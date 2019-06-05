@@ -1,3 +1,46 @@
+```
+.
+├── .eslintrc                 - list of rules to use with eslint
+├── .prettierrc               - style formatting rules
+├── .stylelintrc              - style rule enforcing
+├── .testcafe-electron-rc     - automates TS/JS e2e testing
+├── .travis.yml               - main CI/CD
+├── app
+│   ├── Routes.tsx            - react router routes
+│   ├── actions               - redux action types and definitions
+│   ├── app.global.css        - global styles
+│   ├── app.html              - launches electron's BrowserView component
+│   ├── constants             - routes required() by Routes.tsx for conditional routing
+│   ├── components            - react components
+│   ├── containers            - react containers
+│   ├── index.tsx             - main app wrapper
+│   ├── main.dev.babel.js     - babel development env hook
+│   ├── main.dev.ts           - the main process, launches index.tsx (render process)
+│   ├── menu.ts               - configures menu & shortcuts
+│   ├── reducers              - redux reducers, visually
+│   ├── store
+│   └── utils
+├── appveyor.yml              - CI/CD for Windows & Linux
+├── babel.config.js           - transpilation configuration / plugins for dev | prod
+├── configs                   - contains base, dev, prod, dll, renderer webpack configs
+├── internals                 - misc
+├── package.json              - u know
+├── renovate.json             - automated dependency handling
+├── resources                 - icons for builds/releases
+├── test                      - test suite dir (enzyme, e2e, examples)
+├── tsconfig.json             - tsc's configuration
+└── yarn.lock                 - lockfile
+```
+
+# yarn
+
+yarn global add electron
+yarn add -D / -S electron
+yarn remove
+yarn run start
+
+---
+
 <div align="center">
 <br>
 <img src="https://user-images.githubusercontent.com/12294525/44203609-77d50800-a147-11e8-98f0-f2403527abdc.png" width="600px" />
