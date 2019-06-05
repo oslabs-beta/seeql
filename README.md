@@ -1,10 +1,15 @@
-```
+# electron + react + redux + typescript boilerplate
+
+## project layout | overview
+
+```sh
 .
 ├── .eslintrc                 - list of rules to use with eslint
 ├── .prettierrc               - style formatting rules
 ├── .stylelintrc              - style rule enforcing
 ├── .testcafe-electron-rc     - automates TS/JS e2e testing
 ├── .travis.yml               - main CI/CD
+│
 ├── app
 │   ├── Routes.tsx            - react router routes
 │   ├── actions               - redux action types and definitions
@@ -20,6 +25,7 @@
 │   ├── reducers              - redux reducers, visually
 │   ├── store
 │   └── utils
+│
 ├── appveyor.yml              - CI/CD for Windows & Linux
 ├── babel.config.js           - transpilation configuration / plugins for dev | prod
 ├── configs                   - contains base, dev, prod, dll, renderer webpack configs
@@ -32,7 +38,11 @@
 └── yarn.lock                 - lockfile
 ```
 
-# yarn
+## (you must use) yarn
+
+and should in any case :~)
+
+e.g.
 
 yarn global add electron
 yarn add -D / -S electron
@@ -40,6 +50,8 @@ yarn remove
 yarn run start
 
 ---
+
+original README:
 
 <div align="center">
 <br>
