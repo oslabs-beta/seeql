@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { useState } from 'react';
 import styled from 'styled-components';
+import { Redirect } from 'react-router-dom';
 const ipcRenderer = require('electron').ipcRenderer;
 
 const LoginContainer = styled.div`
@@ -57,11 +58,14 @@ const RequiredWarning = styled.span`
 `
 
 //Functional component 
-const Login = () => {
+const Login = (props) => {
+  console.log(props)
+
   const [ URI, setURI ] = useState('');
   const [ requiredError, setRequiredError ] = useState(false);
   const [ connectionError, setConnectionError ] = useState(false);
   const [ isLoadingState, setLoadingState ] = useState(false);
+  const [ redirectToHome, setRedirectToHome ] = useState(false);
 
   //Trigger on click of "Login" to connect to database
   const connectToDatabase = ():void => {
@@ -70,6 +74,7 @@ const Login = () => {
       setLoadingState(true);
       const connectionStatus = ipcRenderer.sendSync('connection-string', URI);
       if(connectionStatus == 'success') {
+        setRedirectToHome(true);
         setConnectionError(false);
       }
       if(connectionStatus == 'failure') {
@@ -85,6 +90,11 @@ const Login = () => {
     if(requiredError) setRequiredError(false);
   }
 
+  //Redirect to Home on successful connection
+  const redirectHome = () => {
+    if(redirectToHome) return <Redirect to="/homepage" />
+  }
+
   return (
     <LoginContainer>
       { connectionError && <ConnectionErrorMessage>Unable to connect to the database. Please try again.</ConnectionErrorMessage> }
@@ -93,6 +103,7 @@ const Login = () => {
       { requiredError && <RequiredWarning>This field is required</RequiredWarning> }
       { !isLoadingState && <LoginBtn onClick={connectToDatabase}>Login</LoginBtn> }
       { isLoadingState && <LoginBtn onClick={connectToDatabase} disabled>Loading...</LoginBtn>}
+      {redirectHome()}
     </LoginContainer>
   );
 }
