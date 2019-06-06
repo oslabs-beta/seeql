@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { useState } from 'react';
-// const routes = require('../constants/routes.json');
 import styled from 'styled-components';
 const ipcRenderer = require('electron').ipcRenderer;
 
@@ -30,9 +29,10 @@ const URIInput = styled.textarea`
   }
 `
 const LoginBtn = styled.button`
-  padding: 5px 10px;
+  padding: 5px 20px;
   margin: 10px;
   font-family: 'Poppins', sans-serif;
+  display: flex;
 `
 
 const InputLabel = styled.span`
@@ -56,7 +56,8 @@ const RequiredWarning = styled.span`
   font-size: 60%;
 `
 
-const Login = (props) => {
+//Functional component 
+const Login = ({ history }) => {
 
   const [ URI, setURI ] = useState('');
   const [ requiredError, setRequiredError ] = useState(false);
@@ -70,12 +71,12 @@ const Login = (props) => {
       setLoadingState(false);
     } 
     if(status == 'success'){
-      props.history.push('/homepage')
+      history.push('/homepage')
     }
   });
 
   //Trigger on click of "Login" to connect to database
-  const connectToDatabase = () => {
+  const connectToDatabase = ():void => {
     if(!URI) setRequiredError(true);
     else {
       setLoadingState(true);
@@ -84,7 +85,7 @@ const Login = (props) => {
   }
 
   //Set the URI
-  const captureURI = (e) => {
+  const captureURI = (e):void => {
     setURI(e.target.value)
     if(requiredError) setRequiredError(false);
   }
