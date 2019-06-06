@@ -2,6 +2,7 @@ import * as React from 'react';
 import { useState } from 'react';
 // const routes = require('../constants/routes.json');
 import styled from 'styled-components';
+const ipcRenderer = require('electron').ipcRenderer;
 
 const LoginContainer = styled.div`
   background-color: #e8ecf1;
@@ -55,26 +56,38 @@ const RequiredWarning = styled.span`
   font-size: 60%;
 `
 
-const Login = () => {
+const Login = (props) => {
 
   const [ URI, setURI ] = useState('');
   const [ requiredError, setRequiredError ] = useState(false);
   const [ connectionError, setConnectionError ] = useState(false);
   const [ isLoadingState, setLoadingState ] = useState(false);
+ 
+  //Listen for constant connection status
+  ipcRenderer.on('connection-status', (event, status) => {
+    if(status == 'failure'){
+      setConnectionError(true);
+      setLoadingState(false);
+    } 
+    if(status == 'success'){
+      props.history.push('/homepage')
+    }
+  });
 
+  //Trigger on click of "Login" to connect to database
   const connectToDatabase = () => {
     if(!URI) setRequiredError(true);
-    else console.log('send to database', URI)
-    // setLoadingState(true);
-    setConnectionError(true);
+    else {
+      setLoadingState(true);
+      ipcRenderer.send('connection-string', URI);
+    }
   }
 
+  //Set the URI
   const captureURI = (e) => {
     setURI(e.target.value)
     if(requiredError) setRequiredError(false);
   }
-
-  console.log(isLoadingState)
 
   return (
     <LoginContainer>
