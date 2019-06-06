@@ -58,8 +58,7 @@ const RequiredWarning = styled.span`
 `
 
 //Functional component 
-const Login = (props) => {
-  console.log(props)
+const Login = () => {
 
   const [ URI, setURI ] = useState('');
   const [ requiredError, setRequiredError ] = useState(false);
