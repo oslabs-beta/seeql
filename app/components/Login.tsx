@@ -26,8 +26,6 @@ const URIInput = styled.textarea`
 
   :focus {
     outline: none;
-    border: 1px solid #4daf7c;
-    transform: scale(1.01);
   }
 `
 const LoginBtn = styled.button`
@@ -62,13 +60,12 @@ const Login = () => {
   const [ URI, setURI ] = useState('');
   const [ requiredError, setRequiredError ] = useState(false);
   const [ connectionError, setConnectionError ] = useState(false);
-  
+  const [ isLoadingState, setLoadingState ] = useState(false);
+
   const connectToDatabase = () => {
-    if(!URI) {
-      console.log('URI String Field is Required')
-      setRequiredError(true);
-    }
+    if(!URI) setRequiredError(true);
     else console.log('send to database', URI)
+    // setLoadingState(true);
     setConnectionError(true);
   }
 
@@ -77,13 +74,16 @@ const Login = () => {
     if(requiredError) setRequiredError(false);
   }
 
+  console.log(isLoadingState)
+
   return (
     <LoginContainer>
-      { connectionError && <ConnectionErrorMessage>There was an error connecting to the database. Please try again.</ConnectionErrorMessage> }
+      { connectionError && <ConnectionErrorMessage>Unable to connect to the database. Please try again.</ConnectionErrorMessage> }
       <InputLabel>URI Connection String</InputLabel>
-      <URIInput requiredErr={requiredError} onChange={ captureURI } placeholder="Enter your URI connection string.."/>
-      { requiredError && <RequiredWarning>This field is required</RequiredWarning>}
-      <LoginBtn onClick={connectToDatabase}>Login</LoginBtn>
+      <URIInput requiredErr={requiredError} onChange={ captureURI } placeholder="Enter your URI connection string.."></URIInput>
+      { requiredError && <RequiredWarning>This field is required</RequiredWarning> }
+      { !isLoadingState && <LoginBtn onClick={connectToDatabase}>Login</LoginBtn> }
+      { isLoadingState && <LoginBtn onClick={connectToDatabase} disabled>Loading...</LoginBtn>}
     </LoginContainer>
   );
 }
