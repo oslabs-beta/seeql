@@ -68,7 +68,7 @@ const Login = () => {
   const [ isLoading, setLoading ] = useState(false);
   const [ redirectToHome, setRedirectToHome ] = useState(false);
 
-  const connectToDatabase = ():void => {
+  const sendLoginURI = ():void => {
     if (!URI) setRequiredError(true);
     else {
       setLoading(true);
@@ -108,12 +108,11 @@ const Login = () => {
         && <RequiredWarning>This field is required</RequiredWarning> }
       { !isLoading 
         && <LoginBtn 
-             onClick={ connectToDatabase }
+             onClick={ sendLoginURI }
            >Login
            </LoginBtn> }
       { isLoading 
         && <LoginBtn 
-              onClick={ connectToDatabase } 
               disabled
            >Loading...
            </LoginBtn> }
