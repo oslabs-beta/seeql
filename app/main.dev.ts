@@ -105,11 +105,9 @@ ipcMain.on('connection-string', (event, uri) => {
   const client = new Client(uri + '?ssl=true');
   client.connect((err, result) => {
     if (err) {
-      console.log('err: ' + err);
       event.returnValue = 'failure';
     }
     else {
-      console.log('result: ' + result);
       event.returnValue = 'success';
     }
   });

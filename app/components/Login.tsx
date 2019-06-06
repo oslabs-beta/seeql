@@ -17,7 +17,10 @@ const URIInput = styled.textarea`
   width: 200px;
   height: 100px;
   border-radius: 3px;
-  border: ${props => props.requiredErr ? '1px solid #ca333e' : '1px solid lightgrey'};
+  border: ${ (props) => 
+              props.requiredErr 
+              ? '1px solid #ca333e' 
+              : '1px solid lightgrey'};
   overflow: wrap;
   resize: none;
   transition: 0.3s;
@@ -57,52 +60,64 @@ const RequiredWarning = styled.span`
   font-size: 60%;
 `
 
-//Functional component 
 const Login = () => {
 
   const [ URI, setURI ] = useState('');
   const [ requiredError, setRequiredError ] = useState(false);
   const [ connectionError, setConnectionError ] = useState(false);
-  const [ isLoadingState, setLoadingState ] = useState(false);
+  const [ isLoading, setLoading ] = useState(false);
   const [ redirectToHome, setRedirectToHome ] = useState(false);
 
-  //Trigger on click of "Login" to connect to database
   const connectToDatabase = ():void => {
-    if(!URI) setRequiredError(true);
+    if (!URI) setRequiredError(true);
     else {
-      setLoadingState(true);
+      setLoading(true);
       const connectionStatus = ipcRenderer.sendSync('connection-string', URI);
       if(connectionStatus == 'success') {
         setRedirectToHome(true);
         setConnectionError(false);
-      }
+      };
       if(connectionStatus == 'failure') {
         setConnectionError(true);
-        setLoadingState(false);
-      }
-    }
-  }
+        setLoading(false);
+      };
+    };
+  };
 
-  //Set the URI
   const captureURI = (e):void => {
-    setURI(e.target.value)
-    if(requiredError) setRequiredError(false);
-  }
+    setURI(e.target.value);
+    if (requiredError) setRequiredError(false);
+  };
 
-  //Redirect to Home on successful connection
   const redirectHome = () => {
-    if(redirectToHome) return <Redirect to="/homepage" />
-  }
+    if (redirectToHome) return <Redirect to="/homepage" />;
+  };
 
   return (
     <LoginContainer>
-      { connectionError && <ConnectionErrorMessage>Unable to connect to the database. Please try again.</ConnectionErrorMessage> }
+      { connectionError 
+        && <ConnectionErrorMessage>Unable to connect to the database. Please try again.</ConnectionErrorMessage> }
       <InputLabel>URI Connection String</InputLabel>
-      <URIInput requiredErr={requiredError} onChange={ captureURI } placeholder="Enter your URI connection string.."></URIInput>
-      { requiredError && <RequiredWarning>This field is required</RequiredWarning> }
-      { !isLoadingState && <LoginBtn onClick={connectToDatabase}>Login</LoginBtn> }
-      { isLoadingState && <LoginBtn onClick={connectToDatabase} disabled>Loading...</LoginBtn>}
-      {redirectHome()}
+      <URIInput 
+        requiredErr={requiredError} 
+        onChange={ captureURI } 
+        placeholder="Enter your URI connection string..."
+      >
+      </URIInput>
+      { requiredError 
+        && <RequiredWarning>This field is required</RequiredWarning> }
+      { !isLoading 
+        && <LoginBtn 
+             onClick={ connectToDatabase }
+           >Login
+           </LoginBtn> }
+      { isLoading 
+        && <LoginBtn 
+              onClick={ connectToDatabase } 
+              disabled
+           >Loading...
+           </LoginBtn> }
+      { redirectHome() }
     </LoginContainer>
   );
 }
