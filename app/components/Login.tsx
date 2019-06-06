@@ -57,30 +57,25 @@ const RequiredWarning = styled.span`
 `
 
 //Functional component 
-const Login = ({ history }) => {
-
+const Login = () => {
   const [ URI, setURI ] = useState('');
   const [ requiredError, setRequiredError ] = useState(false);
   const [ connectionError, setConnectionError ] = useState(false);
   const [ isLoadingState, setLoadingState ] = useState(false);
- 
-  //Listen for constant connection status
-  ipcRenderer.on('connection-status', (event, status) => {
-    if(status == 'failure'){
-      setConnectionError(true);
-      setLoadingState(false);
-    } 
-    if(status == 'success'){
-      history.push('/homepage')
-    }
-  });
 
   //Trigger on click of "Login" to connect to database
   const connectToDatabase = ():void => {
     if(!URI) setRequiredError(true);
     else {
       setLoadingState(true);
-      ipcRenderer.send('connection-string', URI);
+      const connectionStatus = ipcRenderer.sendSync('connection-string', URI);
+      if(connectionStatus == 'success') {
+        setConnectionError(false);
+      }
+      if(connectionStatus == 'failure') {
+        setConnectionError(true);
+        setLoadingState(false);
+      }
     }
   }
 

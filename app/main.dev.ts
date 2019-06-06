@@ -106,11 +106,11 @@ ipcMain.on('connection-string', (event, uri) => {
   client.connect((err, result) => {
     if (err) {
       console.log('err: ' + err);
-      event.sender.send('connection-status', 'failure')
+      event.returnValue = 'failure';
     }
     else {
       console.log('result: ' + result);
-      event.sender.send('connection-status', 'success')
+      event.returnValue = 'success';
     }
   });
 });
