@@ -8,10 +8,11 @@
  * When running `yarn build` or `yarn build-main`, this file is compiled to
  * `./app/main.prod.js` using webpack. This gives us some performance wins.
  */
-import { app, BrowserWindow } from 'electron';
+import { app, BrowserWindow, ipcMain } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
 import MenuBuilder from './menu';
+const { Client } = require('pg');
 
 export default class AppUpdater {
   constructor() {
@@ -97,4 +98,19 @@ app.on('ready', async () => {
   // Remove this if your app does not use auto updates
   // eslint-disable-next-line
   new AppUpdater();
+});
+
+ipcMain.on('connection-string', (event, uri) => {
+  console.log('uri is', uri);
+  const client = new Client(uri + '?ssl=true');
+  client.connect((err, result) => {
+    if (err) {
+      console.log('err: ' + err);
+      event.sender.send('connection-status', 'failure')
+    }
+    else {
+      console.log('result: ' + result);
+      event.sender.send('connection-status', 'success')
+    }
+  });
 });
