@@ -1,0 +1,31 @@
+[
+  {
+    "name": "customers",
+    "columns": {
+      "id": "int",
+      "name": "varchar (20)",
+      "age": "int",
+      "address": "char (25)",
+      "salary": "decimal (18, 2)"
+    },
+    "primaryKey": "id",
+    "foreignKeys": []
+  },
+  {
+    "name": "orders",
+    "columns": {
+      "id": "int",
+      "date": "date",
+      "customer_id": "int",
+      "amount": "int"
+    },
+    "primaryKey": "id",
+    "foreignKeys": [
+      {
+        "self": "customer_id",
+        "referenced_table": "customer",
+        "referenced_column": "id"
+      }
+    ]
+  }
+]
