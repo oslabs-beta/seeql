@@ -1,31 +1,74 @@
 [
   {
-    "name": "customers",
-    "columns": {
-      "id": "int",
-      "name": "varchar (20)",
-      "age": "int",
-      "address": "char (25)",
-      "salary": "decimal (18, 2)"
-    },
-    "primaryKey": "id",
-    "foreignKeys": []
-  },
-  {
-    "name": "orders",
-    "columns": {
-      "id": "int",
-      "date": "date",
-      "customer_id": "int",
-      "amount": "int"
-    },
+    "table_name": "projects",
+    "columns": [
+      {
+        "columnname": "id",
+        "datatype": "integer",
+        "characterlength": null,
+        "defaultvalue": "nextval('projects_id_seq'::regclass)"
+      },
+      {
+        "columnname": "user_id",
+        "datatype": "integer",
+        "characterlength": null,
+        "defaultvalue": null
+      },
+      {
+        "columnname": "name",
+        "datatype": "character varying",
+        "characterlength": null,
+        "defaultvalue": null
+      },
+      {
+        "columnname": "created_at",
+        "datatype": "date",
+        "characterlength": null,
+        "defaultvalue": "now()"
+      }
+    ],
     "primaryKey": "id",
     "foreignKeys": [
       {
-        "self": "customer_id",
-        "referenced_table": "customer",
-        "referenced_column": "id"
+        "table_schema": "public",
+        "constraint_name": "projects_user_id_fkey",
+        "table_name": "projects",
+        "column_name": "user_id",
+        "foreign_table_schema": "public",
+        "foreign_table_name": "users",
+        "foreign_column_name": "id"
       }
     ]
+  },
+  {
+    "table_name": "users",
+    "columns": [
+      {
+        "columnname": "id",
+        "datatype": "integer",
+        "characterlength": null,
+        "defaultvalue": "nextval('users_id_seq'::regclass)"
+      },
+      {
+        "columnname": "first_name",
+        "datatype": "character varying",
+        "characterlength": null,
+        "defaultvalue": null
+      },
+      {
+        "columnname": "last_name",
+        "datatype": "character varying",
+        "characterlength": null,
+        "defaultvalue": null
+      },
+      {
+        "columnname": "email",
+        "datatype": "character varying",
+        "characterlength": null,
+        "defaultvalue": null
+      }
+    ],
+    "primaryKey": "id",
+    "foreignKeys": []
   }
 ]
