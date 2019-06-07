@@ -2,15 +2,23 @@ import * as React from 'react';
 import { Component, Fragment } from 'react';
 import styled from 'styled-components';
 
-const TableWrapper = styled.table`
-  height: 100%;
+const TableWrapper = styled.ul`
   color: black;
+  display: grid;
+  grid-gap: 20px 20px;
+  grid-auto-rows: auto;
+  grid-auto-columns: minmax(100px, auto);
+`;
+
+const DivWrapper = styled.div`
+  display: flex;
+  flex-direction: row;
+  margin: auto;
 `;
 
 type Props = {
   key: string;
   tableName: string;
-
   columns: Array<string>;
 };
 
@@ -19,26 +27,18 @@ export default class Tables extends Component<Props> {
     let arrOfColumns = [];
     let arrOfTypes = [];
     for (let keys in this.props.columns) {
-      arrOfColumns.push(this.props.columns[keys]['columnname']);
-      arrOfTypes.push(this.props.columns[keys]['datatype']);
+      arrOfColumns.push(<li>{this.props.columns[keys]['columnname']}</li>);
+      arrOfTypes.push(<li>{this.props.columns[keys]['datatype']} </li>);
     }
 
     return (
       <Fragment>
         <TableWrapper>
           <caption>{this.props.tableName}</caption>
-          <thead>
-            <tr>
-              <th>{arrOfColumns}</th>
-              <th>column!</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>{arrOfTypes}</td>
-              <td>data2</td>
-            </tr>
-          </tbody>
+          <DivWrapper className="columns">
+            <li>{arrOfColumns}</li>
+            <li>{arrOfTypes}</li>
+          </DivWrapper>
         </TableWrapper>
       </Fragment>
     );
