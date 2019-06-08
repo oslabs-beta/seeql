@@ -72,8 +72,8 @@ const Tables: React.SFC<Props> = ({
     const primaryKey: boolean = primarykey === columns[keys]['columnname'] ? true : false;
     let affected: boolean = false;
     let foreignKey: boolean = false;
-    let foreignkeyTable: string = 'none';
-    let foreignkeyColumn: string = 'none';
+    let foreignkeyTable: string = '';
+    let foreignkeyColumn: string = '';
   
     if (
       primaryKeyAffected[0].primaryKeyColumn === columns[keys]['columnname'] &&

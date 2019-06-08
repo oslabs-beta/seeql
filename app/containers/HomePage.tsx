@@ -47,7 +47,7 @@ const HomePage = () => {
     const isForeignKey: string = e.target.dataset.isforeignkey;
     const primaryKeyTableForForeignKey: string = e.target.dataset.foreignkeytable;
     const primaryKeyColumn: string = e.target.dataset.foreignkeycolumn;
-    const selecteTableName: string = e.target.dataset.tablename;
+    const selectedTableName: string = e.target.dataset.tablename;
     const selectedColumnName: string = e.target.dataset.columnname;
 
     if (isForeignKey === 'true'){
@@ -61,17 +61,17 @@ const HomePage = () => {
       const allForeignKeys: Array<any> = [];
       data.forEach((table):void => {
           table.foreignKeys.forEach((foreignkey):void => {
-            if(foreignkey.foreign_table_name === selecteTableName
-               && foreignkey.foreign_column_name === selectedColumnName
+            if(foreignkey.foreign_table_name === selectedTableName 
+              && foreignkey.foreign_column_name === selectedColumnName
               )
             allForeignKeys.push({
               table: foreignkey.table_name,
               column: foreignkey.column_name
             })
-          }) // end of foreign key for each
-      }) // end of data foreach
+          }) 
+      }) 
       setForeignKeysAffected(allForeignKeys);
-    } // end of if
+    } 
   }
 
   //Builds out tables to display
