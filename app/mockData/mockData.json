@@ -104,7 +104,7 @@
       {
         "table_schema": "public",
         "constraint_name": "projects_user_id_fkey",
-        "table_name": "projects",
+        "table_name": "projects2",
         "column_name": "user_id",
         "foreign_table_schema": "public",
         "foreign_table_name": "users",
@@ -207,7 +207,7 @@
       {
         "table_schema": "public",
         "constraint_name": "projects_user_id_fkey",
-        "table_name": "projects",
+        "table_name": "projects86",
         "column_name": "user_id",
         "foreign_table_schema": "public",
         "foreign_table_name": "users",

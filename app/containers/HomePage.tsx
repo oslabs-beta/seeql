@@ -7,10 +7,11 @@ const mockData = require('../mockData/mockData.json');
 const HomepageWrapper = styled.div`
   height: 100vh;
   overflow: scroll;
-  /* display: grid;
-  grid-gap: 20px 20px;
-  grid-auto-rows: auto;
-  grid-auto-columns: minmax(100px, auto); */
+  display: grid;
+  grid-gap: 20px;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: auto;
+  padding: 50px;
 `
 
 const HomePage = () => {

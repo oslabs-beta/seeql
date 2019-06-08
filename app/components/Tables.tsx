@@ -7,12 +7,13 @@ const Table = styled.div`
   font-size: 14px;
   color: black;
   font-family: 'Poppins', sans-serif;
+  box-shadow: 1px 2px 5px lightgrey;
+  height: 100px;
 `;
 
 const InnerTableWrapper = styled.ul`
   border: 1px solid black;
   flex-direction: column;
-  width: 300px;
   overflow: scroll;
 `;
 
@@ -31,6 +32,13 @@ const TableCell = styled.p`
   padding: 0px 20px;
   font-size: 12px;
 `;
+
+const TableTitle = styled.label`
+  background: #456990;
+  padding: 5px;
+  color: white;
+  font-weight: bold;
+`
 
 type Props = {
   key: string;
@@ -92,7 +100,8 @@ const Tables: React.SFC<Props> = ({
                 onMouseEnter={displayRelationships}
                 onMouseLeave={removeRelationships}
                 affected={affected}
-              ><TableCell
+              >
+              <TableCell
                 data-isforeignkey={foreignKey}
                 data-foreignkeytable={foreignkeyTable}
                 data-foreignkeycolumn={foreignkeyColumn}
@@ -115,7 +124,7 @@ const Tables: React.SFC<Props> = ({
 
   return (
     <Table key={generateUniqueKey()}>
-      <label>{tableName}</label>
+      <TableTitle>{tableName}</TableTitle>
       <InnerTableWrapper>
         {rows}
       </InnerTableWrapper>
