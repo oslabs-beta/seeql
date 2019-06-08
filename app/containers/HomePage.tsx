@@ -43,24 +43,24 @@ const HomePage = () => {
 
   //Determines which rows should be highlighted
   const highlightRelationships = (e):void => {
-    const isPrimaryKey = e.target.dataset.isprimarykey;
-    const isForeignKey = e.target.dataset.isforeignkey;
-    const primaryKeyTableForForeignKey = e.target.dataset.foreignkeytable;
-    const primaryKeyColumn = e.target.dataset.foreignkeycolumn;
-    const selecteTableName = e.target.dataset.tablename;
-    const selectedColumnName = e.target.dataset.columnname;
+    const isPrimaryKey: string = e.target.dataset.isprimarykey;
+    const isForeignKey: string = e.target.dataset.isforeignkey;
+    const primaryKeyTableForForeignKey: string = e.target.dataset.foreignkeytable;
+    const primaryKeyColumn: string = e.target.dataset.foreignkeycolumn;
+    const selecteTableName: string = e.target.dataset.tablename;
+    const selectedColumnName: string = e.target.dataset.columnname;
 
-    if(isForeignKey === 'true'){
+    if (isForeignKey === 'true'){
       setPrimaryKeyAffected([{
         primaryKeyTable: primaryKeyTableForForeignKey,
         primaryKeyColumn: primaryKeyColumn
       }])
     }
 
-    if(isPrimaryKey === 'true') {
-      const allForeignKeys = [];
-      data.forEach((table) => {
-          table.foreignKeys.forEach((foreignkey) => {
+    if (isPrimaryKey === 'true') {
+      const allForeignKeys: Array<any> = [];
+      data.forEach((table):void => {
+          table.foreignKeys.forEach((foreignkey):void => {
             if(foreignkey.foreign_table_name === selecteTableName
                && foreignkey.foreign_column_name === selectedColumnName
               )
@@ -75,9 +75,9 @@ const HomePage = () => {
   }
 
   //Builds out tables to display
-  useEffect(() => {
+  useEffect(():void => {
     if (data.length > 0) {
-      const dataObj = data.map(table => {
+      const dataObj: Array<any> = data.map(table => {
         return (
           <Tables
             tableName={table.table_name}

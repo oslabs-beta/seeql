@@ -69,11 +69,11 @@ const Tables: React.SFC<Props> = ({
   const generateUniqueKey = () => (Math.random() * 1000).toString();
 
   for (let keys in columns) {
-    const primaryKey = primarykey === columns[keys]['columnname'] ? true : false;
-    let affected = false;
-    let foreignKey = false;
-    let foreignkeyTable = 'none';
-    let foreignkeyColumn = 'none';
+    const primaryKey: boolean = primarykey === columns[keys]['columnname'] ? true : false;
+    let affected: boolean = false;
+    let foreignKey: boolean = false;
+    let foreignkeyTable: string = 'none';
+    let foreignkeyColumn: string = 'none';
   
     if (
       primaryKeyAffected[0].primaryKeyColumn === columns[keys]['columnname'] &&
@@ -87,7 +87,7 @@ const Tables: React.SFC<Props> = ({
       ) affected = true;
     })
 
-    foreignkeys.forEach((key) => {
+    foreignkeys.forEach((key):void => {
       if (key.column_name === columns[keys]['columnname']){
         foreignKey = true;
         foreignkeyTable = key.foreign_table_name;
