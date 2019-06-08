@@ -1,7 +1,7 @@
 import * as React from 'react';
 import styled from 'styled-components';
 
-const TableWrapper = styled.ul`
+const Table = styled.div`
   color: black;
   display: grid;
   grid-gap: 20px 20px;
@@ -9,11 +9,21 @@ const TableWrapper = styled.ul`
   grid-auto-columns: minmax(100px, auto);
 `;
 
-const DivWrapper = styled.div`
+const InnerTableWrapper = styled.ul`
   display: flex;
   border: 1px solid black;
-  flex-direction: row;
+  flex-direction: column;
   margin: auto;
+`;
+
+const TableRow = styled.li`
+  display: flex;
+  justify-content: space-between;
+  list-style: none;
+`;
+
+const TableCell = styled.p`
+  padding: 0px 20px;
 `;
 
 type Props = {
@@ -23,23 +33,20 @@ type Props = {
 };
 
 const Tables: React.SFC<Props> = props => {
-  let columns = [];
-  let types = [];
+  let rows = [];
   //acquires individual column names and corresponding types from data
-  for (let keys in props.columns) {
-    columns.push(<li>{props.columns[keys]['columnname']}</li>);
-    types.push(<li>{props.columns[keys]['datatype']} </li>);
-  }
   const generateUniqueKey = () => (Math.random() * 1000).toString();
+  for (let keys in props.columns) {
+    rows.push(<TableRow key={generateUniqueKey()}><TableCell>{props.columns[keys]['columnname']}</TableCell><TableCell>{props.columns[keys]['datatype']}</TableCell></TableRow>)
+  }
 
   return (
-    <TableWrapper key={generateUniqueKey()}>
+    <Table key={generateUniqueKey()}>
       <label>{props.tableName}</label>
-      <DivWrapper className="columns">
-        <li className="columns">{columns}</li>
-        <li className="types">{types}</li>
-      </DivWrapper>
-    </TableWrapper>
+      <InnerTableWrapper>
+        {rows}
+      </InnerTableWrapper>
+    </Table>
   );
 };
 
