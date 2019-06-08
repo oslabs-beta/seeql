@@ -4,12 +4,12 @@ import styled from 'styled-components';
 import {Redirect} from 'react-router-dom';
 import {Client} from 'pg';
 
-const ToggleSSL = styled.button`
-  padding: 5px 20px;
-  margin: 10px;
-  font-family: 'Poppins', sans-serif;
-  display: flex;
-`
+// const ToggleSSL = styled.button`
+//   padding: 5px 20px;
+//   margin: 10px;
+//   font-family: 'Poppins', sans-serif;
+//   display: flex;
+// `
 
 const LoginContainer = styled.div`
   background-color: #e8ecf1;
@@ -78,7 +78,7 @@ const Login = () => {
     // #TODO: toggleSSL = add ?ssl=true
     // let useSSL: boolean = false;
     // const toggleSSL = (): boolean => useSSL = true;
-    // const client = new Client(URI + useSSL ? '?ssl=true' : '')
+    const client = new Client(URI + '?ssl=true')
 
     client.connect((err: string, res: string) => {
       if (err) {
@@ -103,20 +103,20 @@ const Login = () => {
 
     const getForeignKeys = (tableName: string) => {
       return new Promise((resolve, reject) => {
-        client.query(`SELECT tc.table_schema, 
-                              tc.constraint_name, 
-                              tc.table_name, 
-                              kcu.column_name, 
-                              ccu.table_schema AS foreign_table_schema, 
-                              ccu.table_name AS foreign_table_name, 
-                              ccu.column_name AS foreign_column_name 
-                       FROM information_schema.table_constraints AS tc 
-                       JOIN information_schema.key_column_usage AS kcu 
-                       ON tc.constraint_name = kcu.constraint_name 
+        client.query(`SELECT tc.table_schema,
+                              tc.constraint_name,
+                              tc.table_name,
+                              kcu.column_name,
+                              ccu.table_schema AS foreign_table_schema,
+                              ccu.table_name AS foreign_table_name,
+                              ccu.column_name AS foreign_column_name
+                       FROM information_schema.table_constraints AS tc
+                       JOIN information_schema.key_column_usage AS kcu
+                       ON tc.constraint_name = kcu.constraint_name
                        AND tc.table_schema = kcu.table_schema
-                       JOIN information_schema.constraint_column_usage AS ccu 
-                       ON ccu.constraint_name = tc.constraint_name 
-                       AND ccu.table_schema = tc.table_schema 
+                       JOIN information_schema.constraint_column_usage AS ccu
+                       ON ccu.constraint_name = tc.constraint_name
+                       AND ccu.table_schema = tc.table_schema
                        WHERE tc.constraint_type = 'FOREIGN KEY'
                        AND tc.table_name = '${tableName}'`,
           (err: string, result: string) => {
@@ -145,7 +145,7 @@ const Login = () => {
       return new Promise((resolve, reject) => {
         client.query(`SELECT column_name
                       FROM pg_constraint, information_schema.constraint_column_usage
-                      WHERE contype = 'p' 
+                      WHERE contype = 'p'
                       AND information_schema.constraint_column_usage.table_name = '${tableName}'
                       AND pg_constraint.conname = information_schema.constraint_column_usage.constraint_name`,
           (err: string, result: string) => {
