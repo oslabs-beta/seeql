@@ -97,7 +97,7 @@ const Tables: React.SFC<Props> = ({
 
     rows.push(<TableRow 
                 key={generateUniqueKey()}
-                onMouseEnter={displayRelationships}
+                onMouseOver={displayRelationships}
                 onMouseLeave={removeRelationships}
                 affected={affected}
               >
