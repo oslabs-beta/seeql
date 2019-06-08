@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { Component, Fragment } from 'react';
 import styled from 'styled-components';
 
 const TableWrapper = styled.ul`
@@ -12,6 +11,7 @@ const TableWrapper = styled.ul`
 
 const DivWrapper = styled.div`
   display: flex;
+  border: 1px solid black;
   flex-direction: row;
   margin: auto;
 `;
@@ -22,25 +22,25 @@ type Props = {
   columns: Array<string>;
 };
 
-export default class Tables extends Component<Props> {
-  render() {
-    let arrOfColumns = [];
-    let arrOfTypes = [];
-    for (let keys in this.props.columns) {
-      arrOfColumns.push(<li>{this.props.columns[keys]['columnname']}</li>);
-      arrOfTypes.push(<li>{this.props.columns[keys]['datatype']} </li>);
-    }
-
-    return (
-      <Fragment>
-        <TableWrapper>
-          <caption>{this.props.tableName}</caption>
-          <DivWrapper className="columns">
-            <li>{arrOfColumns}</li>
-            <li>{arrOfTypes}</li>
-          </DivWrapper>
-        </TableWrapper>
-      </Fragment>
-    );
+const Tables: React.SFC<Props> = props => {
+  let columns = [];
+  let types = [];
+  //acquires individual column names and corresponding types from data
+  for (let keys in props.columns) {
+    columns.push(<li>{props.columns[keys]['columnname']}</li>);
+    types.push(<li>{props.columns[keys]['datatype']} </li>);
   }
-}
+  const generateUniqueKey = () => (Math.random() * 1000).toString();
+
+  return (
+    <TableWrapper key={generateUniqueKey()}>
+      <label>{props.tableName}</label>
+      <DivWrapper className="columns">
+        <li className="columns">{columns}</li>
+        <li className="types">{types}</li>
+      </DivWrapper>
+    </TableWrapper>
+  );
+};
+
+export default Tables;

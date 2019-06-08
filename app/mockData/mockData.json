@@ -70,5 +70,283 @@
     ],
     "primaryKey": "id",
     "foreignKeys": []
+  },
+  {
+    "table_name": "projects2",
+    "columns": [
+      {
+        "columnname": "id",
+        "datatype": "integer",
+        "characterlength": null,
+        "defaultvalue": "nextval('projects_id_seq'::regclass)"
+      },
+      {
+        "columnname": "user_id",
+        "datatype": "integer",
+        "characterlength": null,
+        "defaultvalue": null
+      },
+      {
+        "columnname": "name",
+        "datatype": "character varying",
+        "characterlength": null,
+        "defaultvalue": null
+      },
+      {
+        "columnname": "created_at",
+        "datatype": "date",
+        "characterlength": null,
+        "defaultvalue": "now()"
+      }
+    ],
+    "primaryKey": "id",
+    "foreignKeys": [
+      {
+        "table_schema": "public",
+        "constraint_name": "projects_user_id_fkey",
+        "table_name": "projects",
+        "column_name": "user_id",
+        "foreign_table_schema": "public",
+        "foreign_table_name": "users",
+        "foreign_column_name": "id"
+      }
+    ]
+  },
+  {
+    "table_name": "users2",
+    "columns": [
+      {
+        "columnname": "id",
+        "datatype": "integer",
+        "characterlength": null,
+        "defaultvalue": "nextval('users_id_seq'::regclass)"
+      },
+      {
+        "columnname": "first_name",
+        "datatype": "character varying",
+        "characterlength": null,
+        "defaultvalue": null
+      },
+      {
+        "columnname": "last_name",
+        "datatype": "character varying",
+        "characterlength": null,
+        "defaultvalue": null
+      },
+      {
+        "columnname": "email",
+        "datatype": "character varying",
+        "characterlength": null,
+        "defaultvalue": null
+      }
+    ],
+    "primaryKey": "id",
+    "foreignKeys": []
+  },
+  {
+    "table_name": "users3",
+    "columns": [
+      {
+        "columnname": "id",
+        "datatype": "integer",
+        "characterlength": null,
+        "defaultvalue": "nextval('users_id_seq'::regclass)"
+      },
+      {
+        "columnname": "first_name",
+        "datatype": "character varying",
+        "characterlength": null,
+        "defaultvalue": null
+      },
+      {
+        "columnname": "last_name",
+        "datatype": "character varying",
+        "characterlength": null,
+        "defaultvalue": null
+      },
+      {
+        "columnname": "email",
+        "datatype": "character varying",
+        "characterlength": null,
+        "defaultvalue": null
+      }
+    ],
+    "primaryKey": "id",
+    "foreignKeys": []
+  },
+  {
+    "table_name": "projects86",
+    "columns": [
+      {
+        "columnname": "id",
+        "datatype": "integer",
+        "characterlength": null,
+        "defaultvalue": "nextval('projects_id_seq'::regclass)"
+      },
+      {
+        "columnname": "user_id",
+        "datatype": "integer",
+        "characterlength": null,
+        "defaultvalue": null
+      },
+      {
+        "columnname": "name",
+        "datatype": "character varying",
+        "characterlength": null,
+        "defaultvalue": null
+      },
+      {
+        "columnname": "created_at",
+        "datatype": "date",
+        "characterlength": null,
+        "defaultvalue": "now()"
+      }
+    ],
+    "primaryKey": "id",
+    "foreignKeys": [
+      {
+        "table_schema": "public",
+        "constraint_name": "projects_user_id_fkey",
+        "table_name": "projects",
+        "column_name": "user_id",
+        "foreign_table_schema": "public",
+        "foreign_table_name": "users",
+        "foreign_column_name": "id"
+      }
+    ]
+  },
+  {
+    "table_name": "users5",
+    "columns": [
+      {
+        "columnname": "id",
+        "datatype": "integer",
+        "characterlength": null,
+        "defaultvalue": "nextval('users_id_seq'::regclass)"
+      },
+      {
+        "columnname": "first_name",
+        "datatype": "character varying",
+        "characterlength": null,
+        "defaultvalue": null
+      },
+      {
+        "columnname": "last_name",
+        "datatype": "character varying",
+        "characterlength": null,
+        "defaultvalue": null
+      },
+      {
+        "columnname": "email",
+        "datatype": "character varying",
+        "characterlength": null,
+        "defaultvalue": null
+      }
+    ],
+    "primaryKey": "id",
+    "foreignKeys": []
+  },
+  {
+    "table_name": "projects24",
+    "columns": [
+      {
+        "columnname": "id",
+        "datatype": "integer",
+        "characterlength": null,
+        "defaultvalue": "nextval('projects_id_seq'::regclass)"
+      },
+      {
+        "columnname": "user_id",
+        "datatype": "integer",
+        "characterlength": null,
+        "defaultvalue": null
+      },
+      {
+        "columnname": "name",
+        "datatype": "character varying",
+        "characterlength": null,
+        "defaultvalue": null
+      },
+      {
+        "columnname": "created_at",
+        "datatype": "date",
+        "characterlength": null,
+        "defaultvalue": "now()"
+      }
+    ],
+    "primaryKey": "id",
+    "foreignKeys": [
+      {
+        "table_schema": "public",
+        "constraint_name": "projects_user_id_fkey",
+        "table_name": "projects",
+        "column_name": "user_id",
+        "foreign_table_schema": "public",
+        "foreign_table_name": "users",
+        "foreign_column_name": "id"
+      }
+    ]
+  },
+  {
+    "table_name": "users25",
+    "columns": [
+      {
+        "columnname": "id",
+        "datatype": "integer",
+        "characterlength": null,
+        "defaultvalue": "nextval('users_id_seq'::regclass)"
+      },
+      {
+        "columnname": "first_name",
+        "datatype": "character varying",
+        "characterlength": null,
+        "defaultvalue": null
+      },
+      {
+        "columnname": "last_name",
+        "datatype": "character varying",
+        "characterlength": null,
+        "defaultvalue": null
+      },
+      {
+        "columnname": "email",
+        "datatype": "character varying",
+        "characterlength": null,
+        "defaultvalue": null
+      }
+    ],
+    "primaryKey": "id",
+    "foreignKeys": []
+  },
+  {
+    "table_name": "users94",
+    "columns": [
+      {
+        "columnname": "id",
+        "datatype": "integer",
+        "characterlength": null,
+        "defaultvalue": "nextval('users_id_seq'::regclass)"
+      },
+      {
+        "columnname": "first_name",
+        "datatype": "character varying",
+        "characterlength": null,
+        "defaultvalue": null
+      },
+      {
+        "columnname": "last_name",
+        "datatype": "character varying",
+        "characterlength": null,
+        "defaultvalue": null
+      },
+      {
+        "columnname": "email",
+        "datatype": "character varying",
+        "characterlength": null,
+        "defaultvalue": null
+      }
+    ],
+    "primaryKey": "id",
+    "foreignKeys": []
   }
 ]

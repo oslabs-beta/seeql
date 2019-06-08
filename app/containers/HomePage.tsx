@@ -2,53 +2,37 @@ import * as React from 'react';
 import { Fragment } from 'react';
 import { useState, useEffect } from 'react';
 import Tables from '../components/Tables';
-// import { render } from 'react-dom';
 const mockData = require('../mockData/mockData.json');
-// import { mock, Columns, ForeignKeysEntity } from '../mockData/mockContext';
-// import { DataContextProvider } from '../mockData/mockContext';
 // const ipcRenderer = require('electron').ipcRenderer;
 
 const HomePage = () => {
   const [data, setData] = useState([]);
-  const [renderedData, setRender] = useState([]);
+  const [tableToRender, setRender] = useState([]);
+  // const fetchData = () => ipcRenderer.sendSync('fetch-data');
 
-  // // const fetchData = () => ipcRenderer.sendSync('fetch-data');
-  const fetchMockData = () => {
-    return mockData;
-  };
-  const generateUnique = () => {
-    let random = Math.random() * 100;
-    console.log(random);
-    return random.toString();
-  };
+  const fetchData = () => mockData;
+  //function generates a mock unique ID for React Components
+  const generateUniqueKey = () => (Math.random() * 1000).toString();
 
   useEffect(() => {
-    const mockRender = data.map(item => {
-      if (data.length > 0) {
+    if (data.length > 0) {
+      const dataObj = data.map(table => {
         return (
           <Tables
-            tableName={item.table_name}
-            columns={item.columns}
-            key={generateUnique()}
+            tableName={table.table_name}
+            columns={table.columns}
+            key={generateUniqueKey()}
           />
         );
-      }
-    });
-    setRender(mockRender);
-    console.log('mock', mockRender);
+      });
+      setRender(dataObj);
+    }
   }, [data]);
 
   return (
     <Fragment>
-      <button
-        onClick={() => {
-          console.log('clicked');
-          setData(fetchMockData);
-        }}
-      >
-        Get All Tables
-      </button>
-      {renderedData}
+      <button onClick={() => setData(fetchData)}>Get All Tables</button>
+      {tableToRender}
     </Fragment>
   );
 };
