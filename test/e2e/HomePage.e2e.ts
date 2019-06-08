@@ -1,36 +1,36 @@
-import { ClientFunction, Selector } from 'testcafe';
-import { ReactSelector, waitForReact } from 'testcafe-react-selectors';
-import { getPageUrl } from './helpers';
+// import { ClientFunction, Selector } from 'testcafe';
+// import { ReactSelector, waitForReact } from 'testcafe-react-selectors';
+// import { getPageUrl } from './helpers';
 
-const getPageTitle = ClientFunction(() => document.title);
-const counterSelector = Selector('[data-tid="counter"]');
-const buttonsSelector = Selector('[data-tclass="btn"]');
-const clickToCounterLink = t =>
-  t.click(Selector('a').withExactText('to Counter'));
-const incrementButton = buttonsSelector.nth(0);
-const decrementButton = buttonsSelector.nth(1);
-const oddButton = buttonsSelector.nth(2);
-const asyncButton = buttonsSelector.nth(3);
-const getCounterText = () => counterSelector().innerText;
-const assertNoConsoleErrors = async t => {
-  const { error } = await t.getBrowserConsoleMessages();
-  await t.expect(error).eql([]);
-};
+// const getPageTitle = ClientFunction(() => document.title);
+// const counterSelector = Selector('[data-tid="counter"]');
+// const buttonsSelector = Selector('[data-tclass="btn"]');
+// const clickToCounterLink = t =>
+//   t.click(Selector('a').withExactText('to Counter'));
+// const incrementButton = buttonsSelector.nth(0);
+// const decrementButton = buttonsSelector.nth(1);
+// const oddButton = buttonsSelector.nth(2);
+// const asyncButton = buttonsSelector.nth(3);
+// const getCounterText = () => counterSelector().innerText;
+// const assertNoConsoleErrors = async t => {
+//   const { error } = await t.getBrowserConsoleMessages();
+//   await t.expect(error).eql([]);
+// };
 
-fixture`Home Page`.page('../../app/app.html').afterEach(assertNoConsoleErrors);
+// fixture`Home Page`.page('../../app/app.html').afterEach(assertNoConsoleErrors);
 
-test('e2e', async t => {
-  await t.expect(getPageTitle()).eql('Hello Electron React!');
-});
+// test('e2e', async t => {
+//   await t.expect(getPageTitle()).eql('Hello Electron React!');
+// });
 
-test('should open window', async t => {
-  await t.expect(getPageTitle()).eql('Hello Electron React!');
-});
+// test('should open window', async t => {
+//   await t.expect(getPageTitle()).eql('Hello Electron React!');
+// });
 
-test(
-  "should haven't any logs in console of main window",
-  assertNoConsoleErrors
-);
+// test(
+//   "should haven't any logs in console of main window",
+//   assertNoConsoleErrors
+// );
 
 // test('should to Counter with click "to Counter" link', async t => {
 //   await t
