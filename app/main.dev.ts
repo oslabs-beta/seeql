@@ -101,7 +101,6 @@ app.on('ready', async () => {
 });
 
 ipcMain.on('connection-string', (event, uri) => {
-  console.log('uri is', uri);
   const client = new Client(uri + '?ssl=true');
   client.connect((err, result) => {
     if (err) {
