@@ -9,6 +9,7 @@ matrix:
       env:
         - ELECTRON_CACHE=$HOME/.cache/electron
         - ELECTRON_BUILDER_CACHE=$HOME/.cache/electron-builder
+        - GH_TOKEN=
 
     - os: linux
       language: node_js
@@ -75,9 +76,11 @@ before_script:
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sleep 3; fi
 
 script:
-  - yarn package-ci
+  # - yarn package-ci
   - yarn lint
+  - yarn postlint-fix
+  - yarn postlint-styles-fix
   # HACK: Temporarily ignore `yarn test` on linux
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then yarn test; fi
-  - yarn build-e2e
-  - yarn test-e2e
+  # - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then yarn test; fi
+  # - yarn build-e2e
+  # - yarn test-e2e
