@@ -8,9 +8,8 @@ const mockData = require('../mockData/mockData.json');
 const HomePage = () => {
   const [data, setData] = useState([]);
   const [tableToRender, setRender] = useState([]);
-  // const fetchData = () => ipcRenderer.sendSync('fetch-data');
-
   const fetchData = () => mockData;
+
   //function generates a mock unique ID for React Components
   const generateUniqueKey = () => (Math.random() * 1000).toString();
 
