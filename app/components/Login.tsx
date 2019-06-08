@@ -1,9 +1,15 @@
 import * as React from 'react';
-import { useState } from 'react';
+import {useState} from 'react';
 import styled from 'styled-components';
-import { Redirect } from 'react-router-dom';
-const ipcRenderer = require('electron').ipcRenderer;
-import { Client } from 'pg';
+import {Redirect} from 'react-router-dom';
+import {Client} from 'pg';
+
+const ToggleSSL = styled.button`
+  padding: 5px 20px;
+  margin: 10px;
+  font-family: 'Poppins', sans-serif;
+  display: flex;
+`
 
 const LoginContainer = styled.div`
   background-color: #e8ecf1;
@@ -69,7 +75,11 @@ const Login = () => {
   const [redirectToHome, setRedirectToHome] = useState(false);
 
   const sendLoginURI = (): void => {
-    const client = new Client(URI + '?ssl=true')
+    // #TODO: toggleSSL = add ?ssl=true
+    // let useSSL: boolean = false;
+    // const toggleSSL = (): boolean => useSSL = true;
+    // const client = new Client(URI + useSSL ? '?ssl=true' : '')
+
     client.connect((err: string, res: string) => {
       if (err) {
         console.log(err, 'err conecting')
@@ -81,9 +91,10 @@ const Login = () => {
     const getTables = () => {
       return new Promise((resolve, reject) => {
         client.query(`SELECT table_name
-         FROM information_schema.tables
-         WHERE table_schema='public'
-         AND table_type='BASE TABLE'`, (err: string, result: string) => {
+                      FROM information_schema.tables
+                      WHERE table_schema='public'
+                      AND table_type='BASE TABLE'`,
+          (err: string, result: string) => {
             if (err) reject(err);
             resolve(result)
           });
@@ -92,10 +103,23 @@ const Login = () => {
 
     const getForeignKeys = (tableName: string) => {
       return new Promise((resolve, reject) => {
-        client.query(`
-        SELECT tc.table_schema, tc.constraint_name, tc.table_name, kcu.column_name, ccu.table_schema AS foreign_table_schema, ccu.table_name AS foreign_table_name, ccu.column_name AS foreign_column_name FROM information_schema.table_constraints AS tc JOIN information_schema.key_column_usage AS kcu ON tc.constraint_name = kcu.constraint_name AND tc.table_schema = kcu.table_schema
-           JOIN information_schema.constraint_column_usage AS ccu ON ccu.constraint_name = tc.constraint_name AND ccu.table_schema = tc.table_schema WHERE tc.constraint_type = 'FOREIGN KEY'
-           AND tc.table_name = '${tableName}'`, (err: string, result: string) => {
+        client.query(`SELECT tc.table_schema, 
+                              tc.constraint_name, 
+                              tc.table_name, 
+                              kcu.column_name, 
+                              ccu.table_schema AS foreign_table_schema, 
+                              ccu.table_name AS foreign_table_name, 
+                              ccu.column_name AS foreign_column_name 
+                       FROM information_schema.table_constraints AS tc 
+                       JOIN information_schema.key_column_usage AS kcu 
+                       ON tc.constraint_name = kcu.constraint_name 
+                       AND tc.table_schema = kcu.table_schema
+                       JOIN information_schema.constraint_column_usage AS ccu 
+                       ON ccu.constraint_name = tc.constraint_name 
+                       AND ccu.table_schema = tc.table_schema 
+                       WHERE tc.constraint_type = 'FOREIGN KEY'
+                       AND tc.table_name = '${tableName}'`,
+          (err: string, result: string) => {
             if (err) reject(err);
             resolve(result)
           });
@@ -104,13 +128,13 @@ const Login = () => {
 
     const getColumns = (tableName: string) => {
       return new Promise((resolve, reject) => {
-        client.query(`
-          SELECT COLUMN_NAME AS ColumnName,
-            DATA_TYPE AS DataType,
-            CHARACTER_MAXIMUM_LENGTH AS CharacterLength,
-            COLUMN_DEFAULT as DefaultValue
-          FROM INFORMATION_SCHEMA.COLUMNS
-          WHERE TABLE_NAME = '${tableName}'`, (err: string, result: string) => {
+        client.query(`SELECT COLUMN_NAME AS ColumnName,
+                             DATA_TYPE AS DataType,
+                             CHARACTER_MAXIMUM_LENGTH AS CharacterLength,
+                             COLUMN_DEFAULT AS DefaultValue
+                      FROM INFORMATION_SCHEMA.COLUMNS
+                      WHERE TABLE_NAME = '${tableName}'`,
+          (err: string, result: string) => {
             if (err) reject(err);
             resolve(result)
           });
@@ -120,9 +144,11 @@ const Login = () => {
     const getPrimaryKey = (tableName: string) => {
       return new Promise((resolve, reject) => {
         client.query(`SELECT column_name
-         FROM pg_constraint, information_schema.constraint_column_usage
-         WHERE contype = 'p' AND information_schema.constraint_column_usage.table_name = '${tableName}'
-         AND pg_constraint.conname = information_schema.constraint_column_usage.constraint_name`, (err: string, result: string) => {
+                      FROM pg_constraint, information_schema.constraint_column_usage
+                      WHERE contype = 'p' 
+                      AND information_schema.constraint_column_usage.table_name = '${tableName}'
+                      AND pg_constraint.conname = information_schema.constraint_column_usage.constraint_name`,
+          (err: string, result: string) => {
             if (err) reject(err);
             resolve(result)
           });
@@ -146,14 +172,13 @@ const Login = () => {
         resolve(tablesArr)
       })
     }
-
-    composeTableData()
-      .then(r => console.log('table data #TODO: render when component is decided', r))
+    composeTableData().then(r => console.log('table data #TODO: render when component is decided', r))
 
     if (!URI) setRequiredError(true);
     else {
       setLoading(true);
-      const connectionStatus = ipcRenderer.sendSync('connection-string', URI);
+
+      // #TODO: handle errors
       if (connectionStatus == 'success') {
         setRedirectToHome(true);
         setConnectionError(false);
@@ -176,27 +201,39 @@ const Login = () => {
 
   return (
     <LoginContainer>
-      {connectionError
-        && <ConnectionErrorMessage>Unable to connect to the database. Please try again.</ConnectionErrorMessage>}
+      {
+        connectionError
+        && <ConnectionErrorMessage>Unable to connect to the database. Please try again.</ConnectionErrorMessage>
+      }
+
       <InputLabel>URI Connection String</InputLabel>
+
       <URIInput
         requiredErr={requiredError}
         onChange={captureURI}
         placeholder="Enter your URI connection string..."
       >
       </URIInput>
+
       {requiredError
-        && <RequiredWarning>This field is required</RequiredWarning>}
+        && <RequiredWarning>This field is required</RequiredWarning>
+      }
+      /*{ #TDOD
+      <ToggleSSL onClick={toggleSSL}>
+        use SSL?
+      </ToggleSSL>
+        }*/
+
       {!isLoading
-        && <LoginBtn
-          onClick={sendLoginURI}
-        >Login
-           </LoginBtn>}
+        && <LoginBtn onClick={sendLoginURI}>Login</LoginBtn>
+      }
       {isLoading
         && <LoginBtn
           disabled
         >Loading...
-           </LoginBtn>}
+        </LoginBtn>
+      }
+
       {redirectHome()}
     </LoginContainer>
   );
