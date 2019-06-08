@@ -179,11 +179,11 @@ const Login = () => {
       setLoading(true);
 
       // #TODO: handle errors
-      if (connectionStatus == 'success') {
+      if (true) {
         setRedirectToHome(true);
         setConnectionError(false);
-      };
-      if (connectionStatus == 'failure') {
+      }
+      else {
         setConnectionError(true);
         setLoading(false);
       };
@@ -218,11 +218,11 @@ const Login = () => {
       {requiredError
         && <RequiredWarning>This field is required</RequiredWarning>
       }
-      /*{ #TDOD
+      {/* { #TDOD
       <ToggleSSL onClick={toggleSSL}>
         use SSL?
       </ToggleSSL>
-        }*/
+        } */}
 
       {!isLoading
         && <LoginBtn onClick={sendLoginURI}>Login</LoginBtn>
