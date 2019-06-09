@@ -191,7 +191,8 @@ const Login = () => {
   };
 
   const captureURI = (e): void => {
-    setURI(e.target.value);
+    const sanitizedURI = e.target.value.replace(/\s+/g, "");
+    setURI(sanitizedURI);
     if (requiredError) setRequiredError(false);
   };
 
