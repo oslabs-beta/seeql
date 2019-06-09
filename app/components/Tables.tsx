@@ -25,7 +25,6 @@ const TableRow = styled.li`
   border: ${ ({affected}) => affected ? '3px solid pink' : '3px solid transparent'};
   border-top: 1px solid lightgrey;
   transition: 0.3s;
-  
 `;
 
 const TableCell = styled.p`

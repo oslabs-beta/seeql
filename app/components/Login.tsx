@@ -72,8 +72,8 @@ const RequiredWarning = styled.span`
 `
 
 const Login = () => {
-  const [ URI, setURI ] = useState('');
-  const [ isSSL, setSSL ] = useState(false);
+  const [URI, setURI] = useState('');
+  const [isSSL, setSSL] = useState(false);
   const [requiredError, setRequiredError] = useState(false);
   const [connectionError, setConnectionError] = useState(false);
   const [isLoading, setLoading] = useState(false);
@@ -82,7 +82,7 @@ const Login = () => {
   const sendLoginURI = (): void => {
 
     let updatedURI = URI;
-    if ( isSSL ) updatedURI += '?ssl=true';
+    if (isSSL) updatedURI += '?ssl=true';
 
     const client = new Client(updatedURI)
 
