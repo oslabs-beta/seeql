@@ -4,6 +4,28 @@ import styled from 'styled-components';
 import { Redirect } from 'react-router-dom';
 import Db from '../db'
 
+interface URIInputProps {
+  readonly requiredErr: boolean;
+};
+
+const URIInput = styled.textarea<URIInputProps>`
+  width: 200px;
+  height: 100px;
+  border-radius: 3px;
+  border: ${(props) => {
+    return props.requiredErr ? '1px solid #ca333e' : '1px solid lightgrey';
+  };
+  overflow: wrap;
+  resize: none;
+  transition: 0.3s;
+  padding: 5px;
+  font-family: 'Poppins', sans-serif;
+  letter-spacing: 2px;
+  :focus {
+    outline: none;
+  }
+`
+
 const LoginContainer = styled.div`
   background-color: #e8ecf1;
   display: flex;
@@ -12,25 +34,6 @@ const LoginContainer = styled.div`
   justify-content: center;
   padding: 50px;
   height: 100vh;
-`
-const URIInput = styled.textarea`
-  width: 200px;
-  height: 100px;
-  border-radius: 3px;
-  border: ${ (props) =>
-    props.requiredErr
-      ? '1px solid #ca333e'
-      : '1px solid lightgrey'};
-  overflow: wrap;
-  resize: none;
-  transition: 0.3s;
-  padding: 5px;
-  font-family: 'Poppins', sans-serif;
-  letter-spacing: 2px;
-
-  :focus {
-    outline: none;
-  }
 `
 const LoginBtn = styled.button`
   padding: 5px 20px;
@@ -67,21 +70,22 @@ const Login = () => {
   const [isLoading, setLoading] = useState(false);
   const [redirectToHome, setRedirectToHome] = useState(false);
 
+  const db = new Db()
+
   const sendLoginURI = (): void => {
     if (!URI) setRequiredError(true);
     else {
       setLoading(true);
 
-      // #TODO: handle errors
+      // #TODO:
       if (true) {
         setRedirectToHome(true);
         setConnectionError(false);
-      }
-      else {
+      } else {
         setConnectionError(true);
         setLoading(false);
-      };
-    };
+      }
+    }
   };
 
   const captureURI = (e): void => {
@@ -90,7 +94,6 @@ const Login = () => {
     const sanitizedURI = e.target.value.replace(/\s+/g, "");
     setURI(sanitizedURI);
 
-    const db = new Db()
     db.conn(sanitizedURI)
   };
 
@@ -100,7 +103,6 @@ const Login = () => {
 
   return (
     <LoginContainer>
-      <p>postgres://ltdnkwnbccooem:64ad308e565b39cc070194f7fa621ae0e925339be5a1c69480ff2a4462eab4c4@ec2-54-163-226-238.compute-1.amazonaws.com:5432/ddsu160rb5t7vq</p>
 
       {
         connectionError
