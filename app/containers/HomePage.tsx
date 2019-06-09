@@ -6,12 +6,11 @@ const mockData = require('../mockData/mockData.json');
 
 const HomepageWrapper = styled.div`
   height: 100vh;
+  width: 100vw;
   overflow: scroll;
-  display: grid;
-  grid-gap: 20px;
-  grid-template-columns: 1fr 1fr 1fr;
-  grid-template-rows: auto;
   padding: 50px;
+  display: grid;
+  grid-gap: 10px;
 `
 
 const HomePage = () => {

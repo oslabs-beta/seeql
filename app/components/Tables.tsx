@@ -8,7 +8,7 @@ const Table = styled.div`
   color: black;
   font-family: 'Poppins', sans-serif;
   box-shadow: 1px 2px 5px lightgrey;
-  height: 100px;
+
 `;
 
 const InnerTableWrapper = styled.ul`
@@ -25,7 +25,7 @@ const TableRow = styled.li`
   border: ${ ({affected}) => affected ? '3px solid pink' : '3px solid transparent'};
   border-top: 1px solid lightgrey;
   transition: 0.3s;
-
+  
 `;
 
 const TableCell = styled.p`
