@@ -184,7 +184,7 @@ const Login = () => {
     else {
       setLoading(true);
 
-      // #TODO: handle errors
+      // #TODO: handle errors - currently redirects to home automatically
       if (true) {
         setRedirectToHome(true);
         setConnectionError(false);
