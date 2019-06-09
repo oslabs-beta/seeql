@@ -32,14 +32,14 @@
     "test-watch": "yarn test --watch"
   },
   "lint-staged": {
-    "*.{js,jsx}": [
-      "cross-env NODE_ENV=development eslint --cache --format=pretty",
-      "prettier --ignore-path .eslintignore --single-quote --write",
-      "git add"
-    ],
     "{*.json,.{babelrc,eslintrc,prettierrc,stylelintrc}}": [
       "prettier --ignore-path .eslintignore --parser json --write",
-      "git add"
+      "git add --no-verify"
+    ],
+    "*.{js, jsx, ts, tsx}": [
+      "yarn run lint",
+      "./node_modules/prettier/bin-prettier.js ./app/**/*.{tsx,ts} --write --no-verify",
+      "git add --no-verify"
     ],
     "*.{css,scss}": [
       "stylelint --ignore-path .eslintignore --syntax scss --fix",
@@ -240,6 +240,7 @@
     "opencollective-postinstall": "^2.0.1",
     "optimize-css-assets-webpack-plugin": "^5.0.1",
     "prettier": "^1.18.2",
+    "prettier-eslint-cli": "^4.7.1",
     "react-test-renderer": "^16.7.0",
     "rimraf": "^2.6.3",
     "sass-loader": "^7.1.0",
@@ -266,6 +267,7 @@
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.6.3",
+    "@types/styled-components": "^4.1.16",
     "@typescript-eslint/eslint-plugin": "^1.10.1",
     "@typescript-eslint/parser": "^1.10.1",
     "devtron": "^1.4.0",

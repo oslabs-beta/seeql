@@ -6,6 +6,48 @@ See [#118](https://github.com/electron-react-boilerplate/electron-react-boilerpl
 
 ## Static Type Checking With TypeScript
 
+**lint-staged**
+
+lint-staged will run `prettier --fix` whenever `git add` is called on a file
+
+**VSCode instructions:**
+
+if you'd like your local code to mirror the formatted version run by the husky task on push, install the eslint, prettier and typescript god extensions and add the following to ur settings.json:
+
+```
+  "eslint.alwaysShowStatus": true,
+  "prettier.tslintIntegration": true,
+  "prettier.eslintIntegration": true,
+  "eslint.autoFixOnSave": true,
+  "eslint.validate": [
+    "javascript",
+    "javascriptreact",
+    {
+      "language": "typescript",
+      "autoFix": true
+    },
+    {
+      "language": "typescriptreact",
+      "autoFix": true
+    }
+  ],
+  "editor.formatOnSave": true,
+  "[javascript]": {
+    "editor.formatOnSave": false
+  },
+  "[javascriptreact]": {
+    "editor.formatOnSave": false
+  },
+  "[typescript]": {
+    "editor.formatOnSave": false,
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[typescriptreact]": {
+    "editor.formatOnSave": false,
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  }
+```
+
 ## yarn run
 
 Start the app in the `dev` environment. This starts the renderer process in [**hot-module-replacement**](https://webpack.js.org/guides/hmr-react/) mode and starts a webpack dev server that sends hot updates to the renderer process:
