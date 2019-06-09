@@ -1,5 +1,4 @@
 {
-  confirm these are valid for tsx w/ generators
   "compilerOptions": {
     "target": "es5",
     "baseUrl": "./",
@@ -7,17 +6,13 @@
     "jsx": "react",
     "module": "es2015",
     "moduleResolution": "node",
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
     "noUnusedLocals": true,
     "pretty": true,
     "sourceMap": true,
     "resolveJsonModule": true,
-    "lib": [
-      "es2015",
-      "dom"
-    ]
+    "lib": ["es6", "dom"]
   },
-  "exclude": [
-    "node_modules",
-    "**/node_modules/*"
-  ]
+  "exclude": ["node_modules", "**/node_modules/*", "dist"]
 }

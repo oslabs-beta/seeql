@@ -1,8 +1,8 @@
 {
-  "name": "erb-typescript-example",
-  "productName": "ElectronReact",
-  "version": "0.17.1",
-  "description": "Electron application boilerplate based on React, React Router, Webpack, React Hot Loader for rapid application development",
+  "name": "SeeQL",
+  "productName": "SeeQL",
+  "version": "0.0.1",
+  "description": "SeeQL is a database viz tool #TODO",
   "scripts": {
     "build": "concurrently \"yarn build-main\" \"yarn build-renderer\"",
     "build-dll": "cross-env NODE_ENV=development webpack --config ./configs/webpack.config.renderer.dev.dll.babel.js --colors",
@@ -55,8 +55,8 @@
   },
   "main": "./app/main.prod.js",
   "build": {
-    "productName": "ElectronReact",
-    "appId": "org.develar.ElectronReact",
+    "productName": "Seeeql",
+    "appId": "org.develar.Seeql.todo",
     "files": [
       "app/dist/",
       "app/app.html",
@@ -99,48 +99,53 @@
     },
     "publish": {
       "provider": "github",
-      "owner": "electron-react-boilerplate",
-      "repo": "electron-react-boilerplate",
+      "owner": "oslabs-beta",
+      "repo": "seeql",
       "private": false
     }
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/electron-react-boilerplate/electron-react-boilerplate.git"
+    "url": "git+https://github.com/oslabs-beta/seeql.git"
   },
   "author": {
-    "name": "Electron React Boilerplte Maintainers",
-    "email": "electronreactboilerplate@gmail.com",
-    "url": "https://electron-react-boilerplate.js.org"
+    "name": "SeeQL",
+    "email": "seeql-labs@todo.com",
+    "url": "https://seeql.todo.org"
   },
   "contributors": [
     {
-      "name": "Vikram Rangaraj",
-      "email": "vikr01@icloud.com",
-      "url": "https://github.com/vikr01"
+      "name": "Kate Matthews",
+      "email": "#TODO",
+      "url": "#TODO"
     },
     {
-      "name": "Amila Welihinda",
-      "email": "amilajack@gmail.com",
-      "url": "https://github.com/amilajack"
+      "name": "Alice Wong",
+      "email": "",
+      "url": ""
+    },
+    {
+      "name": "Tyler Sayles",
+      "email": "",
+      "url": ""
+    },
+    {
+      "name": "Ariel Hyman",
+      "email": "",
+      "url": ""
     }
   ],
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/electron-react-boilerplate/electron-react-boilerplate/issues"
+    "url": "https://github.com/oslabs-beta/seeql/issues"
   },
   "keywords": [
+    "postgres",
     "electron",
-    "boilerplate",
     "react",
-    "redux",
-    "typescript",
-    "sass",
-    "webpack",
-    "hot",
-    "reload"
+    "typescript"
   ],
-  "homepage": "https://github.com/electron-react-boilerplate/electron-react-boilerplate#readme",
+  "homepage": "https://github.com/oslabs-beta/seeql#readme",
   "jest": {
     "testURL": "http://localhost/",
     "moduleNameMapper": {
@@ -185,12 +190,11 @@
     "@babel/preset-react": "^7.0.0",
     "@babel/preset-typescript": "^7.1.0",
     "@babel/register": "^7.0.0",
+    "@types/electron": "^1.6.10",
     "@types/jest": "^23.3.11",
     "@types/react": "^16.7.18",
     "@types/react-dom": "^16.0.11",
-    "@types/react-redux": "^6.0.12",
     "@types/react-router-dom": "^4.3.1",
-    "@types/redux-logger": "^3.0.6",
     "babel-core": "7.0.0-bridge.0",
     "babel-eslint": "^10.0.1",
     "babel-jest": "^23.6.0",
@@ -234,7 +238,6 @@
     "optimize-css-assets-webpack-plugin": "^5.0.1",
     "prettier": "^1.15.3",
     "react-test-renderer": "^16.7.0",
-    "redux-logger": "^3.0.6",
     "rimraf": "^2.6.3",
     "sass-loader": "^7.1.0",
     "sinon": "^7.2.2",
@@ -256,7 +259,8 @@
     "webpack-cli": "^3.2.0",
     "webpack-dev-server": "^3.1.14",
     "webpack-merge": "^4.2.1",
-    "yarn": "^1.12.3"
+    "yarn": "^1.12.3",
+    "core-js": "3"
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.6.3",
@@ -269,11 +273,8 @@
     "react": "^16.7.0",
     "react-dom": "^16.7.0",
     "react-hot-loader": "^4.6.3",
-    "react-redux": "^6.0.0",
     "react-router": "^4.3.1",
     "react-router-dom": "^4.3.1",
-    "redux": "^4.0.1",
-    "redux-thunk": "^2.3.0",
     "source-map-support": "^0.5.9",
     "styled-components": "^4.3.0"
   },
@@ -281,9 +282,6 @@
     "node": ">=7.x",
     "npm": ">=4.x",
     "yarn": ">=0.21.3"
-  },
-  "collective": {
-    "url": "https://opencollective.com/electron-react-boilerplate-594"
   },
   "browserslist": "electron 1.6"
 }
