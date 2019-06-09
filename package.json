@@ -191,10 +191,13 @@
     "@babel/preset-typescript": "^7.1.0",
     "@babel/register": "^7.0.0",
     "@types/electron": "^1.6.10",
-    "@types/jest": "^23.3.11",
+    "@types/jest": "^24.0.13",
+    "@types/mocha": "^5.2.7",
+    "@types/node": "^12.0.7",
     "@types/react": "^16.7.18",
     "@types/react-dom": "^16.0.11",
     "@types/react-router-dom": "^4.3.1",
+    "@types/webpack-env": "^1.13.9",
     "babel-core": "7.0.0-bridge.0",
     "babel-eslint": "^10.0.1",
     "babel-jest": "^23.6.0",
@@ -204,6 +207,7 @@
     "chalk": "^2.4.1",
     "concurrently": "^4.1.0",
     "connected-react-router": "^6.1.0",
+    "core-js": "3",
     "cross-env": "^5.2.0",
     "cross-spawn": "^6.0.5",
     "css-loader": "^2.1.0",
@@ -259,8 +263,7 @@
     "webpack-cli": "^3.2.0",
     "webpack-dev-server": "^3.1.14",
     "webpack-merge": "^4.2.1",
-    "yarn": "^1.12.3",
-    "core-js": "3"
+    "yarn": "^1.12.3"
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.6.3",

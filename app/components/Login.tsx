@@ -1,8 +1,8 @@
 import * as React from 'react';
-import {useState} from 'react';
+import { useState } from 'react';
 import styled from 'styled-components';
-import {Redirect} from 'react-router-dom';
-import {Client} from 'pg';
+import { Redirect } from 'react-router-dom';
+import { Client } from 'pg';
 
 // const ToggleSSL = styled.button`
 //   padding: 5px 20px;
@@ -157,8 +157,7 @@ const Login = () => {
 
     async function composeTableData() {
       let tablesArr = []
-      var tableNames: any = null
-      tableNames = await getTables()
+      let tableNames: any = await getTables()
 
       for (let table of tableNames.rows) {
         table.primaryKey = await getPrimaryKey(table.table_name)
