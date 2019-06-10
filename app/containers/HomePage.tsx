@@ -2,6 +2,7 @@ import * as React from 'react';
 import { useState, useEffect } from 'react';
 import Tables from '../components/Tables';
 import styled from 'styled-components';
+import LeftPanelTablesList from '../components/LeftPanelTable';
 
 const HomepageWrapper = styled.div`
   height: 100vh;
@@ -16,6 +17,7 @@ const HomepageWrapper = styled.div`
 const HomePage = (props) => {
   // const tableData = JSON.parse(props.location.state.tables);
   const tableData = props.location.state.tables;
+  const [ onlyTableNames, setOnlyTableNames ] = useState([]);
   const [ data, setData ] = useState([]);
   const [ tableToRender, setRender ] = useState([]);
   const [ foreignKeysAffected, setForeignKeysAffected ] = useState([]);
@@ -80,6 +82,9 @@ const HomePage = (props) => {
   //Builds out tables to display
   useEffect(():void => {
     if (data.length > 0) {
+      const test = [];
+      data.forEach(table => test.push(table.table_name));
+      setOnlyTableNames(test);
       const dataObj: Array<any> = data.map(table => {
         return (
           <Tables
@@ -100,9 +105,12 @@ const HomePage = (props) => {
   }, [data, foreignKeysAffected, primaryKeyAffected]);
 
   return (
+    <div>
+    <LeftPanelTablesList tableNames={onlyTableNames}/>
     <HomepageWrapper>
       {tableToRender}
     </HomepageWrapper>
+    </div>
   );
 };
 
