@@ -29,10 +29,10 @@ const URIInput = styled.textarea`
   height: 100px;
   border-radius: 3px;
   border: ${ (props) =>
-    props.requiredErr
-      ? '1px solid #ca333e'
-      : '1px solid lightgrey'
-  }
+		props.requiredErr
+			? '1px solid #ca333e'
+			: '1px solid lightgrey'
+	}
   overflow: wrap;
   resize: none;
   transition: 0.3s;
@@ -73,88 +73,82 @@ const RequiredWarning = styled.span`
 `
 
 const Login = () => {
-  const [URI, setURI] = useState('');
-  const [isSSL, setSSL] = useState(false);
-  const [requiredError, setRequiredError] = useState(false);
-  const [connectionError, setConnectionError] = useState(false);
-  const [isLoading, setLoading] = useState(false);
-  const [redirectToHome, setRedirectToHome] = useState(false);
+	const [URI, setURI] = useState('');
+	const [isSSL, setSSL] = useState(false);
+	const [requiredError, setRequiredError] = useState(false);
+	const [connectionError, setConnectionError] = useState(false);
+	const [isLoading, setLoading] = useState(false);
+	const [redirectToHome, setRedirectToHome] = useState(false);
 
+	const sendLoginURI = (): void => {
+		let updatedURI = URI;
+		if (isSSL) updatedURI += '?ssl=true';
+		if (!URI) setRequiredError(true);
+		else {
+			setLoading(true);
+			const client = new Client(updatedURI)
+			client.connect((err: string, res: string) => {
+				if (err) {
+					setConnectionError(true);
+					setLoading(false);
+				} else {
+					setRedirectToHome(true);
+					setConnectionError(false);
+				}
+			})
+		}
+	};
 
-  const sendLoginURI = (): void => {
-    let updatedURI = URI;
-    if (isSSL) updatedURI += '?ssl=true';
-    if (!URI) setRequiredError(true);
-    else {
-      setLoading(true);
-      const client = new Client(updatedURI)
-      client.connect((err: string, res: string) => {
-        if (err) {
-          console.log(err, 'bitch this si coming from ehere!')
-          setConnectionError(true);
-          setLoading(false);
-        } else {
-          setRedirectToHome(true);
-          setConnectionError(false);
-          console.log('we connected')
-        }
-      })
-    }
-  };
+	const captureURI = (e): void => {
+		const sanitizedURI = e.target.value.replace(/\s+/g, "");
+		setURI(sanitizedURI);
+		if (requiredError) setRequiredError(false);
+	};
 
-  const captureURI = (e): void => {
-    const sanitizedURI = e.target.value.replace(/\s+/g, "");
-    setURI(sanitizedURI);
-    if (requiredError) setRequiredError(false);
-  };
+	const redirectHome = () => {
+		if (redirectToHome) return <Redirect to="/homepage" />;
+	};
 
-  const redirectHome = () => {
-    if (redirectToHome) return <Redirect to="/homepage" />;
-  };
+	return (
+		<LoginContainer>
+			{
+				connectionError
+				&& <ConnectionErrorMessage>Unable to connect to the database. Please try again.</ConnectionErrorMessage>
+			}
 
-  return (
-    <LoginContainer>
-      {
-        connectionError
-        && <ConnectionErrorMessage>Unable to connect to the database. Please try again.</ConnectionErrorMessage>
-      }
+			<InputLabel>
+				URI Connection String
+			</InputLabel>
 
-      <InputLabel>
-        URI Connection String
-        <div style={{width: '20px'}}>
-          postgres://ltdnkwnbccooem:64ad308e565b39cc070194f7fa621ae0e925339be5a1c69480ff2a4462eab4c4@ec2-54-163-226-238.compute-1.amazonaws.com:5432/ddsu160rb5t7vq
-        </div>
-      </InputLabel>
+			<URIInput
+				requiredErr={requiredError}
+				onChange={captureURI}
+				placeholder="Enter your URI connection string..."
+			>
+			</URIInput>
 
-      <URIInput
-        requiredErr={requiredError}
-        onChange={captureURI}
-        placeholder="Enter your URI connection string..."
-      >
-      </URIInput>
+			{requiredError
+				&& <RequiredWarning>This field is required</RequiredWarning>
+			}
 
-      {requiredError
-        && <RequiredWarning>This field is required</RequiredWarning>
-      }
+			<ToggleSSL>
+				<input type="checkbox" onChange={(e) => setSSL(e.target.checked)} />
+				<label>ssl?</label>
+			</ToggleSSL>
 
-      <ToggleSSL>
-        <input type="checkbox" onChange={(e) => setSSL(e.target.checked)} />
-        <label>ssl?</label>
-      </ToggleSSL>
-
-      {!isLoading
-        && <LoginBtn onClick={sendLoginURI}>Login</LoginBtn>
-      }
-      {isLoading
-        && <LoginBtn
-          disabled
-        >Loading...
+			{!isLoading
+				&& <LoginBtn onClick={sendLoginURI}>Login</LoginBtn>
+			}
+			{isLoading
+				&& <LoginBtn
+					disabled
+				>Loading...
         </LoginBtn>
-      }
+			}
 
-      {redirectHome()}
-    </LoginContainer>
-  );
+			{redirectHome()}
+		</LoginContainer>
+	);
 };
 
 export default Login;
