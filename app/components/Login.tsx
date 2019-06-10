@@ -4,12 +4,16 @@ import styled from 'styled-components';
 import {Redirect} from 'react-router-dom';
 import {Client} from 'pg';
 
-// const ToggleSSL = styled.button`
-//   padding: 5px 20px;
-//   margin: 10px;
-//   font-family: 'Poppins', sans-serif;
-//   display: flex;
-// `
+const ToggleSSL = styled.div`
+  display: flex;
+  padding: 5px 20px;
+  margin: 10px;
+  font-family: 'Poppins', sans-serif;
+  display: flex;
+  color: black;
+  align-items: center;
+  font-size: 80%;
+`
 
 const LoginContainer = styled.div`
   background-color: #e8ecf1;
@@ -69,16 +73,18 @@ const RequiredWarning = styled.span`
 
 const Login = () => {
   const [URI, setURI] = useState('');
+  const [isSSL, setSSL] = useState(false);
   const [requiredError, setRequiredError] = useState(false);
   const [connectionError, setConnectionError] = useState(false);
   const [isLoading, setLoading] = useState(false);
   const [redirectToHome, setRedirectToHome] = useState(false);
 
   const sendLoginURI = (): void => {
-    // #TODO: toggleSSL = add ?ssl=true
-    // let useSSL: boolean = false;
-    // const toggleSSL = (): boolean => useSSL = true;
-    const client = new Client(URI + '?ssl=true')
+
+    let updatedURI = URI;
+    if (isSSL) updatedURI += '?ssl=true';
+
+    const client = new Client(updatedURI)
 
     client.connect((err: string, res: string) => {
       if (err) {
@@ -178,7 +184,7 @@ const Login = () => {
     else {
       setLoading(true);
 
-      // #TODO: handle errors
+      // #TODO: handle errors - currently redirects to home automatically
       if (true) {
         setRedirectToHome(true);
         setConnectionError(false);
@@ -219,11 +225,11 @@ const Login = () => {
       {requiredError
         && <RequiredWarning>This field is required</RequiredWarning>
       }
-      {/* { #TDOD
-      <ToggleSSL onClick={toggleSSL}>
-        use SSL?
+
+      <ToggleSSL>
+        <input type="checkbox" onChange={(e) => setSSL(e.target.checked)} />
+        <label>ssl?</label>
       </ToggleSSL>
-        } */}
 
       {!isLoading
         && <LoginBtn onClick={sendLoginURI}>Login</LoginBtn>
