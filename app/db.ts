@@ -70,10 +70,9 @@ const getPrimaryKey = (tableName: string) => {
     });
 }
 
-async function composeTableData() {
+async function composeTableData():Promise<any> {
     let tablesArr = []
-    var tableNames: any = null
-    tableNames = await getTables()
+    var tableNames: any = await getTables()
 
     for (let table of tableNames.rows) {
         table.primaryKey = await getPrimaryKey(table.table_name)
@@ -82,14 +81,16 @@ async function composeTableData() {
         tablesArr.push(table)
     }
 
-    return new Promise((resolve, reject) => {
-        if (tablesArr.length > 0) {
+    return new Promise<any>((resolve, reject):any => {
+        // if (tablesArr.length > 0) {
             resolve(tablesArr)
-        } else {
+        // } else {
             // #TODO: add empty state trigger
-            reject(new Error('database empty'))
-        }
+            // reject(new Error('database empty'))
+        // }
     })
 }
 
-export default { getTables, getForeignKeys, getPrimaryKey, composeTableData } 
+export default composeTableData
+
+// export default { getTables, getForeignKeys, getPrimaryKey, composeTableData } 

@@ -3,6 +3,8 @@ import {useState} from 'react';
 import styled from 'styled-components';
 import {Redirect} from 'react-router-dom';
 import {Client} from 'pg';
+import composeTableData from "../db";
+
 
 const ToggleSSL = styled.div`
   display: flex;
@@ -93,8 +95,12 @@ const Login = () => {
 					setConnectionError(true);
 					setLoading(false);
 				} else {
-					setRedirectToHome(true);
-					setConnectionError(false);
+          composeTableData()
+            .then(res => {
+              console.log('res:', res);
+              setRedirectToHome(true);
+              setConnectionError(false);
+            })
 				}
 			})
 		}
