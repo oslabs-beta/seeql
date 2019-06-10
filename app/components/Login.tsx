@@ -111,8 +111,7 @@ const Login = () => {
 
 	return (
 		<LoginContainer>
-			{
-				connectionError
+			{ connectionError
 				&& <ConnectionErrorMessage>Unable to connect to the database. Please try again.</ConnectionErrorMessage>
 			}
 
