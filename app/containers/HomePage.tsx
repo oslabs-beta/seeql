@@ -2,7 +2,6 @@ import * as React from 'react';
 import { useState, useEffect } from 'react';
 import Tables from '../components/Tables';
 import styled from 'styled-components';
-const mockData = require('../mockData/mockData.json');
 
 const HomepageWrapper = styled.div`
   height: 100vh;
@@ -14,8 +13,9 @@ const HomepageWrapper = styled.div`
   padding: 50px;
 `
 
-const HomePage = () => {
-
+const HomePage = (props) => {
+  // const tableData = JSON.parse(props.location.state.tables);
+  const tableData = props.location.state.tables;
   const [ data, setData ] = useState([]);
   const [ tableToRender, setRender ] = useState([]);
   const [ foreignKeysAffected, setForeignKeysAffected ] = useState([]);
@@ -29,8 +29,11 @@ const HomePage = () => {
 
   //Fetches database information
   useEffect(() => {
-    setData(mockData);
+    setData(tableData);
   },[]);
+
+  console.log('data:', data);
+
 
   //Resets all relationships 
   const removeRelationshipDisplay = () => {
