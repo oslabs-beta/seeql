@@ -10,7 +10,7 @@
     "build-main": "cross-env NODE_ENV=production webpack --config ./configs/webpack.config.main.prod.babel.js --colors",
     "build-renderer": "cross-env NODE_ENV=production webpack --config ./configs/webpack.config.renderer.prod.babel.js --colors",
     "dev": "cross-env START_HOT=1 node -r @babel/register ./internals/scripts/CheckPortInUse.js && cross-env START_HOT=1 yarn start-renderer-dev",
-    "lint": "./node_modules/eslint/bin/eslint.js './**/*.{tsx,ts,js,jsx}' --fix",
+    "lint": "npx eslint '**/*.{tsx,ts,js,jsx}' --fix",
     "lint-styles-fix": "yarn lint-styles --fix",
     "package": "yarn build && electron-builder build --publish never",
     "package-all": "yarn build && electron-builder build -mwl",
@@ -20,7 +20,6 @@
     "postinstall": "electron-builder install-app-deps package.json && yarn build-dll && opencollective-postinstall",
     "postlint-fix": "prettier --ignore-path .eslintignore --single-quote --write '**/*.{*{js,jsx,json},babelrc,eslintrc,prettierrc,stylelintrc}'",
     "postlint-styles-fix": "prettier --ignore-path .eslintignore --single-quote --write '**/*.{css,scss}'",
-    "precommit": "lint-staged",
     "prestart": "yarn build",
     "start": "cross-env NODE_ENV=production electron ./app/main.prod.js",
     "start-main-dev": "cross-env HOT=1 NODE_ENV=development electron ./app/main.dev.babel.js",
@@ -38,8 +37,8 @@
     ],
     "*.{js, jsx, ts, tsx}": [
       "yarn run lint",
-      "./node_modules/prettier/bin-prettier.js ./app/**/*.{tsx,ts} --write --no-verify",
-      "git add --no-verify"
+      "./node_modules/prettier/bin-prettier.js ./app/**/*.{tsx,ts} --write",
+      "git add"
     ],
     "*.{css,scss}": [
       "stylelint --ignore-path .eslintignore --syntax scss --fix",
@@ -289,5 +288,10 @@
     "npm": ">=4.x",
     "yarn": ">=0.21.3"
   },
-  "browserslist": "electron 1.6"
+  "browserslist": "electron 1.6",
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  }
 }

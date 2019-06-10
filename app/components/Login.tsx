@@ -1,8 +1,8 @@
-import * as React from 'react';
-import { useState } from 'react';
-import styled from 'styled-components';
-import { Redirect } from 'react-router-dom';
-import { Client } from 'pg';
+import * as React from "react";
+import { useState } from "react";
+import styled from "styled-components";
+import { Redirect } from "react-router-dom";
+import { Client } from "pg";
 
 // const ToggleSSL = styled.button`
 //   padding: 5px 20px;
@@ -19,37 +19,35 @@ const LoginContainer = styled.div`
   justify-content: center;
   padding: 50px;
   height: 100vh;
-`
+`;
 const URIInput = styled.textarea`
   width: 200px;
   height: 100px;
   border-radius: 3px;
-  border: ${ (props) =>
-    props.requiredErr
-      ? '1px solid #ca333e'
-      : '1px solid lightgrey'};
+  border: ${props =>
+    props.requiredErr ? "1px solid #ca333e" : "1px solid lightgrey"};
   overflow: wrap;
   resize: none;
   transition: 0.3s;
   padding: 5px;
-  font-family: 'Poppins', sans-serif;
+  font-family: "Poppins", sans-serif;
   letter-spacing: 2px;
 
   :focus {
     outline: none;
   }
-`
+`;
 const LoginBtn = styled.button`
   padding: 5px 20px;
   margin: 10px;
-  font-family: 'Poppins', sans-serif;
+  font-family: "Poppins", sans-serif;
   display: flex;
-`
+`;
 
 const InputLabel = styled.span`
   color: black;
-  font-family: 'Poppins', sans-serif;
-`
+  font-family: "Poppins", sans-serif;
+`;
 
 const ConnectionErrorMessage = styled.div`
   background-color: #f1c7ca;
@@ -58,17 +56,17 @@ const ConnectionErrorMessage = styled.div`
   padding: 10px;
   margin: 5px;
   font-size: 80%;
-  font-family: 'Poppins', sans-serif;
+  font-family: "Poppins", sans-serif;
   transition: 0.5s;
-`
+`;
 
 const RequiredWarning = styled.span`
   color: #ca333e;
   font-size: 60%;
-`
+`;
 
 const Login = () => {
-  const [URI, setURI] = useState('');
+  const [URI, setURI] = useState("");
   const [requiredError, setRequiredError] = useState(false);
   const [connectionError, setConnectionError] = useState(false);
   const [isLoading, setLoading] = useState(false);
@@ -78,32 +76,35 @@ const Login = () => {
     // #TODO: toggleSSL = add ?ssl=true
     // let useSSL: boolean = false;
     // const toggleSSL = (): boolean => useSSL = true;
-    const client = new Client(URI + '?ssl=true')
+    const client = new Client(URI + "?ssl=true");
 
     client.connect((err: string, res: string) => {
       if (err) {
-        console.log(err, 'err conecting')
+        console.log(err, "err conecting");
       } else {
-        console.log('we connected')
+        console.log("we connected");
       }
-    })
+    });
 
     const getTables = () => {
       return new Promise((resolve, reject) => {
-        client.query(`SELECT table_name
+        client.query(
+          `SELECT table_name
                       FROM information_schema.tables
                       WHERE table_schema='public'
                       AND table_type='BASE TABLE'`,
           (err: string, result: string) => {
             if (err) reject(err);
-            resolve(result)
-          });
-      })
-    }
+            resolve(result);
+          }
+        );
+      });
+    };
 
     const getForeignKeys = (tableName: string) => {
       return new Promise((resolve, reject) => {
-        client.query(`SELECT tc.table_schema,
+        client.query(
+          `SELECT tc.table_schema,
                               tc.constraint_name,
                               tc.table_name,
                               kcu.column_name,
@@ -121,14 +122,16 @@ const Login = () => {
                        AND tc.table_name = '${tableName}'`,
           (err: string, result: string) => {
             if (err) reject(err);
-            resolve(result)
-          });
+            resolve(result);
+          }
+        );
       });
-    }
+    };
 
     const getColumns = (tableName: string) => {
       return new Promise((resolve, reject) => {
-        client.query(`SELECT COLUMN_NAME AS ColumnName,
+        client.query(
+          `SELECT COLUMN_NAME AS ColumnName,
                              DATA_TYPE AS DataType,
                              CHARACTER_MAXIMUM_LENGTH AS CharacterLength,
                              COLUMN_DEFAULT AS DefaultValue
@@ -136,42 +139,47 @@ const Login = () => {
                       WHERE TABLE_NAME = '${tableName}'`,
           (err: string, result: string) => {
             if (err) reject(err);
-            resolve(result)
-          });
+            resolve(result);
+          }
+        );
       });
-    }
+    };
 
     const getPrimaryKey = (tableName: string) => {
       return new Promise((resolve, reject) => {
-        client.query(`SELECT column_name
+        client.query(
+          `SELECT column_name
                       FROM pg_constraint, information_schema.constraint_column_usage
                       WHERE contype = 'p'
                       AND information_schema.constraint_column_usage.table_name = '${tableName}'
                       AND pg_constraint.conname = information_schema.constraint_column_usage.constraint_name`,
           (err: string, result: string) => {
             if (err) reject(err);
-            resolve(result)
-          });
+            resolve(result);
+          }
+        );
       });
-    }
+    };
 
     async function composeTableData() {
-      let tablesArr = []
-      let tableNames: any = await getTables()
+      let tablesArr = [];
+      let tableNames: any = await getTables();
 
       for (let table of tableNames.rows) {
-        table.primaryKey = await getPrimaryKey(table.table_name)
-        table.foreignKey = await getForeignKeys(table.table_name)
-        table.columns = await getColumns(table.table_name)
+        table.primaryKey = await getPrimaryKey(table.table_name);
+        table.foreignKey = await getForeignKeys(table.table_name);
+        table.columns = await getColumns(table.table_name);
 
-        tablesArr.push(table)
+        tablesArr.push(table);
       }
 
       return new Promise((resolve, reject) => {
-        resolve(tablesArr)
-      })
+        resolve(tablesArr);
+      });
     }
-    composeTableData().then(r => console.log('table data #TODO: render when component is decided', r))
+    composeTableData().then(r =>
+      console.log("table data #TODO: render when component is decided", r)
+    );
 
     if (!URI) setRequiredError(true);
     else {
@@ -181,12 +189,11 @@ const Login = () => {
       if (true) {
         setRedirectToHome(true);
         setConnectionError(false);
-      }
-      else {
+      } else {
         setConnectionError(true);
         setLoading(false);
-      };
-    };
+      }
+    }
   };
 
   const captureURI = (e): void => {
@@ -201,10 +208,11 @@ const Login = () => {
 
   return (
     <LoginContainer>
-      {
-        connectionError
-        && <ConnectionErrorMessage>Unable to connect to the database. Please try again.</ConnectionErrorMessage>
-      }
+      {connectionError && (
+        <ConnectionErrorMessage>
+          Unable to connect to the database. Please try again.
+        </ConnectionErrorMessage>
+      )}
 
       <InputLabel>URI Connection String</InputLabel>
 
@@ -212,31 +220,23 @@ const Login = () => {
         requiredErr={requiredError}
         onChange={captureURI}
         placeholder="Enter your URI connection string..."
-      >
-      </URIInput>
+      ></URIInput>
 
-      {requiredError
-        && <RequiredWarning>This field is required</RequiredWarning>
-      }
+      {requiredError && (
+        <RequiredWarning>This field is required</RequiredWarning>
+      )}
       {/* { #TDOD
       <ToggleSSL onClick={toggleSSL}>
         use SSL?
       </ToggleSSL>
         } */}
 
-      {!isLoading
-        && <LoginBtn onClick={sendLoginURI}>Login</LoginBtn>
-      }
-      {isLoading
-        && <LoginBtn
-          disabled
-        >Loading...
-        </LoginBtn>
-      }
+      {!isLoading && <LoginBtn onClick={sendLoginURI}>Login</LoginBtn>}
+      {isLoading && <LoginBtn disabled>Loading...</LoginBtn>}
 
       {redirectHome()}
     </LoginContainer>
   );
-}
+};
 
 export default Login;
