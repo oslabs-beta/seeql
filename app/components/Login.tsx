@@ -1,29 +1,18 @@
 import * as React from 'react';
-import { useState } from 'react';
+import {useState} from 'react';
 import styled from 'styled-components';
-import { Redirect } from 'react-router-dom';
-import Db from '../db'
+import {Redirect} from 'react-router-dom';
+import {Client} from 'pg';
 
-interface URIInputProps {
-  readonly requiredErr: boolean;
-};
-
-const URIInput = styled.textarea<URIInputProps>`
-  width: 200px;
-  height: 100px;
-  border-radius: 3px;
-  border: ${(props) => {
-    return props.requiredErr ? '1px solid #ca333e' : '1px solid lightgrey';
-  };
-  overflow: wrap;
-  resize: none;
-  transition: 0.3s;
-  padding: 5px;
+const ToggleSSL = styled.div`
+  display: flex;
+  padding: 5px 20px;
+  margin: 10px;
   font-family: 'Poppins', sans-serif;
-  letter-spacing: 2px;
-  :focus {
-    outline: none;
-  }
+  display: flex;
+  color: black;
+  align-items: center;
+  font-size: 80%;
 `
 
 const LoginContainer = styled.div`
@@ -34,6 +23,26 @@ const LoginContainer = styled.div`
   justify-content: center;
   padding: 50px;
   height: 100vh;
+`
+const URIInput = styled.textarea`
+  width: 200px;
+  height: 100px;
+  border-radius: 3px;
+  border: ${ (props) =>
+    props.requiredErr
+      ? '1px solid #ca333e'
+      : '1px solid lightgrey'
+  }
+  overflow: wrap;
+  resize: none;
+  transition: 0.3s;
+  padding: 5px;
+  font-family: 'Poppins', sans-serif;
+  letter-spacing: 2px;
+
+  :focus {
+    outline: none;
+  }
 `
 const LoginBtn = styled.button`
   padding: 5px 20px;
@@ -65,36 +74,45 @@ const RequiredWarning = styled.span`
 
 const Login = () => {
   const [URI, setURI] = useState('');
+  const [isSSL, setSSL] = useState(false);
   const [requiredError, setRequiredError] = useState(false);
   const [connectionError, setConnectionError] = useState(false);
   const [isLoading, setLoading] = useState(false);
   const [redirectToHome, setRedirectToHome] = useState(false);
 
-  const db = new Db()
+  // const testConnection = () => new Promise((resolve, reject) => {
+  //   client.query(`SELECT now()`, (err: string, result: string) => {
+  //     if (err) reject(err);
+  //     resolve(result)
+  //   });
+  // })
 
   const sendLoginURI = (): void => {
+    let updatedURI = URI;
+    if (isSSL) updatedURI += '?ssl=true';
+
     if (!URI) setRequiredError(true);
     else {
       setLoading(true);
-
-      // #TODO:
-      if (true) {
-        setRedirectToHome(true);
-        setConnectionError(false);
-      } else {
-        setConnectionError(true);
-        setLoading(false);
-      }
+      const client = new Client(updatedURI)
+      client.connect((err: string, res: string) => {
+        if (err) {
+          console.log(err, 'bitch this si coming from ehere!')
+          setConnectionError(true);
+          setLoading(false);
+        } else {
+          setRedirectToHome(true);
+          setConnectionError(false);
+          console.log('we connected')
+        }
+      })
     }
   };
 
   const captureURI = (e): void => {
-    if (requiredError) setRequiredError(false);
-
     const sanitizedURI = e.target.value.replace(/\s+/g, "");
     setURI(sanitizedURI);
-
-    db.conn(sanitizedURI)
+    if (requiredError) setRequiredError(false);
   };
 
   const redirectHome = () => {
@@ -103,13 +121,17 @@ const Login = () => {
 
   return (
     <LoginContainer>
-
       {
         connectionError
         && <ConnectionErrorMessage>Unable to connect to the database. Please try again.</ConnectionErrorMessage>
       }
 
-      <InputLabel>URI Connection String</InputLabel>
+      <InputLabel>
+        URI Connection String
+        <div style={{width: '20px'}}>
+          postgres://ltdnkwnbccooem:64ad308e565b39cc070194f7fa621ae0e925339be5a1c69480ff2a4462eab4c4@ec2-54-163-226-238.compute-1.amazonaws.com:5432/ddsu160rb5t7vq
+        </div>
+      </InputLabel>
 
       <URIInput
         requiredErr={requiredError}
@@ -122,10 +144,14 @@ const Login = () => {
         && <RequiredWarning>This field is required</RequiredWarning>
       }
 
+      <ToggleSSL>
+        <input type="checkbox" onChange={(e) => setSSL(e.target.checked)} />
+        <label>ssl?</label>
+      </ToggleSSL>
+
       {!isLoading
         && <LoginBtn onClick={sendLoginURI}>Login</LoginBtn>
       }
-
       {isLoading
         && <LoginBtn
           disabled
@@ -136,6 +162,6 @@ const Login = () => {
       {redirectHome()}
     </LoginContainer>
   );
-}
+};
 
 export default Login;
