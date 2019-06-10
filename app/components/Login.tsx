@@ -76,6 +76,7 @@ const RequiredWarning = styled.span`
 
 const Login = () => {
 
+  const [tableData, setTableData] = useState([]);
 	const [URI, setURI] = useState('');
 	const [isSSL, setSSL] = useState(false);
 	const [requiredError, setRequiredError] = useState(false);
@@ -95,12 +96,13 @@ const Login = () => {
 					setConnectionError(true);
 					setLoading(false);
 				} else {
-          composeTableData()
-            .then(res => {
-              console.log('res:', res);
+          composeTableData(client)
+            .then(tables => {
+              setTableData(tables);
               setRedirectToHome(true);
-              setConnectionError(false);
+              setConnectionError(false)
             })
+            .catch((err: any) => console.log('composeTableData error:', err))
 				}
 			})
 		}
@@ -113,7 +115,7 @@ const Login = () => {
 	};
 
 	const redirectHome = () => {
-		if (redirectToHome) return <Redirect to="/homepage" />;
+		if (redirectToHome) return <Redirect to={{ pathname: "/homepage", state: { tables: tableData } } } />;
 	};
 
 	return (

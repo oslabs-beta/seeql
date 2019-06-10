@@ -96,6 +96,7 @@ const Tables: React.SFC<Props> = ({
     })
 
     foreignkeys.forEach((key):void => {
+      console.log('keys', key)
       if (key.column_name === columns[keys]['columnname']){
         foreignKey = true;
         foreignkeyTable = key.foreign_table_name;

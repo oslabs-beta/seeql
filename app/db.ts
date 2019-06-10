@@ -1,9 +1,4 @@
-import { Client } from 'pg'
-
-const client = new Client()
-client.connect()
-
-const getTables = () => {
+const getTables = (client) => {
     return new Promise((resolve, reject) => {
         client.query(`SELECT table_name
                       FROM information_schema.tables
@@ -16,7 +11,7 @@ const getTables = () => {
     })
 }
 
-const getForeignKeys = (tableName: string) => {
+const getForeignKeys = (client, tableName: string) => {
     return new Promise((resolve, reject) => {
         client.query(`SELECT tc.table_schema,
                          tc.constraint_name,
@@ -34,14 +29,14 @@ const getForeignKeys = (tableName: string) => {
                   AND ccu.table_schema = tc.table_schema
                   WHERE tc.constraint_type = 'FOREIGN KEY'
                   AND tc.table_name = '${tableName}'`,
-            (err: string, result: string) => {
+            (err: string, result: any) => {
                 if (err) reject(err);
-                resolve(result)
+                resolve(result.rows)
             });
     });
 }
 
-const getColumns = (tableName: string) => {
+const getColumns = (client, tableName: string) => {
     return new Promise((resolve, reject) => {
         client.query(`SELECT COLUMN_NAME AS ColumnName,
                              DATA_TYPE AS DataType,
@@ -49,48 +44,46 @@ const getColumns = (tableName: string) => {
                              COLUMN_DEFAULT AS DefaultValue
                       FROM INFORMATION_SCHEMA.COLUMNS
                       WHERE TABLE_NAME = '${tableName}'`,
-            (err: string, result: string) => {
+            (err: string, result: any) => {
                 if (err) reject(err);
-                resolve(result)
+                resolve(result.rows)
             });
     });
 }
 
-const getPrimaryKey = (tableName: string) => {
+const getPrimaryKey = (client, tableName: string) => {
     return new Promise((resolve, reject) => {
         client.query(`SELECT column_name
                       FROM pg_constraint, information_schema.constraint_column_usage
                       WHERE contype = 'p'
                       AND information_schema.constraint_column_usage.table_name = '${tableName}'
                       AND pg_constraint.conname = information_schema.constraint_column_usage.constraint_name`,
-            (err: string, result: string) => {
+            (err: string, result: any) => {
                 if (err) reject(err);
-                resolve(result)
+                resolve(result.rows[0].column_name)
             });
     });
 }
 
-async function composeTableData():Promise<any> {
+async function composeTableData(client):Promise<any> {
     let tablesArr = []
-    var tableNames: any = await getTables()
+    var tableNames: any = await getTables(client)
 
     for (let table of tableNames.rows) {
-        table.primaryKey = await getPrimaryKey(table.table_name)
-        table.foreignKey = await getForeignKeys(table.table_name)
-        table.columns = await getColumns(table.table_name)
+        table.primaryKey = await getPrimaryKey(client, table.table_name)
+        table.foreignKeys = await getForeignKeys(client, table.table_name)
+        table.columns = await getColumns(client, table.table_name)
         tablesArr.push(table)
     }
 
-    return new Promise<any>((resolve, reject):any => {
-        // if (tablesArr.length > 0) {
+    return new Promise<any>((resolve:any, reject:any):any => {
+        if (tablesArr.length > 0) {
             resolve(tablesArr)
-        // } else {
+        } else {
             // #TODO: add empty state trigger
-            // reject(new Error('database empty'))
-        // }
+            reject(new Error('database empty'))
+        }
     })
 }
 
 export default composeTableData
-
-// export default { getTables, getForeignKeys, getPrimaryKey, composeTableData } 
