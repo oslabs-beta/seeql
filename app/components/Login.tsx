@@ -80,17 +80,10 @@ const Login = () => {
   const [isLoading, setLoading] = useState(false);
   const [redirectToHome, setRedirectToHome] = useState(false);
 
-  // const testConnection = () => new Promise((resolve, reject) => {
-  //   client.query(`SELECT now()`, (err: string, result: string) => {
-  //     if (err) reject(err);
-  //     resolve(result)
-  //   });
-  // })
 
   const sendLoginURI = (): void => {
     let updatedURI = URI;
     if (isSSL) updatedURI += '?ssl=true';
-
     if (!URI) setRequiredError(true);
     else {
       setLoading(true);
