@@ -58,10 +58,8 @@ type Props = {
   foreignkeys: Array<any>;
   primaryKeyAffected: Array<any>;
   foreignKeysAffected: Array<any>;
-  // removeRelationships: () => void;
   captureMouseExit: () => void;
   captureMouseEnter: (Event) => void;
-  // displayRelationships: (Event) => void;
 };
 
 const KeyIcon = styled.img`
@@ -76,16 +74,11 @@ const Tables: React.SFC<Props> = ({
   foreignkeys,
   foreignKeysAffected,
   primaryKeyAffected,
-  // displayRelationships,
-  // removeRelationships,
   captureMouseExit,
   captureMouseEnter
 }) => {
 
   let rows = [];
-
-  //acquires individual column names and corresponding types from data
-  const generateUniqueKey = () => (Math.random() * 1000).toString();
 
   for (let keys in columns) {
     const primaryKey: boolean = primarykey === columns[keys]['columnname'] ? true : false;
@@ -115,7 +108,7 @@ const Tables: React.SFC<Props> = ({
     })
 
     rows.push(<TableRow 
-                key={generateUniqueKey()}
+                key={columns[keys]['columnname']}
                 onMouseOver={captureMouseEnter}
                 onMouseLeave={captureMouseExit}
                 affected={affected}
@@ -176,7 +169,7 @@ const Tables: React.SFC<Props> = ({
   }
 
   return (
-    <Table key={generateUniqueKey()}>
+    <Table key={tableName}>
       <TableTitle>{tableName}</TableTitle>
       <InnerTableWrapper>
         {rows}

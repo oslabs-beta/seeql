@@ -29,6 +29,7 @@ let selectedColumnName: string;
 const HomePage = (props) => {
   renders += 1;
   console.log('rendered ', renders);
+
   const tableData = props.location.state.tables;
   const [ data, setData ] = useState([]); //data from database
   const [mouseOver, setMouseOver] = useState(); //data to detect if mouse is over a pk or fk
@@ -39,9 +40,6 @@ const HomePage = (props) => {
     primaryKeyTable: '',
     primaryKeyColumn: ''
   }]);
-  console.log('affected primary', primaryKeyAffected)
-  //function generates a mock unique ID for React Components
-  const generateUniqueKey = () => (Math.random() * 1000).toString();
 
   useEffect(() => {
     //Resets all relationships 
@@ -102,10 +100,7 @@ const HomePage = (props) => {
             foreignkeys={table.foreignKeys}
             primaryKeyAffected={primaryKeyAffected}
             foreignKeysAffected={foreignKeysAffected}
-            // displayRelationships={highlightRelationships}
-            // removeRelationships={removeRelationshipDisplay}
             captureMouseEnter={(e) => {
-              console.log('mouse entered', e.target.dataset)
              isPrimaryKey= e.target.dataset.isprimarykey;
              isForeignKey = e.target.dataset.isforeignkey;
              primaryKeyTableForForeignKey = e.target.dataset.foreignkeytable;
@@ -116,7 +111,7 @@ const HomePage = (props) => {
             }}
             captureMouseExit= {() => {
               setMouseOver(false)}}
-            key={generateUniqueKey()}
+            key={table.table_name}
           />
         );
       });
