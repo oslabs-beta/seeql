@@ -25,7 +25,7 @@ const TableRow = styled.li<T>`
   justify-content: space-between;
   list-style: none;
   background-color: ${ ({affected}) => affected ? 'pink' : 'transparent'};
-  border: ${ ({affected}) => affected ? '3px solid pink' : '3px solid transparent'};
+  border: none;
   border-top: 1px solid lightgrey;
   padding: 5px;
   margin: 0px 15px;
@@ -33,7 +33,7 @@ const TableRow = styled.li<T>`
 
   :hover {
     transform: scale(1.05);
-    background-color: lightblue;
+    background-color: #e8ecf1;
   }
 `;
 

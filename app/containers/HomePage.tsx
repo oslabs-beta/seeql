@@ -33,7 +33,7 @@ const HomePage = (props) => {
   const tableData = props.location.state.tables;
   const [ data, setData ] = useState([]); //data from database
   const [mouseOver, setMouseOver] = useState(); //data to detect if mouse is over a pk or fk
-  const [ listOfTableNames, setlistOfTableNames ] = useState([]); //for Panel Component 
+  const [ listOfTableNames, setlistOfTableNames ] = useState([]); //for Panel component 
   const [ tableToRender, setRender ] = useState([]); //for main view  
   const [ foreignKeysAffected, setForeignKeysAffected ] = useState([]);
   const [ primaryKeyAffected, setPrimaryKeyAffected ] = useState([{
