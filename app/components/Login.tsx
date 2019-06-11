@@ -6,6 +6,18 @@ import {Client} from 'pg';
 import composeTableData from "../db";
 
 
+interface URIInputProps {
+	readonly requiredErr: boolean;
+  };
+  
+const URIInput = styled.textarea<URIInputProps>`
+	width: 200px;
+	height: 100px;
+	border-radius: 3px;
+	border: ${props => props.requiredErr ? '1px solid #ca333e' : '1px solid lightgrey'};
+`
+
+
 const ToggleSSL = styled.div`
   display: flex;
   padding: 5px 20px;
@@ -26,26 +38,7 @@ const LoginContainer = styled.div`
   padding: 50px;
   height: 100vh;
 `
-const URIInput = styled.textarea`
-  width: 200px;
-  height: 100px;
-  border-radius: 3px;
-  border: ${ (props) =>
-		props.requiredErr
-			? '1px solid #ca333e'
-			: '1px solid lightgrey'
-	}
-  overflow: wrap;
-  resize: none;
-  transition: 0.3s;
-  padding: 5px;
-  font-family: 'Poppins', sans-serif;
-  letter-spacing: 2px;
 
-  :focus {
-    outline: none;
-  }
-`
 const LoginBtn = styled.button`
   padding: 5px 20px;
   margin: 10px;
@@ -91,7 +84,7 @@ const Login = () => {
 		else {
 			setLoading(true);
 			const client = new Client(updatedURI)
-			client.connect((err: string, res: string) => {
+			client.connect((err: Error) => {
 				if (err) {
 					setConnectionError(true);
 					setLoading(false);
@@ -130,7 +123,7 @@ const Login = () => {
 				postgres://ltdnkwnbccooem:64ad308e565b39cc070194f7fa621ae0e925339be5a1c69480ff2a4462eab4c4@ec2-54-163-226-238.compute-1.amazonaws.com:5432/ddsu160rb5t7vq
 			</InputLabel>
 
-			<URIInput
+			<URIInput 
 				requiredErr={requiredError}
 				onChange={captureURI}
 				placeholder="Enter your URI connection string..."

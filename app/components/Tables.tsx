@@ -17,7 +17,11 @@ const InnerTableWrapper = styled.ul`
   overflow: scroll;
 `;
 
-const TableRow = styled.li`
+interface T {
+  affected: boolean
+}
+
+const TableRow = styled.li<T>`
   display: flex;
   justify-content: space-between;
   list-style: none;
