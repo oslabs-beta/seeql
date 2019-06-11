@@ -18,7 +18,7 @@ const ButtonMenu = styled.div`
   width: 50px;
 `;
 
-interface ITableName {
+interface TableName {
   name: string;
 }
 

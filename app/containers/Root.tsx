@@ -3,9 +3,7 @@ import { Component } from "react";
 import { BrowserRouter } from "react-router-dom";
 import Routes from "../Routes";
 
-interface Props {}
-
-export default class Root extends Component<Props> {
+export default class Root extends Component {
   render() {
     return (
       <BrowserRouter>
