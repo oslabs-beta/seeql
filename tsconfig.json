@@ -18,6 +18,7 @@
       "jest",
       "node",
       "electron",
+      "pg",
       "styled-components"
     ],
     "typeRoots": ["node_modules/@types"],
