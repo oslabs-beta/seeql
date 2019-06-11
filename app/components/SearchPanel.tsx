@@ -16,11 +16,12 @@ const Title = styled.h1`
 `
 
 const SearchField = styled.input`
-  border-radius: 15px;
-  padding: 10px 20px;
-  height: 30px;
+  margin: 10px 20px;
+  height: 20px;
   font-family: 'Poppins', sans-serif;
-  border: 1px solid lightgrey;
+  border: none;
+  border-bottom: 1px solid lightgrey;
+  padding: 5px;
   :focus{
     outline: none;
   }
@@ -89,7 +90,7 @@ const SearchPanel: React.SFC<Props> = ({ listOfTableNames }) => {
             </ListOfResults>
             }
             { !filteredTables.length &&
-                <div>Sorry, no search results, please try again</div>
+                <div>Sorry, no search results, please try again!!!!!!!!!!!</div>
             }
         </LeftPanelTableListWrapper>
     )
