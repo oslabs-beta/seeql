@@ -14,7 +14,15 @@ const URIInput = styled.textarea<URIInputProps>`
 	width: 200px;
 	height: 100px;
 	border-radius: 3px;
+	font-family: 'Poppins', sans-serif;
+	letter-spacing: 2px;
+	resize: none;
+	padding: 10px;
 	border: ${props => props.requiredErr ? '1px solid #ca333e' : '1px solid lightgrey'};
+
+	:focus {
+		outline: none;
+	}
 `
 
 
