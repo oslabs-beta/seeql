@@ -8,10 +8,11 @@ const Table = styled.div`
   color: black;
   font-family: 'Poppins', sans-serif;
   box-shadow: 1px 2px 5px lightgrey;
-  border-radius: 6px;
+
 `;
 
 const InnerTableWrapper = styled.ul`
+  border: 1px solid black;
   flex-direction: column;
   overflow: scroll;
 `;
@@ -23,29 +24,19 @@ const TableRow = styled.li`
   background-color: ${ ({affected}) => affected ? 'pink' : 'transparent'};
   border: ${ ({affected}) => affected ? '3px solid pink' : '3px solid transparent'};
   border-top: 1px solid lightgrey;
-  margin: 0px 15px;
-  padding: 5px 0px;
   transition: 0.3s;
-
 `;
 
 const TableCell = styled.p`
   padding: 0px 20px;
   font-size: 12px;
-  display: flex;
-  align-items: center;
 `;
 
 const TableTitle = styled.label`
-  padding: 5px 10px;
-  color: black;
-  font-size: 30px;
-  text-align: center;
-`
-
-const KeyIcon = styled.img`
-  width: 15px;
-  height: 15px;
+  background: #456990;
+  padding: 5px;
+  color: white;
+  font-weight: bold;
 `
 
 type Props = {
@@ -117,13 +108,7 @@ const Tables: React.SFC<Props> = ({
                 data-isprimarykey={primaryKey}
                 data-tablename={tableName}
                 data-columnname={columns[keys]['columnname']}
-              ><label>{ columns[keys]['columnname'] }</label>
-              {primaryKey &&
-                <KeyIcon src="https://image.flaticon.com/icons/svg/526/526811.svg"></KeyIcon>
-              }
-              {foreignKey &&
-                <KeyIcon src="https://image.flaticon.com/icons/svg/526/526811.svg"></KeyIcon>
-              }
+              >{ columns[keys]['columnname'] }
               </TableCell>
               <TableCell
                 data-isforeignkey={foreignKey}

@@ -1,10 +1,9 @@
-import * as React from 'react';
-import { Component } from 'react';
-import { BrowserRouter } from 'react-router-dom';
-import Routes from '../Routes';
+import * as React from "react";
+import { Component } from "react";
+import { BrowserRouter } from "react-router-dom";
+import Routes from "../Routes";
 
-type Props = {
-};
+interface Props {}
 
 export default class Root extends Component<Props> {
   render() {
