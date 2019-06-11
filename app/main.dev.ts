@@ -1,18 +1,9 @@
-/* eslint global-require: off */
-
-/**
- * This module executes inside of electron's main process. You can start
- * electron renderer process from here and communicate with the other processes
- * through IPC.
- *
- * When running `yarn build` or `yarn build-main`, this file is compiled to
- * `./app/main.prod.js` using webpack. This gives us some performance wins.
- */
-import { app, BrowserWindow, ipcMain } from "electron";
+// main electron process (see IPC)
+// `yarn build` or `yarn build-main`
+import { app, BrowserWindow } from "electron";
 import { autoUpdater } from "electron-updater";
 import log from "electron-log";
 import MenuBuilder from "./menu";
-const { Client } = require("pg");
 
 export default class AppUpdater {
   constructor() {
@@ -22,7 +13,7 @@ export default class AppUpdater {
   }
 }
 
-let mainWindow = null;
+let mainWindow: Electron.BrowserWindow;
 
 if (process.env.NODE_ENV === "production") {
   const sourceMapSupport = require("source-map-support");
@@ -40,19 +31,13 @@ const installExtensions = async () => {
   const installer = require("electron-devtools-installer");
   const forceDownload = !!process.env.UPGRADE_EXTENSIONS;
   const extensions = ["REACT_DEVELOPER_TOOLS", "REDUX_DEVTOOLS"];
-
   return Promise.all(
     extensions.map(name => installer.default(installer[name], forceDownload))
   ).catch(console.log);
 };
 
-/**
- * Add event listeners...
- */
-
+// Respect the OSX convention of having the application in memory even
 app.on("window-all-closed", () => {
-  // Respect the OSX convention of having the application in memory even
-  // after all windows have been closed
   if (process.platform !== "darwin") {
     app.quit();
   }
@@ -67,6 +52,10 @@ app.on("ready", async () => {
   }
 
   mainWindow = new BrowserWindow({
+    // #TODO: investigate BrowserWindow Config option
+    // https://github.com/electron/electron/blob/master/docs/tutorial/security.md#isolation-for-untrusted-content
+    // nodeIntegration: false,
+    title: "SeeQL: Database Visualized",
     show: false,
     width: 1024,
     height: 728
@@ -74,8 +63,7 @@ app.on("ready", async () => {
 
   mainWindow.loadURL(`file://${__dirname}/app.html`);
 
-  // @TODO: Use 'ready-to-show' event
-  //        https://github.com/electron/electron/blob/master/docs/api/browser-window.md#using-ready-to-show-event
+  // @TODO: Use 'ready-to-show' event; https://github.com/electron/electron/blob/master/docs/api/browser-window.md#using-ready-to-show-event
   mainWindow.webContents.on("did-finish-load", () => {
     if (!mainWindow) {
       throw new Error('"mainWindow" is not defined');
@@ -92,6 +80,25 @@ app.on("ready", async () => {
     mainWindow = null;
   });
 
+  // mainWindow.on("crashed", () => {
+  //   console.log("crashed");
+  // });
+  // const win = new BrowserWindow({ width: 200, height: 200 });
+  // mainWindow.webContents.on("before-input-event", event => {
+  //   const choice = dialog.showMessageBox(win, {
+  //     type: "question",
+  //     buttons: ["Leave", "Stay"],
+  //     title: "Do you want to leave this site?",
+  //     message: "Changes you made may not be saved.",
+  //     defaultId: 0,
+  //     cancelId: 1
+  //   });
+  //   const leave = choice === 0;
+  //   if (leave) {
+  //     event.preventDefault();
+  //   }
+  // });
+
   const menuBuilder = new MenuBuilder(mainWindow);
   menuBuilder.buildMenu();
 
@@ -100,13 +107,3 @@ app.on("ready", async () => {
   new AppUpdater();
 });
 
-ipcMain.on("connection-string", (event, uri) => {
-  const client = new Client(uri + "?ssl=true");
-  client.connect((err, result) => {
-    if (err) {
-      event.returnValue = "failure";
-    } else {
-      event.returnValue = "success";
-    }
-  });
-});
