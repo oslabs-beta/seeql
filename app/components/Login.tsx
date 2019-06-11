@@ -76,7 +76,7 @@ const RequiredWarning = styled.span`
 
 const Login = () => {
 
-  const [tableData, setTableData] = useState([]);
+    const [tableData, setTableData] = useState([]);
 	const [URI, setURI] = useState('');
 	const [isSSL, setSSL] = useState(false);
 	const [requiredError, setRequiredError] = useState(false);
@@ -98,9 +98,10 @@ const Login = () => {
 				} else {
           composeTableData(client)
             .then(tables => {
-              setTableData(tables);
+			  setTableData(tables);
+			  setLoading(false);
+              setConnectionError(false);
               setRedirectToHome(true);
-              setConnectionError(false)
             })
             .catch((err: any) => console.log('composeTableData error:', err))
 				}
