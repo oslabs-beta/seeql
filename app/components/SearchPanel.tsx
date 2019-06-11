@@ -2,15 +2,12 @@ import * as React from 'react';
 import { useState, useEffect } from 'react';
 import styled from 'styled-components';
 
-type Props = {
-  tableNames: Array<string>;
-};
-
 const LeftPanelTableListWrapper = styled.div`
   color: black;
   font-family: 'Poppins', sans-serif;
   padding: 5px;
-  width: 30%;
+  width: 100%;
+  border: 1px solid black;
 `
 
 const Title = styled.h1`
@@ -54,15 +51,23 @@ const ListOfResults = styled.ul`
     overflow: scroll;
 `
 
-const LeftPanelTablesList: React.SFC<Props> = ({ tableNames }) => {
+interface ITableName {
+    name: string
+}
+
+interface Props {
+    listOfTableNames: Array<ITableName>
+}
+
+const SearchPanel: React.SFC<Props> = ({ listOfTableNames }) => {
 
     const [userInputForTables, setUserInputForTables] = useState('');
     const [filteredTables, setFilteredTables] = useState([]);
     const [allTables, setAllTables] = useState([]);
 
     useEffect(() => {
-        setAllTables(tableNames);
-    }, [tableNames])
+        setAllTables(listOfTableNames);
+    }, [listOfTableNames])
 
     useEffect(() => {
         let filtered = [];
@@ -89,4 +94,4 @@ const LeftPanelTablesList: React.SFC<Props> = ({ tableNames }) => {
     )
 }
 
-export default LeftPanelTablesList;
+export default SearchPanel;
