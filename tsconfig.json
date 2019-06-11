@@ -12,15 +12,7 @@
     "pretty": true,
     "sourceMap": true,
     "resolveJsonModule": true,
-    "types": [
-      "webpack-env",
-      "mocha",
-      "jest",
-      "node",
-      "electron",
-      "pg",
-      "styled-components"
-    ],
+    "types": ["webpack-env", "node", "electron", "pg", "styled-components"],
     "typeRoots": ["node_modules/@types"],
     "lib": ["es6", "dom"]
   },
