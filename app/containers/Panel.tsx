@@ -8,12 +8,14 @@ import SearchPanel from '../components/SearchPanel';
 const PanelWrapper = styled.div`
     height: 100vh;
     width: 400px;
-    border: 1px solid green;
+    border: 1px solid lightgrey;
     display: flex;
+    justify-content: space-between;
 `
 const ButtonMenu = styled.div`
     display: flex;
     flex-direction: column;
+    width: 50px;
 `
 
 interface ITableName {

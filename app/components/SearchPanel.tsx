@@ -6,8 +6,9 @@ const LeftPanelTableListWrapper = styled.div`
   color: black;
   font-family: 'Poppins', sans-serif;
   padding: 5px;
-  width: 100%;
   border: 1px solid black;
+  width: 300px;
+  height: 100vh;
 `
 
 const Title = styled.h1`
@@ -15,10 +16,11 @@ const Title = styled.h1`
 `
 
 const SearchField = styled.input`
-  border-radius: 20px;
+  border-radius: 15px;
   padding: 10px 20px;
+  height: 30px;
   font-family: 'Poppins', sans-serif;
-  border: 1px solid grey;
+  border: 1px solid lightgrey;
   :focus{
     outline: none;
   }
@@ -47,7 +49,6 @@ const SelectTableBtn = styled.button`
 
 const ListOfResults = styled.ul`
     padding: 10px 20px;
-    height: 250px;
     overflow: scroll;
 `
 

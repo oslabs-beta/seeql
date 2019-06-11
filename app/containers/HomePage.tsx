@@ -19,11 +19,11 @@ const EntireHomePageWrapper = styled.div`
 `
 
 const HomePage = (props) => {
-  // const tableData = JSON.parse(props.location.state.tables);
+
   const tableData = props.location.state.tables;
-  const [ listOfTableNames, setlistOfTableNames ] = useState([]);
-  const [ data, setData ] = useState([]);
-  const [ tableToRender, setRender ] = useState([]);
+  const [ data, setData ] = useState([]); //data from database
+  const [ listOfTableNames, setlistOfTableNames ] = useState([]); //for Panel Component 
+  const [ tableToRender, setRender ] = useState([]); //for main view  
   const [ foreignKeysAffected, setForeignKeysAffected ] = useState([]);
   const [ primaryKeyAffected, setPrimaryKeyAffected ] = useState([{
     primaryKeyTable: '',
@@ -37,9 +37,6 @@ const HomePage = (props) => {
   useEffect(() => {
     setData(tableData);
   },[]);
-
-  console.log('data:', data);
-
 
   //Resets all relationships 
   const removeRelationshipDisplay = () => {

@@ -98,9 +98,9 @@ const Login = () => {
 				} else {
           composeTableData(client)
             .then(tables => {
+			  setConnectionError(false);
 			  setTableData(tables);
 			  setLoading(false);
-              setConnectionError(false);
               setRedirectToHome(true);
             })
             .catch((err: any) => console.log('composeTableData error:', err))
