@@ -3,6 +3,8 @@ import {useState} from 'react';
 import styled from 'styled-components';
 import {Redirect} from 'react-router-dom';
 import {Client} from 'pg';
+import composeTableData from "../db";
+
 
 const ToggleSSL = styled.div`
   display: flex;
@@ -73,6 +75,8 @@ const RequiredWarning = styled.span`
 `
 
 const Login = () => {
+
+  const [tableData, setTableData] = useState([]);
 	const [URI, setURI] = useState('');
 	const [isSSL, setSSL] = useState(false);
 	const [requiredError, setRequiredError] = useState(false);
@@ -92,8 +96,13 @@ const Login = () => {
 					setConnectionError(true);
 					setLoading(false);
 				} else {
-					setRedirectToHome(true);
-					setConnectionError(false);
+          composeTableData(client)
+            .then(tables => {
+              setTableData(tables);
+              setRedirectToHome(true);
+              setConnectionError(false)
+            })
+            .catch((err: any) => console.log('composeTableData error:', err))
 				}
 			})
 		}
@@ -106,7 +115,7 @@ const Login = () => {
 	};
 
 	const redirectHome = () => {
-		if (redirectToHome) return <Redirect to="/homepage" />;
+		if (redirectToHome) return <Redirect to={{ pathname: "/homepage", state: { tables: tableData } } } />;
 	};
 
 	return (
