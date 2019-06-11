@@ -6,11 +6,22 @@
     "jsx": "react",
     "module": "es2015",
     "moduleResolution": "node",
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
     "noUnusedLocals": true,
     "pretty": true,
     "sourceMap": true,
     "resolveJsonModule": true,
-    "lib": ["es2015", "dom"]
+    "types": [
+      "webpack-env",
+      "jest",
+      "node",
+      "electron",
+      "pg",
+      "styled-components"
+    ],
+    "typeRoots": ["node_modules/@types"],
+    "lib": ["es6", "dom"]
   },
-  "exclude": ["node_modules", "**/node_modules/*"]
+  "exclude": ["node_modules", "**/node_modules/*", "dist"]
 }
