@@ -55,6 +55,7 @@ app.on("ready", async () => {
     // #TODO: investigate BrowserWindow Config option
     // https://github.com/electron/electron/blob/master/docs/tutorial/security.md#isolation-for-untrusted-content
     // nodeIntegration: false,
+    // sandbox: true,
     title: "SeeQL: Database Visualized",
     show: false,
     width: 1024,
@@ -63,7 +64,7 @@ app.on("ready", async () => {
 
   mainWindow.loadURL(`file://${__dirname}/app.html`);
 
-  // @TODO: Use 'ready-to-show' event; https://github.com/electron/electron/blob/master/docs/api/browser-window.md#using-ready-to-show-event
+  // @TODO: Use 'ready-to-show' event https://github.com/electron/electron/blob/master/docs/api/browser-window.md#using-ready-to-show-event
   mainWindow.webContents.on("did-finish-load", () => {
     if (!mainWindow) {
       throw new Error('"mainWindow" is not defined');
@@ -80,9 +81,16 @@ app.on("ready", async () => {
     mainWindow = null;
   });
 
+  // myWindow.on('unresponsive', function () { })
+
+  // mainWindow.on("on-window-unload", () => {
+  //   'r u sure u want quit'
+  // });
+
   // mainWindow.on("crashed", () => {
   //   console.log("crashed");
   // });
+  //
   // const win = new BrowserWindow({ width: 200, height: 200 });
   // mainWindow.webContents.on("before-input-event", event => {
   //   const choice = dialog.showMessageBox(win, {
