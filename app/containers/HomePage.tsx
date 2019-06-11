@@ -2,6 +2,7 @@ import * as React from 'react';
 import { useState, useEffect } from 'react';
 import Tables from '../components/Tables';
 import styled from 'styled-components';
+import Panel from './Panel';
 
 const HomepageWrapper = styled.div`
   height: 100vh;
@@ -13,11 +14,16 @@ const HomepageWrapper = styled.div`
   padding: 50px;
 `
 
+const EntireHomePageWrapper = styled.div`
+  display: flex;
+`
+
 const HomePage = (props) => {
-  // const tableData = JSON.parse(props.location.state.tables);
+
   const tableData = props.location.state.tables;
-  const [ data, setData ] = useState([]);
-  const [ tableToRender, setRender ] = useState([]);
+  const [ data, setData ] = useState([]); //data from database
+  const [ listOfTableNames, setlistOfTableNames ] = useState([]); //for Panel Component 
+  const [ tableToRender, setRender ] = useState([]); //for main view  
   const [ foreignKeysAffected, setForeignKeysAffected ] = useState([]);
   const [ primaryKeyAffected, setPrimaryKeyAffected ] = useState([{
     primaryKeyTable: '',
@@ -31,9 +37,6 @@ const HomePage = (props) => {
   useEffect(() => {
     setData(tableData);
   },[]);
-
-  console.log('data:', data);
-
 
   //Resets all relationships 
   const removeRelationshipDisplay = () => {
@@ -80,6 +83,11 @@ const HomePage = (props) => {
   //Builds out tables to display
   useEffect(():void => {
     if (data.length > 0) {
+
+      const searchPanelTableNames = [];
+      data.forEach(table => searchPanelTableNames.push(table.table_name));
+      setlistOfTableNames(searchPanelTableNames);
+
       const dataObj: Array<any> = data.map(table => {
         return (
           <Tables
@@ -100,9 +108,12 @@ const HomePage = (props) => {
   }, [data, foreignKeysAffected, primaryKeyAffected]);
 
   return (
+    <EntireHomePageWrapper>
+    <Panel listOfTableNames={listOfTableNames}/>
     <HomepageWrapper>
       {tableToRender}
     </HomepageWrapper>
+    </EntireHomePageWrapper>
   );
 };
 
