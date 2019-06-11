@@ -51,6 +51,8 @@ main.js.map
 npm-debug.log.*
 __snapshots__
 
+.stylelintrc
+
 # Package.json
 package.json
 .travis.yml
