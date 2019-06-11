@@ -33,7 +33,7 @@
   "lint-staged": {
     "{*.json,.{babelrc,eslintrc,prettierrc,stylelintrc}}": [
       "prettier --ignore-path .eslintignore --parser json --write",
-      "git add --no-verify"
+      "git add"
     ],
     "*.{js, jsx, ts, tsx}": [
       "yarn run lint",
@@ -266,9 +266,8 @@
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.6.3",
+    "@types/pg": "^7.4.14",
     "@types/styled-components": "^4.1.16",
-    "@typescript-eslint/eslint-plugin": "^1.10.1",
-    "@typescript-eslint/parser": "^1.10.1",
     "devtron": "^1.4.0",
     "electron-debug": "^2.0.0",
     "electron-log": "^2.2.17",
@@ -280,6 +279,7 @@
     "react-hot-loader": "^4.6.3",
     "react-router": "^4.3.1",
     "react-router-dom": "^4.3.1",
+    "rxjs-compat": "^6.5.2",
     "source-map-support": "^0.5.9",
     "styled-components": "^4.3.0"
   },
