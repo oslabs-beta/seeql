@@ -12,25 +12,9 @@
     "pretty": true,
     "sourceMap": true,
     "resolveJsonModule": true,
-    "typeRoots": [
-      "node_modules/@types"
-    ],
-    "types": [
-      "react",
-      "webpack-env",
-      "jest",
-      "node",
-      "electron",
-      "pg"
-    ],
-    "lib": [
-      "es6",
-      "dom"
-    ],
-    "allowJs": true
+    "types": ["webpack-env", "jest", "node", "electron", "pg"],
+    "typeRoots": ["node_modules/@types"],
+    "lib": ["es6", "dom"]
   },
-  "exclude": [
-    "node_modules",
-    "**/node_modules/*"
-  ]
+  "exclude": ["node_modules", "**/node_modules/*", "dist"]
 }
