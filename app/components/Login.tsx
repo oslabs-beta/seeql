@@ -12,7 +12,7 @@ interface URIInputProps {
 interface LoginTypeButtonProps {
   readonly selectedLoginType: string;
   readonly buttonType: string;
-  };
+};
 
 const URIInput = styled.textarea<URIInputProps>`
   width: 200px;
@@ -74,14 +74,6 @@ const LoginTypeButton = styled.button<LoginTypeButtonProps>`
   display: flex;
   background-color: ${props => props.selectedLoginType === props.buttonType ? 'white' : 'grey'};
 `;
-
-const URIContainer = styled.div`
-background-color: #e8ecf1;
-display: flex;
-flex-direction: column;
-align-items: center;
-justify-content: center;
-`
 
 const CredentialsContainer = styled.div`
   display: flex;
@@ -263,16 +255,14 @@ postgres://godugvmyduvduy:3b89454dd6a4090ac4a5574a00a2e13393dda232f258b3a6033c4a
       }
 
       { loginType === 'URI' && 
-        <URIContainer>
           <URIInput
             requiredErr={requiredError}
             onChange={captureURI}
             placeholder="Enter your URI connection string..."
           />
-          { requiredError &&
-            <RequiredWarning>This field is required</RequiredWarning>}
-        </URIContainer>
-      }
+      }     
+      { requiredError &&
+            <RequiredWarning>This field is required</RequiredWarning>} 
 
 			<ToggleSSL>
 				<input type="checkbox" onChange={(e) => setSSL(e.target.checked)} />
