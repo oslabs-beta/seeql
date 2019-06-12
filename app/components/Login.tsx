@@ -1,9 +1,11 @@
-import * as React from "react";
-import { useState } from "react";
-import styled from "styled-components";
-import { Redirect } from "react-router-dom";
-import { Client } from "pg";
-import composeTableData from "../db";
+import * as React from 'react';
+import { useState } from 'react';
+import styled from 'styled-components';
+import { Redirect } from 'react-router-dom';
+import { Client } from 'pg';
+import composeTableData from '../db';
+// import LoadComponent from './LoadComponent';
+// import HomePage from '../containers/HomePage';
 
 interface URIInputProps {
   readonly requiredErr: boolean;
@@ -13,12 +15,12 @@ const URIInput = styled.textarea<URIInputProps>`
   width: 200px;
   height: 100px;
   border-radius: 3px;
-  font-family: "Poppins", sans-serif;
+  font-family: 'Poppins', sans-serif;
   letter-spacing: 2px;
   resize: none;
   padding: 10px;
   border: ${props =>
-    props.requiredErr ? "1px solid #ca333e" : "1px solid lightgrey"};
+    props.requiredErr ? '1px solid #ca333e' : '1px solid lightgrey'};
 
   :focus {
     outline: none;
@@ -29,7 +31,7 @@ const ToggleSSL = styled.div`
   display: flex;
   padding: 5px 20px;
   margin: 10px;
-  font-family: "Poppins", sans-serif;
+  font-family: 'Poppins', sans-serif;
   display: flex;
   color: black;
   align-items: center;
@@ -49,13 +51,13 @@ const LoginContainer = styled.div`
 const LoginBtn = styled.button`
   padding: 5px 20px;
   margin: 10px;
-  font-family: "Poppins", sans-serif;
+  font-family: 'Poppins', sans-serif;
   display: flex;
 `;
 
 const InputLabel = styled.span`
   color: black;
-  font-family: "Poppins", sans-serif;
+  font-family: 'Poppins', sans-serif;
 `;
 
 const ConnectionErrorMessage = styled.div`
@@ -65,7 +67,7 @@ const ConnectionErrorMessage = styled.div`
   padding: 10px;
   margin: 5px;
   font-size: 80%;
-  font-family: "Poppins", sans-serif;
+  font-family: 'Poppins', sans-serif;
   transition: 0.5s;
 `;
 
@@ -76,7 +78,7 @@ const RequiredWarning = styled.span`
 
 const Login = () => {
   const [tableData, setTableData] = useState([]);
-  const [URI, setURI] = useState("");
+  const [URI, setURI] = useState('');
   const [isSSL, setSSL] = useState(false);
   const [requiredError, setRequiredError] = useState(false);
   const [connectionError, setConnectionError] = useState(false);
@@ -85,7 +87,7 @@ const Login = () => {
 
   const sendLoginURI = (): void => {
     let updatedURI = URI;
-    if (isSSL) updatedURI += "?ssl=true";
+    if (isSSL) updatedURI += '?ssl=true';
     if (!URI) setRequiredError(true);
     else {
       setLoading(true);
@@ -102,14 +104,14 @@ const Login = () => {
               setLoading(false);
               setRedirectToHome(true);
             })
-            .catch((err: any) => console.log("composeTableData error:", err));
+            .catch((err: any) => console.log('composeTableData error:', err));
         }
       });
     }
   };
 
   const captureURI = (e): void => {
-    const sanitizedURI = e.target.value.replace(/\s+/g, "");
+    const sanitizedURI = e.target.value.replace(/\s+/g, '');
     setURI(sanitizedURI);
     if (requiredError) setRequiredError(false);
   };
@@ -118,7 +120,7 @@ const Login = () => {
     if (redirectToHome)
       return (
         <Redirect
-          to={{ pathname: "/homepage", state: { tables: tableData } }}
+          to={{ pathname: '/homepage', state: { tables: tableData } }}
         />
       );
   };
@@ -132,17 +134,13 @@ const Login = () => {
       )}
 
       <InputLabel>
-				<em>
-        CS_DEMO_DB
-				</em>
+        <em>CS_DEMO_DB</em>
         <br />
         <br />
-postgres://godugvmyduvduy:3b89454dd6a4090ac4a5574a00a2e13393dda232f258b3a6033c4ac4d24858ff@ec2-50-19-127-115.compute-1.amazonaws.com:5432/d16hrptvvsaq3f
+        postgres://godugvmyduvduy:3b89454dd6a4090ac4a5574a00a2e13393dda232f258b3a6033c4ac4d24858ff@ec2-50-19-127-115.compute-1.amazonaws.com:5432/d16hrptvvsaq3f
         <br />
         <br />
-				<em>
-        MAGNOLIA:
-				</em>
+        <em>MAGNOLIA:</em>
         <br />
         <br />
         postgres://ltdnkwnbccooem:64ad308e565b39cc070194f7fa621ae0e925339be5a1c69480ff2a4462eab4c4@ec2-54-163-226-238.compute-1.amazonaws.com:5432/ddsu160rb5t7vq
@@ -152,7 +150,7 @@ postgres://godugvmyduvduy:3b89454dd6a4090ac4a5574a00a2e13393dda232f258b3a6033c4a
         requiredErr={requiredError}
         onChange={captureURI}
         placeholder="Enter your URI connection string..."
-      ></URIInput>
+      />
 
       {requiredError && (
         <RequiredWarning>This field is required</RequiredWarning>
