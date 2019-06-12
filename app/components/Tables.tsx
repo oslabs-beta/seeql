@@ -169,7 +169,7 @@ const Tables: React.SFC<Props> = ({
   }
 
   return (
-    <Table key={tableName}>
+    <Table key={tableName} onClick={(e:any) => console.log('target', e.target.dataset)}>
       <TableTitle>{tableName}</TableTitle>
       <InnerTableWrapper>
         {rows}

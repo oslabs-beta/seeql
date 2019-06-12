@@ -11,6 +11,11 @@ interface ForeignKey {
  column_name: any; 
 }
 
+const PinnedTable = styled.div`
+  border: 2px solid grey;
+`
+
+
 
 const HomepageWrapper = styled.div`
   height: 100vh;
@@ -118,7 +123,7 @@ const HomePage = (props) => {
           if (onlyPinned.includes(table.table_name)) {
 
             pinned.push(
-              <div>
+              <PinnedTable>
               <button data-pinned={table.table_name} onClick={removeFromPinned} >UNPIN for {table.table_name}</button>
               <Tables
                 tableName={table.table_name}
@@ -140,7 +145,7 @@ const HomePage = (props) => {
                   setMouseOver(false)}}
                 key={table.table_name}
               />
-              </div>
+              </PinnedTable>
             )
 
           }
@@ -191,16 +196,13 @@ const HomePage = (props) => {
     <EntireHomePageWrapper>
     <Panel 
       searchInput={searchInputCapture} />
-
-    <HomepageWrapper>
       {
         // #TODO: flashes empty state on load, figure out why
-        (pinnedTables.length  || filteredTables.length)? <div>{pinnedTables}{filteredTables}</div> :
+        (pinnedTables.length  || filteredTables.length)? <HomepageWrapper>{pinnedTables}{filteredTables}</HomepageWrapper> :
         <EmptyState>
           no matches found, KAREN
         </EmptyState>
       }
-    </HomepageWrapper>
     </EntireHomePageWrapper>
   );
 };
