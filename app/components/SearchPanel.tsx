@@ -39,13 +39,18 @@ interface Props {
     listOfTableNames: Array<ITableName>;
     searchInput: any;
     filteredTables: any;
+    pinnedTables: any;
 }
 
-const SearchPanel: React.SFC<Props> = ({ filteredTables, searchInput }) => {
+const SearchPanel: React.SFC<Props> = ({ filteredTables, searchInput, pinnedTables }) => {
     return(
         <LeftPanelTableListWrapper>
             <Title>Tables</Title>
             <SearchField type="text" placeholder="Search for a table" onChange={searchInput}></SearchField>
+            visually, these are the pinned tables, karen
+            {pinnedTables}
+
+            these are the filtered tables
             {filteredTables.length>0 &&
              <ListOfResults>
               {filteredTables}

@@ -66,25 +66,56 @@ const HomePage = (props) => {
     primaryKeyTable: '',
     primaryKeyColumn: ''
   }]);
+  const [ pinnedTables, setPinnedTables ] = useState([]);
+  const [onlyPinned, setOnlyPinned] = useState([]);
+
+
+  const addToPinned = (e) => { 
+    let pinnedCopy = onlyPinned.slice()
+    pinnedCopy.push(e.target.dataset.pinned)
+    setOnlyPinned(pinnedCopy)
+  }
+
+  console.log('\n\t only pinned', onlyPinned)
 
   useEffect(() => {
     let filtered = [];
+    let pinned = [];
 
     listOfTableNames.forEach((tableName) => {
+        if (onlyPinned.includes(tableName)) {
+          pinned.push(
+           <TableListItem key={tableName} >
+            {tableName}
+            <SelectTableBtn>PINNED KAREN</SelectTableBtn>
+          </TableListItem>
+          )
+        } else { 
+
         const regex = new RegExp(userInputForTables)
 
         if(regex.test(tableName)) {
          filtered.push(
-           <TableListItem key={tableName}>
-           {tableName}
-           <SelectTableBtn>Add</SelectTableBtn>
-           </TableListItem>
+           <TableListItem 
+             key={tableName}
+           >
+            {tableName}
+            <SelectTableBtn 
+              data-pinned={tableName} 
+              onClick={addToPinned}>
+              Add
+            </SelectTableBtn>
+          </TableListItem>
          );
        }
-    })
+     }
+  })
 
-    setFilteredTables(filtered);
-},[userInputForTables, listOfTableNames]);
+  console.log(pinned)
+    setFilteredTables(filtered)
+    setPinnedTables(pinned)
+
+},[userInputForTables, listOfTableNames, onlyPinned]);
 
   useEffect(() => {
     //Resets all relationships 
@@ -164,8 +195,6 @@ const HomePage = (props) => {
             )
           }
       });
-
-      console.log(dataObjArray)
       setRender(dataObjArray);
     }
   }, [
@@ -179,7 +208,11 @@ const HomePage = (props) => {
 
   return (
     <EntireHomePageWrapper>
-    <Panel filteredTables={filteredTables} searchInput={searchInputCapture} listOfTableNames={listOfTableNames}/>
+    <Panel 
+      pinnedTables={pinnedTables}
+      filteredTables={filteredTables} 
+      searchInput={searchInputCapture} 
+      listOfTableNames={listOfTableNames}/>
     <HomepageWrapper>
       {
         // #TODO: flashes empty state on load, figure out why

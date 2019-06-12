@@ -26,9 +26,10 @@ interface Props {
     listOfTableNames: Array<ITableName>
     searchInput: any
     filteredTables: any
+    pinnedTables: any
 }
 
-const Panel: React.SFC<Props> = ({ listOfTableNames, searchInput, filteredTables }) => {
+const Panel: React.SFC<Props> = ({ listOfTableNames, searchInput, filteredTables, pinnedTables }) => {
 
     const [activePanel, setActivePanel] = useState('search');
     const [visible, setVisible] = useState(true);
@@ -42,13 +43,13 @@ const Panel: React.SFC<Props> = ({ listOfTableNames, searchInput, filteredTables
         else setVisible(true);
     }
 
-
     return (
         <PanelWrapper>
             { visible &&
             <div>
             { activePanel==='search' &&
             <SearchPanel 
+              pinnedTables={pinnedTables}
               filteredTables={filteredTables}
               listOfTableNames={listOfTableNames}
               searchInput={searchInput}
