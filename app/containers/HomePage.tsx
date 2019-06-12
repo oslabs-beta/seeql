@@ -48,6 +48,7 @@ const HomePage = (props) => {
   // renders += 1;
   // console.log('rendered ', renders);
   const tableData = props.location.state.tables;
+  const [activeTableInPanel, setActiveTableInPanel] = useState({});
   const [filteredTables, setFilteredTables] = useState([]);
   const [userInputForTables, setUserInputForTables] = useState('');
   const [ data, setData ] = useState([]); //data from database
@@ -60,6 +61,7 @@ const HomePage = (props) => {
   const [ pinnedTables, setPinnedTables ] = useState([]);
   const [onlyPinned, setOnlyPinned] = useState([]);
 
+  console.log('selected table ',data )
   const removeFromPinned = (e) => { 
     let noLongerPinned = onlyPinned.filter(table => table !== e.target.dataset.pinned)
     setOnlyPinned(noLongerPinned)
@@ -69,6 +71,15 @@ const HomePage = (props) => {
     let pinnedCopy = onlyPinned.slice()
     pinnedCopy.push(e.target.dataset.pinned)
     setOnlyPinned(pinnedCopy)
+  }
+
+  const captureSelectedTable = (e) => {
+    const tablename = e.target.dataset.tablename;
+    data.forEach((table) => {
+      if(table.table_name === tablename) {
+        setActiveTableInPanel(table)
+      }
+    })
   }
 
   useEffect(() => {
@@ -132,6 +143,7 @@ const HomePage = (props) => {
                 foreignkeys={table.foreignKeys}
                 primaryKeyAffected={primaryKeyAffected}
                 foreignKeysAffected={foreignKeysAffected}
+                captureSelectedTable={captureSelectedTable}
                 captureMouseEnter={(e) => {
                 isPrimaryKey= e.target.dataset.isprimarykey;
                 isForeignKey = e.target.dataset.isforeignkey;
@@ -162,6 +174,7 @@ const HomePage = (props) => {
                 foreignkeys={table.foreignKeys}
                 primaryKeyAffected={primaryKeyAffected}
                 foreignKeysAffected={foreignKeysAffected}
+                captureSelectedTable={captureSelectedTable}
                 captureMouseEnter={(e) => {
                 isPrimaryKey= e.target.dataset.isprimarykey;
                 isForeignKey = e.target.dataset.isforeignkey;
@@ -195,7 +208,11 @@ const HomePage = (props) => {
   return (
     <EntireHomePageWrapper>
     <Panel 
-      searchInput={searchInputCapture} />
+      onlyPinned={onlyPinned}
+      searchInput={searchInputCapture}
+      removeFromPinned={removeFromPinned}
+      addToPinned={addToPinned}
+      activeTableInPanel={activeTableInPanel} />
       {
         // #TODO: flashes empty state on load, figure out why
         (pinnedTables.length  || filteredTables.length)? <HomepageWrapper>{pinnedTables}{filteredTables}</HomepageWrapper> :

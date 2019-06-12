@@ -60,6 +60,7 @@ type Props = {
   foreignKeysAffected: Array<any>;
   captureMouseExit: () => void;
   captureMouseEnter: (Event) => void;
+  captureSelectedTable: (Event) => void;
 };
 
 const KeyIcon = styled.img`
@@ -75,7 +76,8 @@ const Tables: React.SFC<Props> = ({
   foreignKeysAffected,
   primaryKeyAffected,
   captureMouseExit,
-  captureMouseEnter
+  captureMouseEnter,
+  captureSelectedTable
 }) => {
 
   let rows = [];
@@ -169,8 +171,8 @@ const Tables: React.SFC<Props> = ({
   }
 
   return (
-    <Table key={tableName} onClick={(e:any) => console.log('target', e.target.dataset)}>
-      <TableTitle>{tableName}</TableTitle>
+    <Table key={tableName} onClick={captureSelectedTable}>
+      <TableTitle data-tablename={tableName}>{tableName}</TableTitle>
       <InnerTableWrapper>
         {rows}
       </InnerTableWrapper>
