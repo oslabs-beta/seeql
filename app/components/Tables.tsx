@@ -24,8 +24,8 @@ const TableRow = styled.li<T>`
   display: flex;
   justify-content: space-between;
   list-style: none;
-  background-color: ${({ affected }) => (affected ? "pink" : "transparent")};
-  border: ${({ affected }) =>
+  background-color: ${({affected}) => (affected ? "pink" : "transparent")};
+  border: ${({affected}) =>
     affected ? "3px solid pink" : "3px solid transparent"};
   border-top: 1px solid lightgrey;
   transition: 0.3s;
