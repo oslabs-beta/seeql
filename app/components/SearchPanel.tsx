@@ -16,12 +16,13 @@ const Title = styled.h1`
 `;
 
 const SearchField = styled.input`
-  border-radius: 15px;
-  padding: 10px 20px;
-  height: 30px;
-  font-family: "Poppins", sans-serif;
-  border: 1px solid lightgrey;
-  :focus {
+  margin: 10px 20px;
+  height: 20px;
+  font-family: 'Poppins', sans-serif;
+  border: none;
+  border-bottom: 1px solid lightgrey;
+  padding: 5px;
+  :focus{
     outline: none;
   }
 `;
@@ -102,4 +103,18 @@ const SearchPanel: React.SFC<Props> = ({ listOfTableNames }) => {
   );
 };
 
-export default SearchPanel;
+    return(
+        <LeftPanelTableListWrapper>
+            <Title>Tables</Title>
+            <SearchField type="text" placeholder="Search for a table" onChange={(e) => setUserInputForTables(e.target.value)}></SearchField>
+            {filteredTables.length>0 &&
+             <ListOfResults>
+              {filteredTables}
+            </ListOfResults>
+            }
+            { !filteredTables.length &&
+                <div>Sorry, no search results, please try again!!!!!!!!!!!</div>
+            }
+        </LeftPanelTableListWrapper>
+    )
+}

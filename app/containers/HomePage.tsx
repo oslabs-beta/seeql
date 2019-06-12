@@ -18,55 +18,46 @@ const EntireHomePageWrapper = styled.div`
   display: flex;
 `;
 
-const HomePage = props => {
+let renders = 0;
+let isPrimaryKey: string;
+let isForeignKey: string;
+let primaryKeyTableForForeignKey: string;
+let primaryKeyColumn: string;
+let selectedTableName: string;
+let selectedColumnName: string;
+
+const HomePage = (props) => {
+  renders += 1;
+  console.log('rendered ', renders);
+
   const tableData = props.location.state.tables;
-  const [data, setData] = useState([]); //data from database
-  const [listOfTableNames, setlistOfTableNames] = useState([]); //for Panel Component
-  const [tableToRender, setRender] = useState([]); //for main view
-  const [foreignKeysAffected, setForeignKeysAffected] = useState([]);
-  const [primaryKeyAffected, setPrimaryKeyAffected] = useState([
-    {
-      primaryKeyTable: "",
-      primaryKeyColumn: ""
-    }
-  ]);
+  const [ data, setData ] = useState([]); //data from database
+  const [mouseOver, setMouseOver] = useState(); //data to detect if mouse is over a pk or fk
+  const [ listOfTableNames, setlistOfTableNames ] = useState([]); //for Panel component 
+  const [ tableToRender, setRender ] = useState([]); //for main view  
+  const [ foreignKeysAffected, setForeignKeysAffected ] = useState([]);
+  const [ primaryKeyAffected, setPrimaryKeyAffected ] = useState([{
+    primaryKeyTable: '',
+    primaryKeyColumn: ''
+  }]);
 
-  //function generates a mock unique ID for React Components
-  const generateUniqueKey = () => (Math.random() * 1000).toString();
-
-  //Fetches database information
   useEffect(() => {
-    setData(tableData);
-  }, []);
-
-  //Resets all relationships
-  const removeRelationshipDisplay = () => {
-    setPrimaryKeyAffected([
-      {
-        primaryKeyTable: "",
-        primaryKeyColumn: ""
-      }
-    ]);
-    setForeignKeysAffected([]);
-  };
+    //Resets all relationships 
+    if(!mouseOver) {
+      setPrimaryKeyAffected([{
+        primaryKeyTable: '',
+        primaryKeyColumn: ''
+      }]);
+      setForeignKeysAffected([]);
+   }
 
   //Determines which rows should be highlighted
-  const highlightRelationships = (e): void => {
-    const isPrimaryKey: string = e.target.dataset.isprimarykey;
-    const isForeignKey: string = e.target.dataset.isforeignkey;
-    const primaryKeyTableForForeignKey: string =
-      e.target.dataset.foreignkeytable;
-    const primaryKeyColumn: string = e.target.dataset.foreignkeycolumn;
-    const selectedTableName: string = e.target.dataset.tablename;
-    const selectedColumnName: string = e.target.dataset.columnname;
-
-    if (isForeignKey === "true") {
-      setPrimaryKeyAffected([
-        {
-          primaryKeyTable: primaryKeyTableForForeignKey,
-          primaryKeyColumn: primaryKeyColumn
-        }
-      ]);
+  if(mouseOver) {
+    if (isForeignKey == 'true'){
+      setPrimaryKeyAffected([{
+        primaryKeyTable: primaryKeyTableForForeignKey,
+        primaryKeyColumn: primaryKeyColumn
+      }])
     }
 
     if (isPrimaryKey === "true") {
@@ -84,8 +75,14 @@ const HomePage = props => {
         });
       });
       setForeignKeysAffected(allForeignKeys);
-    }
-  };
+    } 
+   }
+  }, [mouseOver]) 
+
+  //Fetches database information
+  useEffect(():void => {
+    setData(tableData);
+  },[]);
 
   //Builds out tables to display
   useEffect((): void => {
@@ -103,15 +100,24 @@ const HomePage = props => {
             foreignkeys={table.foreignKeys}
             primaryKeyAffected={primaryKeyAffected}
             foreignKeysAffected={foreignKeysAffected}
-            displayRelationships={highlightRelationships}
-            removeRelationships={removeRelationshipDisplay}
-            key={generateUniqueKey()}
+            captureMouseEnter={(e) => {
+             isPrimaryKey= e.target.dataset.isprimarykey;
+             isForeignKey = e.target.dataset.isforeignkey;
+             primaryKeyTableForForeignKey = e.target.dataset.foreignkeytable;
+             primaryKeyColumn = e.target.dataset.foreignkeycolumn;
+             selectedTableName = e.target.dataset.tablename;
+             selectedColumnName = e.target.dataset.columnname;
+             setMouseOver(true)
+            }}
+            captureMouseExit= {() => {
+              setMouseOver(false)}}
+            key={table.table_name}
           />
         );
       });
       setRender(dataObj);
     }
-  }, [data, foreignKeysAffected, primaryKeyAffected]);
+  }, [data,foreignKeysAffected, primaryKeyAffected]);
 
   return (
     <EntireHomePageWrapper>
