@@ -31,27 +31,6 @@ const EmptyState= styled.div`
   color: white;
 `
 
-const TableListItem = styled.li`
-    display: flex;
-    justify-content: space-between;
-    padding: 10px 5px;
-    border-bottom: 1px solid lightgrey;
-    transition: 0.2s;
-    :hover{
-        transform: scale(1.05);
-        background-color: #e3e0e9;
-    }
-`
-
-const SelectTableBtn = styled.button`
-    border: none;
-    background: transparent;
-    :hover{
-        font-weight: bold;
-        color: lightcoral;
-    }
-`
-
 let isPrimaryKey: string;
 let isForeignKey: string;
 let primaryKeyTableForForeignKey: string;
@@ -68,8 +47,6 @@ const HomePage = (props) => {
   const [userInputForTables, setUserInputForTables] = useState('');
   const [ data, setData ] = useState([]); //data from database
   const [mouseOver, setMouseOver] = useState(); //data to detect if mouse is over a pk or fk
-  const [ listOfTableNames, setlistOfTableNames ] = useState([]); //for Panel component 
-  const [ tablesToRender, setRender ] = useState([]); //for main view  
   const [ foreignKeysAffected, setForeignKeysAffected ] = useState([]);
   const [ primaryKeyAffected, setPrimaryKeyAffected ] = useState([{
     primaryKeyTable: '',
@@ -88,49 +65,6 @@ const HomePage = (props) => {
     pinnedCopy.push(e.target.dataset.pinned)
     setOnlyPinned(pinnedCopy)
   }
-
-  console.log('\n\t only pinned', onlyPinned)
-
-  useEffect(() => {
-    let filtered = []; let pinned = [];
-
-    listOfTableNames.forEach((tableName) => {
-        if (onlyPinned.includes(tableName)) {
-          pinned.push(
-           <TableListItem key={tableName} >
-            {tableName}
-            <SelectTableBtn
-              data-pinned={tableName}
-              onClick={removeFromPinned}
-            >PINNED KAREN
-            </SelectTableBtn>
-          </TableListItem>
-          )
-        } else { 
-          const regex = new RegExp(userInputForTables)
-
-          if(regex.test(tableName)) {
-            filtered.push(
-              <TableListItem 
-                key={tableName}
-              >
-                {tableName}
-                <SelectTableBtn 
-                  data-pinned={tableName} 
-                  onClick={addToPinned}>
-                  Add
-                </SelectTableBtn>
-              </TableListItem>
-            );
-        }
-     }
-  })
-
-  console.log(pinned)
-    setFilteredTables(filtered)
-    setPinnedTables(pinned)
-
-},[userInputForTables, listOfTableNames, onlyPinned]);
 
   useEffect(() => {
     if(!mouseOver) { //Resets all relationships 
@@ -173,16 +107,19 @@ const HomePage = (props) => {
 
   //Builds out tables to display
   useEffect(():void => {
-    if (data.length > 0) {
-      const searchPanelTableNames = [];
-      data.forEach(table => searchPanelTableNames.push(table.table_name));
-      setlistOfTableNames(searchPanelTableNames);
 
-      const dataObjArray: Array<any> = []
+    let pinned = [];
+    let filtered = [];
+
+    if (data.length > 0) {
       const regex = new RegExp(userInputForTables)
         data.forEach(table => {
-          if (regex.test(table.table_name)) {
-            dataObjArray.push(
+
+          if (onlyPinned.includes(table.table_name)) {
+
+            pinned.push(
+              <div>
+              <button data-pinned={table.table_name} onClick={removeFromPinned} >UNPIN for {table.table_name}</button>
               <Tables
                 tableName={table.table_name}
                 columns={table.columns}
@@ -203,17 +140,49 @@ const HomePage = (props) => {
                   setMouseOver(false)}}
                 key={table.table_name}
               />
+              </div>
+            )
 
+          }
+
+          else if (regex.test(table.table_name)) {
+
+            filtered.push(
+              <div>
+              <button data-pinned={table.table_name} onClick={addToPinned} >PIN for {table.table_name}</button>
+              <Tables
+                tableName={table.table_name}
+                columns={table.columns}
+                primarykey={table.primaryKey}
+                foreignkeys={table.foreignKeys}
+                primaryKeyAffected={primaryKeyAffected}
+                foreignKeysAffected={foreignKeysAffected}
+                captureMouseEnter={(e) => {
+                isPrimaryKey= e.target.dataset.isprimarykey;
+                isForeignKey = e.target.dataset.isforeignkey;
+                primaryKeyTableForForeignKey = e.target.dataset.foreignkeytable;
+                primaryKeyColumn = e.target.dataset.foreignkeycolumn;
+                selectedTableName = e.target.dataset.tablename;
+                selectedColumnName = e.target.dataset.columnname;
+                setMouseOver(true)
+                }}
+                captureMouseExit= {() => {
+                  setMouseOver(false)}}
+                key={table.table_name}
+              />
+              </div>
             )
           }
       });
-      setRender(dataObjArray);
+      setFilteredTables(filtered)
+      setPinnedTables(pinned)
     }
   }, [
     data,
     foreignKeysAffected, 
     primaryKeyAffected, 
-    userInputForTables
+    userInputForTables,
+    onlyPinned
   ]);
 
   const searchInputCapture = e => setUserInputForTables(e.target.value)
@@ -221,15 +190,12 @@ const HomePage = (props) => {
   return (
     <EntireHomePageWrapper>
     <Panel 
-      pinnedTables={pinnedTables}
-      filteredTables={filteredTables} 
-      searchInput={searchInputCapture} 
-      listOfTableNames={listOfTableNames}/>
+      searchInput={searchInputCapture} />
 
     <HomepageWrapper>
       {
         // #TODO: flashes empty state on load, figure out why
-        tablesToRender.length ? tablesToRender :
+        (pinnedTables.length  || filteredTables.length)? <div>{pinnedTables}{filteredTables}</div> :
         <EmptyState>
           no matches found, KAREN
         </EmptyState>

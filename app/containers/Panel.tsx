@@ -18,18 +18,11 @@ const ButtonMenu = styled.div`
     width: 50px;
 `
 
-interface ITableName {
-    name: string
-}
-
 interface Props {
-    listOfTableNames: Array<ITableName>
     searchInput: any
-    filteredTables: any
-    pinnedTables: any
 }
 
-const Panel: React.SFC<Props> = ({ listOfTableNames, searchInput, filteredTables, pinnedTables }) => {
+const Panel: React.SFC<Props> = ({ searchInput}) => {
 
     const [activePanel, setActivePanel] = useState('search');
     const [visible, setVisible] = useState(true);
@@ -49,9 +42,6 @@ const Panel: React.SFC<Props> = ({ listOfTableNames, searchInput, filteredTables
             <div>
             { activePanel==='search' &&
             <SearchPanel 
-              pinnedTables={pinnedTables}
-              filteredTables={filteredTables}
-              listOfTableNames={listOfTableNames}
               searchInput={searchInput}
             />}
             { activePanel==='favorites' &&

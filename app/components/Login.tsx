@@ -82,14 +82,14 @@ const Login = () => {
   const [connectionError, setConnectionError] = useState(false);
   const [isLoading, setLoading] = useState(false);
   const [redirectToHome, setRedirectToHome] = useState(false);
-
+	console.log(isSSL)
   const sendLoginURI = (): void => {
-    let updatedURI = URI;
-    if (isSSL) updatedURI += "?ssl=true";
+    // let updatedURI = URI;
+    // if (isSSL) updatedURI += "?ssl=true";
     if (!URI) setRequiredError(true);
     else {
       setLoading(true);
-      const client = new Client(updatedURI);
+      const client = new Client('postgres://godugvmyduvduy:3b89454dd6a4090ac4a5574a00a2e13393dda232f258b3a6033c4ac4d24858ff@ec2-50-19-127-115.compute-1.amazonaws.com:5432/d16hrptvvsaq3f?ssl=true');
       client.connect((err: Error) => {
         if (err) {
           setConnectionError(true);

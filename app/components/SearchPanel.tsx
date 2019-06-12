@@ -10,14 +10,6 @@ const LeftPanelTableListWrapper = styled.div`
   height: 100vh;
 `
 
-const PinnedItems = styled.div`
-  color: mediumseagreen;
-  font-family: 'Cursive';
-  font-size: 16px;
-  padding: 10px;
-  border: 1px solid green;
-`
-
 const Title = styled.h1`
   color: black;
 `
@@ -34,23 +26,11 @@ const SearchField = styled.input`
   }
 `
 
-const ListOfResults = styled.ul`
-    padding: 10px 20px;
-    overflow: scroll;
-`
-
-interface ITableName {
-    name: string
-}
-
 interface Props {
-    listOfTableNames: Array<ITableName>;
     searchInput: any;
-    filteredTables: any;
-    pinnedTables: any;
 }
 
-const SearchPanel: React.SFC<Props> = ({ filteredTables, searchInput, pinnedTables }) => {
+const SearchPanel: React.SFC<Props> = ({ searchInput }) => {
     return(
         <LeftPanelTableListWrapper>
             <Title>
@@ -60,28 +40,7 @@ const SearchPanel: React.SFC<Props> = ({ filteredTables, searchInput, pinnedTabl
             <SearchField 
             type="text" 
             placeholder="Search for a table" onChange={searchInput}></SearchField>
-
-            <div style={{ color: 'blue' }}>
-              visually, these are the pinned tables, karen
-            </div>
-
-            <PinnedItems>
-              {pinnedTables}
-            </PinnedItems>
-
-            <div style={{ color: 'blue' }}>
-              these are the filtered tables
-            </div>
-
-            { 
-              filteredTables.length>0 &&
-              <ListOfResults>
-                {filteredTables}
-              </ListOfResults>
-            }
-            { !filteredTables.length &&
-                <div>Sorry, no search results, please try again (KAREN) !!!!!!!!!!!</div>
-            }
+            
         </LeftPanelTableListWrapper>
     )
 }
