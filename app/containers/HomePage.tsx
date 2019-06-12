@@ -18,6 +18,27 @@ const EntireHomePageWrapper = styled.div`
   display: flex;
 `
 
+const TableListItem = styled.li`
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 5px;
+    border-bottom: 1px solid lightgrey;
+    transition: 0.2s;
+    :hover{
+        transform: scale(1.05);
+        background-color: #e3e0e9;
+    }
+`
+
+const SelectTableBtn = styled.button`
+    border: none;
+    background: transparent;
+    :hover{
+        font-weight: bold;
+        color: lightcoral;
+    }
+`
+
 let renders = 0;
 let isPrimaryKey: string;
 let isForeignKey: string;
@@ -31,6 +52,8 @@ const HomePage = (props) => {
   console.log('rendered ', renders);
 
   const tableData = props.location.state.tables;
+  const [filteredTables, setFilteredTables] = useState([]);
+  const [userInputForTables, setUserInputForTables] = useState('');
   const [ data, setData ] = useState([]); //data from database
   const [mouseOver, setMouseOver] = useState(); //data to detect if mouse is over a pk or fk
   const [ listOfTableNames, setlistOfTableNames ] = useState([]); //for Panel component 
@@ -40,6 +63,25 @@ const HomePage = (props) => {
     primaryKeyTable: '',
     primaryKeyColumn: ''
   }]);
+
+  useEffect(() => {
+    let filtered = [];
+
+    listOfTableNames.forEach((tableName) => {
+        const regex = new RegExp(userInputForTables)
+
+        if(regex.test(tableName)) {
+         filtered.push(
+           <TableListItem key={tableName}>
+           {tableName}
+           <SelectTableBtn>Add</SelectTableBtn>
+           </TableListItem>
+         );
+       }
+    })
+
+    setFilteredTables(filtered);
+},[userInputForTables, listOfTableNames]);
 
   useEffect(() => {
     //Resets all relationships 
@@ -92,36 +134,42 @@ const HomePage = (props) => {
       setlistOfTableNames(searchPanelTableNames);
 
       const dataObj: Array<any> = data.map(table => {
-        return (
-          <Tables
-            tableName={table.table_name}
-            columns={table.columns}
-            primarykey={table.primaryKey}
-            foreignkeys={table.foreignKeys}
-            primaryKeyAffected={primaryKeyAffected}
-            foreignKeysAffected={foreignKeysAffected}
-            captureMouseEnter={(e) => {
-             isPrimaryKey= e.target.dataset.isprimarykey;
-             isForeignKey = e.target.dataset.isforeignkey;
-             primaryKeyTableForForeignKey = e.target.dataset.foreignkeytable;
-             primaryKeyColumn = e.target.dataset.foreignkeycolumn;
-             selectedTableName = e.target.dataset.tablename;
-             selectedColumnName = e.target.dataset.columnname;
-             setMouseOver(true)
-            }}
-            captureMouseExit= {() => {
-              setMouseOver(false)}}
-            key={table.table_name}
-          />
-        );
+        const regex = new RegExp(userInputForTables)
+        if (regex.test(table.table_name)) {
+          return(
+            <Tables
+              tableName={table.table_name}
+              columns={table.columns}
+              primarykey={table.primaryKey}
+              foreignkeys={table.foreignKeys}
+              primaryKeyAffected={primaryKeyAffected}
+              foreignKeysAffected={foreignKeysAffected}
+              captureMouseEnter={(e) => {
+              isPrimaryKey= e.target.dataset.isprimarykey;
+              isForeignKey = e.target.dataset.isforeignkey;
+              primaryKeyTableForForeignKey = e.target.dataset.foreignkeytable;
+              primaryKeyColumn = e.target.dataset.foreignkeycolumn;
+              selectedTableName = e.target.dataset.tablename;
+              selectedColumnName = e.target.dataset.columnname;
+              setMouseOver(true)
+              }}
+              captureMouseExit= {() => {
+                setMouseOver(false)}}
+              key={table.table_name}
+            />
+          )}
       });
       setRender(dataObj);
     }
-  }, [data,foreignKeysAffected, primaryKeyAffected]);
+  }, [
+    data,
+    foreignKeysAffected, primaryKeyAffected, userInputForTables]);
+
+  const searchInputCapture = e => setUserInputForTables(e.target.value)
 
   return (
     <EntireHomePageWrapper>
-    <Panel listOfTableNames={listOfTableNames}/>
+    <Panel filteredTables={filteredTables} searchInput={searchInputCapture} listOfTableNames={listOfTableNames}/>
     <HomepageWrapper>
       {tableToRender}
     </HomepageWrapper>

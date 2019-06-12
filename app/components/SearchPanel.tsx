@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { useState, useEffect } from 'react';
 import styled from 'styled-components';
 
 const LeftPanelTableListWrapper = styled.div`
@@ -27,27 +26,6 @@ const SearchField = styled.input`
   }
 `
 
-const TableListItem = styled.li`
-    display: flex;
-    justify-content: space-between;
-    padding: 10px 5px;
-    border-bottom: 1px solid lightgrey;
-    transition: 0.2s;
-    :hover{
-        transform: scale(1.05);
-        background-color: #e3e0e9;
-    }
-`
-
-const SelectTableBtn = styled.button`
-    border: none;
-    background: transparent;
-    :hover{
-        font-weight: bold;
-        color: lightcoral;
-    }
-`
-
 const ListOfResults = styled.ul`
     padding: 10px 20px;
     overflow: scroll;
@@ -58,32 +36,16 @@ interface ITableName {
 }
 
 interface Props {
-    listOfTableNames: Array<ITableName>
+    listOfTableNames: Array<ITableName>;
+    searchInput: any;
+    filteredTables: any;
 }
 
-const SearchPanel: React.SFC<Props> = ({ listOfTableNames }) => {
-
-    const [userInputForTables, setUserInputForTables] = useState('');
-    const [filteredTables, setFilteredTables] = useState([]);
-    const [allTables, setAllTables] = useState([]);
-
-    useEffect(() => {
-        setAllTables(listOfTableNames);
-    }, [listOfTableNames])
-
-    useEffect(() => {
-        let filtered = [];
-        allTables.forEach((tableName) => {
-            const regex = new RegExp(userInputForTables)
-            if(regex.test(tableName)) filtered.push(<TableListItem key={tableName}>{tableName}<SelectTableBtn>Add</SelectTableBtn></TableListItem>);
-        })
-        setFilteredTables(filtered);
-    },[userInputForTables, allTables]);
-
+const SearchPanel: React.SFC<Props> = ({ filteredTables, searchInput }) => {
     return(
         <LeftPanelTableListWrapper>
             <Title>Tables</Title>
-            <SearchField type="text" placeholder="Search for a table" onChange={(e) => setUserInputForTables(e.target.value)}></SearchField>
+            <SearchField type="text" placeholder="Search for a table" onChange={searchInput}></SearchField>
             {filteredTables.length>0 &&
              <ListOfResults>
               {filteredTables}
