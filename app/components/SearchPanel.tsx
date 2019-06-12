@@ -53,12 +53,12 @@ const ListOfResults = styled.ul`
     overflow: scroll;
 `
 
-interface ITableName {
+interface TableName {
     name: string
 }
 
 interface Props {
-    listOfTableNames: Array<ITableName>
+    listOfTableNames: Array<TableName>
 }
 
 const SearchPanel: React.SFC<Props> = ({ listOfTableNames }) => {
