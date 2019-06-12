@@ -52,7 +52,7 @@ const SearchPanel: React.SFC<Props> = ({ filteredTables, searchInput }) => {
             </ListOfResults>
             }
             { !filteredTables.length &&
-                <div>Sorry, no search results, please try again!!!!!!!!!!!</div>
+                <div>Sorry, no search results, please try again (KAREN) !!!!!!!!!!!</div>
             }
         </LeftPanelTableListWrapper>
     )

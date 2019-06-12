@@ -33,9 +33,6 @@ const Panel: React.SFC<Props> = ({ listOfTableNames, searchInput, filteredTables
     const [activePanel, setActivePanel] = useState('search');
     const [visible, setVisible] = useState(true);
 
-    
-    console.log('active', activePanel)
-
     const displayActivePanelComponent = (e) => {
         setActivePanel(e.target.dataset.panel);
     }
