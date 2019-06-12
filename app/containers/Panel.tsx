@@ -23,6 +23,7 @@ interface ISelectedTable {
   foreignKeys?: Array<any>
   primaryKey?: string
   table_name?: string
+  foreignKeysOfPrimary?: any
 }
 
 interface Props {

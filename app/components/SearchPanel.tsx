@@ -39,6 +39,7 @@ interface ISelectedTable {
   foreignKeys?: Array<any>
   primaryKey?: string
   table_name?: string
+  foreignKeysOfPrimary?: any
 }
 
 interface Props {
@@ -51,11 +52,12 @@ interface Props {
 
 const SearchPanel: React.SFC<Props> = ({ searchInput, activeTableInPanel, onlyPinned, removeFromPinned,
   addToPinned }) => {
-    const { table_name, primaryKey, foreignKeys } = activeTableInPanel;
+    const { table_name, primaryKey, foreignKeys, foreignKeysOfPrimary } = activeTableInPanel;
     const foreignKeyRelationships = [];
+    const primaryKeyRelationships = [];
+    console.log('hey', foreignKeysOfPrimary)
     if(foreignKeys){
       foreignKeys.forEach((key) => {
-        console.log('onlye pinned ', onlyPinned, key.foreign_table_name)
         if(onlyPinned.includes(key.foreign_table_name)){
         foreignKeyRelationships.push(
           <li><Text>{key.column_name} <Label as="span">from table</Label> {key.foreign_table_name}({key.foreign_column_name})</Text><button data-pinned={key.foreign_table_name} onClick={removeFromPinned}>UNPIN TABLE</button></li>
@@ -65,6 +67,12 @@ const SearchPanel: React.SFC<Props> = ({ searchInput, activeTableInPanel, onlyPi
             <li><Text>{key.column_name} <Label as="span">from table</Label> {key.foreign_table_name}({key.foreign_column_name})</Text><button data-pinned={key.foreign_table_name} onClick={addToPinned}>PIN TABLE</button></li>)
         }
       })
+    }
+
+    for(let foreignTableOfPrimary in foreignKeysOfPrimary){
+      primaryKeyRelationships.push(
+        <li>{foreignTableOfPrimary}({foreignKeysOfPrimary[foreignTableOfPrimary]})</li>
+      )
     }
 
     return(
@@ -82,6 +90,16 @@ const SearchPanel: React.SFC<Props> = ({ searchInput, activeTableInPanel, onlyPi
               <Text>{table_name}</Text>
               <Label>primary key</Label>
               <Text>{primaryKey}</Text>
+              {primaryKeyRelationships.length ===0 &&
+                <Label>The primary key is not used in any other table</Label>
+              }
+              {primaryKeyRelationships.length > 0 &&
+              <div>
+              <Label>The primary key is referenced in</Label>
+              <ul>
+                {primaryKeyRelationships}
+              </ul>
+              </div>}
               {foreignKeyRelationships.length ===0 &&
                 <Label>This table does not have any foreign keys</Label>
               }

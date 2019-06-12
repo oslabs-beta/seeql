@@ -75,11 +75,28 @@ const HomePage = (props) => {
 
   const captureSelectedTable = (e) => {
     const tablename = e.target.dataset.tablename;
+    let selectedPanelInfo;
+    let primaryKey;
+
     data.forEach((table) => {
       if(table.table_name === tablename) {
-        setActiveTableInPanel(table)
+        primaryKey = table.primaryKey;
+        selectedPanelInfo = table;
       }
     })
+
+    selectedPanelInfo.foreignKeysOfPrimary = {};
+
+    data.forEach((table) => {
+      table.foreignKeys.forEach((foreignKey) => {
+        if(foreignKey.foreign_column_name == primaryKey &&
+          foreignKey.foreign_table_name == tablename) {
+            selectedPanelInfo.foreignKeysOfPrimary[foreignKey.table_name] = foreignKey.column_name
+          }
+      })
+    })
+    
+    setActiveTableInPanel(selectedPanelInfo)
   }
 
   useEffect(() => {
