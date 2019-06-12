@@ -4,6 +4,14 @@ import Tables from '../components/Tables';
 import styled from 'styled-components';
 import Panel from './Panel';
 
+interface ForeignKey {
+ foreign_table_name: string; 
+ foreign_column_name: string; 
+ table_name: any; 
+ column_name: any; 
+}
+
+
 const HomepageWrapper = styled.div`
   height: 100vh;
   overflow: scroll;
@@ -51,6 +59,7 @@ let primaryKeyColumn: string;
 let selectedTableName: string;
 let selectedColumnName: string;
 
+// The Store, basically
 const HomePage = (props) => {
   // renders += 1;
   // console.log('rendered ', renders);
@@ -69,6 +78,10 @@ const HomePage = (props) => {
   const [ pinnedTables, setPinnedTables ] = useState([]);
   const [onlyPinned, setOnlyPinned] = useState([]);
 
+  const removeFromPinned = (e) => { 
+    let noLongerPinned = onlyPinned.filter(table => table !== e.target.dataset.pinned)
+    setOnlyPinned(noLongerPinned)
+  }
 
   const addToPinned = (e) => { 
     let pinnedCopy = onlyPinned.slice()
@@ -79,35 +92,37 @@ const HomePage = (props) => {
   console.log('\n\t only pinned', onlyPinned)
 
   useEffect(() => {
-    let filtered = [];
-    let pinned = [];
+    let filtered = []; let pinned = [];
 
     listOfTableNames.forEach((tableName) => {
         if (onlyPinned.includes(tableName)) {
           pinned.push(
            <TableListItem key={tableName} >
             {tableName}
-            <SelectTableBtn>PINNED KAREN</SelectTableBtn>
+            <SelectTableBtn
+              data-pinned={tableName}
+              onClick={removeFromPinned}
+            >PINNED KAREN
+            </SelectTableBtn>
           </TableListItem>
           )
         } else { 
+          const regex = new RegExp(userInputForTables)
 
-        const regex = new RegExp(userInputForTables)
-
-        if(regex.test(tableName)) {
-         filtered.push(
-           <TableListItem 
-             key={tableName}
-           >
-            {tableName}
-            <SelectTableBtn 
-              data-pinned={tableName} 
-              onClick={addToPinned}>
-              Add
-            </SelectTableBtn>
-          </TableListItem>
-         );
-       }
+          if(regex.test(tableName)) {
+            filtered.push(
+              <TableListItem 
+                key={tableName}
+              >
+                {tableName}
+                <SelectTableBtn 
+                  data-pinned={tableName} 
+                  onClick={addToPinned}>
+                  Add
+                </SelectTableBtn>
+              </TableListItem>
+            );
+        }
      }
   })
 
@@ -118,12 +133,8 @@ const HomePage = (props) => {
 },[userInputForTables, listOfTableNames, onlyPinned]);
 
   useEffect(() => {
-    //Resets all relationships 
-    if(!mouseOver) {
-      setPrimaryKeyAffected([{
-        primaryKeyTable: '',
-        primaryKeyColumn: ''
-      }]);
+    if(!mouseOver) { //Resets all relationships 
+      setPrimaryKeyAffected([{ primaryKeyTable: '', primaryKeyColumn: '' }]);
       setForeignKeysAffected([]);
    }
 
@@ -139,10 +150,11 @@ const HomePage = (props) => {
     if (isPrimaryKey === 'true') {
       const allForeignKeys: Array<any> = [];
       data.forEach((table):void => {
-          table.foreignKeys.forEach((foreignkey):void => {
-            if(foreignkey.foreign_table_name === selectedTableName 
+          table.foreignKeys.forEach((foreignkey: ForeignKey):void => {
+            if (
+              foreignkey.foreign_table_name === selectedTableName 
               && foreignkey.foreign_column_name === selectedColumnName
-              )
+            )
             allForeignKeys.push({
               table: foreignkey.table_name,
               column: foreignkey.column_name
@@ -150,7 +162,7 @@ const HomePage = (props) => {
           }) 
       }) 
       setForeignKeysAffected(allForeignKeys);
-    } 
+     } 
    }
   }, [mouseOver]) 
 
@@ -213,6 +225,7 @@ const HomePage = (props) => {
       filteredTables={filteredTables} 
       searchInput={searchInputCapture} 
       listOfTableNames={listOfTableNames}/>
+
     <HomepageWrapper>
       {
         // #TODO: flashes empty state on load, figure out why
