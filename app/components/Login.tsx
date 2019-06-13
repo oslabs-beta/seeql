@@ -95,7 +95,6 @@ const CredentialsInput = styled.input<URIInputProps>`
   padding-left: 2px;
   margin: .5px;
 	border: ${props => props.requiredErr ? '1px solid #ca333e' : '1px solid lightgrey'};
->>>>>>> dev
 `;
 
 const ConnectionErrorMessage = styled.div`
