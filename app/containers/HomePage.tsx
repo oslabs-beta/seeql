@@ -5,26 +5,31 @@ import styled from "styled-components";
 import Panel from "./Panel";
 import LoadingComponent from "../components/LoadComponent";
 
-// interface ForeignKey {
-//  foreign_table_name: string; 
-//  foreign_column_name: string; 
-//  table_name: any; 
-//  column_name: any; 
-// }
-
 const NormalTable = styled.div`
 overflow: scroll;
 display: absolute;
 `
 
 const PinnedTable = styled.div`
-  border: 2px solid grey;
-  overflow: scroll;
   display: absolute;
 `
 
-const PinBtn = styled.button`
+interface IPinBtnProps{
+  pinned: boolean
+}
+
+
+const PinBtn = styled.button<IPinBtnProps>`
   display: relative;
+  border: none;
+  color: ${(props) => props.pinned ? 'lightcoral' : 'black'}
+  :hover {
+    font-weight: bold;
+    color: #00b5cc;
+  }
+  :focus {
+    outline: none;
+  }
 `
 
 const HomepageWrapper = styled.div`
@@ -35,11 +40,12 @@ const HomepageWrapper = styled.div`
   display: grid;
   grid-gap: 20px;
   grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-  grid-template-rows: 150px auto;
+  grid-template-rows: 200px auto;
 `
 
 const EntireHomePageWrapper = styled.div`
   display: flex;
+  font-family: 'Poppins', sans-serif;
 `;
 
 const LoadWrap = styled.div`
@@ -48,8 +54,13 @@ const LoadWrap = styled.div`
 `;
 
 const EmptyState= styled.div`
-  background-color: black;
-  color: white;
+
+height: 100vh;
+  width: 100%;
+  padding: 20px;  
+   display: flex;
+   justify-content: center;
+   align-items: center;
 `
 
 let isPrimaryKey: string;
@@ -161,8 +172,9 @@ const HomePage = (props) => {
 
             pinned.push(
               <PinnedTable>
-              <PinBtn data-pinned={table.table_name} onClick={removeFromPinned} >UNPIN</PinBtn>
+              <PinBtn data-pinned={table.table_name} onClick={removeFromPinned} pinned={true}>UNPIN</PinBtn>
               <Tables
+                activeTableInPanel={activeTableInPanel}
                 tableName={table.table_name}
                 columns={table.columns}
                 primarykey={table.primaryKey}
@@ -192,8 +204,9 @@ const HomePage = (props) => {
 
             filtered.push(
               <NormalTable>
-              <PinBtn data-pinned={table.table_name} onClick={addToPinned} >PIN</PinBtn>
+              <PinBtn data-pinned={table.table_name} onClick={addToPinned} pinned={false}>PIN</PinBtn>
               <Tables
+                activeTableInPanel={activeTableInPanel}
                 tableName={table.table_name}
                 columns={table.columns}
                 primarykey={table.primaryKey}
@@ -226,7 +239,8 @@ const HomePage = (props) => {
     foreignKeysAffected, 
     primaryKeyAffected, 
     userInputForTables,
-    onlyPinned
+    onlyPinned,
+    activeTableInPanel
   ]);
 
   const searchInputCapture = e => setUserInputForTables(e.target.value)
@@ -242,9 +256,8 @@ const HomePage = (props) => {
           <LoadingComponent />
         </LoadWrap>
       )}
-
       {
-        (pinnedTables.length  || filteredTables.length)? <HomepageWrapper>{pinnedTables}{filteredTables}</HomepageWrapper> :
+        (pinnedTables.length  || filteredTables.length)? <HomepageWrapper>{pinnedTables}{filteredTables}</HomepageWrapper>:
         <EmptyState>
           no matches found, KAREN
         </EmptyState>

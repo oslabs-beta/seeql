@@ -12,6 +12,7 @@ const PanelWrapper = styled.div`
   border: 1px solid black;
   width: 300px;
   height: 100vh;
+  padding: 40px;
 `;
 
 const TopSection = styled.section`
@@ -65,7 +66,7 @@ const SettingsPanel = () => {
         </DivWrapper>
       </TopSection>
       <BottomSection>
-        <div>Reset Project</div>
+        <div></div>
         <NavLink to="/" activeStyle={{ color: 'black ' }}>
           Sign Out
         </NavLink>

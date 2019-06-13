@@ -9,6 +9,11 @@ interface IPanelWrapperProps {
   visible: boolean
 }
 
+interface IIndTabProps {
+  active: string
+  panel: string
+}
+
 const PanelWrapper = styled.div<IPanelWrapperProps>`
     height: 100vh;
     width: ${({visible}) => visible ? '400px' : '50px'};
@@ -18,7 +23,47 @@ const PanelWrapper = styled.div<IPanelWrapperProps>`
 const ButtonMenu = styled.div`
     display: flex;
     flex-direction: column;
-    width: 50px;
+    justify-content: space-between;
+    width: 60px;
+`
+
+const IndTab = styled.button<IIndTabProps>`
+  border: none;
+  font-family: 'Poppins', sans-serif;
+  border: 1px solid grey;
+  border-left: none;
+  padding: 5px;
+  background-color: ${(props) => (props.active === props.panel) ? '#00b5cc' : 'white' }
+  
+  :hover {
+    font-weight: bold;
+  }
+
+  :focus {
+    outline: none;
+  }
+`
+
+const Tabs = styled.div`
+   display: flex;
+   flex-direction: column;
+   height: 100px;
+   justify-content: space-between;
+   font-family: 'Poppins', sans-serif;
+   margin-top: 10px;
+`
+
+const CollapseBtn = styled.button`
+  border: none;
+  margin-bottom: 10px;
+
+  :focus {
+    outline: none;
+  }
+
+  :hover {
+    font-weight: bold;
+  }
 `
 
 interface ISelectedTable {
@@ -65,23 +110,32 @@ const Panel: React.SFC<Props> = ({
             <SettingsPanel />}
             </div>}
             <ButtonMenu>
-                <button 
-                  onClick={togglePanelVisibility}
-                >Collapse Panel</button>
-                <button 
+              <Tabs>
+                <IndTab 
                   data-panel='search' 
+                  panel='search'
+                  active={activePanel}
                   onClick={displayActivePanelComponent}
-                >Table Info</button>
-                <button 
-                  data-panel='favorites' 
+                >Table Info</IndTab>
+                <IndTab 
+                  data-panel='favorites'
+                  panel='favorites' 
+                  active={activePanel}
                   onClick={displayActivePanelComponent}>
                   Favorites
-                </button>
-                <button 
+                </IndTab>
+                <IndTab 
                   data-panel='settings' 
+                  panel='settings'
+                  active={activePanel}
                   onClick={displayActivePanelComponent}>
                   Settings
-                </button>
+                </IndTab>
+                </Tabs>
+                <CollapseBtn 
+                  onClick={togglePanelVisibility}
+                  data-active={activePanel}
+                > {visible ? `< Hide Menu` : `Show Menu >`} </CollapseBtn>
             </ButtonMenu>
         </PanelWrapper>
     )
