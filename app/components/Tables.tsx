@@ -6,9 +6,8 @@ const Table = styled.div`
   flex-direction: column;
   font-size: 14px;
   color: black;
-  font-family: 'Poppins', sans-serif;
   box-shadow: 1px 2px 5px lightgrey;
-
+  overflow: scroll;
 `;
 
 const InnerTableWrapper = styled.ul`
@@ -26,9 +25,7 @@ const TableRow = styled.li<T>`
   list-style: none;
   background-color: ${ ({affected}) => affected ? 'mediumseagreen' : 'transparent'};
   border: none;
-  border-top: 1px solid lightgrey;
   padding: 5px;
-  margin: 0px 15px;
   transition: 0.3s;
 
   :hover {
@@ -38,7 +35,7 @@ const TableRow = styled.li<T>`
 `;
 
 const TableCell = styled.p`
-  padding: 0px 20px;
+  padding: 0px 10px;
   font-size: 12px;
   display: flex;
   align-items: center;
@@ -48,6 +45,7 @@ const TableTitle = styled.label`
   text-align: center;
   font-size: 20px;
   padding: 5px 0px;
+  overflow-wrap: break-word;
 `
 
 type Props = {
@@ -156,7 +154,7 @@ const Tables: React.SFC<Props> = ({
                  data-tablename={tableName}
                  data-columnname={columns[keys]['columnname']}
                  data-isprimarykey={primaryKey}
-                >{ columns[keys]['columnname'] }</label>
+                >{ columns[keys]['columnname']}</label>
               </TableCell>
               <TableCell
                 data-isforeignkey={foreignKey}
@@ -165,7 +163,7 @@ const Tables: React.SFC<Props> = ({
                 data-tablename={tableName}
                 data-columnname={columns[keys]['columnname']}
                 data-isprimarykey={primaryKey}
-              >{ columns[keys]['datatype'] }
+              >{ columns[keys]['datatype']== 'character varying' ? 'varchar' :  columns[keys]['datatype'] }
               </TableCell>
              </TableRow>)
   }

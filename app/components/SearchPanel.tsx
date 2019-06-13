@@ -3,12 +3,15 @@ import styled from "styled-components";
 
 const LeftPanelTableListWrapper = styled.div`
   color: black;
-  font-family: "Poppins", sans-serif;
-  padding: 5px;
+  padding: 40px;
   border: 1px solid black;
   width: 300px;
   height: 100vh;
 `;
+
+const InfoSection = styled.div`
+  overflow-wrap: break-word;
+`
 
 const Title = styled.h1`
   color: black;
@@ -91,7 +94,7 @@ const SearchPanel: React.SFC<Props> = ({
         onChange={searchInput}
       ></SearchField>
       {Object.keys(activeTableInPanel).length > 0 ? (
-        <div>
+        <InfoSection>
           <Label>table name</Label>
           <Text>{table_name}</Text>
           <Label>primary key</Label>
@@ -114,7 +117,7 @@ const SearchPanel: React.SFC<Props> = ({
               <ul>{foreignKeyRelationships}</ul>
             </div>
           )}
-        </div>
+        </InfoSection>
       ) : (
         <div>
           You haven't selected a table yet, click on a table to see their

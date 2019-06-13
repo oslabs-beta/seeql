@@ -11,24 +11,35 @@ interface ForeignKey {
  column_name: any; 
 }
 
-const PinnedTable = styled.div`
-  border: 2px solid grey;
+const NormalTable = styled.div`
+overflow: scroll;
+display: absolute;
 `
 
+const PinnedTable = styled.div`
+  border: 2px solid grey;
+  overflow: scroll;
+  display: absolute;
+`
 
+const PinBtn = styled.button`
+  display: relative;
+`
 
 const HomepageWrapper = styled.div`
   height: 100vh;
+  width: 100%;
   overflow: scroll;
+  padding: 20px;
   display: grid;
   grid-gap: 20px;
-  grid-template-columns: 1fr 1fr 1fr;
-  grid-template-rows: auto;
-  padding: 50px;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  grid-template-rows: 150px auto;
 `
 
 const EntireHomePageWrapper = styled.div`
   display: flex;
+  font-family: 'Poppins', sans-serif;
 `
 
 const EmptyState= styled.div`
@@ -152,7 +163,7 @@ const HomePage = (props) => {
 
             pinned.push(
               <PinnedTable>
-              <button data-pinned={table.table_name} onClick={removeFromPinned} >UNPIN</button>
+              <PinBtn data-pinned={table.table_name} onClick={removeFromPinned} >UNPIN</PinBtn>
               <Tables
                 tableName={table.table_name}
                 columns={table.columns}
@@ -182,8 +193,8 @@ const HomePage = (props) => {
           else if (regex.test(table.table_name)) {
 
             filtered.push(
-              <div>
-              <button data-pinned={table.table_name} onClick={addToPinned} >PIN</button>
+              <NormalTable>
+              <PinBtn data-pinned={table.table_name} onClick={addToPinned} >PIN</PinBtn>
               <Tables
                 tableName={table.table_name}
                 columns={table.columns}
@@ -205,7 +216,7 @@ const HomePage = (props) => {
                   setMouseOver(false)}}
                 key={table.table_name}
               />
-              </div>
+              </NormalTable>
             )
           }
       });

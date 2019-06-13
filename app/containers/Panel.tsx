@@ -5,10 +5,13 @@ import SettingsPanel from '../components/SettingsPanel'
 import FavoritesPanel from '../components/FavoritesPanel';
 import SearchPanel from '../components/SearchPanel';
 
-const PanelWrapper = styled.div`
+interface IPanelWrapperProps {
+  visible: boolean
+}
+
+const PanelWrapper = styled.div<IPanelWrapperProps>`
     height: 100vh;
-    width: 400px;
-    border: 1px solid lightgrey;
+    width: ${({visible}) => visible ? '400px' : '50px'};
     display: flex;
     justify-content: space-between;
 `
@@ -48,7 +51,7 @@ const Panel: React.SFC<Props> = ({
     }
 
     return (
-        <PanelWrapper>
+        <PanelWrapper visible={visible}>
             { visible &&
             <div>
             { activePanel==='search' &&
