@@ -1,9 +1,9 @@
-import * as React from "react";
-import { useState } from "react";
-import styled from "styled-components";
-import { Redirect } from "react-router-dom";
-import { Client } from "pg";
-import composeTableData from "../db";
+import * as React from 'react';
+import { useState } from 'react';
+import styled from 'styled-components';
+import { Redirect } from 'react-router-dom';
+import { Client } from 'pg';
+import composeTableData from '../db';
 
 interface URIInputProps {
   readonly requiredErr: boolean;
@@ -18,12 +18,12 @@ const URIInput = styled.textarea<URIInputProps>`
   width: 200px;
   height: 100px;
   border-radius: 3px;
-  font-family: "Poppins", sans-serif;
+  font-family: 'Poppins', sans-serif;
   letter-spacing: 2px;
   resize: none;
   padding: 10px;
   border: ${props =>
-    props.requiredErr ? "1px solid #ca333e" : "1px solid lightgrey"};
+    props.requiredErr ? '1px solid #ca333e' : '1px solid lightgrey'};
 
   :focus {
     outline: none;
@@ -34,7 +34,7 @@ const ToggleSSL = styled.div`
   display: flex;
   padding: 5px 20px;
   margin: 10px;
-  font-family: "Poppins", sans-serif;
+  font-family: 'Poppins', sans-serif;
   display: flex;
   color: black;
   align-items: center;
@@ -54,9 +54,14 @@ const LoginContainer = styled.div`
 const LoginBtn = styled.button`
   padding: 5px 20px;
   margin: 10px;
-  font-family: "Poppins", sans-serif;
+  font-family: 'Poppins', sans-serif;
   display: flex;
 `;
+
+const InputLabel = styled.span`
+  color: black;
+  font-family: 'Poppins', sans-serif;
+`
 
 const LoginTypeButtonContainer = styled.div`
   display: flex;
@@ -99,7 +104,7 @@ const ConnectionErrorMessage = styled.div`
   padding: 10px;
   margin: 5px;
   font-size: 80%;
-  font-family: "Poppins", sans-serif;
+  font-family: 'Poppins', sans-serif;
   transition: 0.5s;
 `;
 
@@ -114,6 +119,26 @@ const InputLabel = styled.span`
 `;
 
 const Login = () => {
+  const [tableData, setTableData] = useState([]);
+  const [URI, setURI] = useState('');
+  const [isSSL, setSSL] = useState(false);
+  const [requiredError, setRequiredError] = useState(false);
+  const [connectionError, setConnectionError] = useState(false);
+  const [isLoading, setLoading] = useState(false);
+  const [redirectToHome, setRedirectToHome] = useState(false);
+
+  const sendLoginURI = (): void => {
+    let updatedURI = URI;
+    if (isSSL) updatedURI += '?ssl=true';
+    if (!URI) setRequiredError(true);
+    else {
+      setLoading(true);
+      const client = new Client(updatedURI);
+      client.connect((err: Error) => {
+        if (err) {
+          setConnectionError(true);
+          setLoading(false);
+        } else {
   const [loginType, setLoginType] = useState('URI');
   const [host, setHost] = useState({ value: '', requiredError: false});
   const [port, setPort] = useState('5432');
@@ -159,14 +184,14 @@ const Login = () => {
 			        setLoading(false);
               setRedirectToHome(true);
             })
-            .catch((err: any) => console.log('composeTableData error:', err))
-				}
-			})
-		}
-	};
+            .catch((err: any) => console.log('composeTableData error:', err));
+        }
+      });
+    }
+  };
 
   const captureURI = (e): void => {
-    const sanitizedURI = e.target.value.replace(/\s+/g, "");
+    const sanitizedURI = e.target.value.replace(/\s+/g, '');
     setURI(sanitizedURI);
     if (requiredError) setRequiredError(false);
   };
@@ -175,7 +200,7 @@ const Login = () => {
     if (redirectToHome)
       return (
         <Redirect
-          to={{ pathname: "/homepage", state: { tables: tableData } }}
+          to={{ pathname: '/homepage', state: { tables: tableData } }}
         />
       );
   };
@@ -217,6 +242,11 @@ const Login = () => {
         </LoginTypeButton>
       </LoginTypeButtonContainer>
 
+      <URIInput
+        requiredErr={requiredError}
+        onChange={captureURI}
+        placeholder="Enter your URI connection string..."
+      />
       { loginType === 'Credentials' && 
         <CredentialsContainer>
           <CredentialsInput type="text" 
@@ -249,7 +279,6 @@ const Login = () => {
           }
         </CredentialsContainer>
       }
-
       { loginType === 'URI' && 
           <URIInput
             requiredErr={requiredError}
