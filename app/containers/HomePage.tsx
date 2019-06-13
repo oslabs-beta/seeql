@@ -1,9 +1,9 @@
-import * as React from 'react';
-import { useState, useEffect } from 'react';
-import Tables from '../components/Tables';
-import styled from 'styled-components';
-import Panel from './Panel';
-import LoadingComponent from '../components/LoadComponent';
+import * as React from "react";
+import { useState, useEffect } from "react";
+import Tables from "../components/Tables";
+import styled from "styled-components";
+import Panel from "./Panel";
+import LoadingComponent from "../components/LoadComponent";
 
 const HomepageWrapper = styled.div`
   height: 100vh;
@@ -33,7 +33,7 @@ let selectedColumnName: string;
 
 const HomePage = props => {
   renders += 1;
-  console.log('rendered ', renders);
+  console.log("rendered ", renders);
 
   const tableData = props.location.state.tables;
   const [data, setData] = useState([]); //data from database
@@ -44,8 +44,8 @@ const HomePage = props => {
   const [foreignKeysAffected, setForeignKeysAffected] = useState([]);
   const [primaryKeyAffected, setPrimaryKeyAffected] = useState([
     {
-      primaryKeyTable: '',
-      primaryKeyColumn: ''
+      primaryKeyTable: "",
+      primaryKeyColumn: ""
     }
   ]);
 
@@ -54,8 +54,8 @@ const HomePage = props => {
     if (!mouseOver) {
       setPrimaryKeyAffected([
         {
-          primaryKeyTable: '',
-          primaryKeyColumn: ''
+          primaryKeyTable: "",
+          primaryKeyColumn: ""
         }
       ]);
       setForeignKeysAffected([]);
@@ -63,7 +63,7 @@ const HomePage = props => {
 
     //Determines which rows should be highlighted
     if (mouseOver) {
-      if (isForeignKey == 'true') {
+      if (isForeignKey == "true") {
         setPrimaryKeyAffected([
           {
             primaryKeyTable: primaryKeyTableForForeignKey,
@@ -72,24 +72,20 @@ const HomePage = props => {
         ]);
       }
 
-      if (isPrimaryKey === 'true') {
+      if (isPrimaryKey === "true") {
         const allForeignKeys: Array<any> = [];
-        data.forEach(
-          (table): void => {
-            table.foreignKeys.forEach(
-              (foreignkey): void => {
-                if (
-                  foreignkey.foreign_table_name === selectedTableName &&
-                  foreignkey.foreign_column_name === selectedColumnName
-                )
-                  allForeignKeys.push({
-                    table: foreignkey.table_name,
-                    column: foreignkey.column_name
-                  });
-              }
-            );
-          }
-        );
+        data.forEach((table): void => {
+          table.foreignKeys.forEach((foreignkey): void => {
+            if (
+              foreignkey.foreign_table_name === selectedTableName &&
+              foreignkey.foreign_column_name === selectedColumnName
+            )
+              allForeignKeys.push({
+                table: foreignkey.table_name,
+                column: foreignkey.column_name
+              });
+          });
+        });
         setForeignKeysAffected(allForeignKeys);
       }
     }
@@ -151,5 +147,5 @@ const HomePage = props => {
     </EntireHomePageWrapper>
   );
 };
-//need to commit
+
 export default HomePage;

@@ -1,6 +1,6 @@
-import * as React from 'react';
-import styled from 'styled-components';
-import { Spring } from 'react-spring/renderprops';
+import * as React from "react";
+import styled from "styled-components";
+import { Spring } from "react-spring/renderprops";
 
 const Path = styled.path`
   display: flex;
@@ -25,14 +25,10 @@ const Svg = styled.svg`
   justify-content: center;
   align-items: center;
 `;
-// const LoadMessage = styled.p`
-//   font-size: 14px;
-//   color: pink;
-// `;
 
 const LoadComponent = () => {
   return (
-    <SeeqlWrapper className="seeql">
+    <SeeqlWrapper>
       <Spring from={{ x: 100 }} to={{ x: 0 }} config={{ duration: 18000 }}>
         {props => (
           <Svg strokeDasharray={props.x} width="225.704" height="83.608">
@@ -43,9 +39,8 @@ const LoadComponent = () => {
           </Svg>
         )}
       </Spring>
-      {/* <LoadMessage>Retrieving your database ...</LoadMessage> */}
     </SeeqlWrapper>
   );
 };
-//needtocommit
+
 export default LoadComponent;
