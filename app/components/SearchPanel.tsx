@@ -35,7 +35,7 @@ const Text = styled.p`
 `;
 
 const Label = styled.label`
-  font-size: 8px;
+  font-size: 12px;
 `;
 
 interface ISelectedTable {
