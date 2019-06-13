@@ -1,8 +1,9 @@
-import * as React from 'react';
-import { useState, useEffect } from 'react';
-import Tables from '../components/Tables';
-import styled from 'styled-components';
-import Panel from './Panel';
+import * as React from "react";
+import { useState, useEffect } from "react";
+import Tables from "../components/Tables";
+import styled from "styled-components";
+import Panel from "./Panel";
+import LoadingComponent from "../components/LoadComponent";
 
 interface ForeignKey {
  foreign_table_name: string; 
@@ -39,8 +40,11 @@ const HomepageWrapper = styled.div`
 
 const EntireHomePageWrapper = styled.div`
   display: flex;
-  font-family: 'Poppins', sans-serif;
-`
+`;
+const LoadWrap = styled.div`
+  display: flex;
+  width: 100%;
+`;
 
 const EmptyState= styled.div`
   background-color: black;
@@ -64,13 +68,7 @@ const HomePage = (props) => {
   const [userInputForTables, setUserInputForTables] = useState('');
   const [ data, setData ] = useState([]); //data from database
   const [mouseOver, setMouseOver] = useState(); //data to detect if mouse is over a pk or fk
-  const [ foreignKeysAffected, setForeignKeysAffected ] = useState([]);
-  const [ primaryKeyAffected, setPrimaryKeyAffected ] = useState([{
-    primaryKeyTable: '',
-    primaryKeyColumn: ''
-  }]);
-  const [ pinnedTables, setPinnedTables ] = useState([]);
-  const [onlyPinned, setOnlyPinned] = useState([]);
+  const [toggleLoad, setToggleLoad] = useState(true);
 
   console.log('selected table ',data )
   const removeFromPinned = (e) => { 
@@ -114,16 +112,37 @@ const HomePage = (props) => {
     if(!mouseOver) { //Resets all relationships 
       setPrimaryKeyAffected([{ primaryKeyTable: '', primaryKeyColumn: '' }]);
       setForeignKeysAffected([]);
-   }
-
-  //Determines which rows should be highlighted
-  if(mouseOver) {
-    if (isForeignKey == 'true'){
-      setPrimaryKeyAffected([{
-        primaryKeyTable: primaryKeyTableForForeignKey,
-        primaryKeyColumn: primaryKeyColumn
-      }])
     }
+
+    //Determines which rows should be highlighted
+    if (mouseOver) {
+      if (isForeignKey == "true") {
+        setPrimaryKeyAffected([
+          {
+            primaryKeyTable: primaryKeyTableForForeignKey,
+            primaryKeyColumn: primaryKeyColumn
+          }
+        ]);
+      }
+
+      if (isPrimaryKey === "true") {
+        const allForeignKeys: Array<any> = [];
+        data.forEach((table): void => {
+          table.foreignKeys.forEach((foreignkey): void => {
+            if (
+              foreignkey.foreign_table_name === selectedTableName &&
+              foreignkey.foreign_column_name === selectedColumnName
+            )
+              allForeignKeys.push({
+                table: foreignkey.table_name,
+                column: foreignkey.column_name
+              });
+          });
+        });
+        setForeignKeysAffected(allForeignKeys);
+      }
+    }
+  }, [mouseOver]);
 
     if (isPrimaryKey === 'true') {
       const allForeignKeys: Array<any> = [];
@@ -145,9 +164,11 @@ const HomePage = (props) => {
   }, [mouseOver]) 
 
   //Fetches database information
-  useEffect(():void => {
+  useEffect((): void => {
+    setToggleLoad(true);
     setData(tableData);
-  },[]);
+    setToggleLoad(false);
+  }, []);
 
   //Builds out tables to display
   useEffect(():void => {
