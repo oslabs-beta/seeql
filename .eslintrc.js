@@ -3,10 +3,10 @@ module.exports = {
   extends: [
     'plugin:@typescript-eslint/recommended',
     'react-app',
-    'plugin:prettier/recommended',
+    'plugin:prettier/recommended'
   ],
   plugins: ['@typescript-eslint', 'react'],
   rules: {
-    "@typescript-eslint/indent": "off"
-  },
+    '@typescript-eslint/indent': 'off'
+  }
 };
