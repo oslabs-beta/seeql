@@ -53,21 +53,20 @@ const ListOfResults = styled.ul`
   overflow: scroll;
 `;
 
-<<<<<<< HEAD
 interface TableName {
     name: string
 }
 
 interface Props {
-    listOfTableNames: Array<TableName>
-=======
+  listOfTableNames: Array<TableName>
+}
+
 interface ITableName {
   name: string;
 }
 
 interface Props {
   listOfTableNames: Array<ITableName>;
->>>>>>> bada9c01dd6c9da0132d0569ba0c16cc4ebfa394
 }
 
 const SearchPanel: React.SFC<Props> = ({ listOfTableNames }) => {
