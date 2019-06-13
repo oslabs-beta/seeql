@@ -70,9 +70,15 @@ const SearchPanel: React.SFC<Props> = ({ searchInput, activeTableInPanel, onlyPi
     }
 
     for(let foreignTableOfPrimary in foreignKeysOfPrimary){
-      primaryKeyRelationships.push(
-        <li>{foreignTableOfPrimary}({foreignKeysOfPrimary[foreignTableOfPrimary]})</li>
-      )
+      if(onlyPinned.includes(foreignTableOfPrimary)){
+        primaryKeyRelationships.push(
+          <li>{foreignTableOfPrimary}({foreignKeysOfPrimary[foreignTableOfPrimary]})<button data-pinned={foreignTableOfPrimary} onClick={removeFromPinned}>UNPIN TABLE</button></li>
+        )
+      } else {
+        primaryKeyRelationships.push(
+          <li>{foreignTableOfPrimary}({foreignKeysOfPrimary[foreignTableOfPrimary]})<button data-pinned={foreignTableOfPrimary} onClick={addToPinned}>PIN TABLE</button></li>
+        )
+      }
     }
 
     return(
