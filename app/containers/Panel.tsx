@@ -5,10 +5,13 @@ import SettingsPanel from '../components/SettingsPanel'
 import FavoritesPanel from '../components/FavoritesPanel';
 import SearchPanel from '../components/SearchPanel';
 
-const PanelWrapper = styled.div`
+interface IPanelWrapperProps {
+  visible: boolean
+}
+
+const PanelWrapper = styled.div<IPanelWrapperProps>`
     height: 100vh;
-    width: 400px;
-    border: 1px solid lightgrey;
+    width: ${({visible}) => visible ? '400px' : '50px'};
     display: flex;
     justify-content: space-between;
 `
@@ -18,21 +21,25 @@ const ButtonMenu = styled.div`
     width: 50px;
 `
 
-interface ITableName {
-    name: string
+interface ISelectedTable {
+  columns?: Array<any>
+  foreignKeys?: Array<any>
+  primaryKey?: string
+  table_name?: string
+  foreignKeysOfPrimary?: any
 }
 
 interface Props {
-    listOfTableNames: Array<ITableName>
+    searchInput: any
+    activeTableInPanel: ISelectedTable
 }
 
-const Panel: React.SFC<Props> = ({ listOfTableNames }) => {
+const Panel: React.SFC<Props> = ({ 
+  searchInput, 
+  activeTableInPanel}) => {
 
     const [activePanel, setActivePanel] = useState('search');
     const [visible, setVisible] = useState(true);
-
-    
-    console.log('active', activePanel)
 
     const displayActivePanelComponent = (e) => {
         setActivePanel(e.target.dataset.panel);
@@ -43,14 +50,14 @@ const Panel: React.SFC<Props> = ({ listOfTableNames }) => {
         else setVisible(true);
     }
 
-
     return (
-        <PanelWrapper>
+        <PanelWrapper visible={visible}>
             { visible &&
             <div>
             { activePanel==='search' &&
             <SearchPanel 
-              listOfTableNames={listOfTableNames}
+              searchInput={searchInput}
+              activeTableInPanel={activeTableInPanel}
             />}
             { activePanel==='favorites' &&
             <FavoritesPanel />}
@@ -64,7 +71,7 @@ const Panel: React.SFC<Props> = ({ listOfTableNames }) => {
                 <button 
                   data-panel='search' 
                   onClick={displayActivePanelComponent}
-                >Search</button>
+                >Table Info</button>
                 <button 
                   data-panel='favorites' 
                   onClick={displayActivePanelComponent}>

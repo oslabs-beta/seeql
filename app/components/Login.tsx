@@ -58,11 +58,6 @@ const LoginBtn = styled.button`
   display: flex;
 `;
 
-const InputLabel = styled.span`
-  color: black;
-  font-family: 'Poppins', sans-serif;
-`
-
 const LoginTypeButtonContainer = styled.div`
   display: flex;
   flex-direction: row;
@@ -119,42 +114,24 @@ const InputLabel = styled.span`
 `;
 
 const Login = () => {
-  const [tableData, setTableData] = useState([]);
+
+
+  const [loginType, setLoginType] = useState('URI');
+  const [host, setHost] = useState({ value: '', requiredError: false });
+  const [port, setPort] = useState('5432');
+  const [username, setUsername] = useState({ value: '', requiredError: false });
+  const [password, setPassword] = useState({ value: '', requiredError: false });
+  const [database, setDatabase] = useState({ value: '', requiredError: false });
   const [URI, setURI] = useState('');
   const [isSSL, setSSL] = useState(false);
+
   const [requiredError, setRequiredError] = useState(false);
   const [connectionError, setConnectionError] = useState(false);
   const [isLoading, setLoading] = useState(false);
   const [redirectToHome, setRedirectToHome] = useState(false);
-
-  const sendLoginURI = (): void => {
-    let updatedURI = URI;
-    if (isSSL) updatedURI += '?ssl=true';
-    if (!URI) setRequiredError(true);
-    else {
-      setLoading(true);
-      const client = new Client(updatedURI);
-      client.connect((err: Error) => {
-        if (err) {
-          setConnectionError(true);
-          setLoading(false);
-        } else {
-  const [loginType, setLoginType] = useState('URI');
-  const [host, setHost] = useState({ value: '', requiredError: false});
-  const [port, setPort] = useState('5432');
-  const [username, setUsername] = useState({ value: '', requiredError: false});
-  const [password, setPassword] = useState({ value: '', requiredError: false});
-  const [database, setDatabase] = useState({ value: '', requiredError: false});
-	const [URI, setURI] = useState('');
-  const [isSSL, setSSL] = useState(false);
-  
-	const [requiredError, setRequiredError] = useState(false);
-	const [connectionError, setConnectionError] = useState(false);
-	const [isLoading, setLoading] = useState(false);
-	const [redirectToHome, setRedirectToHome] = useState(false);
   const [tableData, setTableData] = useState([]);
 
-	const sendLoginURI = (): void => {
+  const sendLoginURI = (): void => {
     if (connectionError) setConnectionError(false);
     let updatedPort = !port ? '5432' : port;
     let updatedURI;
@@ -164,24 +141,24 @@ const Login = () => {
     if (isSSL) updatedURI += '?ssl=true';
 
     if (!updatedURI) setRequiredError(true);
-    if (!host.value) setHost({ value: '', requiredError: true});
-    if (!username.value) setUsername({ value: '', requiredError: true});
-    if (!password.value) setPassword({ value: '', requiredError: true});
-    if (!database.value) setDatabase({ value: '', requiredError: true});
-    
-    if (URI || (host.value && username.value && password.value && database.value )) {
-			setLoading(true);
-			const client = new Client(updatedURI);
-			client.connect((err: Error) => {
-				if (err) {
-					setConnectionError(true);
-					setLoading(false);
-				} else {
+    if (!host.value) setHost({ value: '', requiredError: true });
+    if (!username.value) setUsername({ value: '', requiredError: true });
+    if (!password.value) setPassword({ value: '', requiredError: true });
+    if (!database.value) setDatabase({ value: '', requiredError: true });
+
+    if (URI || (host.value && username.value && password.value && database.value)) {
+      setLoading(true);
+      const client = new Client(updatedURI);
+      client.connect((err: Error) => {
+        if (err) {
+          setConnectionError(true);
+          setLoading(false);
+        } else {
           composeTableData(client)
             .then(tables => {
-			        setConnectionError(false);
-			        setTableData(tables);
-			        setLoading(false);
+              setConnectionError(false);
+              setTableData(tables);
+              setLoading(false);
               setRedirectToHome(true);
             })
             .catch((err: any) => console.log('composeTableData error:', err));
@@ -207,11 +184,11 @@ const Login = () => {
 
   return (
     <LoginContainer>
-      
-      { connectionError
-				&& <ConnectionErrorMessage>Unable to connect to the database. Please try again.</ConnectionErrorMessage>
+
+      {connectionError
+        && <ConnectionErrorMessage>Unable to connect to the database. Please try again.</ConnectionErrorMessage>
       }
-      
+
       <InputLabel>
         <em>CS_DEMO_DB</em>
         <br />
@@ -224,81 +201,76 @@ const Login = () => {
         <br />
         postgres://ltdnkwnbccooem:64ad308e565b39cc070194f7fa621ae0e925339be5a1c69480ff2a4462eab4c4@ec2-54-163-226-238.compute-1.amazonaws.com:5432/ddsu160rb5t7vq
       </InputLabel>
-      
+
       <LoginTypeButtonContainer>
-        <LoginTypeButton 
-          buttonType="URI" 
-          selectedLoginType={loginType} 
+        <LoginTypeButton
+          buttonType="URI"
+          selectedLoginType={loginType}
           onClick={() => setLoginType('URI')}
-          > 
-          URI 
+        >
+          URI
         </LoginTypeButton>
-        <LoginTypeButton 
-          buttonType="Credentials" 
-          selectedLoginType={loginType} 
+        <LoginTypeButton
+          buttonType="Credentials"
+          selectedLoginType={loginType}
           onClick={() => setLoginType('Credentials')}
-        > 
-          Credentials 
+        >
+          Credentials
         </LoginTypeButton>
       </LoginTypeButtonContainer>
 
-      <URIInput
-        requiredErr={requiredError}
-        onChange={captureURI}
-        placeholder="Enter your URI connection string..."
-      />
-      { loginType === 'Credentials' && 
+      {loginType === 'Credentials' &&
         <CredentialsContainer>
-          <CredentialsInput type="text" 
-            requiredErr={host.requiredError} 
-            placeholder="host" 
-            onChange={(e) => setHost({ value: e.target.value, requiredError: false }) } 
+          <CredentialsInput type="text"
+            requiredErr={host.requiredError}
+            placeholder="host"
+            onChange={(e) => setHost({ value: e.target.value, requiredError: false })}
           />
-          <CredentialsInput type="text" 
-            requiredErr={false} 
-            placeholder="port (default 5432)" 
-            onChange={(e) => setPort(e.target.value) } 
+          <CredentialsInput type="text"
+            requiredErr={false}
+            placeholder="port (default 5432)"
+            onChange={(e) => setPort(e.target.value)}
           />
-          <CredentialsInput type="text" 
-            requiredErr={username.requiredError} 
-            placeholder="username" 
-            onChange={(e) => setUsername({ value: e.target.value, requiredError: false }) } 
+          <CredentialsInput type="text"
+            requiredErr={username.requiredError}
+            placeholder="username"
+            onChange={(e) => setUsername({ value: e.target.value, requiredError: false })}
           />
-          <CredentialsInput type="text" 
-            requiredErr={password.requiredError} 
-            placeholder="password" 
-            onChange={(e) => setPassword({ value: e.target.value, requiredError: false }) } 
+          <CredentialsInput type="text"
+            requiredErr={password.requiredError}
+            placeholder="password"
+            onChange={(e) => setPassword({ value: e.target.value, requiredError: false })}
           />
-          <CredentialsInput type="text" 
-            requiredErr={database.requiredError} 
-            placeholder="database" 
-            onChange={(e) => setDatabase({ value: e.target.value, requiredError: false }) } 
+          <CredentialsInput type="text"
+            requiredErr={database.requiredError}
+            placeholder="database"
+            onChange={(e) => setDatabase({ value: e.target.value, requiredError: false })}
           />
           {(host.requiredError || username.requiredError || password.requiredError || database.requiredError)
             && <RequiredWarning>This field is required</RequiredWarning>
           }
         </CredentialsContainer>
       }
-      { loginType === 'URI' && 
-          <URIInput
-            requiredErr={requiredError}
-            onChange={captureURI}
-            placeholder="Enter your URI connection string..."
-          />
-      }     
-      { requiredError &&
-            <RequiredWarning>This field is required</RequiredWarning>} 
+      {loginType === 'URI' &&
+        <URIInput
+          requiredErr={requiredError}
+          onChange={captureURI}
+          placeholder="Enter your URI connection string..."
+        />
+      }
+      {requiredError &&
+        <RequiredWarning>This field is required</RequiredWarning>}
 
-			<ToggleSSL>
-				<input type="checkbox" onChange={(e) => setSSL(e.target.checked)} />
-				<label>ssl?</label>
-			</ToggleSSL>
+      <ToggleSSL>
+        <input type="checkbox" onChange={(e) => setSSL(e.target.checked)} />
+        <label>ssl?</label>
+      </ToggleSSL>
 
-			{!isLoading && <LoginBtn onClick={sendLoginURI}>Login</LoginBtn>}
-			{isLoading && <LoginBtn disabled>Loading...</LoginBtn>}
+      {!isLoading && <LoginBtn onClick={sendLoginURI}>Login</LoginBtn>}
+      {isLoading && <LoginBtn disabled>Loading...</LoginBtn>}
 
-			{redirectHome()}
-		</LoginContainer>
+      {redirectHome()}
+    </LoginContainer>
   );
 };
 
