@@ -4,8 +4,6 @@ import styled from 'styled-components';
 import { Redirect } from 'react-router-dom';
 import { Client } from 'pg';
 import composeTableData from '../db';
-// import LoadComponent from './LoadComponent';
-// import HomePage from '../containers/HomePage';
 
 interface URIInputProps {
   readonly requiredErr: boolean;
@@ -60,11 +58,11 @@ const LoginBtn = styled.button`
   display: flex;
 `;
 
-<<<<<<< HEAD
 const InputLabel = styled.span`
   color: black;
   font-family: 'Poppins', sans-serif;
-=======
+`
+
 const LoginTypeButtonContainer = styled.div`
   display: flex;
   flex-direction: row;
@@ -122,7 +120,6 @@ const InputLabel = styled.span`
 `;
 
 const Login = () => {
-<<<<<<< HEAD
   const [tableData, setTableData] = useState([]);
   const [URI, setURI] = useState('');
   const [isSSL, setSSL] = useState(false);
@@ -143,7 +140,6 @@ const Login = () => {
           setConnectionError(true);
           setLoading(false);
         } else {
-=======
   const [loginType, setLoginType] = useState('URI');
   const [host, setHost] = useState({ value: '', requiredError: false});
   const [port, setPort] = useState('5432');
@@ -182,7 +178,6 @@ const Login = () => {
 					setConnectionError(true);
 					setLoading(false);
 				} else {
->>>>>>> dev
           composeTableData(client)
             .then(tables => {
 			        setConnectionError(false);
@@ -190,19 +185,11 @@ const Login = () => {
 			        setLoading(false);
               setRedirectToHome(true);
             })
-<<<<<<< HEAD
             .catch((err: any) => console.log('composeTableData error:', err));
         }
       });
     }
   };
-=======
-            .catch((err: any) => console.log('composeTableData error:', err))
-				}
-			})
-		}
-	};
->>>>>>> dev
 
   const captureURI = (e): void => {
     const sanitizedURI = e.target.value.replace(/\s+/g, '');
@@ -256,13 +243,11 @@ const Login = () => {
         </LoginTypeButton>
       </LoginTypeButtonContainer>
 
-<<<<<<< HEAD
       <URIInput
         requiredErr={requiredError}
         onChange={captureURI}
         placeholder="Enter your URI connection string..."
       />
-=======
       { loginType === 'Credentials' && 
         <CredentialsContainer>
           <CredentialsInput type="text" 
@@ -295,8 +280,6 @@ const Login = () => {
           }
         </CredentialsContainer>
       }
->>>>>>> dev
-
       { loginType === 'URI' && 
           <URIInput
             requiredErr={requiredError}
