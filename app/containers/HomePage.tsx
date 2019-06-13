@@ -22,7 +22,11 @@ interface IPinBtnProps{
 const PinBtn = styled.button<IPinBtnProps>`
   display: relative;
   border: none;
-  color: ${(props) => props.pinned ? 'lightcoral' : 'black'}
+  background-color: ${(props) => props.pinned ? 'rgb(93, 0, 250)' : 'white'};
+  color: ${(props) => props.pinned ? 'white' : 'black'};
+  padding: 2px 5px;
+  border-radius: 6px;
+  margin: 2px 0px;
   :hover {
     font-weight: bold;
     color: #00b5cc;
