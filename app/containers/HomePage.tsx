@@ -5,12 +5,12 @@ import styled from "styled-components";
 import Panel from "./Panel";
 import LoadingComponent from "../components/LoadComponent";
 
-interface ForeignKey {
- foreign_table_name: string; 
- foreign_column_name: string; 
- table_name: any; 
- column_name: any; 
-}
+// interface ForeignKey {
+//  foreign_table_name: string; 
+//  foreign_column_name: string; 
+//  table_name: any; 
+//  column_name: any; 
+// }
 
 const NormalTable = styled.div`
 overflow: scroll;
@@ -41,6 +41,7 @@ const HomepageWrapper = styled.div`
 const EntireHomePageWrapper = styled.div`
   display: flex;
 `;
+
 const LoadWrap = styled.div`
   display: flex;
   width: 100%;
@@ -69,8 +70,14 @@ const HomePage = (props) => {
   const [ data, setData ] = useState([]); //data from database
   const [mouseOver, setMouseOver] = useState(); //data to detect if mouse is over a pk or fk
   const [toggleLoad, setToggleLoad] = useState(true);
+  const [ foreignKeysAffected, setForeignKeysAffected ] = useState([]);
+  const [ primaryKeyAffected, setPrimaryKeyAffected ] = useState([{
+    primaryKeyTable: '',
+    primaryKeyColumn: ''
+  }]);
+  const [ pinnedTables, setPinnedTables ] = useState([]);
+  const [onlyPinned, setOnlyPinned] = useState([]);
 
-  console.log('selected table ',data )
   const removeFromPinned = (e) => { 
     let noLongerPinned = onlyPinned.filter(table => table !== e.target.dataset.pinned)
     setOnlyPinned(noLongerPinned)
@@ -117,51 +124,21 @@ const HomePage = (props) => {
     //Determines which rows should be highlighted
     if (mouseOver) {
       if (isForeignKey == "true") {
-        setPrimaryKeyAffected([
-          {
-            primaryKeyTable: primaryKeyTableForForeignKey,
-            primaryKeyColumn: primaryKeyColumn
-          }
-        ]);
+        setPrimaryKeyAffected([ { primaryKeyTable: primaryKeyTableForForeignKey, primaryKeyColumn: primaryKeyColumn } ]);
       }
 
       if (isPrimaryKey === "true") {
         const allForeignKeys: Array<any> = [];
         data.forEach((table): void => {
           table.foreignKeys.forEach((foreignkey): void => {
-            if (
-              foreignkey.foreign_table_name === selectedTableName &&
-              foreignkey.foreign_column_name === selectedColumnName
-            )
-              allForeignKeys.push({
-                table: foreignkey.table_name,
-                column: foreignkey.column_name
-              });
+            if ( foreignkey.foreign_table_name === selectedTableName && foreignkey.foreign_column_name === selectedColumnName)
+              allForeignKeys.push({ table: foreignkey.table_name, column: foreignkey.column_name });
           });
         });
         setForeignKeysAffected(allForeignKeys);
       }
     }
   }, [mouseOver]);
-
-    if (isPrimaryKey === 'true') {
-      const allForeignKeys: Array<any> = [];
-      data.forEach((table):void => {
-          table.foreignKeys.forEach((foreignkey: ForeignKey):void => {
-            if (
-              foreignkey.foreign_table_name === selectedTableName 
-              && foreignkey.foreign_column_name === selectedColumnName
-            )
-            allForeignKeys.push({
-              table: foreignkey.table_name,
-              column: foreignkey.column_name
-            })
-          }) 
-      }) 
-      setForeignKeysAffected(allForeignKeys);
-     } 
-   }
-  }, [mouseOver]) 
 
   //Fetches database information
   useEffect((): void => {
@@ -259,8 +236,14 @@ const HomePage = (props) => {
     <Panel 
       searchInput={searchInputCapture}
       activeTableInPanel={activeTableInPanel} />
+
+       {toggleLoad && (
+        <LoadWrap>
+          <LoadingComponent />
+        </LoadWrap>
+      )}
+
       {
-        // #TODO: flashes empty state on load, figure out why
         (pinnedTables.length  || filteredTables.length)? <HomepageWrapper>{pinnedTables}{filteredTables}</HomepageWrapper> :
         <EmptyState>
           no matches found, KAREN
