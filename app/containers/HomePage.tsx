@@ -152,7 +152,7 @@ const HomePage = (props) => {
 
             pinned.push(
               <PinnedTable>
-              <button data-pinned={table.table_name} onClick={removeFromPinned} >UNPIN for {table.table_name}</button>
+              <button data-pinned={table.table_name} onClick={removeFromPinned} >UNPIN</button>
               <Tables
                 tableName={table.table_name}
                 columns={table.columns}
@@ -183,7 +183,7 @@ const HomePage = (props) => {
 
             filtered.push(
               <div>
-              <button data-pinned={table.table_name} onClick={addToPinned} >PIN for {table.table_name}</button>
+              <button data-pinned={table.table_name} onClick={addToPinned} >PIN</button>
               <Tables
                 tableName={table.table_name}
                 columns={table.columns}
@@ -225,10 +225,7 @@ const HomePage = (props) => {
   return (
     <EntireHomePageWrapper>
     <Panel 
-      onlyPinned={onlyPinned}
       searchInput={searchInputCapture}
-      removeFromPinned={removeFromPinned}
-      addToPinned={addToPinned}
       activeTableInPanel={activeTableInPanel} />
       {
         // #TODO: flashes empty state on load, figure out why

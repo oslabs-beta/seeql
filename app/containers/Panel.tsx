@@ -29,13 +29,11 @@ interface ISelectedTable {
 interface Props {
     searchInput: any
     activeTableInPanel: ISelectedTable
-    onlyPinned: Array<any>
-    removeFromPinned:(Event) => void
-    addToPinned:(Event) => void
 }
 
-const Panel: React.SFC<Props> = ({ searchInput, activeTableInPanel, onlyPinned,  removeFromPinned,
-  addToPinned}) => {
+const Panel: React.SFC<Props> = ({ 
+  searchInput, 
+  activeTableInPanel}) => {
 
     const [activePanel, setActivePanel] = useState('search');
     const [visible, setVisible] = useState(true);
@@ -55,9 +53,6 @@ const Panel: React.SFC<Props> = ({ searchInput, activeTableInPanel, onlyPinned, 
             <div>
             { activePanel==='search' &&
             <SearchPanel 
-              removeFromPinned={removeFromPinned}
-              addToPinned={addToPinned}
-              onlyPinned={onlyPinned}
               searchInput={searchInput}
               activeTableInPanel={activeTableInPanel}
             />}
