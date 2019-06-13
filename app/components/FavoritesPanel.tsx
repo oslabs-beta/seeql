@@ -5,12 +5,12 @@ const PanelWrapper = styled.div`
   color: black;
   font-family: 'Poppins', sans-serif;
   padding: 40px;
-  border: 1px solid black;
   font-size: 30px;
   width: 300px;
   height: 100vh;
   display: flex;
   justify-content: center;
+  background-color: #e8ecf1;
 `
 
 const FavoritesPanel = () => {

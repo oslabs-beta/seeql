@@ -4,9 +4,9 @@ import styled from "styled-components";
 const LeftPanelTableListWrapper = styled.div`
   color: black;
   padding: 40px;
-  border: 1px solid black;
   width: 300px;
   height: 100vh;
+  background-color: #e8ecf1;
 `;
 
 const InfoSection = styled.div`
@@ -21,8 +21,9 @@ const SearchField = styled.input`
   margin: 10px 20px;
   height: 20px;
   font-family: "Poppins", sans-serif;
+  background-color: transparent;
   border: none;
-  border-bottom: 1px solid lightgrey;
+  border-bottom: 2px solid  #00b5cc;
   padding: 5px;
   :focus {
     outline: none;

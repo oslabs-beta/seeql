@@ -30,10 +30,10 @@ const ButtonMenu = styled.div`
 const IndTab = styled.button<IIndTabProps>`
   border: none;
   font-family: 'Poppins', sans-serif;
-  border: 1px solid grey;
-  border-left: none;
+  border: none;
+  border-radius: 0px 6px 6px 0px;
   padding: 5px;
-  background-color: ${(props) => (props.active === props.panel) ? '#00b5cc' : 'white' }
+  background-color: ${(props) => (props.active === props.panel) ? '#e8ecf1' : '#fdfdfe' }
   
   :hover {
     font-weight: bold;
