@@ -188,17 +188,13 @@ const Login = () => {
       }
       
       <InputLabel>
-				<em>
-        CS_DEMO_DB
-				</em>
+        <em>CS_DEMO_DB</em>
         <br />
         <br />
-postgres://godugvmyduvduy:3b89454dd6a4090ac4a5574a00a2e13393dda232f258b3a6033c4ac4d24858ff@ec2-50-19-127-115.compute-1.amazonaws.com:5432/d16hrptvvsaq3f
+        postgres://godugvmyduvduy:3b89454dd6a4090ac4a5574a00a2e13393dda232f258b3a6033c4ac4d24858ff@ec2-50-19-127-115.compute-1.amazonaws.com:5432/d16hrptvvsaq3f
         <br />
         <br />
-				<em>
-        MAGNOLIA:
-				</em>
+        <em>MAGNOLIA:</em>
         <br />
         <br />
         postgres://ltdnkwnbccooem:64ad308e565b39cc070194f7fa621ae0e925339be5a1c69480ff2a4462eab4c4@ec2-54-163-226-238.compute-1.amazonaws.com:5432/ddsu160rb5t7vq
