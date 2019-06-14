@@ -4,6 +4,7 @@ import Tables from "../components/Tables";
 import styled from "styled-components";
 import Panel from "./Panel";
 import LoadingComponent from "../components/LoadComponent";
+import QueryResults from "../components/QueryResults";
 
 
 const InvisibleHeader = styled.div`
@@ -44,18 +45,15 @@ const PinBtn = styled.button<IPinBtnProps>`
 
 const HomepageWrapper = styled.div`
   height: 100vh;
-  width: 100%;
-  overflow: scroll;
   padding: 20px;
-  display: grid;
-  grid-gap: 20px;
-  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-  grid-template-rows: 200px auto;
+  display: flex; 
+  flex-wrap: wrap;
 `
 
 const EntireHomePageWrapper = styled.div`
   display: flex;
   margin-top: -30px;
+  overflow: wrap;
   font-family: 'Poppins', sans-serif;
 `;
 
@@ -269,12 +267,21 @@ const HomePage = (props) => {
           <LoadingComponent />
         </LoadWrap>
       )}
+      <div>
+      <nav>
+        <button>Tables</button>
+        <button>Query Results</button>
+      </nav>
       {
         (pinnedTables.length  || filteredTables.length)? <HomepageWrapper>{pinnedTables}{filteredTables}</HomepageWrapper>:
         <EmptyState>
-          no matches found, KAREN
+          There were no search results. Please search again.
         </EmptyState>
       }
+      { true &&
+        <QueryResults />
+      }
+      </div>
     </EntireHomePageWrapper>
     </React.Fragment>
   );

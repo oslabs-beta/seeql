@@ -18,7 +18,7 @@ const PanelWrapper = styled.div<IPanelWrapperProps>`
     height: 100vh;
     width: ${({visible}) => visible ? '400px' : '50px'};
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-start;
 `
 const ButtonMenu = styled.div`
     display: flex;
@@ -51,7 +51,7 @@ const Tabs = styled.div`
    height: 100px;
    justify-content: space-between;
    font-family: 'Poppins', sans-serif;
-   margin-top: 10px;
+   margin-top: 30px;
 `
 
 const CollapseBtn = styled.button`
@@ -111,7 +111,7 @@ const Panel: React.SFC<Props> = ({
             <SettingsPanel />}
             </div>}
             <ButtonMenu>
-              <Tabs>
+            {visible && <Tabs>
                 <IndTab 
                   data-panel='search' 
                   panel='search'
@@ -132,7 +132,8 @@ const Panel: React.SFC<Props> = ({
                   onClick={displayActivePanelComponent}>
                   Settings
                 </IndTab>
-                </Tabs>
+                </Tabs>}
+              { !visible && <div></div>}
                 <CollapseBtn 
                   onClick={togglePanelVisibility}
                   data-active={activePanel}
