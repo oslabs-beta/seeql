@@ -1,11 +1,15 @@
 import * as React from 'react';
+import styled from 'styled-components';
 
+const QueryResultWrapper = styled.div`
+    border: 1px solid black;
+`
 
 const QueryResults = () => {
     return(
-        <div>
+        <QueryResultWrapper>
             Query results!
-        </div>
+        </QueryResultWrapper>
     )
 }
 

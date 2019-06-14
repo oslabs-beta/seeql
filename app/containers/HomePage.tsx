@@ -81,17 +81,17 @@ let selectedColumnName: string;
 
 // The Store, basically
 const HomePage = (props) => {
-  // renders += 1;
-  // console.log('rendered ', renders);
+
   const tableData = props.location.state.tables;
+  const [activeDisplayInBottomTab, setActiveDisplayInBottomTab] = useState('tables');
   const [activeTableInPanel, setActiveTableInPanel] = useState({});
   const [filteredTables, setFilteredTables] = useState([]);
   const [userInputForTables, setUserInputForTables] = useState('');
-  const [ data, setData ] = useState([]); //data from database
+  const [data, setData] = useState([]); //data from database
   const [mouseOver, setMouseOver] = useState(); //data to detect if mouse is over a pk or fk
   const [toggleLoad, setToggleLoad] = useState(true);
-  const [ foreignKeysAffected, setForeignKeysAffected ] = useState([]);
-  const [ primaryKeyAffected, setPrimaryKeyAffected ] = useState([{
+  const [foreignKeysAffected, setForeignKeysAffected ] = useState([]);
+  const [primaryKeyAffected, setPrimaryKeyAffected ] = useState([{
     primaryKeyTable: '',
     primaryKeyColumn: ''
   }]);
@@ -252,7 +252,8 @@ const HomePage = (props) => {
     activeTableInPanel
   ]);
 
-  const searchInputCapture = e => setUserInputForTables(e.target.value)
+  const searchInputCapture = e => setUserInputForTables(e.target.value);
+  const activeTabcapture = (e) => setActiveDisplayInBottomTab(e.target.dataset.activetabname);
 
   return (
     <React.Fragment>
@@ -269,16 +270,16 @@ const HomePage = (props) => {
       )}
       <div>
       <nav>
-        <button>Tables</button>
-        <button>Query Results</button>
+        <button data-activetabname='tables' onClick={activeTabcapture}>Tables</button>
+        <button data-activetabname='queryresults' onClick={activeTabcapture}>Query Results</button>
       </nav>
-      {
-        (pinnedTables.length  || filteredTables.length)? <HomepageWrapper>{pinnedTables}{filteredTables}</HomepageWrapper>:
+      {  activeDisplayInBottomTab==='tables' &&
+        ((pinnedTables.length  || filteredTables.length)? <HomepageWrapper>{pinnedTables}{filteredTables}</HomepageWrapper>:
         <EmptyState>
           There were no search results. Please search again.
-        </EmptyState>
+        </EmptyState>)
       }
-      { true &&
+      { activeDisplayInBottomTab==='queryresults' &&
         <QueryResults />
       }
       </div>
