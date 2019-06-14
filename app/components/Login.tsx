@@ -5,6 +5,10 @@ import { Redirect } from 'react-router-dom';
 import { Client } from 'pg';
 import composeTableData from '../db';
 
+const InvisibleHeader = styled.div`
+  height: 30px;
+  -webkit-app-region: drag;
+`
 
 const FullPageWrapper = styled.div`
   display: flex;
@@ -201,6 +205,8 @@ const Login = () => {
   };
 
   return (
+    <React.Fragment>
+    <InvisibleHeader></InvisibleHeader>
     <FullPageWrapper>
     <LoginContainer>
 
@@ -284,6 +290,7 @@ const Login = () => {
       {redirectHome()}
     </LoginContainer>
     </FullPageWrapper>
+    </React.Fragment>
   );
 };
 

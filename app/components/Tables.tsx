@@ -13,11 +13,11 @@ const Table = styled.div<ITableProps>`
   color: black;
   border: ${(props) => (props.selectedtable === props.tablename) ? '2px solid #00b5cc' : '1px solid grey'};
   box-shadow: ${(props) => (props.selectedtable === props.tablename) ? '4px 4px 10px  #99f3ff' : 'none'};
-  overflow: scroll;
 `;
 
 const InnerTableWrapper = styled.ul`
   flex-direction: column;
+  max-height: 200px;
   overflow: scroll;
 `;
 

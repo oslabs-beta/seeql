@@ -5,6 +5,12 @@ import styled from "styled-components";
 import Panel from "./Panel";
 import LoadingComponent from "../components/LoadComponent";
 
+
+const InvisibleHeader = styled.div`
+  height: 30px;
+  display: relative;
+  -webkit-app-region: drag;
+`
 const NormalTable = styled.div`
 overflow: scroll;
 display: absolute;
@@ -49,6 +55,7 @@ const HomepageWrapper = styled.div`
 
 const EntireHomePageWrapper = styled.div`
   display: flex;
+  margin-top: -30px;
   font-family: 'Poppins', sans-serif;
 `;
 
@@ -250,6 +257,8 @@ const HomePage = (props) => {
   const searchInputCapture = e => setUserInputForTables(e.target.value)
 
   return (
+    <React.Fragment>
+    <InvisibleHeader ></InvisibleHeader>
     <EntireHomePageWrapper>
     <Panel 
       searchInput={searchInputCapture}
@@ -267,6 +276,7 @@ const HomePage = (props) => {
         </EmptyState>
       }
     </EntireHomePageWrapper>
+    </React.Fragment>
   );
 };
 
