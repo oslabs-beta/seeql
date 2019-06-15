@@ -8,6 +8,20 @@ import QueryResults from "../components/QueryResults";
 import changePinnedStatus from "../reducers/ChangePinnedStatus"
 import * as actions from '../actions/actions';
 
+
+const SearchField = styled.input`
+  margin: 10px 20px;
+  height: 20px;
+  font-family: "Poppins", sans-serif;
+  background-color: transparent;
+  border: none;
+  border-bottom: 2px solid  #00b5cc;
+  padding: 5px;
+  :focus {
+    outline: none;
+  }
+`;
+
 const BottomPanel = styled.div`
   border: 1px solid black;
 `
@@ -246,7 +260,6 @@ const HomePage = (props) => {
     activeTableInPanel
   ]);
 
-  const searchInputCapture = e => setUserInputForTables(e.target.value);
   const activeTabcapture = (e) => setActiveDisplayInBottomTab(e.target.dataset.activetabname);
 
   return (
@@ -254,15 +267,18 @@ const HomePage = (props) => {
     <InvisibleHeader ></InvisibleHeader>
     <EntireHomePageWrapper>
     <Panel 
-      searchInput={searchInputCapture}
       activeTableInPanel={activeTableInPanel} />
-
        {toggleLoad && (
         <LoadWrap>
           <LoadingComponent />
         </LoadWrap>
       )}
       <BottomPanel>
+      <SearchField
+        type="text"
+        placeholder="Search for a table"
+        onChange={e => setUserInputForTables(e.target.value)}
+      ></SearchField>
       <nav>
         <button data-activetabname='tables' onClick={activeTabcapture}>Tables</button>
         <button data-activetabname='queryresults' onClick={activeTabcapture}>Query Results</button>

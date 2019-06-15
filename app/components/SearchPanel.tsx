@@ -22,19 +22,6 @@ const Title = styled.h1`
   color: black;
 `;
 
-const SearchField = styled.input`
-  margin: 10px 20px;
-  height: 20px;
-  font-family: "Poppins", sans-serif;
-  background-color: transparent;
-  border: none;
-  border-bottom: 2px solid  #00b5cc;
-  padding: 5px;
-  :focus {
-    outline: none;
-  }
-`;
-
 const Text = styled.p`
   font-size: 14px;
 `;
@@ -52,13 +39,11 @@ interface ISelectedTable {
 }
 
 interface Props {
-  searchInput: any;
   activeTableInPanel: ISelectedTable;
   visible: boolean;
 }
 
 const SearchPanel: React.SFC<Props> = ({
-  searchInput,
   activeTableInPanel,
   visible
 }) => {
@@ -95,12 +80,6 @@ const SearchPanel: React.SFC<Props> = ({
   return (
     <LeftPanelTableListWrapper visible={visible}>
       <Title>Information</Title>
-
-      <SearchField
-        type="text"
-        placeholder="Search for a table"
-        onChange={searchInput}
-      ></SearchField>
       {Object.keys(activeTableInPanel).length > 0 ? (
         <InfoSection>
           <Label>table name</Label>

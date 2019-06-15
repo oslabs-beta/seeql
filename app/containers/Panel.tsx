@@ -16,7 +16,7 @@ interface IIndTabProps {
 
 const PanelWrapper = styled.div<IPanelWrapperProps>`
     height: 100vh;
-    width: ${({visible}) => visible ? '400px' : '50px'};
+    width: ${({visible}) => visible ? '375px' : '50px'};
     display: flex;
     justify-content: flex-start;
     transition: width 500ms ease-in-out;
@@ -77,12 +77,10 @@ interface ISelectedTable {
 }
 
 interface Props {
-    searchInput: any
     activeTableInPanel: ISelectedTable
 }
 
 const Panel: React.SFC<Props> = ({ 
-  searchInput, 
   activeTableInPanel}) => {
 
     const [activePanel, setActivePanel] = useState('search');
@@ -104,7 +102,6 @@ const Panel: React.SFC<Props> = ({
             { activePanel==='search' &&
             <SearchPanel 
               visible={visible}
-              searchInput={searchInput}
               activeTableInPanel={activeTableInPanel}
             />}
             { activePanel==='favorites' &&
