@@ -8,6 +8,10 @@ import QueryResults from "../components/QueryResults";
 import changePinnedStatus from "../reducers/ChangePinnedStatus"
 import * as actions from '../actions/actions';
 
+const BottomPanel = styled.div`
+  border: 1px solid black;
+`
+
 
 const InvisibleHeader = styled.div`
   height: 30px;
@@ -36,6 +40,7 @@ const PinBtn = styled.button<IPinBtnProps>`
   padding: 2px 5px;
   border-radius: 6px;
   margin: 2px 0px;
+
   :hover {
     font-weight: bold;
     color: #00b5cc;
@@ -65,13 +70,12 @@ const LoadWrap = styled.div`
 `;
 
 const EmptyState= styled.div`
-
-height: 100vh;
+  height: 100vh;
   width: 100%;
   padding: 20px;  
-   display: flex;
-   justify-content: center;
-   align-items: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `
 
 let isPrimaryKey: string;
@@ -81,7 +85,6 @@ let primaryKeyColumn: string;
 let selectedTableName: string;
 let selectedColumnName: string;
 
-// The Store, basically
 const HomePage = (props) => {
 
   const tableData = props.location.state.tables;
@@ -259,7 +262,7 @@ const HomePage = (props) => {
           <LoadingComponent />
         </LoadWrap>
       )}
-      <div>
+      <BottomPanel>
       <nav>
         <button data-activetabname='tables' onClick={activeTabcapture}>Tables</button>
         <button data-activetabname='queryresults' onClick={activeTabcapture}>Query Results</button>
@@ -273,7 +276,7 @@ const HomePage = (props) => {
       { activeDisplayInBottomTab==='queryresults' &&
         <QueryResults />
       }
-      </div>
+      </BottomPanel>
     </EntireHomePageWrapper>
     </React.Fragment>
   );

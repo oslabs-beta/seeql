@@ -19,6 +19,7 @@ const PanelWrapper = styled.div<IPanelWrapperProps>`
     width: ${({visible}) => visible ? '400px' : '50px'};
     display: flex;
     justify-content: flex-start;
+    transition: width 500ms ease-in-out;
 `
 const ButtonMenu = styled.div`
     display: flex;
@@ -102,6 +103,7 @@ const Panel: React.SFC<Props> = ({
             <div>
             { activePanel==='search' &&
             <SearchPanel 
+              visible={visible}
               searchInput={searchInput}
               activeTableInPanel={activeTableInPanel}
             />}

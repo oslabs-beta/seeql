@@ -1,12 +1,17 @@
 import * as React from "react";
 import styled from "styled-components";
 
-const LeftPanelTableListWrapper = styled.div`
+interface ILeftPanelTableWrapperProps {
+  visible: boolean
+}
+
+const LeftPanelTableListWrapper = styled.div<ILeftPanelTableWrapperProps>`
   color: black;
   padding: 40px;
-  width: 300px;
+  width: ${({visible}) => visible ? '300px' : '0px'};
   height: 100vh;
   background-color: #e8ecf1;
+  transition: width 500ms ease-in-out;
 `;
 
 const InfoSection = styled.div`
@@ -49,11 +54,13 @@ interface ISelectedTable {
 interface Props {
   searchInput: any;
   activeTableInPanel: ISelectedTable;
+  visible: boolean;
 }
 
 const SearchPanel: React.SFC<Props> = ({
   searchInput,
-  activeTableInPanel
+  activeTableInPanel,
+  visible
 }) => {
   const {
     table_name,
@@ -86,7 +93,7 @@ const SearchPanel: React.SFC<Props> = ({
   }
 
   return (
-    <LeftPanelTableListWrapper>
+    <LeftPanelTableListWrapper visible={visible}>
       <Title>Information</Title>
 
       <SearchField
