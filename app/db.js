@@ -4,9 +4,8 @@ const getTables = client => {
       `SELECT table_name
                       FROM information_schema.tables
                       WHERE table_schema='public'
-                      AND table_type='BASE TABLE'
-                      ORDER BY table_name ASC`,
-      (err: string, result: string) => {
+                      AND table_type='BASE TABLE'`,
+      (err, result) => {
         if (err) reject(err);
         resolve(result);
       }
@@ -14,7 +13,7 @@ const getTables = client => {
   });
 };
 
-const getForeignKeys = (client, tableName: string) => {
+const getForeignKeys = (client, tableName) => {
   return new Promise((resolve, reject) => {
     client.query(
       `SELECT tc.table_schema,
@@ -33,7 +32,7 @@ const getForeignKeys = (client, tableName: string) => {
                   AND ccu.table_schema = tc.table_schema
                   WHERE tc.constraint_type = 'FOREIGN KEY'
                   AND tc.table_name = '${tableName}'`,
-      (err: string, result: any) => {
+      (err, result) => {
         if (err) reject(err);
         resolve(result.rows);
       }
@@ -44,7 +43,7 @@ const getForeignKeys = (client, tableName: string) => {
 // #TODO: add error handling when tables lack a primary key
 // Relational database theory dictates that every table must have a primary key.
 // This rule is not enforced by PostgreSQL, but it is usually best to follow it.
-const getColumns = (client, tableName: string) => {
+const getColumns = (client, tableName) => {
   return new Promise((resolve, reject) => {
     client.query(
       `SELECT COLUMN_NAME AS ColumnName,
@@ -53,7 +52,7 @@ const getColumns = (client, tableName: string) => {
                              COLUMN_DEFAULT AS DefaultValue
                       FROM INFORMATION_SCHEMA.COLUMNS
                       WHERE TABLE_NAME = '${tableName}'`,
-      (err: string, result: any) => {
+      (err, result) => {
         if (err)
           // #TODO: give a msg that doesn't expose structure of database
           reject(err);
@@ -63,7 +62,7 @@ const getColumns = (client, tableName: string) => {
   });
 };
 
-const getPrimaryKey = (client, tableName: string) => {
+const getPrimaryKey = (client, tableName) => {
   return new Promise((resolve, reject) => {
     client.query(
       `SELECT column_name
@@ -71,7 +70,7 @@ const getPrimaryKey = (client, tableName: string) => {
                       WHERE contype = 'p'
                       AND information_schema.constraint_column_usage.table_name = '${tableName}'
                       AND pg_constraint.conname = information_schema.constraint_column_usage.constraint_name`,
-      (err: string, result: any) => {
+      (err, result) => {
         if (err) reject(err);
         resolve(result.rows[0].column_name);
       }
@@ -79,18 +78,18 @@ const getPrimaryKey = (client, tableName: string) => {
   });
 };
 
-async function composeTableData(client): Promise<any> {
-  let tablesArr = [];
-  var tableNames: any = await getTables(client);
+async function composeTableData(client) {
+  const tablesArr = [];
+  const tableNames = await getTables(client);
 
-  for (let table of tableNames.rows) {
+  for (const table of tableNames.rows) {
     table.primaryKey = await getPrimaryKey(client, table.table_name);
     table.foreignKeys = await getForeignKeys(client, table.table_name);
     table.columns = await getColumns(client, table.table_name);
     tablesArr.push(table);
   }
 
-  return new Promise<any>((resolve: any, reject: any): any => {
+  return new Promise((resolve, reject) => {
     if (tablesArr.length > 0) {
       resolve(tablesArr);
     } else {
@@ -100,4 +99,4 @@ async function composeTableData(client): Promise<any> {
   });
 }
 
-export default composeTableData;
+module.exports = composeTableData;

@@ -1,98 +1,118 @@
-import * as React from 'react';
-import { useState, useEffect } from 'react';
-import styled from 'styled-components';
+import * as React from "react";
+import styled from "styled-components";
 
-const LeftPanelTableListWrapper = styled.div`
+interface ILeftPanelTableWrapperProps {
+  visible: boolean
+}
+
+const LeftPanelTableListWrapper = styled.div<ILeftPanelTableWrapperProps>`
   color: black;
-  font-family: 'Poppins', sans-serif;
-  padding: 5px;
-  border: 1px solid black;
-  width: 300px;
+  padding: 40px;
+  width: ${({visible}) => visible ? '300px' : '0px'};
   height: 100vh;
+  background-color: #e8ecf1;
+  transition: width 500ms ease-in-out;
+`;
+
+const InfoSection = styled.div`
+  overflow-wrap: break-word;
 `
 
 const Title = styled.h1`
   color: black;
-`
+`;
 
-const SearchField = styled.input`
-  border-radius: 15px;
-  padding: 10px 20px;
-  height: 30px;
-  font-family: 'Poppins', sans-serif;
-  border: 1px solid lightgrey;
-  :focus{
-    outline: none;
-  }
-`
+const Text = styled.p`
+  font-size: 14px;
+`;
 
-const TableListItem = styled.li`
-    display: flex;
-    justify-content: space-between;
-    padding: 10px 5px;
-    border-bottom: 1px solid lightgrey;
-    transition: 0.2s;
-    :hover{
-        transform: scale(1.05);
-        background-color: #e3e0e9;
-    }
-`
+const Label = styled.label`
+  font-size: 12px;
+`;
 
-const SelectTableBtn = styled.button`
-    border: none;
-    background: transparent;
-    :hover{
-        font-weight: bold;
-        color: lightcoral;
-    }
-`
-
-const ListOfResults = styled.ul`
-    padding: 10px 20px;
-    overflow: scroll;
-`
-
-interface ITableName {
-    name: string
+interface ISelectedTable {
+  columns?: Array<any>;
+  foreignKeys?: Array<any>;
+  primaryKey?: string;
+  table_name?: string;
+  foreignKeysOfPrimary?: any;
 }
 
 interface Props {
-    listOfTableNames: Array<ITableName>
+  activeTableInPanel: ISelectedTable;
+  visible: boolean;
 }
 
-const SearchPanel: React.SFC<Props> = ({ listOfTableNames }) => {
+const SearchPanel: React.SFC<Props> = ({
+  activeTableInPanel,
+  visible
+}) => {
+  const {
+    table_name,
+    primaryKey,
+    foreignKeys,
+    foreignKeysOfPrimary
+  } = activeTableInPanel;
+  const foreignKeyRelationships = [];
+  const primaryKeyRelationships = [];
 
-    const [userInputForTables, setUserInputForTables] = useState('');
-    const [filteredTables, setFilteredTables] = useState([]);
-    const [allTables, setAllTables] = useState([]);
+  if (foreignKeys) {
+    foreignKeys.forEach(key => {
+        foreignKeyRelationships.push(
+          <li>
+            <Text>
+              {key.column_name} <Label as="span">from table</Label>{" "}
+              {key.foreign_table_name}({key.foreign_column_name})
+            </Text>
+          </li>
+        );
+    })
+  }
 
-    useEffect(() => {
-        setAllTables(listOfTableNames);
-    }, [listOfTableNames])
+  for (let foreignTableOfPrimary in foreignKeysOfPrimary) {
+      primaryKeyRelationships.push(
+        <li>
+          {foreignTableOfPrimary}({foreignKeysOfPrimary[foreignTableOfPrimary]})
+        </li>
+      );
+  }
 
-    useEffect(() => {
-        let filtered = [];
-        allTables.forEach((tableName) => {
-            const regex = new RegExp(userInputForTables)
-            if(regex.test(tableName)) filtered.push(<TableListItem key={tableName}>{tableName}<SelectTableBtn>Add</SelectTableBtn></TableListItem>);
-        })
-        setFilteredTables(filtered);
-    },[userInputForTables, allTables]);
-
-    return(
-        <LeftPanelTableListWrapper>
-            <Title>Tables</Title>
-            <SearchField type="text" placeholder="Search for a table" onChange={(e) => setUserInputForTables(e.target.value)}></SearchField>
-            {filteredTables.length>0 &&
-             <ListOfResults>
-              {filteredTables}
-            </ListOfResults>
-            }
-            { !filteredTables.length &&
-                <div>Sorry, no search results, please try again</div>
-            }
-        </LeftPanelTableListWrapper>
-    )
-}
+  return (
+    <LeftPanelTableListWrapper visible={visible}>
+      <Title>Information</Title>
+      {Object.keys(activeTableInPanel).length > 0 ? (
+        <InfoSection>
+          <Label>table name</Label>
+          <Text>{table_name}</Text>
+          <Label>primary key</Label>
+          <Text>{primaryKey}</Text>
+          {primaryKeyRelationships.length === 0 && (
+            <Label>The primary key is not used in any other table</Label>
+          )}
+          {primaryKeyRelationships.length > 0 && (
+            <div>
+              <Label>The primary key is referenced in</Label>
+              <ul>{primaryKeyRelationships}</ul>
+            </div>
+          )}
+          {foreignKeyRelationships.length === 0 && (
+            <Label>This table does not have any foreign keys</Label>
+          )}
+          {foreignKeyRelationships.length > 0 && (
+            <div>
+              <Label>foreign keys in this table are</Label>
+              <ul>{foreignKeyRelationships}</ul>
+            </div>
+          )}
+        </InfoSection>
+      ) : (
+        <div>
+          You haven't selected a table yet, click on a table to see their
+          information
+        </div>
+      )}
+    </LeftPanelTableListWrapper>
+  );
+};
 
 export default SearchPanel;

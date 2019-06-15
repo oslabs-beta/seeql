@@ -12,9 +12,9 @@
     "pretty": true,
     "sourceMap": true,
     "resolveJsonModule": true,
-    "types": ["webpack-env", "jest", "node", "electron", "pg"],
+    "types": ["node", "electron", "pg", "jest"],
     "typeRoots": ["node_modules/@types"],
     "lib": ["es6", "dom"]
   },
-  "exclude": ["node_modules", "**/node_modules/*", "dist"]
+  "exclude": ["node_modules", "**/node_modules/*"]
 }

@@ -5,34 +5,86 @@ import SettingsPanel from '../components/SettingsPanel'
 import FavoritesPanel from '../components/FavoritesPanel';
 import SearchPanel from '../components/SearchPanel';
 
-const PanelWrapper = styled.div`
+interface IPanelWrapperProps {
+  visible: boolean
+}
+
+interface IIndTabProps {
+  active: string
+  panel: string
+}
+
+const PanelWrapper = styled.div<IPanelWrapperProps>`
     height: 100vh;
-    width: 400px;
-    border: 1px solid lightgrey;
+    width: ${({visible}) => visible ? '375px' : '50px'};
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-start;
+    transition: width 500ms ease-in-out;
 `
 const ButtonMenu = styled.div`
     display: flex;
     flex-direction: column;
-    width: 50px;
+    justify-content: space-between;
+    height: 100vh;
+    width: 60px;
 `
 
-interface ITableName {
-    name: string
+const IndTab = styled.button<IIndTabProps>`
+  border: none;
+  font-family: 'Poppins', sans-serif;
+  border: none;
+  border-radius: 0px 6px 6px 0px;
+  padding: 5px;
+  background-color: ${(props) => (props.active === props.panel) ? '#e8ecf1' : '#fdfdfe' }
+  
+  :hover {
+    font-weight: bold;
+  }
+
+  :focus {
+    outline: none;
+  }
+`
+
+const Tabs = styled.div`
+   display: flex;
+   flex-direction: column;
+   height: 100px;
+   justify-content: space-between;
+   font-family: 'Poppins', sans-serif;
+   margin-top: 30px;
+`
+
+const CollapseBtn = styled.button`
+  border: none;
+  margin-bottom: 10px;
+
+  :focus {
+    outline: none;
+  }
+
+  :hover {
+    font-weight: bold;
+  }
+`
+
+interface ISelectedTable {
+  columns?: Array<any>
+  foreignKeys?: Array<any>
+  primaryKey?: string
+  table_name?: string
+  foreignKeysOfPrimary?: any
 }
 
 interface Props {
-    listOfTableNames: Array<ITableName>
+    activeTableInPanel: ISelectedTable
 }
 
-const Panel: React.SFC<Props> = ({ listOfTableNames }) => {
+const Panel: React.SFC<Props> = ({ 
+  activeTableInPanel}) => {
 
     const [activePanel, setActivePanel] = useState('search');
     const [visible, setVisible] = useState(true);
-
-    
-    console.log('active', activePanel)
 
     const displayActivePanelComponent = (e) => {
         setActivePanel(e.target.dataset.panel);
@@ -43,14 +95,14 @@ const Panel: React.SFC<Props> = ({ listOfTableNames }) => {
         else setVisible(true);
     }
 
-
     return (
-        <PanelWrapper>
+        <PanelWrapper visible={visible}>
             { visible &&
             <div>
             { activePanel==='search' &&
             <SearchPanel 
-              listOfTableNames={listOfTableNames}
+              visible={visible}
+              activeTableInPanel={activeTableInPanel}
             />}
             { activePanel==='favorites' &&
             <FavoritesPanel />}
@@ -58,23 +110,33 @@ const Panel: React.SFC<Props> = ({ listOfTableNames }) => {
             <SettingsPanel />}
             </div>}
             <ButtonMenu>
-                <button 
-                  onClick={togglePanelVisibility}
-                >Collapse Panel</button>
-                <button 
+            {visible && <Tabs>
+                <IndTab 
                   data-panel='search' 
+                  panel='search'
+                  active={activePanel}
                   onClick={displayActivePanelComponent}
-                >Search</button>
-                <button 
-                  data-panel='favorites' 
+                >Table Info</IndTab>
+                <IndTab 
+                  data-panel='favorites'
+                  panel='favorites' 
+                  active={activePanel}
                   onClick={displayActivePanelComponent}>
                   Favorites
-                </button>
-                <button 
+                </IndTab>
+                <IndTab 
                   data-panel='settings' 
+                  panel='settings'
+                  active={activePanel}
                   onClick={displayActivePanelComponent}>
                   Settings
-                </button>
+                </IndTab>
+                </Tabs>}
+              { !visible && <div></div>}
+                <CollapseBtn 
+                  onClick={togglePanelVisibility}
+                  data-active={activePanel}
+                > {visible ? `< Hide Menu` : `Show Menu >`} </CollapseBtn>
             </ButtonMenu>
         </PanelWrapper>
     )

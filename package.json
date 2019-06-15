@@ -10,16 +10,12 @@
     "build-main": "cross-env NODE_ENV=production webpack --config ./configs/webpack.config.main.prod.babel.js --colors",
     "build-renderer": "cross-env NODE_ENV=production webpack --config ./configs/webpack.config.renderer.prod.babel.js --colors",
     "dev": "cross-env START_HOT=1 node -r @babel/register ./internals/scripts/CheckPortInUse.js && cross-env START_HOT=1 yarn start-renderer-dev",
-    "lint": "npx eslint '**/*.{tsx,ts,js,jsx}' --fix",
-    "lint-styles-fix": "yarn lint-styles --fix",
     "package": "yarn build && electron-builder build --publish never",
     "package-all": "yarn build && electron-builder build -mwl",
     "package-ci": "yarn postinstall && yarn build && electron-builder --publish always",
     "package-linux": "yarn build && electron-builder build --linux",
     "package-win": "yarn build && electron-builder build --win --x64",
     "postinstall": "electron-builder install-app-deps package.json && yarn build-dll && opencollective-postinstall",
-    "postlint-fix": "prettier --ignore-path .eslintignore --single-quote --write '**/*.{*{js,jsx,json},babelrc,eslintrc,prettierrc,stylelintrc}'",
-    "postlint-styles-fix": "prettier --ignore-path .eslintignore --single-quote --write '**/*.{css,scss}'",
     "prestart": "yarn build",
     "start": "cross-env NODE_ENV=production electron ./app/main.prod.js",
     "start-main-dev": "cross-env HOT=1 NODE_ENV=development electron ./app/main.dev.babel.js",
@@ -28,16 +24,17 @@
     "test-all": "yarn lint && yarn build && yarn test && yarn build-e2e && yarn test-e2e",
     "test-e2e": "node -r @babel/register ./internals/scripts/CheckBuiltsExist.js && cross-env NODE_ENV=test testcafe electron:./ ./test/e2e/HomePage.e2e.ts",
     "test-e2e-live": "node -r @babel/register ./internals/scripts/CheckBuiltsExist.js && cross-env NODE_ENV=test testcafe-live electron:./ ./test/e2e/HomePage.e2e.ts",
-    "test-watch": "yarn test --watch"
+    "test-watch": "yarn test --watch",
+    "eslint": "npx eslint -c .eslintrc.js ./ --fix",
+    "prettier": "npx prettier --ignore-path .eslintignore --single-quote --write '**/*.{*{js,jsx,json,ts,tsx},babelrc,eslintrc,prettierrc,stylelintrc}'"
   },
   "lint-staged": {
     "{*.json,.{babelrc,eslintrc,prettierrc,stylelintrc}}": [
-      "prettier --ignore-path .eslintignore --parser json --write",
       "git add"
     ],
     "*.{js, jsx, ts, tsx}": [
-      "yarn run lint",
-      "./node_modules/prettier/bin-prettier.js ./app/**/*.{tsx,ts} --write",
+      "eslint",
+      "prettier",
       "git add"
     ],
     "*.{css,scss}": [
@@ -274,6 +271,9 @@
     "electron-debug": "^2.0.0",
     "electron-log": "^2.2.17",
     "electron-updater": "^4.0.6",
+    "eslint-config-react-app": "^4.0.1",
+    "eslint-plugin-flowtype": "^3.10.3",
+    "eslint-plugin-react-hooks": "^1.6.0",
     "history": "^4.7.2",
     "pg": "^7.11.0",
     "react": "^16.7.0",
@@ -281,6 +281,8 @@
     "react-hot-loader": "^4.6.3",
     "react-router": "^4.3.1",
     "react-router-dom": "^4.3.1",
+    "react-spring": "^8.0.23",
+    "react-table": "^6.10.0",
     "rxjs-compat": "^6.5.2",
     "source-map-support": "^0.5.9",
     "styled-components": "^4.3.0"

@@ -1,19 +1,19 @@
-// main electron process (see IPC)
-// `yarn build` or `yarn build-main`
-import { app, BrowserWindow } from "electron";
+/* eslint-disable @typescript-eslint/no-var-requires */
+import { app, BrowserWindow, ipcMain } from "electron";
 import { autoUpdater } from "electron-updater";
 import log from "electron-log";
 import MenuBuilder from "./menu";
 
 export default class AppUpdater {
-  constructor() {
+  public constructor() {
     log.transports.file.level = "info";
     autoUpdater.logger = log;
     autoUpdater.checkForUpdatesAndNotify();
   }
 }
 
-let mainWindow: Electron.BrowserWindow;
+let mainWindow: Electron.BrowserWindow = null;
+let queryWindow: Electron.BrowserWindow = null;
 
 if (process.env.NODE_ENV === "production") {
   const sourceMapSupport = require("source-map-support");
@@ -27,19 +27,35 @@ if (
   require("electron-debug")();
 }
 
-const installExtensions = async () => {
+const installExtensions = async (): Promise<any> => {
   const installer = require("electron-devtools-installer");
   const forceDownload = !!process.env.UPGRADE_EXTENSIONS;
   const extensions = ["REACT_DEVELOPER_TOOLS", "REDUX_DEVTOOLS"];
+
   return Promise.all(
     extensions.map(name => installer.default(installer[name], forceDownload))
   ).catch(console.log);
 };
 
-// Respect the OSX convention of having the application in memory even
-app.on("window-all-closed", () => {
+// Quit when all windows are closed, unless OS X,
+// which stays in memory until CMD+Q
+app.on("window-all-closed", (): void => {
   if (process.platform !== "darwin") {
     app.quit();
+  }
+});
+
+// get webContents from remote process
+app.on("remote-get-current-web-contents", (event, webContents): void => {
+  console.log(event);
+  console.log(`\n \n ${webContents}`);
+  event.preventDefault();
+});
+
+app.on("activate", () => {
+  // On macOS it's common to re-create a window in the app when the
+  // dock icon is clicked and there are no other windows open.
+  if (mainWindow === null) {
   }
 });
 
@@ -52,14 +68,11 @@ app.on("ready", async () => {
   }
 
   mainWindow = new BrowserWindow({
-    // #TODO: investigate BrowserWindow Config option
-    // https://github.com/electron/electron/blob/master/docs/tutorial/security.md#isolation-for-untrusted-content
-    // nodeIntegration: false,
-    // sandbox: true,
     title: "SeeQL: Database Visualized",
     show: false,
     width: 1024,
-    height: 728
+    height: 728,
+    titleBarStyle: "hiddenInset"
   });
 
   mainWindow.loadURL(`file://${__dirname}/app.html`);
@@ -81,37 +94,41 @@ app.on("ready", async () => {
     mainWindow = null;
   });
 
-  // myWindow.on('unresponsive', function () { })
-
-  // mainWindow.on("on-window-unload", () => {
-  //   'r u sure u want quit'
-  // });
-
-  // mainWindow.on("crashed", () => {
-  //   console.log("crashed");
-  // });
-  //
-  // const win = new BrowserWindow({ width: 200, height: 200 });
-  // mainWindow.webContents.on("before-input-event", event => {
-  //   const choice = dialog.showMessageBox(win, {
-  //     type: "question",
-  //     buttons: ["Leave", "Stay"],
-  //     title: "Do you want to leave this site?",
-  //     message: "Changes you made may not be saved.",
-  //     defaultId: 0,
-  //     cancelId: 1
-  //   });
-  //   const leave = choice === 0;
-  //   if (leave) {
-  //     event.preventDefault();
-  //   }
-  // });
+  mainWindow.on("unresponsive", () => {
+    console.log(`handle this somehow`);
+  });
 
   const menuBuilder = new MenuBuilder(mainWindow);
   menuBuilder.buildMenu();
 
-  // Remove this if your app does not use auto updates
-  // eslint-disable-next-line
-  new AppUpdater();
-});
+  queryWindow = new BrowserWindow({ show: false });
+  queryWindow.loadURL(`file://${__dirname}/query.html`);
 
+  // Listening from homepage, to send to database
+  ipcMain.on("uri-to-main", (_event: Event, uri: string) => {
+    queryWindow.webContents.send("uri-to-db", uri);
+  });
+
+  ipcMain.on("query-to-main", (_event: Event, query: string) => {
+    queryWindow.webContents.send("query-to-db", query);
+  });
+
+  // Listening from database, to send to homepage
+  ipcMain.on("database-tables-to-main", (
+    _event: Event,
+    databaseTables /* #TODO */
+  ) => {
+    mainWindow.webContents.send("tabledata-to-login", databaseTables);
+  });
+
+  ipcMain.on("db-connection-error", (_event: Event, err: Error) => {
+    mainWindow.webContents.send("db-connection-error", err);
+  });
+
+  ipcMain.on("query-result-to-main", (
+    _event: Event,
+    messagePayload /* #TODO */
+  ) => {
+    mainWindow.webContents.send("query-result-to-homepage", messagePayload);
+  });
+});

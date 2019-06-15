@@ -1,19 +1,25 @@
 import * as React from 'react';
 import styled from 'styled-components';
 
-const Table = styled.div`
+interface ITableProps {
+  selectedtable: any
+  tablename: any
+}
+
+const Table = styled.div<ITableProps>`
   display: flex;
   flex-direction: column;
   font-size: 14px;
   color: black;
-  font-family: 'Poppins', sans-serif;
-  box-shadow: 1px 2px 5px lightgrey;
-
+  width: 200px;
+  margin: 5px;
+  border: ${(props) => (props.selectedtable === props.tablename) ? '2px solid #00b5cc' : '1px solid grey'};
+  box-shadow: ${(props) => (props.selectedtable === props.tablename) ? '4px 4px 10px  #99f3ff' : 'none'};
 `;
 
 const InnerTableWrapper = styled.ul`
-  border: 1px solid black;
   flex-direction: column;
+  max-height: 200px;
   overflow: scroll;
 `;
 
@@ -25,22 +31,29 @@ const TableRow = styled.li<T>`
   display: flex;
   justify-content: space-between;
   list-style: none;
-  background-color: ${ ({affected}) => affected ? 'pink' : 'transparent'};
-  border: ${ ({affected}) => affected ? '3px solid pink' : '3px solid transparent'};
-  border-top: 1px solid lightgrey;
+  background-color: ${ ({affected}) => affected ? '#00b5cc' : 'transparent'};
+  border: none;
+  padding: 5px;
   transition: 0.3s;
+
+  :hover {
+    transform: scale(1.05);
+    background-color: #e8ecf1;
+  }
 `;
 
 const TableCell = styled.p`
-  padding: 0px 20px;
+  padding: 0px 10px;
   font-size: 12px;
+  display: flex;
+  align-items: center;
 `;
 
 const TableTitle = styled.label`
-  background: #456990;
-  padding: 5px;
-  color: white;
-  font-weight: bold;
+  text-align: center;
+  font-size: 20px;
+  padding: 5px 0px;
+  overflow-wrap: break-word;
 `
 
 type Props = {
@@ -51,9 +64,16 @@ type Props = {
   foreignkeys: Array<any>;
   primaryKeyAffected: Array<any>;
   foreignKeysAffected: Array<any>;
-  removeRelationships: () => void;
-  displayRelationships: (Event) => void;
+  activeTableInPanel:any;
+  captureMouseExit: () => void;
+  captureMouseEnter: (Event) => void;
+  captureSelectedTable: (Event) => void;
 };
+
+const KeyIcon = styled.img`
+  width: 15px;
+  height: 15px;
+`
 
 const Tables: React.SFC<Props> = ({ 
   tableName,
@@ -62,14 +82,13 @@ const Tables: React.SFC<Props> = ({
   foreignkeys,
   foreignKeysAffected,
   primaryKeyAffected,
-  displayRelationships,
-  removeRelationships
+  captureMouseExit,
+  captureMouseEnter,
+  captureSelectedTable,
+  activeTableInPanel
 }) => {
 
   let rows = [];
-
-  //acquires individual column names and corresponding types from data
-  const generateUniqueKey = () => (Math.random() * 1000).toString();
 
   for (let keys in columns) {
     const primaryKey: boolean = primarykey === columns[keys]['columnname'] ? true : false;
@@ -91,7 +110,6 @@ const Tables: React.SFC<Props> = ({
     })
 
     foreignkeys.forEach((key):void => {
-      console.log('keys', key)
       if (key.column_name === columns[keys]['columnname']){
         foreignKey = true;
         foreignkeyTable = key.foreign_table_name;
@@ -100,19 +118,53 @@ const Tables: React.SFC<Props> = ({
     })
 
     rows.push(<TableRow 
-                key={generateUniqueKey()}
-                onMouseOver={displayRelationships}
-                onMouseLeave={removeRelationships}
+                key={columns[keys]['columnname']}
+                onMouseOver={captureMouseEnter}
+                onMouseLeave={captureMouseExit}
                 affected={affected}
+                data-isforeignkey={foreignKey}
+                data-foreignkeytable={foreignkeyTable}
+                data-foreignkeycolumn={foreignkeyColumn}
+                data-tablename={tableName}
+                data-columnname={columns[keys]['columnname']}
+                data-isprimarykey={primaryKey}
               >
               <TableCell
                 data-isforeignkey={foreignKey}
                 data-foreignkeytable={foreignkeyTable}
                 data-foreignkeycolumn={foreignkeyColumn}
-                data-isprimarykey={primaryKey}
                 data-tablename={tableName}
                 data-columnname={columns[keys]['columnname']}
-              >{ columns[keys]['columnname'] }
+                data-isprimarykey={primaryKey}
+              >
+               {foreignKey &&
+                <KeyIcon 
+                data-isforeignkey={foreignKey}
+                data-foreignkeytable={foreignkeyTable}
+                data-foreignkeycolumn={foreignkeyColumn}
+                data-tablename={tableName}
+                data-columnname={columns[keys]['columnname']}
+                data-isprimarykey={primaryKey}  
+                src="https://image.flaticon.com/icons/svg/891/891399.svg"></KeyIcon>
+               } 
+               {primaryKey &&
+                <KeyIcon 
+                data-isforeignkey={foreignKey}
+                data-foreignkeytable={foreignkeyTable}
+                data-foreignkeycolumn={foreignkeyColumn}
+                data-tablename={tableName}
+                data-columnname={columns[keys]['columnname']}
+                data-isprimarykey={primaryKey}
+                src="https://image.flaticon.com/icons/svg/179/179543.svg"></KeyIcon>
+               } 
+                <label
+                 data-isforeignkey={foreignKey}
+                 data-foreignkeytable={foreignkeyTable}
+                 data-foreignkeycolumn={foreignkeyColumn}
+                 data-tablename={tableName}
+                 data-columnname={columns[keys]['columnname']}
+                 data-isprimarykey={primaryKey}
+                >{ columns[keys]['columnname']}</label>
               </TableCell>
               <TableCell
                 data-isforeignkey={foreignKey}
@@ -121,14 +173,14 @@ const Tables: React.SFC<Props> = ({
                 data-tablename={tableName}
                 data-columnname={columns[keys]['columnname']}
                 data-isprimarykey={primaryKey}
-              >{ columns[keys]['datatype'] }
+              >{ columns[keys]['datatype']== 'character varying' ? 'varchar' :  columns[keys]['datatype'] }
               </TableCell>
              </TableRow>)
   }
 
   return (
-    <Table key={generateUniqueKey()}>
-      <TableTitle>{tableName}</TableTitle>
+    <Table key={tableName} onClick={captureSelectedTable} selectedtable={activeTableInPanel.table_name} tablename={tableName}>
+      <TableTitle data-tablename={tableName}>{tableName}</TableTitle>
       <InnerTableWrapper>
         {rows}
       </InnerTableWrapper>
