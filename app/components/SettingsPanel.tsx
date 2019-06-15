@@ -9,9 +9,10 @@ const PanelWrapper = styled.div`
   color: black;
   font-family: 'Poppins', sans-serif;
   padding: 20px;
-  border: 1px solid black;
   width: 300px;
   height: 100vh;
+  padding: 40px;
+  background-color: #e8ecf1;
 `;
 
 const TopSection = styled.section`
@@ -29,7 +30,7 @@ const DivWrapper = styled.div`
 `;
 const Title = styled.h1`
   color: black;
-  padding-bottom: 10px;
+  font-size: 30px;
 `;
 const Label = styled.label`
   color: black;
@@ -65,7 +66,7 @@ const SettingsPanel = () => {
         </DivWrapper>
       </TopSection>
       <BottomSection>
-        <div>Reset Project</div>
+        <div></div>
         <NavLink to="/" activeStyle={{ color: 'black ' }}>
           Sign Out
         </NavLink>

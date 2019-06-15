@@ -1,17 +1,25 @@
 import * as React from 'react';
 import styled from 'styled-components';
 
-const Table = styled.div`
+interface ITableProps {
+  selectedtable: any
+  tablename: any
+}
+
+const Table = styled.div<ITableProps>`
   display: flex;
   flex-direction: column;
   font-size: 14px;
   color: black;
-  box-shadow: 1px 2px 5px lightgrey;
-  overflow: scroll;
+  width: 200px;
+  margin: 5px;
+  border: ${(props) => (props.selectedtable === props.tablename) ? '2px solid #00b5cc' : '1px solid grey'};
+  box-shadow: ${(props) => (props.selectedtable === props.tablename) ? '4px 4px 10px  #99f3ff' : 'none'};
 `;
 
 const InnerTableWrapper = styled.ul`
   flex-direction: column;
+  max-height: 200px;
   overflow: scroll;
 `;
 
@@ -23,7 +31,7 @@ const TableRow = styled.li<T>`
   display: flex;
   justify-content: space-between;
   list-style: none;
-  background-color: ${ ({affected}) => affected ? 'mediumseagreen' : 'transparent'};
+  background-color: ${ ({affected}) => affected ? '#00b5cc' : 'transparent'};
   border: none;
   padding: 5px;
   transition: 0.3s;
@@ -56,6 +64,7 @@ type Props = {
   foreignkeys: Array<any>;
   primaryKeyAffected: Array<any>;
   foreignKeysAffected: Array<any>;
+  activeTableInPanel:any;
   captureMouseExit: () => void;
   captureMouseEnter: (Event) => void;
   captureSelectedTable: (Event) => void;
@@ -75,7 +84,8 @@ const Tables: React.SFC<Props> = ({
   primaryKeyAffected,
   captureMouseExit,
   captureMouseEnter,
-  captureSelectedTable
+  captureSelectedTable,
+  activeTableInPanel
 }) => {
 
   let rows = [];
@@ -169,7 +179,7 @@ const Tables: React.SFC<Props> = ({
   }
 
   return (
-    <Table key={tableName} onClick={captureSelectedTable}>
+    <Table key={tableName} onClick={captureSelectedTable} selectedtable={activeTableInPanel.table_name} tablename={tableName}>
       <TableTitle data-tablename={tableName}>{tableName}</TableTitle>
       <InnerTableWrapper>
         {rows}

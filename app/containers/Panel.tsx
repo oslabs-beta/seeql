@@ -9,16 +9,63 @@ interface IPanelWrapperProps {
   visible: boolean
 }
 
+interface IIndTabProps {
+  active: string
+  panel: string
+}
+
 const PanelWrapper = styled.div<IPanelWrapperProps>`
     height: 100vh;
-    width: ${({visible}) => visible ? '400px' : '50px'};
+    width: ${({visible}) => visible ? '375px' : '50px'};
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-start;
+    transition: width 500ms ease-in-out;
 `
 const ButtonMenu = styled.div`
     display: flex;
     flex-direction: column;
-    width: 50px;
+    justify-content: space-between;
+    height: 100vh;
+    width: 60px;
+`
+
+const IndTab = styled.button<IIndTabProps>`
+  border: none;
+  font-family: 'Poppins', sans-serif;
+  border: none;
+  border-radius: 0px 6px 6px 0px;
+  padding: 5px;
+  background-color: ${(props) => (props.active === props.panel) ? '#e8ecf1' : '#fdfdfe' }
+  
+  :hover {
+    font-weight: bold;
+  }
+
+  :focus {
+    outline: none;
+  }
+`
+
+const Tabs = styled.div`
+   display: flex;
+   flex-direction: column;
+   height: 100px;
+   justify-content: space-between;
+   font-family: 'Poppins', sans-serif;
+   margin-top: 30px;
+`
+
+const CollapseBtn = styled.button`
+  border: none;
+  margin-bottom: 10px;
+
+  :focus {
+    outline: none;
+  }
+
+  :hover {
+    font-weight: bold;
+  }
 `
 
 interface ISelectedTable {
@@ -30,12 +77,10 @@ interface ISelectedTable {
 }
 
 interface Props {
-    searchInput: any
     activeTableInPanel: ISelectedTable
 }
 
 const Panel: React.SFC<Props> = ({ 
-  searchInput, 
   activeTableInPanel}) => {
 
     const [activePanel, setActivePanel] = useState('search');
@@ -56,7 +101,7 @@ const Panel: React.SFC<Props> = ({
             <div>
             { activePanel==='search' &&
             <SearchPanel 
-              searchInput={searchInput}
+              visible={visible}
               activeTableInPanel={activeTableInPanel}
             />}
             { activePanel==='favorites' &&
@@ -65,23 +110,33 @@ const Panel: React.SFC<Props> = ({
             <SettingsPanel />}
             </div>}
             <ButtonMenu>
-                <button 
-                  onClick={togglePanelVisibility}
-                >Collapse Panel</button>
-                <button 
+            {visible && <Tabs>
+                <IndTab 
                   data-panel='search' 
+                  panel='search'
+                  active={activePanel}
                   onClick={displayActivePanelComponent}
-                >Table Info</button>
-                <button 
-                  data-panel='favorites' 
+                >Table Info</IndTab>
+                <IndTab 
+                  data-panel='favorites'
+                  panel='favorites' 
+                  active={activePanel}
                   onClick={displayActivePanelComponent}>
                   Favorites
-                </button>
-                <button 
+                </IndTab>
+                <IndTab 
                   data-panel='settings' 
+                  panel='settings'
+                  active={activePanel}
                   onClick={displayActivePanelComponent}>
                   Settings
-                </button>
+                </IndTab>
+                </Tabs>}
+              { !visible && <div></div>}
+                <CollapseBtn 
+                  onClick={togglePanelVisibility}
+                  data-active={activePanel}
+                > {visible ? `< Hide Menu` : `Show Menu >`} </CollapseBtn>
             </ButtonMenu>
         </PanelWrapper>
     )
