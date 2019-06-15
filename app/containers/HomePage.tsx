@@ -9,24 +9,14 @@ import QueryResults from "../components/QueryResults";
 import changePinnedStatus from "../reducers/ChangePinnedStatus"
 import * as actions from '../actions/actions';
 
-
-const SearchField = styled.input`
-  margin: 10px 20px;
-  height: 20px;
-  font-family: "Poppins", sans-serif;
-  background-color: transparent;
-  border: none;
-  border-bottom: 2px solid  #00b5cc;
-  padding: 5px;
-  :focus {
-    outline: none;
-  }
-`;
-
 const BottomPanel = styled.div`
   border: 1px solid black;
 `
 
+const OMNIboxInput = styled.textarea`
+  height: 50px;
+  width: 50vw;
+`
 
 const InvisibleHeader = styled.div`
   height: 30px;
@@ -117,6 +107,9 @@ const HomePage = (props) => {
   }]);
   const [pinnedTables, setPinnedTables] = useState([]);
   const [onlyPinned, dispatch] = useReducer(changePinnedStatus, [])
+  const [query, setQuery] = useState('');
+  const [queryResult, setQueryResult] = useState([]);
+  const [omniBoxView, setOmniBoxView] = useState('plain');
 
   const captureSelectedTable = (e) => {
     const tablename = e.target.dataset.tablename;
@@ -265,12 +258,17 @@ const HomePage = (props) => {
 
 
   // #TODO: Connect this ipc communication with new query input
-  // const executeQuery = () => {
-  //   ipcRenderer.send("query-to-main", query);
-  // }
+  const executeQuery = () => {
+    ipcRenderer.send("query-to-main", query);
+  }
 
-  ipcRenderer.on("db-query-result", (event, queryResult) => {
-    console.log('db-query-result is:', queryResult);
+  ipcRenderer.on("query-result-to-homepage", (event, queryResult) => {
+    if(queryResult.statusCode === 'Success'){
+      setQueryResult(queryResult.message);
+      setActiveDisplayInBottomTab('queryresults')
+    } else{
+      console.log('issue');
+    }
   });
 
   return (
@@ -285,11 +283,20 @@ const HomePage = (props) => {
         </LoadWrap>
       )}
       <BottomPanel>
-      <SearchField
-        type="text"
+      { omniBoxView === 'SQL' &&  
+      <div>
+        <OMNIboxInput onChange={(e) => setQuery(e.target.value)} placeholder="SELECT * FROM ..."></OMNIboxInput>
+        <button onClick={executeQuery}>Execute Query</button>
+      </div>
+      } 
+      {omniBoxView === 'plain' &&  
+      <OMNIboxInput
         placeholder="Search for a table"
         onChange={e => setUserInputForTables(e.target.value)}
-      ></SearchField>
+      ></OMNIboxInput>
+      }
+      <button onClick={() => setOmniBoxView('SQL')}>SQL</button>
+      <button onClick={() => setOmniBoxView('plain')}>PLAIN</button>
       <nav>
         <button data-activetabname='tables' onClick={activeTabcapture}>Tables</button>
         <button data-activetabname='queryresults' onClick={activeTabcapture}>Query Results</button>
@@ -301,7 +308,7 @@ const HomePage = (props) => {
         </EmptyState>)
       }
       { activeDisplayInBottomTab==='queryresults' &&
-        <QueryResults />
+        <QueryResults queryResult={queryResult}/>
       }
       </BottomPanel>
     </EntireHomePageWrapper>

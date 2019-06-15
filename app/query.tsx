@@ -24,8 +24,13 @@ ipcRenderer.on("uri-to-db", (event, uri) => {
 });
 
 ipcRenderer.on("query-to-db", (event, query) => {
-  client.query(query)
-    .then(result => console.log('query result in query.tsx:', result.rows))
-    .catch(err => console.log('query err in query.tsx:', err));
+
+  if(query.slice(0,6).toUpperCase() === 'SELECT'){
+    client.query(query)
+      .then(result => ipcRenderer.send('query-result-to-main', { statusCode: 'Success', message: result.rows}))
+      .catch(err => ipcRenderer.send('query-result-to-main', { statusCode: 'Error', message: 'Issue getting data from db'}));
+  } else {
+    ipcRenderer.send('query-result-to-main', { statusCode: 'Error', message: 'Invalid query input'})
+  }
 });
 

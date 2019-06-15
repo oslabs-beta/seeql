@@ -282,6 +282,7 @@
     "react-router": "^4.3.1",
     "react-router-dom": "^4.3.1",
     "react-spring": "^8.0.23",
+    "react-table": "^6.10.0",
     "rxjs-compat": "^6.5.2",
     "source-map-support": "^0.5.9",
     "styled-components": "^4.3.0"
