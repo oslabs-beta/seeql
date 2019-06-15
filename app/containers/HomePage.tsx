@@ -1,22 +1,22 @@
-import * as React from "react";
-import { useState, useEffect, useReducer } from "react";
-import Tables from "../components/Tables";
-import styled from "styled-components";
-import Panel from "./Panel";
-import LoadingComponent from "../components/LoadComponent";
-import { ipcRenderer } from "electron";
-import QueryResults from "../components/QueryResults";
-import changePinnedStatus from "../reducers/ChangePinnedStatus"
+import * as React from 'react';
+import { useState, useEffect, useReducer, useContext } from 'react';
+import Tables from '../components/Tables';
+import styled from 'styled-components';
+import Panel from './Panel';
+import LoadingComponent from '../components/LoadComponent';
+import { ipcRenderer } from 'electron';
+import QueryResults from '../components/QueryResults';
+import changePinnedStatus from '../reducers/ChangePinnedStatus';
 import * as actions from '../actions/actions';
-
+import Themes from '../contexts/themeContext';
 
 const SearchField = styled.input`
   margin: 10px 20px;
   height: 20px;
-  font-family: "Poppins", sans-serif;
+  font-family: 'Poppins', sans-serif;
   background-color: transparent;
   border: none;
-  border-bottom: 2px solid  #00b5cc;
+  border-bottom: 2px solid #00b5cc;
   padding: 5px;
   :focus {
     outline: none;
@@ -25,33 +25,31 @@ const SearchField = styled.input`
 
 const BottomPanel = styled.div`
   border: 1px solid black;
-`
-
+`;
 
 const InvisibleHeader = styled.div`
   height: 30px;
   display: relative;
   -webkit-app-region: drag;
-`
+`;
 const NormalTable = styled.div`
-overflow: scroll;
-display: absolute;
-`
+  overflow: scroll;
+  display: absolute;
+`;
 
 const PinnedTable = styled.div`
   display: absolute;
-`
+`;
 
-interface IPinBtnProps{
-  pinned: boolean
+interface IPinBtnProps {
+  pinned: boolean;
 }
-
 
 const PinBtn = styled.button<IPinBtnProps>`
   display: relative;
   border: none;
-  background-color: ${(props) => props.pinned ? 'rgb(93, 0, 250)' : 'white'};
-  color: ${(props) => props.pinned ? 'white' : 'black'};
+  background-color: ${props => (props.pinned ? 'rgb(93, 0, 250)' : 'white')};
+  color: ${props => (props.pinned ? 'white' : 'black')};
   padding: 2px 5px;
   border-radius: 6px;
   margin: 2px 0px;
@@ -63,14 +61,14 @@ const PinBtn = styled.button<IPinBtnProps>`
   :focus {
     outline: none;
   }
-`
+`;
 
 const HomepageWrapper = styled.div`
   height: 100vh;
   padding: 20px;
-  display: flex; 
+  display: flex;
   flex-wrap: wrap;
-`
+`;
 
 const EntireHomePageWrapper = styled.div`
   display: flex;
@@ -84,14 +82,14 @@ const LoadWrap = styled.div`
   width: 100%;
 `;
 
-const EmptyState= styled.div`
+const EmptyState = styled.div`
   height: 100vh;
   width: 100%;
-  padding: 20px;  
+  padding: 20px;
   display: flex;
   justify-content: center;
   align-items: center;
-`
+`;
 
 let isPrimaryKey: string;
 let isForeignKey: string;
@@ -100,68 +98,88 @@ let primaryKeyColumn: string;
 let selectedTableName: string;
 let selectedColumnName: string;
 
-const HomePage = (props) => {
-
+const HomePage = props => {
+  const Theme = useContext(Themes);
+  console.log(Theme);
   const tableData = props.location.state.tables;
-  const [activeDisplayInBottomTab, setActiveDisplayInBottomTab] = useState('tables');
+  const [activeDisplayInBottomTab, setActiveDisplayInBottomTab] = useState(
+    'tables'
+  );
   const [activeTableInPanel, setActiveTableInPanel] = useState({});
   const [filteredTables, setFilteredTables] = useState([]);
   const [userInputForTables, setUserInputForTables] = useState('');
   const [data, setData] = useState([]); //data from database
   const [mouseOver, setMouseOver] = useState(); //data to detect if mouse is over a pk or fk
   const [toggleLoad, setToggleLoad] = useState(true);
-  const [foreignKeysAffected, setForeignKeysAffected ] = useState([]);
-  const [primaryKeyAffected, setPrimaryKeyAffected ] = useState([{
-    primaryKeyTable: '',
-    primaryKeyColumn: ''
-  }]);
+  const [foreignKeysAffected, setForeignKeysAffected] = useState([]);
+  const [primaryKeyAffected, setPrimaryKeyAffected] = useState([
+    {
+      primaryKeyTable: '',
+      primaryKeyColumn: ''
+    }
+  ]);
   const [pinnedTables, setPinnedTables] = useState([]);
-  const [onlyPinned, dispatch] = useReducer(changePinnedStatus, [])
+  const [onlyPinned, dispatch] = useReducer(changePinnedStatus, []);
 
-  const captureSelectedTable = (e) => {
+  const captureSelectedTable = e => {
     const tablename = e.target.dataset.tablename;
     let selectedPanelInfo;
     let primaryKey;
 
-    data.forEach((table) => {
-      if(table.table_name === tablename) {
+    data.forEach(table => {
+      if (table.table_name === tablename) {
         primaryKey = table.primaryKey;
         selectedPanelInfo = table;
       }
-    })
+    });
 
     selectedPanelInfo.foreignKeysOfPrimary = {};
 
-    data.forEach((table) => {
-      table.foreignKeys.forEach((foreignKey) => {
-        if(foreignKey.foreign_column_name == primaryKey &&
-          foreignKey.foreign_table_name == tablename) {
-            selectedPanelInfo.foreignKeysOfPrimary[foreignKey.table_name] = foreignKey.column_name
-          }
-      })
-    })
-    
-    setActiveTableInPanel(selectedPanelInfo)
-  }
+    data.forEach(table => {
+      table.foreignKeys.forEach(foreignKey => {
+        if (
+          foreignKey.foreign_column_name == primaryKey &&
+          foreignKey.foreign_table_name == tablename
+        ) {
+          selectedPanelInfo.foreignKeysOfPrimary[foreignKey.table_name] =
+            foreignKey.column_name;
+        }
+      });
+    });
+
+    setActiveTableInPanel(selectedPanelInfo);
+  };
 
   useEffect(() => {
-    if(!mouseOver) { //Resets all relationships 
+    if (!mouseOver) {
+      //Resets all relationships
       setPrimaryKeyAffected([{ primaryKeyTable: '', primaryKeyColumn: '' }]);
       setForeignKeysAffected([]);
     }
 
     //Determines which rows should be highlighted
     if (mouseOver) {
-      if (isForeignKey == "true") {
-        setPrimaryKeyAffected([ { primaryKeyTable: primaryKeyTableForForeignKey, primaryKeyColumn: primaryKeyColumn } ]);
+      if (isForeignKey == 'true') {
+        setPrimaryKeyAffected([
+          {
+            primaryKeyTable: primaryKeyTableForForeignKey,
+            primaryKeyColumn: primaryKeyColumn
+          }
+        ]);
       }
 
-      if (isPrimaryKey === "true") {
+      if (isPrimaryKey === 'true') {
         const allForeignKeys: Array<any> = [];
         data.forEach((table): void => {
           table.foreignKeys.forEach((foreignkey): void => {
-            if ( foreignkey.foreign_table_name === selectedTableName && foreignkey.foreign_column_name === selectedColumnName)
-              allForeignKeys.push({ table: foreignkey.table_name, column: foreignkey.column_name });
+            if (
+              foreignkey.foreign_table_name === selectedTableName &&
+              foreignkey.foreign_column_name === selectedColumnName
+            )
+              allForeignKeys.push({
+                table: foreignkey.table_name,
+                column: foreignkey.column_name
+              });
           });
         });
         setForeignKeysAffected(allForeignKeys);
@@ -177,20 +195,25 @@ const HomePage = (props) => {
   }, []);
 
   //Builds out tables to display
-  useEffect(():void => {
-
+  useEffect((): void => {
     let pinned = [];
     let filtered = [];
 
     if (data.length > 0) {
-      const regex = new RegExp(userInputForTables)
-        data.forEach(table => {
-
-          if (onlyPinned.includes(table.table_name)) {
-
-            pinned.push(
-              <PinnedTable>
-              <PinBtn data-pinned={table.table_name} onClick={() => dispatch(actions.removeFromPinned(table.table_name))} pinned={true}>UNPIN</PinBtn>
+      const regex = new RegExp(userInputForTables);
+      data.forEach(table => {
+        if (onlyPinned.includes(table.table_name)) {
+          pinned.push(
+            <PinnedTable>
+              <PinBtn
+                data-pinned={table.table_name}
+                onClick={() =>
+                  dispatch(actions.removeFromPinned(table.table_name))
+                }
+                pinned={true}
+              >
+                UNPIN
+              </PinBtn>
               <Tables
                 activeTableInPanel={activeTableInPanel}
                 tableName={table.table_name}
@@ -200,29 +223,33 @@ const HomePage = (props) => {
                 primaryKeyAffected={primaryKeyAffected}
                 foreignKeysAffected={foreignKeysAffected}
                 captureSelectedTable={captureSelectedTable}
-                captureMouseEnter={(e) => {
-                isPrimaryKey= e.target.dataset.isprimarykey;
-                isForeignKey = e.target.dataset.isforeignkey;
-                primaryKeyTableForForeignKey = e.target.dataset.foreignkeytable;
-                primaryKeyColumn = e.target.dataset.foreignkeycolumn;
-                selectedTableName = e.target.dataset.tablename;
-                selectedColumnName = e.target.dataset.columnname;
-                setMouseOver(true)
+                captureMouseEnter={e => {
+                  isPrimaryKey = e.target.dataset.isprimarykey;
+                  isForeignKey = e.target.dataset.isforeignkey;
+                  primaryKeyTableForForeignKey =
+                    e.target.dataset.foreignkeytable;
+                  primaryKeyColumn = e.target.dataset.foreignkeycolumn;
+                  selectedTableName = e.target.dataset.tablename;
+                  selectedColumnName = e.target.dataset.columnname;
+                  setMouseOver(true);
                 }}
-                captureMouseExit= {() => {
-                  setMouseOver(false)}}
+                captureMouseExit={() => {
+                  setMouseOver(false);
+                }}
                 key={table.table_name}
               />
-              </PinnedTable>
-            )
-
-          }
-
-          else if (regex.test(table.table_name)) {
-
-            filtered.push(
-              <NormalTable>
-              <PinBtn data-pinned={table.table_name} onClick={() => dispatch(actions.addToPinned(table.table_name))} pinned={false}>PIN</PinBtn>
+            </PinnedTable>
+          );
+        } else if (regex.test(table.table_name)) {
+          filtered.push(
+            <NormalTable>
+              <PinBtn
+                data-pinned={table.table_name}
+                onClick={() => dispatch(actions.addToPinned(table.table_name))}
+                pinned={false}
+              >
+                PIN
+              </PinBtn>
               <Tables
                 activeTableInPanel={activeTableInPanel}
                 tableName={table.table_name}
@@ -232,79 +259,90 @@ const HomePage = (props) => {
                 primaryKeyAffected={primaryKeyAffected}
                 foreignKeysAffected={foreignKeysAffected}
                 captureSelectedTable={captureSelectedTable}
-                captureMouseEnter={(e) => {
-                isPrimaryKey= e.target.dataset.isprimarykey;
-                isForeignKey = e.target.dataset.isforeignkey;
-                primaryKeyTableForForeignKey = e.target.dataset.foreignkeytable;
-                primaryKeyColumn = e.target.dataset.foreignkeycolumn;
-                selectedTableName = e.target.dataset.tablename;
-                selectedColumnName = e.target.dataset.columnname;
-                setMouseOver(true)
+                captureMouseEnter={e => {
+                  isPrimaryKey = e.target.dataset.isprimarykey;
+                  isForeignKey = e.target.dataset.isforeignkey;
+                  primaryKeyTableForForeignKey =
+                    e.target.dataset.foreignkeytable;
+                  primaryKeyColumn = e.target.dataset.foreignkeycolumn;
+                  selectedTableName = e.target.dataset.tablename;
+                  selectedColumnName = e.target.dataset.columnname;
+                  setMouseOver(true);
                 }}
-                captureMouseExit= {() => {
-                  setMouseOver(false)}}
+                captureMouseExit={() => {
+                  setMouseOver(false);
+                }}
                 key={table.table_name}
               />
-              </NormalTable>
-            )
-          }
+            </NormalTable>
+          );
+        }
       });
-      setFilteredTables(filtered)
-      setPinnedTables(pinned)
+      setFilteredTables(filtered);
+      setPinnedTables(pinned);
     }
   }, [
     data,
-    foreignKeysAffected, 
-    primaryKeyAffected, 
+    foreignKeysAffected,
+    primaryKeyAffected,
     userInputForTables,
     onlyPinned,
     activeTableInPanel
   ]);
 
-  const activeTabcapture = (e) => setActiveDisplayInBottomTab(e.target.dataset.activetabname);
-
+  const activeTabcapture = e =>
+    setActiveDisplayInBottomTab(e.target.dataset.activetabname);
 
   // #TODO: Connect this ipc communication with new query input
   // const executeQuery = () => {
   //   ipcRenderer.send("query-to-main", query);
   // }
 
-  ipcRenderer.on("db-query-result", (event, queryResult) => {
+  ipcRenderer.on('db-query-result', (event, queryResult) => {
     console.log('db-query-result is:', queryResult);
   });
 
   return (
     <React.Fragment>
-    <InvisibleHeader ></InvisibleHeader>
-    <EntireHomePageWrapper>
-    <Panel 
-      activeTableInPanel={activeTableInPanel} />
-       {toggleLoad && (
-        <LoadWrap>
-          <LoadingComponent />
-        </LoadWrap>
-      )}
-      <BottomPanel>
-      <SearchField
-        type="text"
-        placeholder="Search for a table"
-        onChange={e => setUserInputForTables(e.target.value)}
-      ></SearchField>
-      <nav>
-        <button data-activetabname='tables' onClick={activeTabcapture}>Tables</button>
-        <button data-activetabname='queryresults' onClick={activeTabcapture}>Query Results</button>
-      </nav>
-      {  activeDisplayInBottomTab==='tables' &&
-        ((pinnedTables.length  || filteredTables.length)? <HomepageWrapper>{pinnedTables}{filteredTables}</HomepageWrapper>:
-        <EmptyState>
-          There were no search results. Please search again.
-        </EmptyState>)
-      }
-      { activeDisplayInBottomTab==='queryresults' &&
-        <QueryResults />
-      }
-      </BottomPanel>
-    </EntireHomePageWrapper>
+      <InvisibleHeader></InvisibleHeader>
+      <EntireHomePageWrapper>
+        <Panel activeTableInPanel={activeTableInPanel} />
+        {toggleLoad && (
+          <LoadWrap>
+            <LoadingComponent />
+          </LoadWrap>
+        )}
+        <BottomPanel>
+          <SearchField
+            type="text"
+            placeholder="Search for a table"
+            onChange={e => setUserInputForTables(e.target.value)}
+          ></SearchField>
+          <nav>
+            <button data-activetabname="tables" onClick={activeTabcapture}>
+              Tables
+            </button>
+            <button
+              data-activetabname="queryresults"
+              onClick={activeTabcapture}
+            >
+              Query Results
+            </button>
+          </nav>
+          {activeDisplayInBottomTab === 'tables' &&
+            (pinnedTables.length || filteredTables.length ? (
+              <HomepageWrapper>
+                {pinnedTables}
+                {filteredTables}
+              </HomepageWrapper>
+            ) : (
+              <EmptyState>
+                There were no search results. Please search again.
+              </EmptyState>
+            ))}
+          {activeDisplayInBottomTab === 'queryresults' && <QueryResults />}
+        </BottomPanel>
+      </EntireHomePageWrapper>
     </React.Fragment>
   );
 };

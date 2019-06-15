@@ -1,2 +1,4 @@
 export const REMOVE_FROM_PINNED = 'REMOVE_FROM_PINNED';
 export const ADD_TO_PINNED = 'ADD_TO_PINNED';
+export const TOGGLE_DARK = 'TOGGLE_DARK';
+export const TOGGLE_LIGHT = 'TOGGLE_LIGHT';
