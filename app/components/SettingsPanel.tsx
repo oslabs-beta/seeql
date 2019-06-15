@@ -44,7 +44,7 @@ const SettingsPanel = () => {
   //   const redirectHome = () => <Redirect to="/" />;
   const theme = useContext(ThemeContext);
   const [state, dispatch] = useReducer(themeReducer, theme);
-  console.log(state);
+  console.log('STAte', state);
   return (
     <PanelWrapper>
       <TopSection>
@@ -78,7 +78,8 @@ const SettingsPanel = () => {
         </DivWrapper>
       </TopSection>
       <BottomSection>
-        <div></div>
+        {/* {console.log('in div', state.lightTheme.backgroundColor)} */}
+        <div style={state}>CHANGE ME HEY BLAHHSLAH</div>
         <NavLink to="/" activeStyle={{ color: 'black ' }}>
           Sign Out
         </NavLink>
