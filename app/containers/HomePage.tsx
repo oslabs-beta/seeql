@@ -4,6 +4,7 @@ import Tables from "../components/Tables";
 import styled from "styled-components";
 import Panel from "./Panel";
 import LoadingComponent from "../components/LoadComponent";
+import { ipcRenderer } from "electron";
 
 // interface ForeignKey {
 //  foreign_table_name: string; 
@@ -231,6 +232,18 @@ const HomePage = (props) => {
 
   const searchInputCapture = e => setUserInputForTables(e.target.value)
 
+  const [query, setQuery] = useState('');
+
+  const queryInputCapture = e => setQuery(e.target.value); 
+
+  const executeQuery = () => {
+    ipcRenderer.send("query-to-main", query);
+  }
+
+  ipcRenderer.on("db-query-result", (event, queryResult) => {
+    console.log('db-query-result is:', queryResult);
+  });
+
   return (
     <EntireHomePageWrapper>
     <Panel 
@@ -242,6 +255,9 @@ const HomePage = (props) => {
           <LoadingComponent />
         </LoadWrap>
       )}
+
+        <input type="text" onChange={queryInputCapture} />
+        <button onClick={executeQuery}>Execute Query</button>
 
       {
         (pinnedTables.length  || filteredTables.length)? <HomepageWrapper>{pinnedTables}{filteredTables}</HomepageWrapper> :

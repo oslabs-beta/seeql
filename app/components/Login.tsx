@@ -2,8 +2,7 @@ import * as React from 'react';
 import { useState } from 'react';
 import styled from 'styled-components';
 import { Redirect } from 'react-router-dom';
-import { Client } from 'pg';
-import composeTableData from '../db';
+import { ipcRenderer } from "electron";
 
 interface URIInputProps {
   readonly requiredErr: boolean;
@@ -146,26 +145,28 @@ const Login = () => {
     if (!password.value) setPassword({ value: '', requiredError: true });
     if (!database.value) setDatabase({ value: '', requiredError: true });
 
-    if (URI || (host.value && username.value && password.value && database.value)) {
+    if (
+      URI ||
+      (host.value && username.value && password.value && database.value)
+    ) {
       setLoading(true);
-      const client = new Client(updatedURI);
-      client.connect((err: Error) => {
-        if (err) {
-          setConnectionError(true);
-          setLoading(false);
-        } else {
-          composeTableData(client)
-            .then(tables => {
-              setConnectionError(false);
-              setTableData(tables);
-              setLoading(false);
-              setRedirectToHome(true);
-            })
-            .catch((err: any) => console.log('composeTableData error:', err));
-        }
-      });
+      ipcRenderer.send("uri-to-main", updatedURI);
     }
+ 
   };
+
+  ipcRenderer.on("db-connection-error", (event, err) => {
+    // #TODO: Error handling for cases where unable to retrieve info from a valid connection
+    setConnectionError(true);
+    setLoading(false);
+  });
+
+  ipcRenderer.on("tabledata-to-login", (event, databaseTables) => {
+    setConnectionError(false);
+    setTableData(databaseTables);
+    setLoading(false);
+    setRedirectToHome(true);
+  });
 
   const captureURI = (e): void => {
     const sanitizedURI = e.target.value.replace(/\s+/g, '');

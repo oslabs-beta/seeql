@@ -12,7 +12,6 @@ import { app, BrowserWindow, ipcMain } from "electron";
 import { autoUpdater } from "electron-updater";
 import log from "electron-log";
 import MenuBuilder from "./menu";
-const { Client } = require("pg");
 
 export default class AppUpdater {
   constructor() {
@@ -23,6 +22,7 @@ export default class AppUpdater {
 }
 
 let mainWindow = null;
+let queryWindow = null;
 
 if (process.env.NODE_ENV === "production") {
   const sourceMapSupport = require("source-map-support");
@@ -95,18 +95,31 @@ app.on("ready", async () => {
   const menuBuilder = new MenuBuilder(mainWindow);
   menuBuilder.buildMenu();
 
-  // Remove this if your app does not use auto updates
-  // eslint-disable-next-line
-  new AppUpdater();
+  queryWindow = new BrowserWindow({ show: false });
+  queryWindow.loadURL(`file://${__dirname}/query.html`);
+
+
+  // Listening from homepage, to send to database
+  ipcMain.on("uri-to-main", (event, uri) => {
+    queryWindow.webContents.send("uri-to-db", uri);
+  });
+  
+  ipcMain.on("query-to-main", (event, query) => {
+    queryWindow.webContents.send("query-to-db", query);
+  });
+
+
+
+  // Listening from database, to send to homepage
+  ipcMain.on("database-tables-to-main", (event, databaseTables) => {
+    mainWindow.webContents.send("tabledata-to-login", databaseTables);
+  });
+
+  ipcMain.on("db-connection-error", (event, err) => {
+    mainWindow.webContents.send("db-connection-error", err);
+  });
+
+
 });
 
-ipcMain.on("connection-string", (event, uri) => {
-  const client = new Client(uri + "?ssl=true");
-  client.connect((err, result) => {
-    if (err) {
-      event.returnValue = "failure";
-    } else {
-      event.returnValue = "success";
-    }
-  });
-});
+
