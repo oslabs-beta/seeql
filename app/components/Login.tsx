@@ -153,7 +153,7 @@ const Login = () => {
   const [tableData, setTableData] = useState([]);
 
   const sendLoginURI = (): void => {
-    if (connectionError) setConnectionError(false);
+    // if (connectionError) setConnectionError(false);
     let updatedPort = !port ? '5432' : port;
     let updatedURI;
     if (loginType === 'URI') updatedURI = URI;
@@ -177,12 +177,14 @@ const Login = () => {
  
   };
 
+  ipcRenderer.removeAllListeners("db-connection-error")
   ipcRenderer.on("db-connection-error", (event, err) => {
     // #TODO: Error handling for cases where unable to retrieve info from a valid connection
     setConnectionError(true);
     setLoading(false);
   });
 
+  ipcRenderer.removeAllListeners("tabledata-to-login")
   ipcRenderer.on("tabledata-to-login", (event, databaseTables) => {
     setConnectionError(false);
     setTableData(databaseTables);
@@ -205,10 +207,13 @@ const Login = () => {
       );
   };
 
+
+
   return (
     <React.Fragment>
     <InvisibleHeader></InvisibleHeader>
     <FullPageWrapper>
+
     <LoginContainer>
 
       {connectionError

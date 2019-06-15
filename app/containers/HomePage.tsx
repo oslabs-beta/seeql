@@ -9,24 +9,49 @@ import QueryResults from "../components/QueryResults";
 import changePinnedStatus from "../reducers/ChangePinnedStatus"
 import * as actions from '../actions/actions';
 
+interface IBottomPanelNavButtonProps {
+  activeDisplayInBottomTab: string
+  activetabname: string
+} 
 
-const SearchField = styled.input`
-  margin: 10px 20px;
-  height: 20px;
-  font-family: "Poppins", sans-serif;
-  background-color: transparent;
+const BottomPanelNav = styled.nav`
+  display: flex;
+  justify-content: space-around;
+`
+
+const OmniBoxNav = styled.nav`
+  display: relative;
+  right: 50px;
+  top: -40px;
+`
+
+const BottomPanelNavButton = styled.button<IBottomPanelNavButtonProps>`
+  font-family: 'Poppins', sans-serif;
   border: none;
-  border-bottom: 2px solid  #00b5cc;
+  border-bottom: ${({activeDisplayInBottomTab, activetabname}) => (activeDisplayInBottomTab === activetabname) ? "2px solid pink" : "2px solid transparent"};
   padding: 5px;
+  transition: 0.3s;
   :focus {
     outline: none;
   }
-`;
-
-const BottomPanel = styled.div`
-  border: 1px solid black;
+  :hover {
+    border-bottom: 2px solid black;
+  }
 `
 
+const RightPanel = styled.div`
+  border: 1px solid black;
+`
+const OMNIboxInput = styled.textarea`
+  font-family: 'Poppins', sans-serif;
+  height: 50px;
+  width: 50vw;
+  padding: 5px;
+  resize:none;
+  :focus{
+    outline: none;
+  }
+`
 
 const InvisibleHeader = styled.div`
   height: 30px;
@@ -117,6 +142,9 @@ const HomePage = (props) => {
   }]);
   const [pinnedTables, setPinnedTables] = useState([]);
   const [onlyPinned, dispatch] = useReducer(changePinnedStatus, [])
+  const [query, setQuery] = useState('');
+  const [queryResult, setQueryResult] = useState([]);
+  const [omniBoxView, setOmniBoxView] = useState('plain');
 
   const captureSelectedTable = (e) => {
     const tablename = e.target.dataset.tablename;
@@ -263,14 +291,23 @@ const HomePage = (props) => {
 
   const activeTabcapture = (e) => setActiveDisplayInBottomTab(e.target.dataset.activetabname);
 
-
+  const executeQueryOnEnter = (e) => {
+    const code = e.keyCode || e.which;
+    if(code === 13) { //13 is the enter keycode
+      ipcRenderer.send("query-to-main", query);
+    }
+  }
   // #TODO: Connect this ipc communication with new query input
-  // const executeQuery = () => {
-  //   ipcRenderer.send("query-to-main", query);
-  // }
+  const executeQuery = () => {
+    ipcRenderer.send("query-to-main", query);
+  }
 
-  ipcRenderer.on("db-query-result", (event, queryResult) => {
-    console.log('db-query-result is:', queryResult);
+  ipcRenderer.removeAllListeners("query-result-to-homepag")
+  ipcRenderer.on("query-result-to-homepage", (event, queryResult) => {
+    if(queryResult.statusCode === 'Success'){
+      setQueryResult(queryResult.message);
+      setActiveDisplayInBottomTab('queryresults')
+    }
   });
 
   return (
@@ -284,16 +321,31 @@ const HomePage = (props) => {
           <LoadingComponent />
         </LoadWrap>
       )}
-      <BottomPanel>
-      <SearchField
-        type="text"
+      <RightPanel>
+      { omniBoxView === 'SQL' &&  
+      <div>
+        <OMNIboxInput 
+          onChange={(e) => setQuery(e.target.value)} 
+          placeholder="SELECT * FROM ..."
+          onKeyPress={executeQueryOnEnter}
+          ></OMNIboxInput>
+        <button onClick={executeQuery}>Execute Query</button>
+      </div>
+      } 
+      {omniBoxView === 'plain' &&  
+      <OMNIboxInput
         placeholder="Search for a table"
         onChange={e => setUserInputForTables(e.target.value)}
-      ></SearchField>
-      <nav>
-        <button data-activetabname='tables' onClick={activeTabcapture}>Tables</button>
-        <button data-activetabname='queryresults' onClick={activeTabcapture}>Query Results</button>
-      </nav>
+      ></OMNIboxInput>
+      }
+      <OmniBoxNav>
+        <button onClick={() => setOmniBoxView('SQL')}>SQL</button>
+        <button onClick={() => setOmniBoxView('plain')}>PLAIN</button>
+      </OmniBoxNav>
+      <BottomPanelNav>
+        <BottomPanelNavButton activeDisplayInBottomTab={activeDisplayInBottomTab} activetabname='tables' data-activetabname='tables' onClick={activeTabcapture}>Tables</BottomPanelNavButton>
+        <BottomPanelNavButton activeDisplayInBottomTab={activeDisplayInBottomTab} activetabname='queryresults' data-activetabname='queryresults' onClick={activeTabcapture}>Query Results</BottomPanelNavButton>
+      </BottomPanelNav>
       {  activeDisplayInBottomTab==='tables' &&
         ((pinnedTables.length  || filteredTables.length)? <HomepageWrapper>{pinnedTables}{filteredTables}</HomepageWrapper>:
         <EmptyState>
@@ -301,9 +353,9 @@ const HomePage = (props) => {
         </EmptyState>)
       }
       { activeDisplayInBottomTab==='queryresults' &&
-        <QueryResults />
+        <QueryResults queryResult={queryResult}/>
       }
-      </BottomPanel>
+      </RightPanel>
     </EntireHomePageWrapper>
     </React.Fragment>
   );
