@@ -292,7 +292,6 @@ const HomePage = (props) => {
   const activeTabcapture = (e) => setActiveDisplayInBottomTab(e.target.dataset.activetabname);
 
   const executeQueryOnEnter = (e) => {
-    console.log('pressed a key!', e.which, e.keyCode);
     const code = e.keyCode || e.which;
     if(code === 13) { //13 is the enter keycode
       ipcRenderer.send("query-to-main", query);
