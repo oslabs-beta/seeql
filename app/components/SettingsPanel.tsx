@@ -1,16 +1,16 @@
-import * as React from 'react';
-import { useContext, useReducer } from 'react';
-import { NavLink } from 'react-router-dom';
-import styled from 'styled-components';
-import ThemeContext from '../contexts/themeContext';
-import themeReducer from '../reducers/themeReducer';
+import * as React from "react";
+import { useContext, useReducer } from "react";
+import { NavLink } from "react-router-dom";
+import styled from "styled-components";
+import ThemeContext from "../contexts/themeContext";
+import themeReducer from "../reducers/themeReducer";
 
 const PanelWrapper = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   color: black;
-  font-family: 'Poppins', sans-serif;
+  font-family: "Poppins", sans-serif;
   padding: 20px;
   width: 300px;
   height: 100vh;
@@ -44,7 +44,7 @@ const SettingsPanel = () => {
   //   const redirectHome = () => <Redirect to="/" />;
   const theme = useContext(ThemeContext);
   const [state, dispatch] = useReducer(themeReducer, theme);
-  console.log('STAte', state);
+  console.log("STAte", state);
   return (
     <PanelWrapper>
       <TopSection>
@@ -61,7 +61,7 @@ const SettingsPanel = () => {
           </select> */}
           <button
             onClick={() => {
-              dispatch({ type: 'TOGGLE_LIGHT' });
+              dispatch({ type: "TOGGLE_LIGHT" });
             }}
           >
             TOGGLE THEME
@@ -80,7 +80,7 @@ const SettingsPanel = () => {
       <BottomSection>
         {/* {console.log('in div', state.lightTheme.backgroundColor)} */}
         <div style={state}>CHANGE ME HEY BLAHHSLAH</div>
-        <NavLink to="/" activeStyle={{ color: 'black ' }}>
+        <NavLink to="/" activeStyle={{ color: "black " }}>
           Sign Out
         </NavLink>
       </BottomSection>
