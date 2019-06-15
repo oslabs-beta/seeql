@@ -5,6 +5,18 @@ import { Redirect } from 'react-router-dom';
 import { Client } from 'pg';
 import composeTableData from '../db';
 
+const InvisibleHeader = styled.div`
+  height: 30px;
+  -webkit-app-region: drag;
+`
+
+const FullPageWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+`
+
 interface URIInputProps {
   readonly requiredErr: boolean;
 }
@@ -32,6 +44,7 @@ const URIInput = styled.textarea<URIInputProps>`
 
 const ToggleSSL = styled.div`
   display: flex;
+  justify-content: center;
   padding: 5px 20px;
   margin: 10px;
   font-family: 'Poppins', sans-serif;
@@ -42,20 +55,17 @@ const ToggleSSL = styled.div`
 `;
 
 const LoginContainer = styled.div`
-  background-color: #e8ecf1;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
   padding: 50px;
-  height: 100vh;
+  height: 400px;
+  width: 300px;
+  border: 1px solid grey;
 `;
 
 const LoginBtn = styled.button`
   padding: 5px 20px;
-  margin: 10px;
   font-family: 'Poppins', sans-serif;
-  display: flex;
 `;
 
 const LoginTypeButtonContainer = styled.div`
@@ -72,7 +82,13 @@ const LoginTypeButton = styled.button<LoginTypeButtonProps>`
   margin: 10px;
   font-family: 'Poppins', sans-serif;
   display: flex;
-  background-color: ${props => props.selectedLoginType === props.buttonType ? 'white' : 'grey'};
+  border: none;
+  background-color: white;
+  border-bottom: ${props => props.selectedLoginType === props.buttonType ? '3px solid #00b5cc' : '3px solid transparent'};
+
+  :focus {
+    outline: none;
+  }
 `;
 
 const CredentialsContainer = styled.div`
@@ -112,6 +128,12 @@ const InputLabel = styled.span`
   color: black;
   font-family: "Poppins", sans-serif;
 `;
+
+const URIConnectionStringForm = styled.div`
+  display: flex;
+  flex-direction: column;
+  height: 150px;
+`
 
 const Login = () => {
 
@@ -183,24 +205,15 @@ const Login = () => {
   };
 
   return (
+    <React.Fragment>
+    <InvisibleHeader></InvisibleHeader>
+    <FullPageWrapper>
     <LoginContainer>
 
       {connectionError
         && <ConnectionErrorMessage>Unable to connect to the database. Please try again.</ConnectionErrorMessage>
       }
 
-      <InputLabel>
-        <em>CS_DEMO_DB</em>
-        <br />
-        <br />
-        postgres://godugvmyduvduy:3b89454dd6a4090ac4a5574a00a2e13393dda232f258b3a6033c4ac4d24858ff@ec2-50-19-127-115.compute-1.amazonaws.com:5432/d16hrptvvsaq3f
-        <br />
-        <br />
-        <em>MAGNOLIA:</em>
-        <br />
-        <br />
-        postgres://ltdnkwnbccooem:64ad308e565b39cc070194f7fa621ae0e925339be5a1c69480ff2a4462eab4c4@ec2-54-163-226-238.compute-1.amazonaws.com:5432/ddsu160rb5t7vq
-      </InputLabel>
 
       <LoginTypeButtonContainer>
         <LoginTypeButton
@@ -252,11 +265,16 @@ const Login = () => {
         </CredentialsContainer>
       }
       {loginType === 'URI' &&
-        <URIInput
-          requiredErr={requiredError}
-          onChange={captureURI}
-          placeholder="Enter your URI connection string..."
-        />
+      <URIConnectionStringForm>
+          <InputLabel>
+            URI Connection String
+          </InputLabel>
+          <URIInput
+            requiredErr={requiredError}
+            onChange={captureURI}
+            placeholder="Enter your URI connection string..."
+          />
+        </URIConnectionStringForm>
       }
       {requiredError &&
         <RequiredWarning>This field is required</RequiredWarning>}
@@ -271,6 +289,8 @@ const Login = () => {
 
       {redirectHome()}
     </LoginContainer>
+    </FullPageWrapper>
+    </React.Fragment>
   );
 };
 

@@ -14,7 +14,6 @@ body {
   position: relative;
   color: black;
   height: 100vh;
-  font-family: Arial, Helvetica, Helvetica Neue, serif;
   overflow-y: hidden;
 }
 
@@ -35,7 +34,7 @@ li {
 }
 
 a {
-  color: white;
+  color: black;
   opacity: 0.75;
   text-decoration: none;
 }

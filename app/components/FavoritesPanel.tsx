@@ -4,16 +4,19 @@ import styled from 'styled-components';
 const PanelWrapper = styled.div`
   color: black;
   font-family: 'Poppins', sans-serif;
-  padding: 5px;
-  border: 1px solid black;
+  padding: 40px;
+  font-size: 30px;
   width: 300px;
   height: 100vh;
+  display: flex;
+  justify-content: center;
+  background-color: #e8ecf1;
 `
 
 const FavoritesPanel = () => {
     return (
         <PanelWrapper>
-            This is favorites Panel
+            Welcome to favorites, this feature is coming soon!
         </PanelWrapper>
     )
 
