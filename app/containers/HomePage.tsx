@@ -20,6 +20,7 @@ const BottomPanelNav = styled.nav`
 `
 
 const BottomPanelNavButton = styled.button<IBottomPanelNavButtonProps>`
+  font-family: 'Poppins', sans-serif;
   border: none;
   border-bottom: ${({activeDisplayInBottomTab, activetabname}) => (activeDisplayInBottomTab === activetabname) ? "2px solid pink" : "2px solid transparent"};
   padding: 5px;
@@ -32,10 +33,12 @@ const BottomPanelNavButton = styled.button<IBottomPanelNavButtonProps>`
   }
 `
 
-const BottomPanel = styled.div`
+const RightPanel = styled.div`
   border: 1px solid black;
 `
 const OMNIboxInput = styled.textarea`
+  font-family: 'Poppins', sans-serif;
+  letter-spacing: 2px;
   height: 50px;
   width: 50vw;
   padding: 5px;
@@ -283,7 +286,13 @@ const HomePage = (props) => {
 
   const activeTabcapture = (e) => setActiveDisplayInBottomTab(e.target.dataset.activetabname);
 
-
+  const executeQueryOnEnter = (e) => {
+    console.log('pressed a key!', e.which, e.keyCode);
+    const code = e.keyCode || e.which;
+    if(code === 13) { //13 is the enter keycode
+      ipcRenderer.send("query-to-main", query);
+    }
+  }
   // #TODO: Connect this ipc communication with new query input
   const executeQuery = () => {
     ipcRenderer.send("query-to-main", query);
@@ -310,10 +319,14 @@ const HomePage = (props) => {
           <LoadingComponent />
         </LoadWrap>
       )}
-      <BottomPanel>
+      <RightPanel>
       { omniBoxView === 'SQL' &&  
       <div>
-        <OMNIboxInput onChange={(e) => setQuery(e.target.value)} placeholder="SELECT * FROM ..."></OMNIboxInput>
+        <OMNIboxInput 
+          onChange={(e) => setQuery(e.target.value)} 
+          placeholder="SELECT * FROM ..."
+          onKeyPress={executeQueryOnEnter}
+          ></OMNIboxInput>
         <button onClick={executeQuery}>Execute Query</button>
       </div>
       } 
@@ -338,7 +351,7 @@ const HomePage = (props) => {
       { activeDisplayInBottomTab==='queryresults' &&
         <QueryResults queryResult={queryResult}/>
       }
-      </BottomPanel>
+      </RightPanel>
     </EntireHomePageWrapper>
     </React.Fragment>
   );
