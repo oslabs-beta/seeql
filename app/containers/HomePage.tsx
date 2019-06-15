@@ -289,6 +289,7 @@ const HomePage = (props) => {
     ipcRenderer.send("query-to-main", query);
   }
 
+  ipcRenderer.removeAllListeners("query-result-to-homepage")
   ipcRenderer.on("query-result-to-homepage", (event, queryResult) => {
     if(queryResult.statusCode === 'Success'){
       setQueryResult(queryResult.message);
