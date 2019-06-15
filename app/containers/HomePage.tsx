@@ -272,6 +272,7 @@ const HomePage = (props) => {
       setQueryResult(queryResult.message);
       setActiveDisplayInBottomTab('queryresults')
     } else{
+      console.log(queryResult)
       console.log('issue');
     }
   });
