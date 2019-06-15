@@ -289,13 +289,11 @@ const HomePage = (props) => {
     ipcRenderer.send("query-to-main", query);
   }
 
+  ipcRenderer.removeAllListeners("query-result-to-homepag")
   ipcRenderer.on("query-result-to-homepage", (event, queryResult) => {
     if(queryResult.statusCode === 'Success'){
       setQueryResult(queryResult.message);
       setActiveDisplayInBottomTab('queryresults')
-    } else{
-      console.log(queryResult)
-      console.log('issue');
     }
   });
 

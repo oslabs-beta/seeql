@@ -13,7 +13,6 @@ interface IQueryResultsProps {
 
 
 const QueryResults: React.SFC<IQueryResultsProps> = ({queryResult}) => {
-    console.log('result', queryResult)
     let columns=[];
 
     if(queryResult.length > 0) {
