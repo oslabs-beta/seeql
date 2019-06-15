@@ -4,6 +4,7 @@ import Tables from "../components/Tables";
 import styled from "styled-components";
 import Panel from "./Panel";
 import LoadingComponent from "../components/LoadComponent";
+import { ipcRenderer } from "electron";
 import QueryResults from "../components/QueryResults";
 import changePinnedStatus from "../reducers/ChangePinnedStatus"
 import * as actions from '../actions/actions';
@@ -261,6 +262,16 @@ const HomePage = (props) => {
   ]);
 
   const activeTabcapture = (e) => setActiveDisplayInBottomTab(e.target.dataset.activetabname);
+
+
+  // #TODO: Connect this ipc communication with new query input
+  // const executeQuery = () => {
+  //   ipcRenderer.send("query-to-main", query);
+  // }
+
+  ipcRenderer.on("db-query-result", (event, queryResult) => {
+    console.log('db-query-result is:', queryResult);
+  });
 
   return (
     <React.Fragment>
