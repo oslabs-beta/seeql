@@ -9,10 +9,32 @@ import QueryResults from "../components/QueryResults";
 import changePinnedStatus from "../reducers/ChangePinnedStatus"
 import * as actions from '../actions/actions';
 
+interface IBottomPanelNavButtonProps {
+  activeDisplayInBottomTab: string
+  activetabname: string
+} 
+
+const BottomPanelNav = styled.nav`
+  display: flex;
+  justify-content: space-around;
+`
+
+const BottomPanelNavButton = styled.button<IBottomPanelNavButtonProps>`
+  border: none;
+  border-bottom: ${({activeDisplayInBottomTab, activetabname}) => (activeDisplayInBottomTab === activetabname) ? "2px solid pink" : "2px solid transparent"};
+  padding: 5px;
+  transition: 0.3s;
+  :focus {
+    outline: none;
+  }
+  :hover {
+    border-bottom: 2px solid black;
+  }
+`
+
 const BottomPanel = styled.div`
   border: 1px solid black;
 `
-
 const OMNIboxInput = styled.textarea`
   height: 50px;
   width: 50vw;
@@ -303,10 +325,10 @@ const HomePage = (props) => {
       }
       <button onClick={() => setOmniBoxView('SQL')}>SQL</button>
       <button onClick={() => setOmniBoxView('plain')}>PLAIN</button>
-      <nav>
-        <button data-activetabname='tables' onClick={activeTabcapture}>Tables</button>
-        <button data-activetabname='queryresults' onClick={activeTabcapture}>Query Results</button>
-      </nav>
+      <BottomPanelNav>
+        <BottomPanelNavButton activeDisplayInBottomTab={activeDisplayInBottomTab} activetabname='tables' data-activetabname='tables' onClick={activeTabcapture}>Tables</BottomPanelNavButton>
+        <BottomPanelNavButton activeDisplayInBottomTab={activeDisplayInBottomTab} activetabname='queryresults' data-activetabname='queryresults' onClick={activeTabcapture}>Query Results</BottomPanelNavButton>
+      </BottomPanelNav>
       {  activeDisplayInBottomTab==='tables' &&
         ((pinnedTables.length  || filteredTables.length)? <HomepageWrapper>{pinnedTables}{filteredTables}</HomepageWrapper>:
         <EmptyState>
