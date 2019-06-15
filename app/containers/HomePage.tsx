@@ -19,6 +19,12 @@ const BottomPanelNav = styled.nav`
   justify-content: space-around;
 `
 
+const OmniBoxNav = styled.nav`
+  display: relative;
+  right: 50px;
+  top: -40px;
+`
+
 const BottomPanelNavButton = styled.button<IBottomPanelNavButtonProps>`
   font-family: 'Poppins', sans-serif;
   border: none;
@@ -38,7 +44,6 @@ const RightPanel = styled.div`
 `
 const OMNIboxInput = styled.textarea`
   font-family: 'Poppins', sans-serif;
-  letter-spacing: 2px;
   height: 50px;
   width: 50vw;
   padding: 5px;
@@ -336,8 +341,10 @@ const HomePage = (props) => {
         onChange={e => setUserInputForTables(e.target.value)}
       ></OMNIboxInput>
       }
-      <button onClick={() => setOmniBoxView('SQL')}>SQL</button>
-      <button onClick={() => setOmniBoxView('plain')}>PLAIN</button>
+      <OmniBoxNav>
+        <button onClick={() => setOmniBoxView('SQL')}>SQL</button>
+        <button onClick={() => setOmniBoxView('plain')}>PLAIN</button>
+      </OmniBoxNav>
       <BottomPanelNav>
         <BottomPanelNavButton activeDisplayInBottomTab={activeDisplayInBottomTab} activetabname='tables' data-activetabname='tables' onClick={activeTabcapture}>Tables</BottomPanelNavButton>
         <BottomPanelNavButton activeDisplayInBottomTab={activeDisplayInBottomTab} activetabname='queryresults' data-activetabname='queryresults' onClick={activeTabcapture}>Query Results</BottomPanelNavButton>
