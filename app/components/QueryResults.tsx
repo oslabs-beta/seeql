@@ -13,24 +13,32 @@ interface IQueryResultsProps {
 
 
 const QueryResults: React.SFC<IQueryResultsProps> = ({queryResult}) => {
-    console.log('inside component', queryResult)
-    const columnNames = Object.keys(queryResult[0]);
+    let columns=[];
 
-    const columns = columnNames.map((column) => { 
-        return ({
-        Header: column,
-        accessor: column
-        })
-    });
-
+    if(queryResult.length > 0) {
     
+        const columnNames = Object.keys(queryResult[0]);
+
+        columns = columnNames.map((column) => { 
+            return ({
+            Header: column,
+            accessor: column
+            })
+        });
+
+   }
 
     return(
         <QueryResultWrapper>
+            { queryResult.length > 0 &&
             <ReactTable 
                 data={queryResult}
                 columns={columns}
             />
+            }
+            { queryResult.length === 0 &&
+            <div>You haven't queried anything.</div>
+            }
         </QueryResultWrapper>
     )
 }

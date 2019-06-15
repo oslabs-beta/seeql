@@ -153,7 +153,7 @@ const Login = () => {
   const [tableData, setTableData] = useState([]);
 
   const sendLoginURI = (): void => {
-    if (connectionError) setConnectionError(false);
+    // if (connectionError) setConnectionError(false);
     let updatedPort = !port ? '5432' : port;
     let updatedURI;
     if (loginType === 'URI') updatedURI = URI;

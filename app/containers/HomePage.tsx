@@ -16,6 +16,11 @@ const BottomPanel = styled.div`
 const OMNIboxInput = styled.textarea`
   height: 50px;
   width: 50vw;
+  padding: 5px;
+  resize:none;
+  :focus{
+    outline: none;
+  }
 `
 
 const InvisibleHeader = styled.div`
