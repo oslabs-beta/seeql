@@ -6,6 +6,7 @@ import Panel from "./Panel";
 import LoadingComponent from "../components/LoadComponent";
 import QueryResults from "../components/QueryResults";
 import changePinnedStatus from "../reducers/ChangePinnedStatus"
+import * as actions from '../actions/actions';
 
 
 const InvisibleHeader = styled.div`
@@ -96,7 +97,7 @@ const HomePage = (props) => {
     primaryKeyTable: '',
     primaryKeyColumn: ''
   }]);
-  const [ pinnedTables, setPinnedTables ] = useState([]);
+  const [pinnedTables, setPinnedTables] = useState([]);
   const [onlyPinned, dispatch] = useReducer(changePinnedStatus, [])
 
   const captureSelectedTable = (e) => {
@@ -171,12 +172,7 @@ const HomePage = (props) => {
 
             pinned.push(
               <PinnedTable>
-              <PinBtn data-pinned={table.table_name} onClick={(e) => dispatch({
-                type: 'REMOVE_FROM_PINNED',
-                payload: {
-                  tablename: table.table_name
-                }}
-                )} pinned={true}>UNPIN</PinBtn>
+              <PinBtn data-pinned={table.table_name} onClick={() => dispatch(actions.removeFromPinned(table.table_name))} pinned={true}>UNPIN</PinBtn>
               <Tables
                 activeTableInPanel={activeTableInPanel}
                 tableName={table.table_name}
@@ -208,12 +204,7 @@ const HomePage = (props) => {
 
             filtered.push(
               <NormalTable>
-              <PinBtn data-pinned={table.table_name} onClick={(e) => dispatch({
-                type: 'ADD_TO_PINNED',
-                payload: {
-                  tablename: table.table_name
-                }}
-                )} pinned={false}>PIN</PinBtn>
+              <PinBtn data-pinned={table.table_name} onClick={() => dispatch(actions.addToPinned(table.table_name))} pinned={false}>PIN</PinBtn>
               <Tables
                 activeTableInPanel={activeTableInPanel}
                 tableName={table.table_name}
