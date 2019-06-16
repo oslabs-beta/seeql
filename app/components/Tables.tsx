@@ -39,6 +39,7 @@ const TableRow = styled.li<ITableRowProps>`
   :hover {
     transform: scale(1.01);
     background-color: #e8ecf1;
+    cursor: copy;
   }
 `;
 
@@ -53,6 +54,9 @@ const TableTitle = styled.p`
   font-size: 140%;
   padding: 5px;
   overflow-wrap: break-word;
+  :hover{
+    cursor: copy;
+  }
 `
 interface IForeignKey {
   column_name?: string

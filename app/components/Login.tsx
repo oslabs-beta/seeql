@@ -63,13 +63,18 @@ interface LoginTypeButtonProps {
 
 const LoginTypeButton = styled.button<LoginTypeButtonProps>`
   padding: 5px;
-  font-size: 80%;
+  font-size: 140%;
+  margin: 10px;
   font-family: 'Poppins', sans-serif;
   background-color: transparent;
   display: flex;
   border: none;
   border-bottom: ${({selectedLoginType, buttonType}) => selectedLoginType === buttonType ? '3px solid #013243' : '3px solid transparent'};
-
+  transition: 0.3s;
+  :hover{
+    border-bottom: 3px solid #013243;
+    cursor: pointer;
+  }
   :focus {
     outline: none;
   }
@@ -82,7 +87,7 @@ const URIConnectionContainer= styled.div`
 `
 
 const InputLabel = styled.span`
-  font-size: 60%;
+  font-size: 100%;
   letter-spacing:2px;
 `;
 
@@ -122,7 +127,7 @@ const LoginBtn = styled.button`
   width: 100px;
   border: none;
   transition: 0.2s;
-  font-size: 80%;
+  font-size: 120%;
   :hover{
     color: white;
     background-color: #1EA196;
@@ -158,18 +163,19 @@ const CredentialsInput = styled.input<IURIInputProps>`
 
 const ConnectionErrorMessage = styled.div`
   background-color: #f1c7ca;
+  width: 200px;
   color: #ca333e;
   border-radius: 3px;
   padding: 5px;
   margin: 5px;
   font-family: 'Poppins', sans-serif;
   border-left: 3px solid #ca333e;
-  font-size: 80%;
+  font-size: 100%;
 `;
 
 const RequiredWarning = styled.span`
   color: #ca333e;
-  font-size: 60%;
+  font-size: 80%;
 `;
 
 const Login = () => {
@@ -346,7 +352,7 @@ const Login = () => {
             placeholder="Enter your URI connection string..."
           />
           {requiredError &&
-          <RequiredWarning>This field is required</RequiredWarning>}
+          <RequiredWarning>URI is required</RequiredWarning>}
         </URIConnectionContainer> 
       }
       <ToggleSSL>
