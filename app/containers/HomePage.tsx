@@ -1,19 +1,18 @@
-import * as React from 'react';
-import { useState, useEffect, useReducer, useContext } from 'react';
-import Tables from '../components/Tables';
-import styled from 'styled-components';
-import Panel from './Panel';
-import LoadingComponent from '../components/LoadComponent';
-import { ipcRenderer } from 'electron';
-import QueryResults from '../components/QueryResults';
-import changePinnedStatus from '../reducers/ChangePinnedStatus';
-import * as actions from '../actions/actions';
-import Themes from '../contexts/themeContext';
+import * as React from "react";
+import { useState, useEffect, useReducer } from "react";
+import Tables from "../components/Tables";
+import styled from "styled-components";
+import Panel from "./Panel";
+import LoadingComponent from "../components/LoadComponent";
+import { ipcRenderer } from "electron";
+import QueryResults from "../components/QueryResults";
+import changePinnedStatus from "../reducers/ChangePinnedStatus";
+import * as actions from "../actions/actions";
 
 const SearchField = styled.input`
   margin: 10px 20px;
   height: 20px;
-  font-family: 'Poppins', sans-serif;
+  font-family: "Poppins", sans-serif;
   background-color: transparent;
   border: none;
   border-bottom: 2px solid #00b5cc;
@@ -48,8 +47,8 @@ interface IPinBtnProps {
 const PinBtn = styled.button<IPinBtnProps>`
   display: relative;
   border: none;
-  background-color: ${props => (props.pinned ? 'rgb(93, 0, 250)' : 'white')};
-  color: ${props => (props.pinned ? 'white' : 'black')};
+  background-color: ${props => (props.pinned ? "rgb(93, 0, 250)" : "white")};
+  color: ${props => (props.pinned ? "white" : "black")};
   padding: 2px 5px;
   border-radius: 6px;
   margin: 2px 0px;
@@ -74,7 +73,7 @@ const EntireHomePageWrapper = styled.div`
   display: flex;
   margin-top: -30px;
   overflow: wrap;
-  font-family: 'Poppins', sans-serif;
+  font-family: "Poppins", sans-serif;
 `;
 
 const LoadWrap = styled.div`
@@ -99,23 +98,23 @@ let selectedTableName: string;
 let selectedColumnName: string;
 
 const HomePage = props => {
-  const Theme = useContext(Themes);
-  console.log(Theme);
+  // const Theme = useContext(Themes);
+  // console.log("Homepage Theme", Theme);
   const tableData = props.location.state.tables;
   const [activeDisplayInBottomTab, setActiveDisplayInBottomTab] = useState(
-    'tables'
+    "tables"
   );
   const [activeTableInPanel, setActiveTableInPanel] = useState({});
   const [filteredTables, setFilteredTables] = useState([]);
-  const [userInputForTables, setUserInputForTables] = useState('');
+  const [userInputForTables, setUserInputForTables] = useState("");
   const [data, setData] = useState([]); //data from database
   const [mouseOver, setMouseOver] = useState(); //data to detect if mouse is over a pk or fk
   const [toggleLoad, setToggleLoad] = useState(true);
   const [foreignKeysAffected, setForeignKeysAffected] = useState([]);
   const [primaryKeyAffected, setPrimaryKeyAffected] = useState([
     {
-      primaryKeyTable: '',
-      primaryKeyColumn: ''
+      primaryKeyTable: "",
+      primaryKeyColumn: ""
     }
   ]);
   const [pinnedTables, setPinnedTables] = useState([]);
@@ -153,13 +152,13 @@ const HomePage = props => {
   useEffect(() => {
     if (!mouseOver) {
       //Resets all relationships
-      setPrimaryKeyAffected([{ primaryKeyTable: '', primaryKeyColumn: '' }]);
+      setPrimaryKeyAffected([{ primaryKeyTable: "", primaryKeyColumn: "" }]);
       setForeignKeysAffected([]);
     }
 
     //Determines which rows should be highlighted
     if (mouseOver) {
-      if (isForeignKey == 'true') {
+      if (isForeignKey == "true") {
         setPrimaryKeyAffected([
           {
             primaryKeyTable: primaryKeyTableForForeignKey,
@@ -168,8 +167,8 @@ const HomePage = props => {
         ]);
       }
 
-      if (isPrimaryKey === 'true') {
-        const allForeignKeys: Array<any> = [];
+      if (isPrimaryKey === "true") {
+        const allForeignKeys: any[] = [];
         data.forEach((table): void => {
           table.foreignKeys.forEach((foreignkey): void => {
             if (
@@ -185,14 +184,14 @@ const HomePage = props => {
         setForeignKeysAffected(allForeignKeys);
       }
     }
-  }, [mouseOver]);
+  }, [data, mouseOver]);
 
   //Fetches database information
   useEffect((): void => {
     setToggleLoad(true);
     setData(tableData);
     setToggleLoad(false);
-  }, []);
+  }, [tableData]);
 
   //Builds out tables to display
   useEffect((): void => {
@@ -287,7 +286,8 @@ const HomePage = props => {
     primaryKeyAffected,
     userInputForTables,
     onlyPinned,
-    activeTableInPanel
+    activeTableInPanel,
+    captureSelectedTable
   ]);
 
   const activeTabcapture = e =>
@@ -298,8 +298,8 @@ const HomePage = props => {
   //   ipcRenderer.send("query-to-main", query);
   // }
 
-  ipcRenderer.on('db-query-result', (event, queryResult) => {
-    console.log('db-query-result is:', queryResult);
+  ipcRenderer.on("db-query-result", (event, queryResult) => {
+    console.log("db-query-result is:", queryResult);
   });
 
   return (
@@ -329,7 +329,7 @@ const HomePage = props => {
               Query Results
             </button>
           </nav>
-          {activeDisplayInBottomTab === 'tables' &&
+          {activeDisplayInBottomTab === "tables" &&
             (pinnedTables.length || filteredTables.length ? (
               <HomepageWrapper>
                 {pinnedTables}
@@ -340,7 +340,7 @@ const HomePage = props => {
                 There were no search results. Please search again.
               </EmptyState>
             ))}
-          {activeDisplayInBottomTab === 'queryresults' && <QueryResults />}
+          {activeDisplayInBottomTab === "queryresults" && <QueryResults />}
         </BottomPanel>
       </EntireHomePageWrapper>
     </React.Fragment>

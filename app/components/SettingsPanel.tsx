@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useContext, useReducer } from "react";
+import { useReducer, useContext, useState } from "react";
 import { NavLink } from "react-router-dom";
 import styled from "styled-components";
 import Context from "../contexts/themeContext";
@@ -42,12 +42,12 @@ const Label = styled.label`
 `;
 
 const SettingsPanel = () => {
-  //   const redirectHome = () => <Redirect to="/" />;
   const context = useContext(Context);
   const [state, dispatch] = useReducer(themeReducer, context);
+  const [toggle, setToggle] = useState(false);
 
+  console.log("CONTEXT", context);
   console.log("STAte", state);
-  console.log("context", context);
   return (
     <PanelWrapper>
       <TopSection>
@@ -64,7 +64,10 @@ const SettingsPanel = () => {
           </select> */}
           <button
             onClick={() => {
-              dispatch({ type: "TOGGLE_DARK" });
+              setToggle(!toggle);
+              toggle
+                ? dispatch({ type: "TOGGLE_DARK" })
+                : dispatch({ type: "TOGGLE_LIGHT" });
             }}
           >
             TOGGLE THEME
