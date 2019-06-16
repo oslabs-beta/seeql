@@ -29,6 +29,8 @@ const RightPanel = styled.div`
   padding: 40px;
   height: 100vh;
   width: 100vw;
+  display: flex;
+  flex-direction: column;
 `
 
 const OMNIBoxContainer = styled.div`
@@ -51,6 +53,7 @@ const OMNIboxInput = styled.textarea`
 `
 
 const ExecuteQueryButton = styled.button`
+  font-family: 'Poppins', sans-serif;
   border: none;
   width: 60vw;
   background-color: #013243;
@@ -58,6 +61,7 @@ const ExecuteQueryButton = styled.button`
   color: #f2f1ef;
   text-align: center;
   padding: 5px;
+  font-size: 80%;
 
   :hover {
     background-color: #042D36;
@@ -79,6 +83,7 @@ interface IOMNIBoxNavButtonsProps {
 
 const OMNIBoxNavButtons = styled.button<IOMNIBoxNavButtonsProps>`
   padding: 5px;
+  font-family: 'Poppins', sans-serif;
   border-radius: 3px 3px 0px 0px;
   border: none;
   background-color: ${({omniBoxView, selectedView}) => (selectedView === omniBoxView) ? '#3C1642' : 'transparent' };
@@ -93,7 +98,9 @@ const OmniBoxNav = styled.nav`
 `
 const BottomPanelNav = styled.nav`
   display: flex;
-  justify-content: space-around;
+  justify-content: center;
+  align-self: flex-start;
+  width: 60vw;
 `
 
 interface IBottomPanelNavButtonProps {
@@ -105,9 +112,11 @@ const BottomPanelNavButton = styled.button<IBottomPanelNavButtonProps>`
   font-family: 'Poppins', sans-serif;
   border: none;
   border-bottom: ${({activeDisplayInBottomTab, activetabname}) => (activeDisplayInBottomTab === activetabname) ? "3px solid black" : "3px solid transparent"};
-  padding: 5px;
+  padding: 8px;
+  width: 400px;
   transition: 0.3s;
-  border-radius: 3px;
+  font-size: 80%;
+  background-color: transparent;
   :focus {
     outline: none;
   }
@@ -116,9 +125,13 @@ const BottomPanelNavButton = styled.button<IBottomPanelNavButtonProps>`
   }
 `
 
-const BottomPanel = styled.div`
+const BottomPanelContainer = styled.div`
   background-color: transparent;
   overflow: scroll;
+  width: 70vw;
+  display: flex;
+  flex-direction: column;
+  margin-top: 40px;
 `
 
 const TablesContainer = styled.div`
@@ -180,6 +193,11 @@ const QueryResultError = styled.div`
   font-size: 80%;
 `;
 
+const ErrorChar = styled.span`
+  color: #ca333e;
+  font-weight: bold;
+`
+
 let isPrimaryKey: string;
 let isForeignKey: string;
 let primaryKeyTableForForeignKey: string;
@@ -190,6 +208,7 @@ let selectedColumnName: string;
 const HomePage = ({location}) => {
 
   const allTablesMetaData = location.state.tables;
+  const [loadingQueryStatus, setLoadingQueryStatus] = useState(false);
   const [activeDisplayInBottomTab, setActiveDisplayInBottomTab] = useState('tables');
   const [activeTableInPanel, setActiveTableInPanel] = useState({});
   const [filteredTables, setFilteredTables] = useState([]);
@@ -204,23 +223,24 @@ const HomePage = ({location}) => {
   }]);
   const [pinnedTables, setPinnedTables] = useState([]);
   const [omniBoxView, setOmniBoxView] = useState('SQL');
-  const [userInputQuery, setUserInputQuery] = useState('');
+  const [userInputQuery, setUserInputQuery] = useState('SELECT * FROM [add a table name here]');
   const [queryResult, setQueryResult] = useState({
     status: 'No query',
     message: []
   });
   const [visible, setVisible] = useState(true);
+
   const togglePanelVisibility = () => {
     if (visible) setVisible(false);
     else setVisible(true);
   }
+
   const [pinnedTableNames, dispatchPinned] = useReducer(changePinnedStatus, [])
   const [activePanel, dispatchLeftPanelDisplay] = useReducer(changeDisplayOfLeftPanel, 'search');
   const [queryResultError, setQueryResultError] = useState({
     status: false,
     message: ''
   })
-
   const captureSelectedTable = (e) => {
     const tablename = e.target.dataset.tablename;
     let selectedPanelInfo;
@@ -377,24 +397,29 @@ const HomePage = ({location}) => {
       status: false,
       message: ''
     })
-    const code:number = e.keyCode || e.which;
-    if(code === 13) { //13 is the enter keycode
-      ipcRenderer.send("query-to-main", userInputQuery);
-    }
+    if(!loadingQueryStatus){
+      const code:number = e.keyCode || e.which;
+      if(code === 13) { //13 is the enter keycode
+        ipcRenderer.send("query-to-main", userInputQuery);
+        setLoadingQueryStatus(true);
+      }
+   }
   }
   // #TODO: Connect this ipc communication with new query input
   const executeQuery = ():void => {
-    setQueryResultError({
-      status: false,
-      message: ''
-    })
-    ipcRenderer.send("query-to-main", userInputQuery);
+    if(!loadingQueryStatus){
+      setQueryResultError({
+        status: false,
+        message: ''
+      })
+      ipcRenderer.send("query-to-main", userInputQuery);
+    }
+    setLoadingQueryStatus(true);
   }
 
   ipcRenderer.removeAllListeners("query-result-to-homepag")
   ipcRenderer.on("query-result-to-homepage", (event, queryResult) => {
     if(queryResult.statusCode === 'Success'){
-      console.log('success', queryResult)
       setQueryResult({
         status: (queryResult.message.length === 0) ? 'No results' : 'Success',
         message: queryResult.message
@@ -410,7 +435,12 @@ const HomePage = ({location}) => {
         status: true,
         message: `Syntax error in retrieving query results. Error beginning on character '${userInputQuery.slice(parseInt(queryResult.err.position)-1, parseInt(queryResult.err.position))}' in postion '${queryResult.err.position}'`
       })
+      let copyOfUserInput = userInputQuery.slice(0, parseInt(queryResult.err.position)-1) 
+      + <ErrorChar>userInputQuery.slice(parseInt(queryResult.err.position)-1, parseInt(queryResult.err.position))</ErrorChar>
+      + userInputQuery.slice(parseInt(queryResult.err.position));
+      setUserInputQuery(copyOfUserInput)
     }
+    setLoadingQueryStatus(false);
   });
 
   return (
@@ -445,10 +475,10 @@ const HomePage = ({location}) => {
         <OMNIBoxWrapper>
         <OMNIboxInput 
           onChange={(e) => setUserInputQuery(e.target.value)} 
-          placeholder="SELECT * FROM ..."
           onKeyPress={executeQueryOnEnter}
+          value={userInputQuery}
           ></OMNIboxInput>
-        <ExecuteQueryButton onClick={executeQuery}>Execute Query</ExecuteQueryButton>
+        <ExecuteQueryButton onClick={executeQuery} disabled={loadingQueryStatus}>{loadingQueryStatus ? 'Loading query results...' : 'Execute Query'}</ExecuteQueryButton>
         </OMNIBoxWrapper>
       } 
       {omniBoxView === 'plain' &&  
@@ -460,11 +490,11 @@ const HomePage = ({location}) => {
       {queryResultError.status && 
       <QueryResultError>{queryResultError.message}</QueryResultError>}
       </OMNIBoxContainer>
-      <BottomPanelNav>
-        <BottomPanelNavButton activeDisplayInBottomTab={activeDisplayInBottomTab} activetabname='tables' data-activetabname='tables' onClick={activeTabcapture}>Tables</BottomPanelNavButton>
-        <BottomPanelNavButton activeDisplayInBottomTab={activeDisplayInBottomTab} activetabname='queryresults' data-activetabname='queryresults' onClick={activeTabcapture}>Query Results</BottomPanelNavButton>
-      </BottomPanelNav>
-        <BottomPanel>
+        <BottomPanelContainer>
+        <BottomPanelNav>
+          <BottomPanelNavButton activeDisplayInBottomTab={activeDisplayInBottomTab} activetabname='tables' data-activetabname='tables' onClick={activeTabcapture}>Tables</BottomPanelNavButton>
+          <BottomPanelNavButton activeDisplayInBottomTab={activeDisplayInBottomTab} activetabname='queryresults' data-activetabname='queryresults' onClick={activeTabcapture}>Query Results</BottomPanelNavButton>
+        </BottomPanelNav>
         {activeDisplayInBottomTab==='tables' &&
           ((pinnedTables.length  || filteredTables.length)? <TablesContainer>{pinnedTables}{filteredTables}</TablesContainer>:
           <EmptyState>
@@ -474,7 +504,7 @@ const HomePage = ({location}) => {
         { activeDisplayInBottomTab==='queryresults' &&
           <QueryResults queryResult={queryResult}/>
         }
-        </BottomPanel>
+        </BottomPanelContainer>
       </RightPanel>
     </HomepageWrapper>
     </React.Fragment>

@@ -24,7 +24,6 @@ ipcRenderer.on("uri-to-db", (event, uri) => {
 });
 
 ipcRenderer.on("query-to-db", (event, query) => {
-
   if(query.slice(0,6).toUpperCase() === 'SELECT'){
     if(query.indexOf(';') > -1) query = query.slice(0,query.indexOf(';'))
     query += ';';

@@ -17,11 +17,10 @@ interface IQueryResultsProps {
 }
 
 const QueryResults: React.SFC<IQueryResultsProps> = ({queryResult}) => {
-    console.log('query result ', queryResult)
     let columns=[];
 
     if(queryResult.message.length > 0) {
-        const columnNames = Object.keys(queryResult[0]);
+        const columnNames = Object.keys(queryResult.message[0]);
         columns = columnNames.map((column) => { 
             return ({
             Header: column,
@@ -34,7 +33,7 @@ const QueryResults: React.SFC<IQueryResultsProps> = ({queryResult}) => {
         <QueryResultWrapper>
             { queryResult.message.length > 0 &&
             <ReactTable 
-                data={queryResult}
+                data={queryResult.message}
                 columns={columns}
             />
             }
