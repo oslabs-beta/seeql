@@ -3,8 +3,14 @@ import styled from 'styled-components';
 import ReactTable from "react-table";
 
 const QueryResultWrapper = styled.div`
-    padding: 20px;
-    width: 100%;
+  padding: 20px;
+  display: flex; 
+  flex-wrap: wrap;
+  background-color: white;
+  border: 1px solid black;
+  overflow: scroll;
+  width: 60vw;
+  height: 60vh;
 `
 
 interface IQueryResult{

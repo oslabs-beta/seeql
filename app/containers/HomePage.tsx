@@ -20,21 +20,19 @@ const HomepageWrapper = styled.div`
   display: flex;
   margin-top: -30px;
   font-family: 'Poppins', sans-serif;
-  width: 100vw;
-  height: 100vh;
+  /* width: 100vw; */
 `;
 
 const RightPanel = styled.div`
   background-color:  #f2f1ef;
   padding: 40px;
-  height: 100vh;
-  width: 100vw;
+  /* width: 100%; */
   display: flex;
   flex-direction: column;
 `
 
 const OMNIBoxContainer = styled.div`
-  width: 70vw;
+  /* width: 70vw; */
 `
 
 const OMNIboxInput = styled.textarea`
@@ -42,7 +40,7 @@ const OMNIboxInput = styled.textarea`
   border: 1px solid lightgrey;
   padding: 8px;
   height: 100px;
-  width: 60vw;
+  /* width: 60vw; */
   border-radius: 3px;
   letter-spacing: 2px;
   resize: none;
@@ -55,7 +53,7 @@ const OMNIboxInput = styled.textarea`
 const ExecuteQueryButton = styled.button`
   font-family: 'Poppins', sans-serif;
   border: none;
-  width: 60vw;
+  /* width: 60vw; */
   background-color: #013243;
   transition: 0.2s;
   color: #f2f1ef;
@@ -100,7 +98,7 @@ const BottomPanelNav = styled.nav`
   display: flex;
   justify-content: center;
   align-self: flex-start;
-  width: 60vw;
+  /* width: 60vw; */
 `
 
 interface IBottomPanelNavButtonProps {
@@ -111,9 +109,9 @@ interface IBottomPanelNavButtonProps {
 const BottomPanelNavButton = styled.button<IBottomPanelNavButtonProps>`
   font-family: 'Poppins', sans-serif;
   border: none;
-  border-bottom: ${({activeDisplayInBottomTab, activetabname}) => (activeDisplayInBottomTab === activetabname) ? "3px solid black" : "3px solid transparent"};
+  border-bottom: ${({activeDisplayInBottomTab, activetabname}) => (activeDisplayInBottomTab === activetabname) ? "3px solid #013243" : "3px solid transparent"};
   padding: 8px;
-  width: 400px;
+  /* width: 400px; */
   transition: 0.3s;
   font-size: 80%;
   background-color: transparent;
@@ -127,8 +125,7 @@ const BottomPanelNavButton = styled.button<IBottomPanelNavButtonProps>`
 
 const BottomPanelContainer = styled.div`
   background-color: transparent;
-  overflow: scroll;
-  width: 70vw;
+  /* width: 70vw; */
   display: flex;
   flex-direction: column;
   margin-top: 40px;
@@ -138,17 +135,22 @@ const TablesContainer = styled.div`
   padding: 20px;
   display: flex; 
   flex-wrap: wrap;
+  background-color: white;
+  border: 1px solid black;
+  overflow: scroll;
+  height: 60vh;
+  /* width: 60vw; */
 `
 const EmptyState = styled.div`
   padding: 20px;  
 `
 
 const NormalTableWrapper = styled.div`
-  margin: 5px;
+  margin: 10px;
 `
 
 const PinnedTableWrapper = styled.div`
-  margin: 5px;
+  margin: 10px;
 `
 
 interface IPinButtonProps{
@@ -187,7 +189,7 @@ const QueryResultError = styled.div`
   border-radius: 3px;
   padding: 5px;
   margin: 5px;
-  width: 55vw;
+  /* width: 55vw; */
   font-family: 'Poppins', sans-serif;
   border-left: 3px solid #ca333e;
   font-size: 80%;
@@ -346,7 +348,7 @@ const HomePage = ({location}) => {
 
             filtered.push(
               <NormalTableWrapper>
-              <PinBtn data-pinned={table.table_name} onClick={() => dispatchLeftPanelDisplay(actions.addToPinned(table.table_name))} pinned={false}>PIN</PinBtn>
+              <PinBtn data-pinned={table.table_name} onClick={() => dispatchPinned(actions.addToPinned(table.table_name))} pinned={false}>PIN</PinBtn>
               <Tables
                 activeTableInPanel={activeTableInPanel}
                 tableName={table.table_name}
@@ -433,7 +435,8 @@ const HomePage = ({location}) => {
     } else if(queryResult.statusCode === 'Syntax Error') {
       setQueryResultError({
         status: true,
-        message: `Syntax error in retrieving query results. Error beginning on character '${userInputQuery.slice(parseInt(queryResult.err.position)-1, parseInt(queryResult.err.position))}' in postion '${queryResult.err.position}'`
+        message: `Syntax error in retrieving query results. 
+        Error beginning on character '${userInputQuery.slice(parseInt(queryResult.err.position)-1, parseInt(queryResult.err.position))}'`
       })
       let copyOfUserInput = userInputQuery.slice(0, parseInt(queryResult.err.position)-1) 
       + <ErrorChar>userInputQuery.slice(parseInt(queryResult.err.position)-1, parseInt(queryResult.err.position))</ErrorChar>

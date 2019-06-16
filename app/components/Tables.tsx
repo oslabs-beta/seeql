@@ -10,8 +10,8 @@ const Table = styled.div<ITableProps>`
   display: flex;
   flex-direction: column;
   background-color: white;
-  font-size: 80%;
-  width: 200px;
+  font-size: 70%;
+  width: 180px;
   border-radius: 3px;
   border: ${(props) => (props.selectedtable === props.tablename) ? '2px solid #00b5cc' : '1px solid grey'};
   box-shadow: ${(props) => (props.selectedtable === props.tablename) ? '4px 4px 10px  #99f3ff' : 'none'};
@@ -43,7 +43,6 @@ const TableRow = styled.li<ITableRowProps>`
 `;
 
 const TableCell = styled.p`
-  padding: 5px;
   font-size: 100%;
   display: flex;
   align-items: center;
@@ -207,7 +206,7 @@ const Tables: React.SFC<Props> = ({
                 data-tablename={tableName}
                 data-columnname={columns[keys]['columnname']}
                 data-isprimarykey={primaryKey}
-              >{ columns[keys]['datatype']== 'character varying' ? 'varchar' :  columns[keys]['datatype'] }
+              >{ columns[keys]['datatype'] === 'character varying' ? 'varchar' :  columns[keys]['datatype'] }
               </TableCell>
              </TableRow>)
   }
