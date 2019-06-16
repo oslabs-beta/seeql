@@ -1,11 +1,9 @@
-const lightTheme = {
-  backgroundColor: "#faf"
+const themes = {
+  backgroundColorLight: "pink",
+  backgroundColorDark: "blue"
 };
-// export const darkTheme = {
-//   'background-color': '#000'
-// };
 
-export default lightTheme;
+export default themes;
 
 //research on themes styled patterns
 //json? export? raw html?

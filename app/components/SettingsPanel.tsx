@@ -2,7 +2,7 @@ import * as React from "react";
 import { useContext, useReducer } from "react";
 import { NavLink } from "react-router-dom";
 import styled from "styled-components";
-import ThemeContext from "../contexts/themeContext";
+import Context from "../contexts/themeContext";
 import themeReducer from "../reducers/themeReducer";
 
 const PanelWrapper = styled.div`
@@ -15,8 +15,9 @@ const PanelWrapper = styled.div`
   width: 300px;
   height: 100vh;
   padding: 40px;
-  background-color: #e8ecf1;
+  background-color: ${props => props.theme.backgroundColorLight};
 `;
+// background-color: #e8ecf1;
 
 const TopSection = styled.section`
   display: flex;
@@ -42,9 +43,11 @@ const Label = styled.label`
 
 const SettingsPanel = () => {
   //   const redirectHome = () => <Redirect to="/" />;
-  const theme = useContext(ThemeContext);
-  const [state, dispatch] = useReducer(themeReducer, theme);
+  const context = useContext(Context);
+  const [state, dispatch] = useReducer(themeReducer, context);
+
   console.log("STAte", state);
+  console.log("context", context);
   return (
     <PanelWrapper>
       <TopSection>
@@ -61,7 +64,7 @@ const SettingsPanel = () => {
           </select> */}
           <button
             onClick={() => {
-              dispatch({ type: "TOGGLE_LIGHT" });
+              dispatch({ type: "TOGGLE_DARK" });
             }}
           >
             TOGGLE THEME
