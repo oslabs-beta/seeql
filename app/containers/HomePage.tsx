@@ -29,6 +29,7 @@ const RightPanel = styled.div`
 
 const OMNIBoxContainer = styled.div`
   padding: 20px;
+  margin-top: 30px;
   width: 70vw;
 `
 
@@ -327,9 +328,14 @@ const HomePage = ({location}) => {
     userInputForTables,
     pinnedTableNames,
     activeTableInPanel
+
   ]);
 
-  const activeTabcapture = (e):void => setActiveDisplayInBottomTab(e.target.dataset.activetabname);
+  const activeTabcapture = (e):void => {
+    setActiveDisplayInBottomTab(e.target.dataset.activetabname);
+    if (e.target.dataset.activetabname === 'plain') setUserInputQuery('');
+    if (e.target.dataset.activetabname === 'SQL') setUserInputForTables('');
+  }
 
   const executeQueryOnEnter = (e):void => {
     const code:number = e.keyCode || e.which;
@@ -364,12 +370,12 @@ const HomePage = ({location}) => {
       <OMNIBoxContainer>
       <OmniBoxNav>
         <OMNIBoxNavButtons 
-          onClick={() => setOmniBoxView('SQL')}
+          onClick={() => {setOmniBoxView('SQL')}}
           omniBoxView={omniBoxView}
           selectedView='SQL'
           >SQL</OMNIBoxNavButtons>
         <OMNIBoxNavButtons 
-          onClick={() => setOmniBoxView('plain')}
+          onClick={() => {setOmniBoxView('plain')}}
           omniBoxView={omniBoxView}
           selectedView='plain'
           >PLAIN</OMNIBoxNavButtons>

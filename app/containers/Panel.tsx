@@ -16,7 +16,7 @@ interface IIndTabProps {
 
 const PanelWrapper = styled.div<IPanelWrapperProps>`
     height: 100vh;
-    width: ${({visible}) => visible ? '375px' : '50px'};
+    width: ${({visible}) => visible ? '375px' : '0px'};
     display: flex;
     justify-content: flex-start;
     transition: width 500ms ease-in-out;
@@ -24,7 +24,6 @@ const PanelWrapper = styled.div<IPanelWrapperProps>`
 const ButtonMenu = styled.div`
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
     height: 100vh;
     width: 60px;
 `
@@ -52,12 +51,21 @@ const Tabs = styled.div`
    height: 100px;
    justify-content: space-between;
    font-family: 'Poppins', sans-serif;
-   margin-top: 30px;
 `
 
-const CollapseBtn = styled.button`
+interface ICollapseBtnProps {
+  visible: boolean
+}
+
+const CollapseBtn = styled.button<ICollapseBtnProps>`
   border: none;
-  margin-bottom: 10px;
+  border-radius: 3px;
+  padding: 5px;
+  width: 25px;
+  height: 25px;
+  margin: 5px;
+  margin-left: ${({visible}) => visible ? '5px' : '80px'};
+  text-align: center;
 
   :focus {
     outline: none;
@@ -65,19 +73,32 @@ const CollapseBtn = styled.button`
 
   :hover {
     font-weight: bold;
+    background-color: #f2f1ef;
   }
 `
 
-interface ISelectedTable {
-  columns?: Array<any>
-  foreignKeys?: Array<any>
+interface IForeignKeysAffected {
+  column: string
+  table: string
+}
+
+interface IColumnsMetaData {
+  characterlength?: string
+  columnname: string
+  datatype: string
+  defaultvalue: string
+}
+
+interface IAcitveTableInPanel {
+  columns?: Array<IColumnsMetaData>
+  foreignKeys?: Array<IForeignKeysAffected>
   primaryKey?: string
   table_name?: string
   foreignKeysOfPrimary?: any
 }
 
 interface Props {
-    activeTableInPanel: ISelectedTable
+    activeTableInPanel: IAcitveTableInPanel
 }
 
 const Panel: React.SFC<Props> = ({ 
@@ -110,6 +131,12 @@ const Panel: React.SFC<Props> = ({
             <SettingsPanel />}
             </div>}
             <ButtonMenu>
+            { !visible && <div></div>}
+                <CollapseBtn 
+                  onClick={togglePanelVisibility}
+                  data-active={activePanel}
+                  visible={visible}
+                > {visible ? `<<` : `>>`} </CollapseBtn>
             {visible && <Tabs>
                 <IndTab 
                   data-panel='search' 
@@ -132,11 +159,6 @@ const Panel: React.SFC<Props> = ({
                   Settings
                 </IndTab>
                 </Tabs>}
-              { !visible && <div></div>}
-                <CollapseBtn 
-                  onClick={togglePanelVisibility}
-                  data-active={activePanel}
-                > {visible ? `< Hide Menu` : `Show Menu >`} </CollapseBtn>
             </ButtonMenu>
         </PanelWrapper>
     )

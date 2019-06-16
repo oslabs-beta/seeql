@@ -30,6 +30,18 @@ const Label = styled.label`
   font-size: 12px;
 `;
 
+// interface IForeignKeysAffected {
+//   column?: string
+//   table?: string
+// }
+
+// interface IColumnsMetaData {
+//   characterlength?: string
+//   columnname: string
+//   datatype: string
+//   defaultvalue: string
+// }
+
 interface ISelectedTable {
   columns?: Array<any>;
   foreignKeys?: Array<any>;
