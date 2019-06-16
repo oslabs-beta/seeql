@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import SettingsPanel from '../components/SettingsPanel'
 import FavoritesPanel from '../components/FavoritesPanel';
 import SearchPanel from '../components/SearchPanel';
+import * as actions from '../actions/actions';
 
 interface IPanelWrapperProps {
   visible: boolean
@@ -96,12 +97,16 @@ interface IAcitveTableInPanel {
   foreignKeysOfPrimary?: any
 }
 
+interface IDispatchLeftPanelDisplayAction {
+  type: string
+}
+
 interface Props {
     activeTableInPanel: IAcitveTableInPanel
     visible: boolean
     activePanel: string
     togglePanelVisibility: () => void;
-    displayActivePanelComponent: (Event) => void;
+    dispatchLeftPanelDisplay: (IDispatchLeftPanelDisplayAction) => any;
 }
 
 const Panel: React.SFC<Props> = ({ 
@@ -109,9 +114,9 @@ const Panel: React.SFC<Props> = ({
   visible,
   togglePanelVisibility,
   activePanel,
-  displayActivePanelComponent
+  dispatchLeftPanelDisplay
 }) => {
-
+    console.log('test', actions.changeToInfoPanel)
     return (
         <PanelWrapper visible={visible}>
             { visible &&
@@ -137,20 +142,20 @@ const Panel: React.SFC<Props> = ({
                   data-panel='search' 
                   panel='search'
                   active={activePanel}
-                  onClick={displayActivePanelComponent}
+                  onClick={() => dispatchLeftPanelDisplay(actions.changeToInfoPanel())}
                 >Table Info</IndTab>
                 <IndTab 
                   data-panel='favorites'
                   panel='favorites' 
                   active={activePanel}
-                  onClick={displayActivePanelComponent}>
+                  onClick={() => dispatchLeftPanelDisplay(actions.changeToFavPanel())}>
                   Favorites
                 </IndTab>
                 <IndTab 
                   data-panel='settings' 
                   panel='settings'
                   active={activePanel}
-                  onClick={displayActivePanelComponent}>
+                  onClick={() => dispatchLeftPanelDisplay(actions.changeToSettingsPanel())}>
                   Settings
                 </IndTab>
                 </Tabs>}

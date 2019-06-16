@@ -4,6 +4,7 @@ import { ipcRenderer } from "electron";
 import styled from "styled-components";
 import * as actions from '../actions/actions';
 import changePinnedStatus from "../reducers/ChangePinnedStatus"
+import changeDisplayOfLeftPanel from "../reducers/ChangeDisplayOfLeftPanel"
 import Tables from "../components/Tables";
 import LeftPanel from "./Panel";
 import LoadingComponent from "../components/LoadComponent";
@@ -193,16 +194,13 @@ const HomePage = ({location}) => {
   const [omniBoxView, setOmniBoxView] = useState('SQL');
   const [userInputQuery, setUserInputQuery] = useState('');
   const [queryResult, setQueryResult] = useState([]);
-  const [pinnedTableNames, dispatch] = useReducer(changePinnedStatus, [])
   const [visible, setVisible] = useState(true);
   const togglePanelVisibility = () => {
-      if (visible) setVisible(false);
-      else setVisible(true);
+    if (visible) setVisible(false);
+    else setVisible(true);
   }
-  const [activePanel, setActivePanel] = useState('search');
-  const displayActivePanelComponent = (e) => {
-      setActivePanel(e.target.dataset.panel);
-  }
+  const [pinnedTableNames, dispatchPinned] = useReducer(changePinnedStatus, [])
+  const [activePanel, dispatchLeftPanelDisplay] = useReducer(changeDisplayOfLeftPanel, 'search');
 
   const captureSelectedTable = (e) => {
     const tablename = e.target.dataset.tablename;
@@ -228,7 +226,7 @@ const HomePage = ({location}) => {
     })
     
     setActiveTableInPanel(selectedPanelInfo)
-    setActivePanel('search')
+    dispatchLeftPanelDisplay(actions.changeToInfoPanel())
   }
 
   useEffect(() => {
@@ -277,7 +275,7 @@ const HomePage = ({location}) => {
 
             pinned.push(
               <PinnedTableWrapper>
-              <PinBtn data-pinned={table.table_name} onClick={() => dispatch(actions.removeFromPinned(table.table_name))} pinned={true}>UNPIN</PinBtn>
+              <PinBtn data-pinned={table.table_name} onClick={() => dispatchPinned(actions.removeFromPinned(table.table_name))} pinned={true}>UNPIN</PinBtn>
               <Tables
                 activeTableInPanel={activeTableInPanel}
                 tableName={table.table_name}
@@ -309,7 +307,7 @@ const HomePage = ({location}) => {
 
             filtered.push(
               <NormalTableWrapper>
-              <PinBtn data-pinned={table.table_name} onClick={() => dispatch(actions.addToPinned(table.table_name))} pinned={false}>PIN</PinBtn>
+              <PinBtn data-pinned={table.table_name} onClick={() => dispatchLeftPanelDisplay(actions.addToPinned(table.table_name))} pinned={false}>PIN</PinBtn>
               <Tables
                 activeTableInPanel={activeTableInPanel}
                 tableName={table.table_name}
@@ -380,7 +378,7 @@ const HomePage = ({location}) => {
     <HomepageWrapper className="homepage">
       <LeftPanel 
         activePanel={activePanel}
-        displayActivePanelComponent={displayActivePanelComponent}
+        dispatchLeftPanelDisplay={dispatchLeftPanelDisplay}
         activeTableInPanel={activeTableInPanel} 
         togglePanelVisibility={togglePanelVisibility} visible={visible} />
        {toggleLoad && (

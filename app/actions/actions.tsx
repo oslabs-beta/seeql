@@ -11,3 +11,15 @@ export const addToPinned = table_name => ({
     payload: {
         tablename: table_name
     }});
+
+export const changeToInfoPanel = () => ({
+    type: actions.CHANGE_TO_INFO_PANEL
+    });
+
+export const changeToFavPanel = () => ({
+    type: actions.CHANGE_TO_FAV_PANEL
+    });
+
+export const changeToSettingsPanel = () => ({
+    type: actions.CHANGE_TO_SETTINGS_PANEL
+    });
