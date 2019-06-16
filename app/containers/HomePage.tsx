@@ -329,16 +329,16 @@ const HomePage = ({location}) => {
     activeTableInPanel
   ]);
 
-  const activeTabcapture = (e) => setActiveDisplayInBottomTab(e.target.dataset.activetabname);
+  const activeTabcapture = (e):void => setActiveDisplayInBottomTab(e.target.dataset.activetabname);
 
-  const executeQueryOnEnter = (e) => {
-    const code = e.keyCode || e.which;
+  const executeQueryOnEnter = (e):void => {
+    const code:number = e.keyCode || e.which;
     if(code === 13) { //13 is the enter keycode
       ipcRenderer.send("query-to-main", userInputQuery);
     }
   }
   // #TODO: Connect this ipc communication with new query input
-  const executeQuery = () => {
+  const executeQuery = ():void => {
     ipcRenderer.send("query-to-main", userInputQuery);
   }
 

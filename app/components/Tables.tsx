@@ -2,33 +2,32 @@ import * as React from 'react';
 import styled from 'styled-components';
 
 interface ITableProps {
-  selectedtable: any
-  tablename: any
+  selectedtable: string
+  tablename: string
 }
 
 const Table = styled.div<ITableProps>`
   display: flex;
   flex-direction: column;
   background-color: white;
-  font-size: 14px;
-  color: black;
+  font-size: 80%;
   width: 200px;
-  margin: 5px;
+  border-radius: 3px;
   border: ${(props) => (props.selectedtable === props.tablename) ? '2px solid #00b5cc' : '1px solid grey'};
   box-shadow: ${(props) => (props.selectedtable === props.tablename) ? '4px 4px 10px  #99f3ff' : 'none'};
 `;
 
-const InnerTableWrapper = styled.ul`
+const TableRowsList = styled.ul`
   flex-direction: column;
   max-height: 200px;
   overflow: scroll;
 `;
 
-interface T {
+interface ITableRowProps {
   affected: boolean
 }
 
-const TableRow = styled.li<T>`
+const TableRow = styled.li<ITableRowProps>`
   display: flex;
   justify-content: space-between;
   list-style: none;
@@ -38,34 +37,68 @@ const TableRow = styled.li<T>`
   transition: 0.3s;
 
   :hover {
-    transform: scale(1.05);
+    transform: scale(1.01);
     background-color: #e8ecf1;
   }
 `;
 
 const TableCell = styled.p`
-  padding: 0px 10px;
-  font-size: 12px;
+  padding: 5px;
+  font-size: 100%;
   display: flex;
   align-items: center;
 `;
 
-const TableTitle = styled.label`
+const TableTitle = styled.p`
   text-align: center;
-  font-size: 20px;
-  padding: 5px 0px;
+  font-size: 140%;
+  padding: 5px;
   overflow-wrap: break-word;
 `
+interface IForeignKey {
+  column_name?: string
+  constraint_name?: string
+  foreign_column_name?: string
+  foreign_table_name?: string
+  foreign_table_schema?: string
+  table_name?: string
+  table_schema?: string
+}
+
+interface IPrimaryKeyAffected {
+  primaryKeyColumn: string
+  primaryKeyTable: string 
+}
+
+interface IForeignKeysAffected {
+  column: string
+  table: string
+}
+
+interface IColumnsMetaData {
+  characterlength?: string
+  columnname: string
+  datatype: string
+  defaultvalue: string
+}
+
+interface IActiveTableInPanel {
+  columns?: Array<IColumnsMetaData>
+  foreignKeys?: Array<IForeignKey>
+  foreignKeysOfPrimary?: any
+  primaryKey?: string
+  table_name?: string
+}
 
 type Props = {
   key: string;
   tableName: string;
   columns: Array<string>;
   primarykey: string;
-  foreignkeys: Array<any>;
-  primaryKeyAffected: Array<any>;
-  foreignKeysAffected: Array<any>;
-  activeTableInPanel:any;
+  foreignkeys: Array<IForeignKey>;
+  primaryKeyAffected: Array<IPrimaryKeyAffected>;
+  foreignKeysAffected: Array<IForeignKeysAffected>;
+  activeTableInPanel: IActiveTableInPanel;
   captureMouseExit: () => void;
   captureMouseEnter: (Event) => void;
   captureSelectedTable: (Event) => void;
@@ -92,7 +125,7 @@ const Tables: React.SFC<Props> = ({
   let rows = [];
 
   for (let keys in columns) {
-    const primaryKey: boolean = primarykey === columns[keys]['columnname'] ? true : false;
+    const primaryKey: boolean = (primarykey === columns[keys]['columnname']) ? true : false;
     let affected: boolean = false;
     let foreignKey: boolean = false;
     let foreignkeyTable: string = '';
@@ -101,9 +134,9 @@ const Tables: React.SFC<Props> = ({
     if (
       primaryKeyAffected[0].primaryKeyColumn === columns[keys]['columnname'] &&
       primaryKeyAffected[0].primaryKeyTable === tableName
-    ) affected=true;
+    ) affected = true;
 
-    foreignKeysAffected.forEach((option) => {
+    foreignKeysAffected.forEach((option):void => {
       if ( 
         option.table === tableName && 
         option.column === columns[keys]['columnname']
@@ -182,9 +215,9 @@ const Tables: React.SFC<Props> = ({
   return (
     <Table key={tableName} onClick={captureSelectedTable} selectedtable={activeTableInPanel.table_name} tablename={tableName}>
       <TableTitle data-tablename={tableName}>{tableName}</TableTitle>
-      <InnerTableWrapper>
+      <TableRowsList>
         {rows}
-      </InnerTableWrapper>
+      </TableRowsList>
     </Table>
   );
 };
