@@ -1,16 +1,89 @@
 import * as React from "react";
 import { useState, useEffect, useReducer } from "react";
-import Tables from "../components/Tables";
-import styled from "styled-components";
-import Panel from "./Panel";
-import LoadingComponent from "../components/LoadComponent";
 import { ipcRenderer } from "electron";
-import QueryResults from "../components/QueryResults";
-import changePinnedStatus from "../reducers/ChangePinnedStatus"
+import styled from "styled-components";
 import * as actions from '../actions/actions';
+import changePinnedStatus from "../reducers/ChangePinnedStatus"
+import Tables from "../components/Tables";
+import LeftPanel from "./Panel";
+import LoadingComponent from "../components/LoadComponent";
+import QueryResults from "../components/QueryResults";
 
-const TableSection = styled.div`
-  background-color: #e8ecf1;
+const InvisibleHeader = styled.div`
+  height: 30px;
+  display: relative;
+  -webkit-app-region: drag;
+`
+
+const HomepageWrapper = styled.div`
+  display: flex;
+  margin-top: -30px;
+  font-family: 'Poppins', sans-serif;
+  width: 100vw;
+  height: 100vh;
+`;
+
+const RightPanel = styled.div`
+
+`
+
+const OMNIBoxContainer = styled.div`
+  padding: 20px;
+  width: 70vw;
+`
+
+const OMNIboxInput = styled.textarea`
+  font-family: 'Poppins', sans-serif;
+  padding: 8px;
+  height: 100px;
+  width: 60vw;
+  border-radius: 3px;
+  letter-spacing: 2px;
+  resize: none;
+
+  :focus{
+    outline: none;
+  }
+`
+
+const ExecuteQueryButton = styled.button`
+  border: none;
+  border-radius: 3px;
+  background-color: #086375;
+  transition: 0.2s;
+  color: white;
+  padding: 5px;
+
+  :hover {
+    background-color: #042D36;
+  }
+
+  :focus{
+    outline: none;
+  }
+`
+interface IOMNIBoxNavButtonsProps {
+  omniBoxView: string
+  selectedView: string
+}
+
+const OMNIBoxNavButtons = styled.button<IOMNIBoxNavButtonsProps>`
+  padding: 5px;
+  border-radius: 3px 3px 0px 0px;
+  border: none;
+  background-color: ${({omniBoxView, selectedView}) => (selectedView === omniBoxView) ? '#3C1642' : 'transparent' };
+  color: ${({omniBoxView, selectedView}) => (selectedView === omniBoxView) ? 'white' : 'black' };
+  
+  :focus {
+    outline: none;
+  }
+`
+const OmniBoxNav = styled.nav`
+  display: flex;
+`
+const BottomPanelNav = styled.nav`
+  display: flex;
+  justify-content: space-around;
 `
 
 interface IBottomPanelNavButtonProps {
@@ -18,73 +91,53 @@ interface IBottomPanelNavButtonProps {
   activetabname: string
 } 
 
-const BottomPanelNav = styled.nav`
-  display: flex;
-  justify-content: space-around;
-`
-
-const OmniBoxNav = styled.nav`
-  display: relative;
-  right: 50px;
-  top: -40px;
-`
-
 const BottomPanelNavButton = styled.button<IBottomPanelNavButtonProps>`
   font-family: 'Poppins', sans-serif;
   border: none;
-  border-bottom: ${({activeDisplayInBottomTab, activetabname}) => (activeDisplayInBottomTab === activetabname) ? "2px solid pink" : "2px solid transparent"};
+  border-bottom: ${({activeDisplayInBottomTab, activetabname}) => (activeDisplayInBottomTab === activetabname) ? "3px solid black" : "3px solid transparent"};
   padding: 5px;
   transition: 0.3s;
+  border-radius: 3px;
   :focus {
     outline: none;
   }
   :hover {
-    border-bottom: 2px solid black;
+    border-bottom: 3px solid black;
   }
 `
 
-const RightPanel = styled.div`
-  
-`
-const OMNIboxInput = styled.textarea`
-  font-family: 'Poppins', sans-serif;
-  height: 100px;
-  width: 50vw;
-  padding: 10px;
-  margin: 20px;
-  resize:none;
-  :focus{
-    outline: none;
-  }
+const BottomPanel = styled.div`
+  background-color: transparent;
+  overflow: scroll;
 `
 
-const InvisibleHeader = styled.div`
-  height: 30px;
-  display: relative;
-  -webkit-app-region: drag;
+const TablesContainer = styled.div`
+  padding: 20px;
+  display: flex; 
+  flex-wrap: wrap;
 `
-const NormalTable = styled.div`
-overflow: scroll;
-display: absolute;
-`
-
-const PinnedTable = styled.div`
-  display: absolute;
+const EmptyState = styled.div`
+  padding: 20px;  
 `
 
-interface IPinBtnProps{
+const NormalTableWrapper = styled.div`
+  margin: 5px;
+`
+
+const PinnedTableWrapper = styled.div`
+  margin: 5px;
+`
+
+interface IPinButtonProps{
   pinned: boolean
 }
 
-
-const PinBtn = styled.button<IPinBtnProps>`
-  display: relative;
+const PinBtn = styled.button<IPinButtonProps>`
   border: none;
   background-color: ${(props) => props.pinned ? 'rgb(93, 0, 250)' : 'white'};
   color: ${(props) => props.pinned ? 'white' : 'black'};
-  padding: 2px 5px;
-  border-radius: 6px;
-  margin: 2px 0px;
+  padding: 5px;
+  border-radius: 3px;
 
   :hover {
     font-weight: bold;
@@ -95,35 +148,15 @@ const PinBtn = styled.button<IPinBtnProps>`
   }
 `
 
-const HomepageWrapper = styled.div`
-  height: 100vh;
-  padding: 20px;
-  display: flex; 
-  flex-wrap: wrap;
-  overflow: auto;
-`
-
-const EntireHomePageWrapper = styled.div`
-  display: flex;
-  margin-top: -30px;
-  overflow: wrap;
-  font-family: 'Poppins', sans-serif;
-  width: 100vw;
-`;
-
 const LoadWrap = styled.div`
   display: flex;
   width: 100%;
 `;
 
-const EmptyState= styled.div`
-  height: 100vh;
-  width: 100%;
-  padding: 20px;  
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`
+interface IForeignKey {
+  table: string
+  column: string
+}
 
 let isPrimaryKey: string;
 let isForeignKey: string;
@@ -132,9 +165,9 @@ let primaryKeyColumn: string;
 let selectedTableName: string;
 let selectedColumnName: string;
 
-const HomePage = (props) => {
+const HomePage = ({location}) => {
 
-  const tableData = props.location.state.tables;
+  const allTablesMetaData = location.state.tables;
   const [activeDisplayInBottomTab, setActiveDisplayInBottomTab] = useState('tables');
   const [activeTableInPanel, setActiveTableInPanel] = useState({});
   const [filteredTables, setFilteredTables] = useState([]);
@@ -148,10 +181,10 @@ const HomePage = (props) => {
     primaryKeyColumn: ''
   }]);
   const [pinnedTables, setPinnedTables] = useState([]);
-  const [onlyPinned, dispatch] = useReducer(changePinnedStatus, [])
-  const [query, setQuery] = useState('');
+  const [omniBoxView, setOmniBoxView] = useState('SQL');
+  const [userInputQuery, setUserInputQuery] = useState('');
   const [queryResult, setQueryResult] = useState([]);
-  const [omniBoxView, setOmniBoxView] = useState('plain');
+  const [pinnedTableNames, dispatch] = useReducer(changePinnedStatus, [])
 
   const captureSelectedTable = (e) => {
     const tablename = e.target.dataset.tablename;
@@ -190,9 +223,9 @@ const HomePage = (props) => {
       if (isForeignKey == "true") {
         setPrimaryKeyAffected([ { primaryKeyTable: primaryKeyTableForForeignKey, primaryKeyColumn: primaryKeyColumn } ]);
       }
-
+    
       if (isPrimaryKey === "true") {
-        const allForeignKeys: Array<any> = [];
+        const allForeignKeys: Array<IForeignKey> = [];
         data.forEach((table): void => {
           table.foreignKeys.forEach((foreignkey): void => {
             if ( foreignkey.foreign_table_name === selectedTableName && foreignkey.foreign_column_name === selectedColumnName)
@@ -207,7 +240,7 @@ const HomePage = (props) => {
   //Fetches database information
   useEffect((): void => {
     setToggleLoad(true);
-    setData(tableData);
+    setData(allTablesMetaData);
     setToggleLoad(false);
   }, []);
 
@@ -221,10 +254,10 @@ const HomePage = (props) => {
       const regex = new RegExp(userInputForTables)
         data.forEach(table => {
 
-          if (onlyPinned.includes(table.table_name)) {
+          if (pinnedTableNames.includes(table.table_name)) {
 
             pinned.push(
-              <PinnedTable>
+              <PinnedTableWrapper>
               <PinBtn data-pinned={table.table_name} onClick={() => dispatch(actions.removeFromPinned(table.table_name))} pinned={true}>UNPIN</PinBtn>
               <Tables
                 activeTableInPanel={activeTableInPanel}
@@ -248,7 +281,7 @@ const HomePage = (props) => {
                   setMouseOver(false)}}
                 key={table.table_name}
               />
-              </PinnedTable>
+              </PinnedTableWrapper>
             )
 
           }
@@ -256,7 +289,7 @@ const HomePage = (props) => {
           else if (regex.test(table.table_name)) {
 
             filtered.push(
-              <NormalTable>
+              <NormalTableWrapper>
               <PinBtn data-pinned={table.table_name} onClick={() => dispatch(actions.addToPinned(table.table_name))} pinned={false}>PIN</PinBtn>
               <Tables
                 activeTableInPanel={activeTableInPanel}
@@ -280,7 +313,7 @@ const HomePage = (props) => {
                   setMouseOver(false)}}
                 key={table.table_name}
               />
-              </NormalTable>
+              </NormalTableWrapper>
             )
           }
       });
@@ -292,7 +325,7 @@ const HomePage = (props) => {
     foreignKeysAffected, 
     primaryKeyAffected, 
     userInputForTables,
-    onlyPinned,
+    pinnedTableNames,
     activeTableInPanel
   ]);
 
@@ -301,12 +334,12 @@ const HomePage = (props) => {
   const executeQueryOnEnter = (e) => {
     const code = e.keyCode || e.which;
     if(code === 13) { //13 is the enter keycode
-      ipcRenderer.send("query-to-main", query);
+      ipcRenderer.send("query-to-main", userInputQuery);
     }
   }
   // #TODO: Connect this ipc communication with new query input
   const executeQuery = () => {
-    ipcRenderer.send("query-to-main", query);
+    ipcRenderer.send("query-to-main", userInputQuery);
   }
 
   ipcRenderer.removeAllListeners("query-result-to-homepag")
@@ -320,24 +353,36 @@ const HomePage = (props) => {
   return (
     <React.Fragment>
     <InvisibleHeader ></InvisibleHeader>
-    <EntireHomePageWrapper>
-    <Panel 
-      activeTableInPanel={activeTableInPanel} />
+    <HomepageWrapper>
+      <LeftPanel activeTableInPanel={activeTableInPanel} />
        {toggleLoad && (
         <LoadWrap>
           <LoadingComponent />
         </LoadWrap>
-      )}
+       )}
       <RightPanel>
+      <OMNIBoxContainer>
+      <OmniBoxNav>
+        <OMNIBoxNavButtons 
+          onClick={() => setOmniBoxView('SQL')}
+          omniBoxView={omniBoxView}
+          selectedView='SQL'
+          >SQL</OMNIBoxNavButtons>
+        <OMNIBoxNavButtons 
+          onClick={() => setOmniBoxView('plain')}
+          omniBoxView={omniBoxView}
+          selectedView='plain'
+          >PLAIN</OMNIBoxNavButtons>
+      </OmniBoxNav>
       { omniBoxView === 'SQL' &&  
-      <div>
+        <React.Fragment>
         <OMNIboxInput 
-          onChange={(e) => setQuery(e.target.value)} 
+          onChange={(e) => setUserInputQuery(e.target.value)} 
           placeholder="SELECT * FROM ..."
           onKeyPress={executeQueryOnEnter}
           ></OMNIboxInput>
-        <button onClick={executeQuery}>Execute Query</button>
-      </div>
+        <ExecuteQueryButton onClick={executeQuery}>Execute Query</ExecuteQueryButton>
+        </React.Fragment>
       } 
       {omniBoxView === 'plain' &&  
       <OMNIboxInput
@@ -345,27 +390,24 @@ const HomePage = (props) => {
         onChange={e => setUserInputForTables(e.target.value)}
       ></OMNIboxInput>
       }
-      <OmniBoxNav>
-        <button onClick={() => setOmniBoxView('SQL')}>SQL</button>
-        <button onClick={() => setOmniBoxView('plain')}>PLAIN</button>
-      </OmniBoxNav>
+      </OMNIBoxContainer>
       <BottomPanelNav>
         <BottomPanelNavButton activeDisplayInBottomTab={activeDisplayInBottomTab} activetabname='tables' data-activetabname='tables' onClick={activeTabcapture}>Tables</BottomPanelNavButton>
         <BottomPanelNavButton activeDisplayInBottomTab={activeDisplayInBottomTab} activetabname='queryresults' data-activetabname='queryresults' onClick={activeTabcapture}>Query Results</BottomPanelNavButton>
       </BottomPanelNav>
-      <TableSection>
-      {  activeDisplayInBottomTab==='tables' &&
-        ((pinnedTables.length  || filteredTables.length)? <HomepageWrapper>{pinnedTables}{filteredTables}</HomepageWrapper>:
-        <EmptyState>
-          There were no search results. Please search again.
-        </EmptyState>)
-      }
-      { activeDisplayInBottomTab==='queryresults' &&
-        <QueryResults queryResult={queryResult}/>
-      }
-      </TableSection>
+        <BottomPanel>
+        {activeDisplayInBottomTab==='tables' &&
+          ((pinnedTables.length  || filteredTables.length)? <TablesContainer>{pinnedTables}{filteredTables}</TablesContainer>:
+          <EmptyState>
+            There were no search results. Please search again.
+          </EmptyState>)
+        }
+        { activeDisplayInBottomTab==='queryresults' &&
+          <QueryResults queryResult={queryResult}/>
+        }
+        </BottomPanel>
       </RightPanel>
-    </EntireHomePageWrapper>
+    </HomepageWrapper>
     </React.Fragment>
   );
 };

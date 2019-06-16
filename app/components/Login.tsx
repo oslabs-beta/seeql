@@ -41,6 +41,7 @@ interface LoginTypeButtonProps {
 
 const LoginTypeButton = styled.button<LoginTypeButtonProps>`
   padding: 5px;
+  font-size: 80%;
   font-family: 'Poppins', sans-serif;
   display: flex;
   border: none;
@@ -99,7 +100,7 @@ const LoginBtn = styled.button`
   width: 100px;
   border: none;
   transition: 0.2s;
-  font-size: 100%;
+  font-size: 80%;
   :hover{
     color: white;
     background-color: #1EA196;
@@ -148,7 +149,6 @@ const RequiredWarning = styled.span`
   font-size: 60%;
 `;
 
-
 const Login = () => {
   const [loginType, setLoginType] = useState('URI');
   const [host, setHost] = useState({ value: '', requiredError: false });
@@ -160,7 +160,7 @@ const Login = () => {
   const [isSSL, setSSL] = useState(false);
   const [requiredError, setRequiredError] = useState(false);
   const [connectionError, setConnectionError] = useState(false);
-  const [isLoading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [redirectToHome, setRedirectToHome] = useState(false);
   const [tableData, setTableData] = useState([]);
 
@@ -324,10 +324,10 @@ const Login = () => {
       }
       <ToggleSSL>
         <input type="checkbox" onChange={(e) => setSSL(e.target.checked)} />
-        <label>ssl?</label>
+        <InputLabel>ssl?</InputLabel>
       </ToggleSSL>
-      {!isLoading && <LoginBtn onClick={sendLoginURI}>Login</LoginBtn>}
-      {isLoading && <LoginBtn disabled>Loading...</LoginBtn>}
+      {!loading && <LoginBtn onClick={sendLoginURI}>Login</LoginBtn>}
+      {loading && <LoginBtn disabled>Loading...</LoginBtn>}
       {redirectHome()}
     </LoginContainer>
   </LoginPageWrapper>
