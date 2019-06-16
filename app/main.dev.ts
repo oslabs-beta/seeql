@@ -1,5 +1,8 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
-import { app, BrowserWindow, ipcMain } from "electron";
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
+/* eslint-disable @typescript-eslint/no-var-requires */
+/* eslint global-require: off */
+import electron, { app, BrowserWindow, ipcMain } from "electron";
 import { autoUpdater } from "electron-updater";
 import log from "electron-log";
 import MenuBuilder from "./menu";
@@ -78,6 +81,10 @@ app.on("ready", async () => {
   mainWindow.loadURL(`file://${__dirname}/app.html`);
 
   // @TODO: Use 'ready-to-show' event https://github.com/electron/electron/blob/master/docs/api/browser-window.md#using-ready-to-show-event
+  // detects user's display preferences and notifies FE to setup theme
+  const prefs = electron.systemPreferences || electron.remote.systemPreferences;
+  const isDarkMode = () => prefs.isDarkMode();
+
   mainWindow.webContents.on("did-finish-load", () => {
     if (!mainWindow) {
       throw new Error('"mainWindow" is not defined');
@@ -131,4 +138,12 @@ app.on("ready", async () => {
   ) => {
     mainWindow.webContents.send("query-result-to-homepage", messagePayload);
   });
+
+  // ipcMain.on("OSX-dark-theme-enabled", (_event: void, err: Error) => {
+  //   mainWindow.webContents.send("OSX-dark-theme-enabled", err)
+  // })
+
+  // const onDarkModeChanged = notifyFrontend => {
+  //   return prefs.subscribeNotification('AppleInterfaceThemeChangedNotification', notifyFrontend);
+  // };
 });
