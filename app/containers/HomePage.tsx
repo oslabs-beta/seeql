@@ -20,19 +20,18 @@ const HomepageWrapper = styled.div`
   display: flex;
   margin-top: -30px;
   font-family: 'Poppins', sans-serif;
-  /* width: 100vw; */
 `;
 
 const RightPanel = styled.div`
   background-color:  #f2f1ef;
   padding: 40px;
-  /* width: 100%; */
   display: flex;
   flex-direction: column;
+  width: 100%;
 `
 
 const OMNIBoxContainer = styled.div`
-  /* width: 70vw; */
+
 `
 
 const OMNIboxInput = styled.textarea`
@@ -40,10 +39,10 @@ const OMNIboxInput = styled.textarea`
   border: 1px solid lightgrey;
   padding: 8px;
   height: 100px;
-  /* width: 60vw; */
   border-radius: 3px;
   letter-spacing: 2px;
   resize: none;
+  width: 100%;
 
   :focus{
     outline: none;
@@ -53,7 +52,6 @@ const OMNIboxInput = styled.textarea`
 const ExecuteQueryButton = styled.button`
   font-family: 'Poppins', sans-serif;
   border: none;
-  /* width: 60vw; */
   background-color: #013243;
   transition: 0.2s;
   color: #f2f1ef;
@@ -98,7 +96,6 @@ const BottomPanelNav = styled.nav`
   display: flex;
   justify-content: center;
   align-self: flex-start;
-  /* width: 60vw; */
 `
 
 interface IBottomPanelNavButtonProps {
@@ -111,7 +108,6 @@ const BottomPanelNavButton = styled.button<IBottomPanelNavButtonProps>`
   border: none;
   border-bottom: ${({activeDisplayInBottomTab, activetabname}) => (activeDisplayInBottomTab === activetabname) ? "3px solid #013243" : "3px solid transparent"};
   padding: 8px;
-  /* width: 400px; */
   transition: 0.3s;
   font-size: 80%;
   background-color: transparent;
@@ -125,7 +121,6 @@ const BottomPanelNavButton = styled.button<IBottomPanelNavButtonProps>`
 
 const BottomPanelContainer = styled.div`
   background-color: transparent;
-  /* width: 70vw; */
   display: flex;
   flex-direction: column;
   margin-top: 40px;
@@ -139,7 +134,6 @@ const TablesContainer = styled.div`
   border: 1px solid black;
   overflow: scroll;
   height: 60vh;
-  /* width: 60vw; */
 `
 const EmptyState = styled.div`
   padding: 20px;  
@@ -189,7 +183,6 @@ const QueryResultError = styled.div`
   border-radius: 3px;
   padding: 5px;
   margin: 5px;
-  /* width: 55vw; */
   font-family: 'Poppins', sans-serif;
   border-left: 3px solid #ca333e;
   font-size: 80%;

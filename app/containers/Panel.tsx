@@ -15,8 +15,7 @@ interface IIndTabProps {
 }
 
 const PanelWrapper = styled.div<IPanelWrapperProps>`
-    height: 100vh;
-    width: ${({visible}) => visible ? '375px' : '0px'};
+    width: ${({visible}) => visible ? '375px' : '100px'};
     display: flex;
     justify-content: flex-start;
     transition: width 500ms ease-in-out;
@@ -64,6 +63,8 @@ const CollapseBtn = styled.button<ICollapseBtnProps>`
   width: 25px;
   height: 25px;
   margin: 5px;
+  display: relative;
+  left: 100px;
   margin-left: ${({visible}) => visible ? '5px' : '80px'};
   text-align: center;
 
@@ -131,11 +132,11 @@ const Panel: React.SFC<Props> = ({
             <SettingsPanel />}
             </div>}
             <ButtonMenu>
-                <CollapseBtn 
-                  onClick={togglePanelVisibility}
-                  data-active={activePanel}
-                  visible={visible}
-                > {visible ? `<<` : `>>`} </CollapseBtn>
+            <CollapseBtn 
+              onClick={togglePanelVisibility}
+              data-active={activePanel}
+              visible={visible}
+            > {visible ? `<<` : `>>`} </CollapseBtn>
             {visible && <Tabs>
                 <IndTab 
                   data-panel='search' 
