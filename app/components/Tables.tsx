@@ -9,6 +9,7 @@ interface ITableProps {
 const Table = styled.div<ITableProps>`
   display: flex;
   flex-direction: column;
+  background-color: white;
   font-size: 14px;
   color: black;
   width: 200px;

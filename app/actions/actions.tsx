@@ -1,6 +1,5 @@
 import * as actions from '../constants/actionTypes';
 
-
 export const removeFromPinned = table_name => ({
     type: actions.REMOVE_FROM_PINNED,
     payload: {

@@ -9,6 +9,10 @@ import QueryResults from "../components/QueryResults";
 import changePinnedStatus from "../reducers/ChangePinnedStatus"
 import * as actions from '../actions/actions';
 
+const TableSection = styled.div`
+  background-color: #e8ecf1;
+`
+
 interface IBottomPanelNavButtonProps {
   activeDisplayInBottomTab: string
   activetabname: string
@@ -40,13 +44,14 @@ const BottomPanelNavButton = styled.button<IBottomPanelNavButtonProps>`
 `
 
 const RightPanel = styled.div`
-  border: 1px solid black;
+  
 `
 const OMNIboxInput = styled.textarea`
   font-family: 'Poppins', sans-serif;
-  height: 50px;
+  height: 100px;
   width: 50vw;
-  padding: 5px;
+  padding: 10px;
+  margin: 20px;
   resize:none;
   :focus{
     outline: none;
@@ -95,6 +100,7 @@ const HomepageWrapper = styled.div`
   padding: 20px;
   display: flex; 
   flex-wrap: wrap;
+  overflow: auto;
 `
 
 const EntireHomePageWrapper = styled.div`
@@ -102,6 +108,7 @@ const EntireHomePageWrapper = styled.div`
   margin-top: -30px;
   overflow: wrap;
   font-family: 'Poppins', sans-serif;
+  width: 100vw;
 `;
 
 const LoadWrap = styled.div`
@@ -346,6 +353,7 @@ const HomePage = (props) => {
         <BottomPanelNavButton activeDisplayInBottomTab={activeDisplayInBottomTab} activetabname='tables' data-activetabname='tables' onClick={activeTabcapture}>Tables</BottomPanelNavButton>
         <BottomPanelNavButton activeDisplayInBottomTab={activeDisplayInBottomTab} activetabname='queryresults' data-activetabname='queryresults' onClick={activeTabcapture}>Query Results</BottomPanelNavButton>
       </BottomPanelNav>
+      <TableSection>
       {  activeDisplayInBottomTab==='tables' &&
         ((pinnedTables.length  || filteredTables.length)? <HomepageWrapper>{pinnedTables}{filteredTables}</HomepageWrapper>:
         <EmptyState>
@@ -355,6 +363,7 @@ const HomePage = (props) => {
       { activeDisplayInBottomTab==='queryresults' &&
         <QueryResults queryResult={queryResult}/>
       }
+      </TableSection>
       </RightPanel>
     </EntireHomePageWrapper>
     </React.Fragment>

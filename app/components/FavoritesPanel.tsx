@@ -3,7 +3,6 @@ import styled from 'styled-components';
 
 const PanelWrapper = styled.div`
   color: black;
-  font-family: 'Poppins', sans-serif;
   padding: 40px;
   font-size: 30px;
   width: 300px;
@@ -12,14 +11,12 @@ const PanelWrapper = styled.div`
   justify-content: center;
   background-color: #e8ecf1;
 `
-
 const FavoritesPanel = () => {
     return (
         <PanelWrapper>
             Welcome to favorites, this feature is coming soon!
         </PanelWrapper>
     )
-
 }
 
 export default FavoritesPanel;

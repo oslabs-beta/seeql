@@ -3,7 +3,6 @@ import styled from 'styled-components';
 import ReactTable from "react-table";
 
 const QueryResultWrapper = styled.div`
-    border: 1px solid black;
     padding: 20px;
     width: 100%;
 `
@@ -11,21 +10,17 @@ interface IQueryResultsProps {
     queryResult: Array<any>
 }
 
-
 const QueryResults: React.SFC<IQueryResultsProps> = ({queryResult}) => {
     let columns=[];
 
     if(queryResult.length > 0) {
-    
         const columnNames = Object.keys(queryResult[0]);
-
         columns = columnNames.map((column) => { 
             return ({
             Header: column,
             accessor: column
             })
         });
-
    }
 
     return(
