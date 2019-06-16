@@ -168,6 +168,18 @@ interface IForeignKey {
   column: string
 }
 
+const QueryResultError = styled.div`
+  background-color: #f1c7ca;
+  color: #ca333e;
+  border-radius: 3px;
+  padding: 5px;
+  margin: 5px;
+  width: 55vw;
+  font-family: 'Poppins', sans-serif;
+  border-left: 3px solid #ca333e;
+  font-size: 80%;
+`;
+
 let isPrimaryKey: string;
 let isForeignKey: string;
 let primaryKeyTableForForeignKey: string;
@@ -193,7 +205,10 @@ const HomePage = ({location}) => {
   const [pinnedTables, setPinnedTables] = useState([]);
   const [omniBoxView, setOmniBoxView] = useState('SQL');
   const [userInputQuery, setUserInputQuery] = useState('');
-  const [queryResult, setQueryResult] = useState([]);
+  const [queryResult, setQueryResult] = useState({
+    status: 'No query',
+    message: []
+  });
   const [visible, setVisible] = useState(true);
   const togglePanelVisibility = () => {
     if (visible) setVisible(false);
@@ -201,6 +216,10 @@ const HomePage = ({location}) => {
   }
   const [pinnedTableNames, dispatchPinned] = useReducer(changePinnedStatus, [])
   const [activePanel, dispatchLeftPanelDisplay] = useReducer(changeDisplayOfLeftPanel, 'search');
+  const [queryResultError, setQueryResultError] = useState({
+    status: false,
+    message: ''
+  })
 
   const captureSelectedTable = (e) => {
     const tablename = e.target.dataset.tablename;
@@ -354,6 +373,10 @@ const HomePage = ({location}) => {
   }
 
   const executeQueryOnEnter = (e):void => {
+    setQueryResultError({
+      status: false,
+      message: ''
+    })
     const code:number = e.keyCode || e.which;
     if(code === 13) { //13 is the enter keycode
       ipcRenderer.send("query-to-main", userInputQuery);
@@ -361,14 +384,32 @@ const HomePage = ({location}) => {
   }
   // #TODO: Connect this ipc communication with new query input
   const executeQuery = ():void => {
+    setQueryResultError({
+      status: false,
+      message: ''
+    })
     ipcRenderer.send("query-to-main", userInputQuery);
   }
 
   ipcRenderer.removeAllListeners("query-result-to-homepag")
   ipcRenderer.on("query-result-to-homepage", (event, queryResult) => {
     if(queryResult.statusCode === 'Success'){
-      setQueryResult(queryResult.message);
+      console.log('success', queryResult)
+      setQueryResult({
+        status: (queryResult.message.length === 0) ? 'No results' : 'Success',
+        message: queryResult.message
+      });
       setActiveDisplayInBottomTab('queryresults')
+    } else if(queryResult.statusCode === 'Invalid Request'){
+      setQueryResultError({
+        status: true,
+        message: queryResult.message
+      })
+    } else if(queryResult.statusCode === 'Syntax Error') {
+      setQueryResultError({
+        status: true,
+        message: `Syntax error in retrieving query results. Error beginning on character '${userInputQuery.slice(parseInt(queryResult.err.position)-1, parseInt(queryResult.err.position))}' in postion '${queryResult.err.position}'`
+      })
     }
   });
 
@@ -416,6 +457,8 @@ const HomePage = ({location}) => {
         onChange={e => setUserInputForTables(e.target.value)}
       ></OMNIboxInput>
       }
+      {queryResultError.status && 
+      <QueryResultError>{queryResultError.message}</QueryResultError>}
       </OMNIBoxContainer>
       <BottomPanelNav>
         <BottomPanelNavButton activeDisplayInBottomTab={activeDisplayInBottomTab} activetabname='tables' data-activetabname='tables' onClick={activeTabcapture}>Tables</BottomPanelNavButton>

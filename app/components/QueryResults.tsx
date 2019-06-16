@@ -6,14 +6,21 @@ const QueryResultWrapper = styled.div`
     padding: 20px;
     width: 100%;
 `
+
+interface IQueryResult{
+    status: string
+    message: Array<any>
+}
+
 interface IQueryResultsProps {
-    queryResult: Array<any>
+    queryResult: IQueryResult
 }
 
 const QueryResults: React.SFC<IQueryResultsProps> = ({queryResult}) => {
+    console.log('query result ', queryResult)
     let columns=[];
 
-    if(queryResult.length > 0) {
+    if(queryResult.message.length > 0) {
         const columnNames = Object.keys(queryResult[0]);
         columns = columnNames.map((column) => { 
             return ({
@@ -25,14 +32,17 @@ const QueryResults: React.SFC<IQueryResultsProps> = ({queryResult}) => {
 
     return(
         <QueryResultWrapper>
-            { queryResult.length > 0 &&
+            { queryResult.message.length > 0 &&
             <ReactTable 
                 data={queryResult}
                 columns={columns}
             />
             }
-            { queryResult.length === 0 &&
-            <div>You haven't queried anything.</div>
+            { ((queryResult.message.length === 0) && (queryResult.status === 'No results'))  &&
+            <div>{`There were no results found for your query :(`}</div>
+            }
+            { ((queryResult.message.length === 0) && (queryResult.status === 'No query'))  &&
+            <div>{`You haven't queried anything! Enter a query above to get started. :(`}</div>
             }
         </QueryResultWrapper>
     )

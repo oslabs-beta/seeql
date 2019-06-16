@@ -30,9 +30,9 @@ ipcRenderer.on("query-to-db", (event, query) => {
     query += ';';
     client.query(query)
       .then(result => ipcRenderer.send('query-result-to-main', { statusCode: 'Success', message: result.rows}))
-      .catch(err => ipcRenderer.send('query-result-to-main', { statusCode: 'Error', message: 'Issue getting data from db', err}));
+      .catch(err => ipcRenderer.send('query-result-to-main', { statusCode: 'Syntax Error', message: 'Issue getting data from db', err}));
   } else {
-    ipcRenderer.send('query-result-to-main', { statusCode: 'Error', message: 'Invalid query input'})
+    ipcRenderer.send('query-result-to-main', { statusCode: 'Invalid Request', message: 'Invalid query input. The query can only be a SELECT statement.'})
   }
 });
 

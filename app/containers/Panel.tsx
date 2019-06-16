@@ -116,7 +116,6 @@ const Panel: React.SFC<Props> = ({
   activePanel,
   dispatchLeftPanelDisplay
 }) => {
-    console.log('test', actions.changeToInfoPanel)
     return (
         <PanelWrapper visible={visible}>
             { visible &&
