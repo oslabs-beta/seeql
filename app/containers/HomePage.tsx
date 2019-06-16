@@ -24,17 +24,19 @@ const HomepageWrapper = styled.div`
 `;
 
 const RightPanel = styled.div`
-
+  background-color:  #f2f1ef;
+  padding: 40px;
+  height: 100vh;
+  width: 100vw;
 `
 
 const OMNIBoxContainer = styled.div`
-  padding: 20px;
-  margin-top: 30px;
   width: 70vw;
 `
 
 const OMNIboxInput = styled.textarea`
   font-family: 'Poppins', sans-serif;
+  border: 1px solid lightgrey;
   padding: 8px;
   height: 100px;
   width: 60vw;
@@ -49,10 +51,11 @@ const OMNIboxInput = styled.textarea`
 
 const ExecuteQueryButton = styled.button`
   border: none;
-  border-radius: 3px;
-  background-color: #086375;
+  width: 60vw;
+  background-color: #013243;
   transition: 0.2s;
-  color: white;
+  color: #f2f1ef;
+  text-align: center;
   padding: 5px;
 
   :hover {
@@ -63,6 +66,11 @@ const ExecuteQueryButton = styled.button`
     outline: none;
   }
 `
+const OMNIBoxWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+`
+
 interface IOMNIBoxNavButtonsProps {
   omniBoxView: string
   selectedView: string
@@ -186,6 +194,15 @@ const HomePage = ({location}) => {
   const [userInputQuery, setUserInputQuery] = useState('');
   const [queryResult, setQueryResult] = useState([]);
   const [pinnedTableNames, dispatch] = useReducer(changePinnedStatus, [])
+  const [visible, setVisible] = useState(true);
+  const togglePanelVisibility = () => {
+      if (visible) setVisible(false);
+      else setVisible(true);
+  }
+  const [activePanel, setActivePanel] = useState('search');
+  const displayActivePanelComponent = (e) => {
+      setActivePanel(e.target.dataset.panel);
+  }
 
   const captureSelectedTable = (e) => {
     const tablename = e.target.dataset.tablename;
@@ -211,6 +228,7 @@ const HomePage = ({location}) => {
     })
     
     setActiveTableInPanel(selectedPanelInfo)
+    setActivePanel('search')
   }
 
   useEffect(() => {
@@ -359,8 +377,12 @@ const HomePage = ({location}) => {
   return (
     <React.Fragment>
     <InvisibleHeader ></InvisibleHeader>
-    <HomepageWrapper>
-      <LeftPanel activeTableInPanel={activeTableInPanel} />
+    <HomepageWrapper className="homepage">
+      <LeftPanel 
+        activePanel={activePanel}
+        displayActivePanelComponent={displayActivePanelComponent}
+        activeTableInPanel={activeTableInPanel} 
+        togglePanelVisibility={togglePanelVisibility} visible={visible} />
        {toggleLoad && (
         <LoadWrap>
           <LoadingComponent />
@@ -381,14 +403,14 @@ const HomePage = ({location}) => {
           >PLAIN</OMNIBoxNavButtons>
       </OmniBoxNav>
       { omniBoxView === 'SQL' &&  
-        <React.Fragment>
+        <OMNIBoxWrapper>
         <OMNIboxInput 
           onChange={(e) => setUserInputQuery(e.target.value)} 
           placeholder="SELECT * FROM ..."
           onKeyPress={executeQueryOnEnter}
           ></OMNIboxInput>
         <ExecuteQueryButton onClick={executeQuery}>Execute Query</ExecuteQueryButton>
-        </React.Fragment>
+        </OMNIBoxWrapper>
       } 
       {omniBoxView === 'plain' &&  
       <OMNIboxInput

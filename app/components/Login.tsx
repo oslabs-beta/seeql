@@ -10,6 +10,7 @@ const InvisibleHeader = styled.div`
 `
 
 const LoginPageWrapper = styled.div`
+  margin-top: -30px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -18,12 +19,33 @@ const LoginPageWrapper = styled.div`
   width: 100vw;
 `
 
+const Title = styled.h1`
+  font-size: 72px;
+  font-weight: none;
+`
+
+const Panel = styled.div`
+  height: 100vh;
+  width: 50vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`
+
+const LeftPanel = styled(Panel)`
+  background-color: #013243;
+  color: #f2f1ef;
+`
+
+const RightPanel = styled(Panel)`
+  background-color: #f2f1ef;
+`
+
 const LoginContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items:center;
   padding: 20px;
-  width: 300px;
 `;
 
 const LoginTypeNavigation = styled.div`
@@ -43,10 +65,10 @@ const LoginTypeButton = styled.button<LoginTypeButtonProps>`
   padding: 5px;
   font-size: 80%;
   font-family: 'Poppins', sans-serif;
+  background-color: transparent;
   display: flex;
   border: none;
-  background-color: white;
-  border-bottom: ${({selectedLoginType, buttonType}) => selectedLoginType === buttonType ? '3px solid #00b5cc' : '3px solid transparent'};
+  border-bottom: ${({selectedLoginType, buttonType}) => selectedLoginType === buttonType ? '3px solid #013243' : '3px solid transparent'};
 
   :focus {
     outline: none;
@@ -141,7 +163,8 @@ const ConnectionErrorMessage = styled.div`
   padding: 5px;
   margin: 5px;
   font-family: 'Poppins', sans-serif;
-  transition: 0.5s;
+  border-left: 3px solid #ca333e;
+  font-size: 80%;
 `;
 
 const RequiredWarning = styled.span`
@@ -222,6 +245,10 @@ const Login = () => {
     <React.Fragment>
       <InvisibleHeader></InvisibleHeader>
       <LoginPageWrapper>
+        <LeftPanel>
+          <Title>SeeQL</Title>
+        </LeftPanel>
+        <RightPanel>
         <LoginContainer>
         {connectionError && 
           <ConnectionErrorMessage>Unable to connect to the database. Please try again.</ConnectionErrorMessage>
@@ -330,6 +357,7 @@ const Login = () => {
       {loading && <LoginBtn disabled>Loading...</LoginBtn>}
       {redirectHome()}
     </LoginContainer>
+    </RightPanel>
   </LoginPageWrapper>
 </React.Fragment>
 )};

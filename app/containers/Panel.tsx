@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { useState } from 'react';
 import styled from 'styled-components';
 import SettingsPanel from '../components/SettingsPanel'
 import FavoritesPanel from '../components/FavoritesPanel';
@@ -99,22 +98,19 @@ interface IAcitveTableInPanel {
 
 interface Props {
     activeTableInPanel: IAcitveTableInPanel
+    visible: boolean
+    activePanel: string
+    togglePanelVisibility: () => void;
+    displayActivePanelComponent: (Event) => void;
 }
 
 const Panel: React.SFC<Props> = ({ 
-  activeTableInPanel}) => {
-
-    const [activePanel, setActivePanel] = useState('search');
-    const [visible, setVisible] = useState(true);
-
-    const displayActivePanelComponent = (e) => {
-        setActivePanel(e.target.dataset.panel);
-    }
-
-    const togglePanelVisibility = () => {
-        if (visible) setVisible(false);
-        else setVisible(true);
-    }
+  activeTableInPanel,
+  visible,
+  togglePanelVisibility,
+  activePanel,
+  displayActivePanelComponent
+}) => {
 
     return (
         <PanelWrapper visible={visible}>
@@ -131,7 +127,6 @@ const Panel: React.SFC<Props> = ({
             <SettingsPanel />}
             </div>}
             <ButtonMenu>
-            { !visible && <div></div>}
                 <CollapseBtn 
                   onClick={togglePanelVisibility}
                   data-active={activePanel}
