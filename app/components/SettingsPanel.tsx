@@ -1,16 +1,16 @@
-import * as React from "react";
-import { useReducer, useContext, useState } from "react";
-import { NavLink } from "react-router-dom";
-import styled from "styled-components";
-import Context from "../contexts/themeContext";
-import themeReducer from "../reducers/themeReducer";
+import * as React from 'react';
+import { useReducer, useContext, useState } from 'react';
+import { NavLink } from 'react-router-dom';
+import styled from 'styled-components';
+import Context from '../contexts/themeContext';
+import themeReducer from '../reducers/themeReducer';
 
 const PanelWrapper = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   color: black;
-  font-family: "Poppins", sans-serif;
+  font-family: 'Poppins', sans-serif;
   padding: 20px;
   width: 300px;
   height: 100vh;
@@ -54,20 +54,13 @@ const SettingsPanel = () => {
 
         <DivWrapper>
           <Label>Theme</Label>
-          {/* <select>
-            <option value="">seeQl</option>
-            <option value="">'K'</option>
-            <option value="">'A'</option>
-            <option value="">'T'</option>
-            <option value="">'A'</option>
-          </select> */}
           <button
             onClick={() => {
               setToggle(!toggle);
               setContext(state);
               toggle
-                ? dispatch({ type: "TOGGLE_DARK" })
-                : dispatch({ type: "TOGGLE_LIGHT" });
+                ? dispatch({ type: 'TOGGLE_DARK' })
+                : dispatch({ type: 'TOGGLE_LIGHT' });
             }}
           >
             {contextText}
@@ -84,9 +77,8 @@ const SettingsPanel = () => {
         </DivWrapper>
       </TopSection>
       <BottomSection>
-        {/* {console.log('in div', state.lightTheme.backgroundColor)} */}
         <div style={state}>CHANGE ME HEY BLAHHSLAH</div>
-        <NavLink to="/" activeStyle={{ color: "black " }}>
+        <NavLink to="/" activeStyle={{ color: 'black ' }}>
           Sign Out
         </NavLink>
       </BottomSection>

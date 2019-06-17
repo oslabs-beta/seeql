@@ -1,5 +1,5 @@
-import * as React from "react";
-import styled from "styled-components";
+import * as React from 'react';
+import styled from 'styled-components';
 
 interface ILeftPanelTableWrapperProps {
   visible: boolean;
@@ -8,7 +8,7 @@ interface ILeftPanelTableWrapperProps {
 const LeftPanelTableListWrapper = styled.div<ILeftPanelTableWrapperProps>`
   color: black;
   padding: 40px;
-  width: ${({ visible }) => (visible ? "300px" : "0px")};
+  width: ${({ visible }) => (visible ? '300px' : '0px')};
   height: 100vh;
   background-color: ${props => props.theme.backgroundColor};
   color: ${props => props.theme.fontColor};
@@ -75,7 +75,7 @@ const SearchPanel: React.SFC<Props> = ({ activeTableInPanel, visible }) => {
       foreignKeyRelationships.push(
         <li>
           <Text>
-            {key.column_name} <Label as="span">from table</Label>{" "}
+            {key.column_name} <Label as="span">from table</Label>
             {key.foreign_table_name}({key.foreign_column_name})
           </Text>
         </li>
@@ -83,7 +83,7 @@ const SearchPanel: React.SFC<Props> = ({ activeTableInPanel, visible }) => {
     });
   }
 
-  for (let foreignTableOfPrimary in foreignKeysOfPrimary) {
+  for (const foreignTableOfPrimary in foreignKeysOfPrimary) {
     primaryKeyRelationships.push(
       <li>
         {foreignTableOfPrimary}({foreignKeysOfPrimary[foreignTableOfPrimary]})

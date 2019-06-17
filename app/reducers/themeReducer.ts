@@ -1,12 +1,12 @@
 export default function themeReducer(state, action) {
   switch (action.type) {
-    case "TOGGLE_LIGHT": {
+    case 'TOGGLE_LIGHT': {
       return {
         light: true,
         dark: false
       };
     }
-    case "TOGGLE_DARK": {
+    case 'TOGGLE_DARK': {
       return {
         light: false,
         dark: true

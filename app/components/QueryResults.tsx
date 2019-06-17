@@ -1,6 +1,6 @@
-import * as React from "react";
-import styled from "styled-components";
-import ReactTable from "react-table";
+import * as React from 'react';
+import styled from 'styled-components';
+import ReactTable from 'react-table';
 
 const QueryResultWrapper = styled.div`
   padding: 20px;
@@ -41,11 +41,11 @@ const QueryResults: React.SFC<IQueryResultsProps> = ({ queryResult }) => {
         <ReactTable data={queryResult.message} columns={columns} />
       )}
       {queryResult.message.length === 0 &&
-        queryResult.status === "No results" && (
+        queryResult.status === 'No results' && (
           <div>{`There were no results found for your query :(`}</div>
         )}
       {queryResult.message.length === 0 &&
-        queryResult.status === "No query" && (
+        queryResult.status === 'No query' && (
           <div>{`You haven't queried anything! Enter a query above to get started. :(`}</div>
         )}
     </QueryResultWrapper>

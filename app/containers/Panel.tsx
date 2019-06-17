@@ -1,9 +1,9 @@
-import * as React from "react";
-import styled from "styled-components";
-import SettingsPanel from "../components/SettingsPanel";
-import FavoritesPanel from "../components/FavoritesPanel";
-import SearchPanel from "../components/SearchPanel";
-import * as actions from "../actions/actions";
+import * as React from 'react';
+import styled from 'styled-components';
+import SettingsPanel from '../components/SettingsPanel';
+import FavoritesPanel from '../components/FavoritesPanel';
+import SearchPanel from '../components/SearchPanel';
+import * as actions from '../actions/actions';
 interface IPanelWrapperProps {
   visible: boolean;
 }
@@ -14,7 +14,7 @@ interface IIndTabProps {
 }
 
 const PanelWrapper = styled.div<IPanelWrapperProps>`
-  width: ${({ visible }) => (visible ? "375px" : "100px")};
+  width: ${({ visible }) => (visible ? '375px' : '100px')};
   display: flex;
   justify-content: flex-start;
   transition: width 500ms ease-in-out;
@@ -33,7 +33,7 @@ const IndTab = styled.button<IIndTabProps>`
   border-radius: 0px 6px 6px 0px;
   padding: 5px;
   background-color: ${props =>
-    props.active === props.panel ? "#e8ecf1" : "#fdfdfe"}
+    props.active === props.panel ? '#e8ecf1' : '#fdfdfe'}
   
   :hover {
     font-weight: bold;
@@ -48,7 +48,7 @@ const Tabs = styled.div`
   flex-direction: column;
   height: 100px;
   justify-content: space-between;
-  font-family: "Poppins", sans-serif;
+  font-family: 'Poppins', sans-serif;
 `;
 
 interface ICollapseBtnProps {
@@ -64,7 +64,7 @@ const CollapseBtn = styled.button<ICollapseBtnProps>`
   margin: 5px;
   display: relative;
   left: 100px;
-  margin-left: ${({ visible }) => (visible ? "5px" : "80px")};
+  margin-left: ${({ visible }) => (visible ? '5px' : '80px')};
   text-align: center;
   :focus {
     outline: none;
@@ -118,14 +118,14 @@ const Panel: React.SFC<Props> = ({
     <PanelWrapper visible={visible}>
       {visible && (
         <div>
-          {activePanel === "search" && (
+          {activePanel === 'search' && (
             <SearchPanel
               visible={visible}
               activeTableInPanel={activeTableInPanel}
             />
           )}
-          {activePanel === "favorites" && <FavoritesPanel />}
-          {activePanel === "settings" && <SettingsPanel />}
+          {activePanel === 'favorites' && <FavoritesPanel />}
+          {activePanel === 'settings' && <SettingsPanel />}
         </div>
       )}
       <ButtonMenu>
@@ -134,8 +134,8 @@ const Panel: React.SFC<Props> = ({
           data-active={activePanel}
           visible={visible}
         >
-          {" "}
-          {visible ? `<<` : `>>`}{" "}
+          {' '}
+          {visible ? `<<` : `>>`}{' '}
         </CollapseBtn>
         {visible && (
           <Tabs>

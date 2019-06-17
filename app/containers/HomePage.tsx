@@ -1,14 +1,14 @@
-import * as React from "react";
-import { useState, useEffect, useReducer } from "react";
-import { ipcRenderer } from "electron";
-import styled from "styled-components";
-import * as actions from "../actions/actions";
-import changePinnedStatus from "../reducers/ChangePinnedStatus";
-import changeDisplayOfLeftPanel from "../reducers/ChangeDisplayOfLeftPanel";
-import Tables from "../components/Tables";
-import LeftPanel from "./Panel";
-import LoadingComponent from "../components/LoadComponent";
-import QueryResults from "../components/QueryResults";
+import * as React from 'react';
+import { useState, useEffect, useReducer } from 'react';
+import { ipcRenderer } from 'electron';
+import styled from 'styled-components';
+import * as actions from '../actions/actions';
+import changePinnedStatus from '../reducers/ChangePinnedStatus';
+import changeDisplayOfLeftPanel from '../reducers/ChangeDisplayOfLeftPanel';
+import Tables from '../components/Tables';
+import LeftPanel from './Panel';
+import LoadingComponent from '../components/LoadComponent';
+import QueryResults from '../components/QueryResults';
 
 const InvisibleHeader = styled.div`
   height: 30px;
@@ -19,7 +19,7 @@ const InvisibleHeader = styled.div`
 const HomepageWrapper = styled.div`
   display: flex;
   margin-top: -30px;
-  font-family: "Poppins", sans-serif;
+  font-family: 'Poppins', sans-serif;
 `;
 
 const RightPanel = styled.div`
@@ -33,7 +33,7 @@ const RightPanel = styled.div`
 const OMNIBoxContainer = styled.div``;
 
 const OMNIboxInput = styled.textarea`
-  font-family: "Poppins", sans-serif;
+  font-family: 'Poppins', sans-serif;
   border: 1px solid lightgrey;
   padding: 8px;
   height: 100px;
@@ -48,7 +48,7 @@ const OMNIboxInput = styled.textarea`
 `;
 
 const ExecuteQueryButton = styled.button`
-  font-family: "Poppins", sans-serif;
+  font-family: 'Poppins', sans-serif;
   border: none;
   background-color: #013243;
   transition: 0.2s;
@@ -77,13 +77,13 @@ interface IOMNIBoxNavButtonsProps {
 
 const OMNIBoxNavButtons = styled.button<IOMNIBoxNavButtonsProps>`
   padding: 5px;
-  font-family: "Poppins", sans-serif;
+  font-family: 'Poppins', sans-serif;
   border-radius: 3px 3px 0px 0px;
   border: none;
   background-color: ${({ omniBoxView, selectedView }) =>
-    selectedView === omniBoxView ? "#3C1642" : "transparent"};
+    selectedView === omniBoxView ? '#3C1642' : 'transparent'};
   color: ${({ omniBoxView, selectedView }) =>
-    selectedView === omniBoxView ? "white" : "black"};
+    selectedView === omniBoxView ? 'white' : 'black'};
 
   :focus {
     outline: none;
@@ -104,12 +104,12 @@ interface IBottomPanelNavButtonProps {
 }
 
 const BottomPanelNavButton = styled.button<IBottomPanelNavButtonProps>`
-  font-family: "Poppins", sans-serif;
+  font-family: 'Poppins', sans-serif;
   border: none;
   border-bottom: ${({ activeDisplayInBottomTab, activetabname }) =>
     activeDisplayInBottomTab === activetabname
-      ? "3px solid #013243"
-      : "3px solid transparent"};
+      ? '3px solid #013243'
+      : '3px solid transparent'};
   padding: 8px;
   transition: 0.3s;
   font-size: 80%;
@@ -156,8 +156,8 @@ interface IPinButtonProps {
 
 const PinBtn = styled.button<IPinButtonProps>`
   border: none;
-  background-color: ${props => (props.pinned ? "rgb(93, 0, 250)" : "white")};
-  color: ${props => (props.pinned ? "white" : "black")};
+  background-color: ${props => (props.pinned ? 'rgb(93, 0, 250)' : 'white')};
+  color: ${props => (props.pinned ? 'white' : 'black')};
   padding: 5px;
   border-radius: 3px;
 
@@ -186,7 +186,7 @@ const QueryResultError = styled.div`
   border-radius: 3px;
   padding: 5px;
   margin: 5px;
-  font-family: "Poppins", sans-serif;
+  font-family: 'Poppins', sans-serif;
   border-left: 3px solid #ca333e;
   font-size: 80%;
 `;
@@ -202,28 +202,28 @@ const HomePage = ({ location }) => {
   const allTablesMetaData = location.state.tables;
   const [loadingQueryStatus, setLoadingQueryStatus] = useState(false);
   const [activeDisplayInBottomTab, setActiveDisplayInBottomTab] = useState(
-    "tables"
+    'tables'
   );
   const [activeTableInPanel, setActiveTableInPanel] = useState({});
   const [filteredTables, setFilteredTables] = useState([]);
-  const [userInputForTables, setUserInputForTables] = useState("");
+  const [userInputForTables, setUserInputForTables] = useState('');
   const [data, setData] = useState([]); //data from database
   const [mouseOver, setMouseOver] = useState(); //data to detect if mouse is over a pk or fk
   const [toggleLoad, setToggleLoad] = useState(true);
   const [foreignKeysAffected, setForeignKeysAffected] = useState([]);
   const [primaryKeyAffected, setPrimaryKeyAffected] = useState([
     {
-      primaryKeyTable: "",
-      primaryKeyColumn: ""
+      primaryKeyTable: '',
+      primaryKeyColumn: ''
     }
   ]);
   const [pinnedTables, setPinnedTables] = useState([]);
-  const [omniBoxView, setOmniBoxView] = useState("SQL");
+  const [omniBoxView, setOmniBoxView] = useState('SQL');
   const [userInputQuery, setUserInputQuery] = useState(
-    "SELECT * FROM [add a table name here]"
+    'SELECT * FROM [add a table name here]'
   );
   const [queryResult, setQueryResult] = useState({
-    status: "No query",
+    status: 'No query',
     message: []
   });
   const [visible, setVisible] = useState(true);
@@ -236,11 +236,11 @@ const HomePage = ({ location }) => {
   const [pinnedTableNames, dispatchPinned] = useReducer(changePinnedStatus, []);
   const [activePanel, dispatchLeftPanelDisplay] = useReducer(
     changeDisplayOfLeftPanel,
-    "search"
+    'search'
   );
   const [queryResultError, setQueryResultError] = useState({
     status: false,
-    message: ""
+    message: ''
   });
   const captureSelectedTable = e => {
     const tablename = e.target.dataset.tablename;
@@ -275,13 +275,13 @@ const HomePage = ({ location }) => {
   useEffect(() => {
     if (!mouseOver) {
       //Resets all relationships
-      setPrimaryKeyAffected([{ primaryKeyTable: "", primaryKeyColumn: "" }]);
+      setPrimaryKeyAffected([{ primaryKeyTable: '', primaryKeyColumn: '' }]);
       setForeignKeysAffected([]);
     }
 
     //Determines which rows should be highlighted
     if (mouseOver) {
-      if (isForeignKey == "true") {
+      if (isForeignKey == 'true') {
         setPrimaryKeyAffected([
           {
             primaryKeyTable: primaryKeyTableForForeignKey,
@@ -290,7 +290,7 @@ const HomePage = ({ location }) => {
         ]);
       }
 
-      if (isPrimaryKey === "true") {
+      if (isPrimaryKey === 'true') {
         const allForeignKeys: IForeignKey[] = [];
         data.forEach((table): void => {
           table.foreignKeys.forEach((foreignkey): void => {
@@ -318,8 +318,8 @@ const HomePage = ({ location }) => {
 
   //Builds out tables to display
   useEffect((): void => {
-    let pinned = [];
-    let filtered = [];
+    const pinned = [];
+    const filtered = [];
 
     if (data.length > 0) {
       const regex = new RegExp(userInputForTables);
@@ -417,20 +417,20 @@ const HomePage = ({ location }) => {
 
   const activeTabcapture = (e): void => {
     setActiveDisplayInBottomTab(e.target.dataset.activetabname);
-    if (e.target.dataset.activetabname === "plain") setUserInputQuery("");
-    if (e.target.dataset.activetabname === "SQL") setUserInputForTables("");
+    if (e.target.dataset.activetabname === 'plain') setUserInputQuery('');
+    if (e.target.dataset.activetabname === 'SQL') setUserInputForTables('');
   };
 
   const executeQueryOnEnter = (e): void => {
     setQueryResultError({
       status: false,
-      message: ""
+      message: ''
     });
     if (!loadingQueryStatus) {
       const code: number = e.keyCode || e.which;
       if (code === 13) {
         //13 is the enter keycode
-        ipcRenderer.send("query-to-main", userInputQuery);
+        ipcRenderer.send('query-to-main', userInputQuery);
         setLoadingQueryStatus(true);
       }
     }
@@ -440,27 +440,27 @@ const HomePage = ({ location }) => {
     if (!loadingQueryStatus) {
       setQueryResultError({
         status: false,
-        message: ""
+        message: ''
       });
-      ipcRenderer.send("query-to-main", userInputQuery);
+      ipcRenderer.send('query-to-main', userInputQuery);
     }
     setLoadingQueryStatus(true);
   };
 
-  ipcRenderer.removeAllListeners("query-result-to-homepage");
-  ipcRenderer.on("query-result-to-homepage", (event, queryResult) => {
-    if (queryResult.statusCode === "Success") {
+  ipcRenderer.removeAllListeners('query-result-to-homepage');
+  ipcRenderer.on('query-result-to-homepage', (event, queryResult) => {
+    if (queryResult.statusCode === 'Success') {
       setQueryResult({
-        status: queryResult.message.length === 0 ? "No results" : "Success",
+        status: queryResult.message.length === 0 ? 'No results' : 'Success',
         message: queryResult.message
       });
-      setActiveDisplayInBottomTab("queryresults");
-    } else if (queryResult.statusCode === "Invalid Request") {
+      setActiveDisplayInBottomTab('queryresults');
+    } else if (queryResult.statusCode === 'Invalid Request') {
       setQueryResultError({
         status: true,
         message: queryResult.message
       });
-    } else if (queryResult.statusCode === "Syntax Error") {
+    } else if (queryResult.statusCode === 'Syntax Error') {
       setQueryResultError({
         status: true,
         message: `Syntax error in retrieving query results. 
@@ -499,7 +499,7 @@ const HomePage = ({ location }) => {
             <OmniBoxNav>
               <OMNIBoxNavButtons
                 onClick={() => {
-                  setOmniBoxView("SQL");
+                  setOmniBoxView('SQL');
                 }}
                 omniBoxView={omniBoxView}
                 selectedView="SQL"
@@ -508,7 +508,7 @@ const HomePage = ({ location }) => {
               </OMNIBoxNavButtons>
               <OMNIBoxNavButtons
                 onClick={() => {
-                  setOmniBoxView("plain");
+                  setOmniBoxView('plain');
                 }}
                 omniBoxView={omniBoxView}
                 selectedView="plain"
@@ -516,7 +516,7 @@ const HomePage = ({ location }) => {
                 PLAIN
               </OMNIBoxNavButtons>
             </OmniBoxNav>
-            {omniBoxView === "SQL" && (
+            {omniBoxView === 'SQL' && (
               <OMNIBoxWrapper>
                 <OMNIboxInput
                   onChange={e => setUserInputQuery(e.target.value)}
@@ -528,12 +528,12 @@ const HomePage = ({ location }) => {
                   disabled={loadingQueryStatus}
                 >
                   {loadingQueryStatus
-                    ? "Loading query results..."
-                    : "Execute Query"}
+                    ? 'Loading query results...'
+                    : 'Execute Query'}
                 </ExecuteQueryButton>
               </OMNIBoxWrapper>
             )}
-            {omniBoxView === "plain" && (
+            {omniBoxView === 'plain' && (
               <OMNIboxInput
                 placeholder="Search for a table"
                 onChange={e => setUserInputForTables(e.target.value)}
@@ -562,7 +562,7 @@ const HomePage = ({ location }) => {
                 Query Results
               </BottomPanelNavButton>
             </BottomPanelNav>
-            {activeDisplayInBottomTab === "tables" &&
+            {activeDisplayInBottomTab === 'tables' &&
               (pinnedTables.length || filteredTables.length ? (
                 <TablesContainer>
                   {pinnedTables}
@@ -573,7 +573,7 @@ const HomePage = ({ location }) => {
                   There were no search results. Please search again.
                 </EmptyState>
               ))}
-            {activeDisplayInBottomTab === "queryresults" && (
+            {activeDisplayInBottomTab === 'queryresults' && (
               <QueryResults queryResult={queryResult} />
             )}
           </BottomPanelContainer>

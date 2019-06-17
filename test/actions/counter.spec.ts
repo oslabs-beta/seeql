@@ -1,12 +1,12 @@
 //  import { spy } from 'sinon';
- import * as actions from '../../app/actions/actions';
+import * as actions from '../../app/actions/actions';
 
- describe('actions', () => {
-   it('should be gorgeous', () => {
-     let x;
-     expect(actions.removeFromPinned(x)).toMatchSnapshot();
-   });
- })
+describe('actions', () => {
+  it('should be gorgeous', () => {
+    let x;
+    expect(actions.removeFromPinned(x)).toMatchSnapshot();
+  });
+});
 
 // describe('actions', () => {
 //   it('should increment should create increment action', () => {
