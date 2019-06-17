@@ -120,6 +120,9 @@ app.on("ready", async () => {
     mainWindow.webContents.send("db-connection-error", err);
   });
 
+  ipcMain.on('query-result-to-main', (event, messagePayload) => {
+    mainWindow.webContents.send("query-result-to-homepage", messagePayload)
+  });
 
 });
 

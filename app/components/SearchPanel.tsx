@@ -31,6 +31,23 @@ const Label = styled.label`
   font-size: 12px;
 `;
 
+// interface IForeignKeys {
+//   column_name?: string
+//   constraint_name?: string
+//   foreign_column_name?: string
+//   foreign_table_name?: string
+//   foreign_table_schema?: string
+//   table_name?: string
+//   table_schema?: string
+// }
+
+// interface IColumns {
+//   characterlength?: string
+//   columnname?: string
+//   datatype?: string
+//   defaultvalue?: string
+// }
+
 interface ISelectedTable {
   columns?: any[];
   foreignKeys?: any[];
@@ -53,7 +70,6 @@ const SearchPanel: React.SFC<Props> = ({ activeTableInPanel, visible }) => {
   } = activeTableInPanel;
   const foreignKeyRelationships = [];
   const primaryKeyRelationships = [];
-
   if (foreignKeys) {
     foreignKeys.forEach(key => {
       foreignKeyRelationships.push(

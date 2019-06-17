@@ -9,34 +9,104 @@ const InvisibleHeader = styled.div`
   -webkit-app-region: drag;
 `
 
-const FullPageWrapper = styled.div`
+const LoginPageWrapper = styled.div`
+  margin-top: -30px;
   display: flex;
   align-items: center;
   justify-content: center;
+  font-family: 'Poppins', sans-serif;
   height: 100vh;
+  width: 100vw;
 `
 
-interface URIInputProps {
-  readonly requiredErr: boolean;
-}
+const Title = styled.h1`
+  font-size: 72px;
+  font-weight: none;
+`
+
+const Panel = styled.div`
+  height: 100vh;
+  width: 50vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`
+
+const LeftPanel = styled(Panel)`
+  background-color: #013243;
+  color: #f2f1ef;
+`
+
+const RightPanel = styled(Panel)`
+  background-color: #f2f1ef;
+`
+
+const LoginContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items:center;
+  padding: 20px;
+`;
+
+const LoginTypeNavigation = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+`;
 
 interface LoginTypeButtonProps {
   readonly selectedLoginType: string;
   readonly buttonType: string;
 };
 
-const URIInput = styled.textarea<URIInputProps>`
+
+const LoginTypeButton = styled.button<LoginTypeButtonProps>`
+  padding: 5px;
+  font-size: 140%;
+  margin: 10px;
+  font-family: 'Poppins', sans-serif;
+  background-color: transparent;
+  display: flex;
+  border: none;
+  border-bottom: ${({selectedLoginType, buttonType}) => selectedLoginType === buttonType ? '3px solid #013243' : '3px solid transparent'};
+  transition: 0.3s;
+  :hover{
+    border-bottom: 3px solid #013243;
+    cursor: pointer;
+  }
+  :focus {
+    outline: none;
+  }
+`;
+
+const URIConnectionContainer= styled.div`
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+`
+
+const InputLabel = styled.span`
+  font-size: 100%;
+  letter-spacing:2px;
+`;
+
+interface IURIInputProps {
+  requiredError: boolean;
+}
+
+const URIInput = styled.textarea<IURIInputProps>`
   width: 200px;
-  height: 100px;
+  height: 150px;
   border-radius: 3px;
   font-family: 'Poppins', sans-serif;
   letter-spacing: 2px;
   resize: none;
-  padding: 10px;
-  border: ${props =>
-    props.requiredErr ? '1px solid #ca333e' : '1px solid lightgrey'};
+  padding: 8px;
+  border: ${({requiredError}) =>
+    requiredError ? '1px solid #ca333e' : '1px solid lightgrey'};
 
-  :focus {
+  :focus{
     outline: none;
   }
 `;
@@ -44,48 +114,25 @@ const URIInput = styled.textarea<URIInputProps>`
 const ToggleSSL = styled.div`
   display: flex;
   justify-content: center;
-  padding: 5px 20px;
+  padding: 5px;
   margin: 10px;
-  font-family: 'Poppins', sans-serif;
   display: flex;
-  color: black;
   align-items: center;
-  font-size: 80%;
-`;
-
-const LoginContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  padding: 50px;
-  height: 400px;
-  width: 300px;
-  border: 1px solid grey;
 `;
 
 const LoginBtn = styled.button`
-  padding: 5px 20px;
+  padding: 5px;
+  border-radius: 3px;
   font-family: 'Poppins', sans-serif;
-`;
-
-const LoginTypeButtonContainer = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  padding: 0px;
-  height: 8vh;
-`;
-
-const LoginTypeButton = styled.button<LoginTypeButtonProps>`
-  padding: 5px 20px;
-  margin: 10px;
-  font-family: 'Poppins', sans-serif;
-  display: flex;
+  width: 100px;
   border: none;
-  background-color: white;
-  border-bottom: ${props => props.selectedLoginType === props.buttonType ? '3px solid #00b5cc' : '3px solid transparent'};
-
-  :focus {
+  transition: 0.2s;
+  font-size: 120%;
+  :hover{
+    color: white;
+    background-color: #1EA196;
+  }
+  :focus{
     outline: none;
   }
 `;
@@ -93,50 +140,45 @@ const LoginTypeButton = styled.button<LoginTypeButtonProps>`
 const CredentialsContainer = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 100px;
+  padding: 20px;
 `;
 
-const CredentialsInput = styled.input<URIInputProps>`
-  border-radius: 1px;
-  height: 12vh;
+const InputAndLabelWrapper = styled.div`
+  margin: 5px 0px;
+  display: flex;
+  flex-direction: column;
+`
+
+const CredentialsInput = styled.input<IURIInputProps>`
+  border-radius: 3px;
+  padding: 8px;
   width: 200px;
-  padding-left: 2px;
-  margin: .5px;
-	border: ${props => props.requiredErr ? '1px solid #ca333e' : '1px solid lightgrey'};
+  font-family: 'Poppins', sans-serif;
+  letter-spacing: 2px;
+	border: ${({requiredError}) => requiredError ? '1px solid #ca333e' : '1px solid lightgrey'};
+  :focus{
+    outline: none;
+  }
 `;
 
 const ConnectionErrorMessage = styled.div`
   background-color: #f1c7ca;
+  width: 200px;
   color: #ca333e;
   border-radius: 3px;
-  padding: 10px;
+  padding: 5px;
   margin: 5px;
-  font-size: 80%;
   font-family: 'Poppins', sans-serif;
-  transition: 0.5s;
+  border-left: 3px solid #ca333e;
+  font-size: 100%;
 `;
 
 const RequiredWarning = styled.span`
   color: #ca333e;
-  font-size: 60%;
+  font-size: 80%;
 `;
-
-const InputLabel = styled.span`
-  color: black;
-  font-family: "Poppins", sans-serif;
-`;
-
-const URIConnectionStringForm = styled.div`
-  display: flex;
-  flex-direction: column;
-  height: 150px;
-`
 
 const Login = () => {
-
-
   const [loginType, setLoginType] = useState('URI');
   const [host, setHost] = useState({ value: '', requiredError: false });
   const [port, setPort] = useState('5432');
@@ -145,15 +187,13 @@ const Login = () => {
   const [database, setDatabase] = useState({ value: '', requiredError: false });
   const [URI, setURI] = useState('');
   const [isSSL, setSSL] = useState(false);
-
   const [requiredError, setRequiredError] = useState(false);
   const [connectionError, setConnectionError] = useState(false);
-  const [isLoading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [redirectToHome, setRedirectToHome] = useState(false);
   const [tableData, setTableData] = useState([]);
 
   const sendLoginURI = (): void => {
-    if (connectionError) setConnectionError(false);
     let updatedPort = !port ? '5432' : port;
     let updatedURI;
     if (loginType === 'URI') updatedURI = URI;
@@ -177,12 +217,14 @@ const Login = () => {
  
   };
 
+  ipcRenderer.removeAllListeners("db-connection-error")
   ipcRenderer.on("db-connection-error", (event, err) => {
     // #TODO: Error handling for cases where unable to retrieve info from a valid connection
     setConnectionError(true);
     setLoading(false);
   });
 
+  ipcRenderer.removeAllListeners("tabledata-to-login")
   ipcRenderer.on("tabledata-to-login", (event, databaseTables) => {
     setConnectionError(false);
     setTableData(databaseTables);
@@ -207,92 +249,123 @@ const Login = () => {
 
   return (
     <React.Fragment>
-    <InvisibleHeader></InvisibleHeader>
-    <FullPageWrapper>
-    <LoginContainer>
-
-      {connectionError
-        && <ConnectionErrorMessage>Unable to connect to the database. Please try again.</ConnectionErrorMessage>
-      }
-
-
-      <LoginTypeButtonContainer>
-        <LoginTypeButton
-          buttonType="URI"
-          selectedLoginType={loginType}
-          onClick={() => setLoginType('URI')}
-        >
+      <InvisibleHeader></InvisibleHeader>
+      <LoginPageWrapper>
+        <LeftPanel>
+          <Title>SeeQL</Title>
+        </LeftPanel>
+        <RightPanel>
+        <LoginContainer>
+        {connectionError && 
+          <ConnectionErrorMessage>Unable to connect to the database. Please try again.</ConnectionErrorMessage>
+        }
+        <LoginTypeNavigation>
+          <LoginTypeButton
+            buttonType="URI"
+            selectedLoginType={loginType}
+            onClick={() => {setLoginType('URI'), setConnectionError(false)}}
+          >
           URI
-        </LoginTypeButton>
-        <LoginTypeButton
-          buttonType="Credentials"
-          selectedLoginType={loginType}
-          onClick={() => setLoginType('Credentials')}
-        >
+          </LoginTypeButton>
+          <LoginTypeButton
+            buttonType="Credentials"
+            selectedLoginType={loginType}
+            onClick={() => {setLoginType('Credentials'), setConnectionError(false)}}
+          >
           Credentials
-        </LoginTypeButton>
-      </LoginTypeButtonContainer>
-
+          </LoginTypeButton>
+      </LoginTypeNavigation>
       {loginType === 'Credentials' &&
         <CredentialsContainer>
-          <CredentialsInput type="text"
-            requiredErr={host.requiredError}
-            placeholder="host"
-            onChange={(e) => setHost({ value: e.target.value, requiredError: false })}
-          />
-          <CredentialsInput type="text"
-            requiredErr={false}
-            placeholder="port (default 5432)"
-            onChange={(e) => setPort(e.target.value)}
-          />
-          <CredentialsInput type="text"
-            requiredErr={username.requiredError}
-            placeholder="username"
-            onChange={(e) => setUsername({ value: e.target.value, requiredError: false })}
-          />
-          <CredentialsInput type="text"
-            requiredErr={password.requiredError}
-            placeholder="password"
-            onChange={(e) => setPassword({ value: e.target.value, requiredError: false })}
-          />
-          <CredentialsInput type="text"
-            requiredErr={database.requiredError}
-            placeholder="database"
-            onChange={(e) => setDatabase({ value: e.target.value, requiredError: false })}
-          />
-          {(host.requiredError || username.requiredError || password.requiredError || database.requiredError)
-            && <RequiredWarning>This field is required</RequiredWarning>
-          }
+          <InputAndLabelWrapper>
+            <InputLabel>
+              Host
+            </InputLabel>
+            <CredentialsInput type="text"
+              requiredError={host.requiredError}
+              placeholder="host"
+              onChange={(e) => setHost({ value: e.target.value, requiredError: false })}
+            />
+            {host.requiredError && 
+            <RequiredWarning>host is required</RequiredWarning>
+            }
+          </InputAndLabelWrapper>
+          <InputAndLabelWrapper>
+            <InputLabel>
+              Port
+            </InputLabel>
+            <CredentialsInput type="text"
+              requiredError={false}
+              placeholder="port (default 5432)"
+              onChange={(e) => setPort(e.target.value)}
+            />
+          </InputAndLabelWrapper>
+          <InputAndLabelWrapper>
+            <InputLabel>
+              Username
+            </InputLabel>
+            <CredentialsInput type="text"
+              requiredError={username.requiredError}
+              placeholder="username"
+              onChange={(e) => setUsername({ value: e.target.value, requiredError: false })}
+            />
+            {username.requiredError && 
+            <RequiredWarning>username is required</RequiredWarning>
+            }
+          </InputAndLabelWrapper>
+          <InputAndLabelWrapper>
+            <InputLabel>
+              Password
+            </InputLabel>
+            <CredentialsInput type="password"
+              requiredError={password.requiredError}
+              placeholder="password"
+              onChange={(e) => setPassword({ value: e.target.value, requiredError: false })}
+            />
+            {password.requiredError && 
+            <RequiredWarning>password is required</RequiredWarning>
+            }
+          </InputAndLabelWrapper>
+          <InputAndLabelWrapper>
+            <InputLabel>
+              Database
+            </InputLabel>
+            <CredentialsInput type="text"
+              requiredError={database.requiredError}
+              placeholder="database"
+              onChange={(e) => setDatabase({ value: e.target.value, requiredError: false })}
+            />
+            {database.requiredError && 
+            <RequiredWarning>database is required</RequiredWarning>
+            }
+          </InputAndLabelWrapper>
         </CredentialsContainer>
       }
       {loginType === 'URI' &&
-      <URIConnectionStringForm>
+        <URIConnectionContainer>
           <InputLabel>
             URI Connection String
           </InputLabel>
           <URIInput
-            requiredErr={requiredError}
+            requiredError={requiredError}
             onChange={captureURI}
             placeholder="Enter your URI connection string..."
           />
-        </URIConnectionStringForm>
+          {requiredError &&
+          <RequiredWarning>URI is required</RequiredWarning>}
+        </URIConnectionContainer> 
       }
-      {requiredError &&
-        <RequiredWarning>This field is required</RequiredWarning>}
-
       <ToggleSSL>
         <input type="checkbox" onChange={(e) => setSSL(e.target.checked)} />
-        <label>ssl?</label>
+        <InputLabel>ssl?</InputLabel>
       </ToggleSSL>
-
-      {!isLoading && <LoginBtn onClick={sendLoginURI}>Login</LoginBtn>}
-      {isLoading && <LoginBtn disabled>Loading...</LoginBtn>}
-
+      {!loading && <LoginBtn onClick={sendLoginURI}>Login</LoginBtn>}
+      {loading && <LoginBtn disabled>Loading...</LoginBtn>}
       {redirectHome()}
     </LoginContainer>
-    </FullPageWrapper>
-    </React.Fragment>
-  );
-};
+    </RightPanel>
+  </LoginPageWrapper>
+</React.Fragment>
+)};
 
 export default Login;
