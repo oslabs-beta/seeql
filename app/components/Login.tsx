@@ -199,13 +199,13 @@ const Login = () => {
   const sendLoginURI = (): void => {
     const updatedPort = !port ? '5432' : port;
     let updatedURI:string;
-    if (loginType === 'URI') updatedURI = `postgres://${username.value}:${password.value}@${host.value}:${updatedPort}/${database.value}`;
+    if (loginType === 'URI') updatedURI = URI;
     else if (loginType === 'Credentials')
       updatedURI = `postgres://${username.value}:${password.value}@${host.value}:${updatedPort}/${database.value}`;
 
     if (isSSL) updatedURI += '?ssl=true';
 
-    if (!updatedURI) setRequiredError(false);
+    if (!updatedURI) setRequiredError(true);
     if (!host.value) setHost({ value: '', requiredError: true });
     if (!username.value) setUsername({ value: '', requiredError: true });
     if (!password.value) setPassword({ value: '', requiredError: true });
