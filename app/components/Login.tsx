@@ -216,7 +216,7 @@ const Login = () => {
       (host.value && username.value && password.value && database.value)
     ) {
       setLoading(true);
-      ipcRenderer.send('Uri-to-main', updatedURI);
+      ipcRenderer.send('uri-to-main', updatedURI);
     }
   };
 
