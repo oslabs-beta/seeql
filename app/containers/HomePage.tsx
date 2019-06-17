@@ -451,20 +451,6 @@ const HomePage = ({ location }) => {
     };
   };
 
-  const executeQueryOnEnter = (e): void => {
-    setQueryResultError({
-      status: false,
-      message: ''
-    });
-    if (!loadingQueryStatus) {
-      const code: number = e.keyCode || e.which;
-      if (code === 13) {
-        //13 is the enter keycode
-        ipcRenderer.send('query-to-main', userInputQuery);
-        setLoadingQueryStatus(true);
-      }
-    }
-  };
   // #TODO: Connect this ipc communication with new query input
   const executeQuery = (): void => {
     if (!loadingQueryStatus) {
@@ -550,7 +536,6 @@ const HomePage = ({ location }) => {
               <OMNIBoxWrapper>
                 <OMNIboxInput
                   onChange={e => setUserInputQuery(e.target.value)}
-                  onKeyPress={executeQueryOnEnter}
                   value={userInputQuery}
                 ></OMNIboxInput>
                 <ExecuteQueryButton
