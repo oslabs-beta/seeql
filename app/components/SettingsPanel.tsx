@@ -16,10 +16,8 @@ const PanelWrapper = styled.div`
   height: 100vh;
   padding: 40px;
   background-color: ${props => props.theme.backgroundColor};
+  color: ${props => props.theme.fontColor};
 `;
-
-// background-color: ${props => props.theme.backgroundColorLight};
-// background-color: #e8ecf1;
 
 const TopSection = styled.section`
   display: flex;
@@ -35,11 +33,11 @@ const DivWrapper = styled.div`
   flex-direction: column;
 `;
 const Title = styled.h1`
-  color: black;
+  color: ${props => props.theme.fontColor};
   font-size: 30px;
 `;
 const Label = styled.label`
-  color: black;
+  color: ${props => props.theme.fontColor};
   padding: 10px 0;
 `;
 

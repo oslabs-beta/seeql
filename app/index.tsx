@@ -15,7 +15,7 @@ const Index = () => {
 
   return (
     <ThemeContext.Provider value={[context, setContext]}>
-      <ThemeProvider theme={context.light ? themes.light : themes.dark}>
+      <ThemeProvider theme={context.light ? themes.default : themes.dark}>
         <AppContainer>
           <BrowserRouter>
             <Routes />
