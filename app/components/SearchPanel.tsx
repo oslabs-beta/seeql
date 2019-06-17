@@ -1,14 +1,14 @@
-import * as React from "react";
-import styled from "styled-components";
+import * as React from 'react';
+import styled from 'styled-components';
 
 interface ILeftPanelTableWrapperProps {
-  visible: boolean
+  visible: boolean;
 }
 
 const LeftPanelTableListWrapper = styled.div<ILeftPanelTableWrapperProps>`
   color: black;
   padding: 40px;
-  width: ${({visible}) => visible ? '300px' : '0px'};
+  width: ${({ visible }) => (visible ? '300px' : '0px')};
   height: 100vh;
   background-color: #e8ecf1;
   transition: width 500ms ease-in-out;
@@ -16,7 +16,7 @@ const LeftPanelTableListWrapper = styled.div<ILeftPanelTableWrapperProps>`
 
 const InfoSection = styled.div`
   overflow-wrap: break-word;
-`
+`;
 
 const Title = styled.h1`
   color: black;
@@ -31,8 +31,8 @@ const Label = styled.label`
 `;
 
 interface ISelectedTable {
-  columns?: Array<any>;
-  foreignKeys?: Array<any>;
+  columns?: any[];
+  foreignKeys?: any[];
   primaryKey?: string;
   table_name?: string;
   foreignKeysOfPrimary?: any;
@@ -43,10 +43,7 @@ interface Props {
   visible: boolean;
 }
 
-const SearchPanel: React.SFC<Props> = ({
-  activeTableInPanel,
-  visible
-}) => {
+const SearchPanel: React.SFC<Props> = ({ activeTableInPanel, visible }) => {
   const {
     table_name,
     primaryKey,
@@ -58,23 +55,23 @@ const SearchPanel: React.SFC<Props> = ({
 
   if (foreignKeys) {
     foreignKeys.forEach(key => {
-        foreignKeyRelationships.push(
-          <li>
-            <Text>
-              {key.column_name} <Label as="span">from table</Label>{" "}
-              {key.foreign_table_name}({key.foreign_column_name})
-            </Text>
-          </li>
-        );
-    })
-  }
-
-  for (let foreignTableOfPrimary in foreignKeysOfPrimary) {
-      primaryKeyRelationships.push(
+      foreignKeyRelationships.push(
         <li>
-          {foreignTableOfPrimary}({foreignKeysOfPrimary[foreignTableOfPrimary]})
+          <Text>
+            {key.column_name} <Label as="span">from table</Label>{' '}
+            {key.foreign_table_name}({key.foreign_column_name})
+          </Text>
         </li>
       );
+    });
+  }
+
+  for (const foreignTableOfPrimary in foreignKeysOfPrimary) {
+    primaryKeyRelationships.push(
+      <li>
+        {foreignTableOfPrimary}({foreignKeysOfPrimary[foreignTableOfPrimary]})
+      </li>
+    );
   }
 
   return (

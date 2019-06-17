@@ -80,10 +80,10 @@ const getPrimaryKey = (client, tableName: string) => {
 };
 
 async function composeTableData(client): Promise<any> {
-  let tablesArr = [];
-  var tableNames: any = await getTables(client);
+  const tablesArr = [];
+  const tableNames: any = await getTables(client);
 
-  for (let table of tableNames.rows) {
+  for (const table of tableNames.rows) {
     table.primaryKey = await getPrimaryKey(client, table.table_name);
     table.foreignKeys = await getForeignKeys(client, table.table_name);
     table.columns = await getColumns(client, table.table_name);
@@ -95,7 +95,7 @@ async function composeTableData(client): Promise<any> {
       resolve(tablesArr);
     } else {
       // #TODO: add empty state trigger
-      reject(new Error("database empty"));
+      reject(new Error('database empty'));
     }
   });
 }

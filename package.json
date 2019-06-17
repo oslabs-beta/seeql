@@ -25,27 +25,7 @@
     "test-e2e": "node -r @babel/register ./internals/scripts/CheckBuiltsExist.js && cross-env NODE_ENV=test testcafe electron:./ ./test/e2e/HomePage.e2e.ts",
     "test-e2e-live": "node -r @babel/register ./internals/scripts/CheckBuiltsExist.js && cross-env NODE_ENV=test testcafe-live electron:./ ./test/e2e/HomePage.e2e.ts",
     "test-watch": "yarn test --watch",
-    "eslint": "npx eslint -c .eslintrc.js ./ --fix",
-    "prettier": "npx prettier --ignore-path .eslintignore --single-quote --write '**/*.{*{js,jsx,json,ts,tsx},babelrc,eslintrc,prettierrc,stylelintrc}'"
-  },
-  "lint-staged": {
-    "{*.json,.{babelrc,eslintrc,prettierrc,stylelintrc}}": [
-      "git add"
-    ],
-    "*.{js, jsx, ts, tsx}": [
-      "eslint",
-      "prettier",
-      "git add"
-    ],
-    "*.{css,scss}": [
-      "stylelint --ignore-path .eslintignore --syntax scss --fix",
-      "prettier --ignore-path .eslintignore --single-quote --write",
-      "git add"
-    ],
-    "*.{yml,md}": [
-      "prettier --ignore-path .eslintignore --single-quote --write",
-      "git add"
-    ]
+    "eslint": "./node_modules/eslint/bin/eslint.js '**/*.{ts,tsx}' --fix"
   },
   "main": "./app/main.prod.js",
   "build": {
@@ -215,7 +195,7 @@
     "enzyme-to-json": "^3.3.5",
     "eslint": "^5.16.0",
     "eslint-config-airbnb": "^17.1.0",
-    "eslint-config-prettier": "^4.3.0",
+    "eslint-config-prettier": "^5.0.0",
     "eslint-formatter-pretty": "^2.0.0",
     "eslint-import-resolver-webpack": "^0.10.1",
     "eslint-plugin-compat": "^2.6.3",
@@ -292,11 +272,5 @@
     "npm": ">=4.x",
     "yarn": ">=0.21.3"
   },
-  "browserslist": "electron 1.6",
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
-  }
+  "browserslist": "electron 1.6"
 }
-

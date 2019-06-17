@@ -2,19 +2,19 @@ import * as React from 'react';
 import { useState } from 'react';
 import styled from 'styled-components';
 import { Redirect } from 'react-router-dom';
-import { ipcRenderer } from "electron";
+import { ipcRenderer } from 'electron';
 
 const InvisibleHeader = styled.div`
   height: 30px;
   -webkit-app-region: drag;
-`
+`;
 
 const FullPageWrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
   height: 100vh;
-`
+`;
 
 interface URIInputProps {
   readonly requiredErr: boolean;
@@ -23,7 +23,7 @@ interface URIInputProps {
 interface LoginTypeButtonProps {
   readonly selectedLoginType: string;
   readonly buttonType: string;
-};
+}
 
 const URIInput = styled.textarea<URIInputProps>`
   width: 200px;
@@ -83,7 +83,10 @@ const LoginTypeButton = styled.button<LoginTypeButtonProps>`
   display: flex;
   border: none;
   background-color: white;
-  border-bottom: ${props => props.selectedLoginType === props.buttonType ? '3px solid #00b5cc' : '3px solid transparent'};
+  border-bottom: ${props =>
+    props.selectedLoginType === props.buttonType
+      ? '3px solid #00b5cc'
+      : '3px solid transparent'};
 
   :focus {
     outline: none;
@@ -103,8 +106,9 @@ const CredentialsInput = styled.input<URIInputProps>`
   height: 12vh;
   width: 200px;
   padding-left: 2px;
-  margin: .5px;
-	border: ${props => props.requiredErr ? '1px solid #ca333e' : '1px solid lightgrey'};
+  margin: 0.5px;
+  border: ${props =>
+    props.requiredErr ? '1px solid #ca333e' : '1px solid lightgrey'};
 `;
 
 const ConnectionErrorMessage = styled.div`
@@ -125,18 +129,16 @@ const RequiredWarning = styled.span`
 
 const InputLabel = styled.span`
   color: black;
-  font-family: "Poppins", sans-serif;
+  font-family: 'Poppins', sans-serif;
 `;
 
 const URIConnectionStringForm = styled.div`
   display: flex;
   flex-direction: column;
   height: 150px;
-`
+`;
 
 const Login = () => {
-
-
   const [loginType, setLoginType] = useState('URI');
   const [host, setHost] = useState({ value: '', requiredError: false });
   const [port, setPort] = useState('5432');
@@ -154,10 +156,11 @@ const Login = () => {
 
   const sendLoginURI = (): void => {
     // if (connectionError) setConnectionError(false);
-    let updatedPort = !port ? '5432' : port;
+    const updatedPort = !port ? '5432' : port;
     let updatedURI;
     if (loginType === 'URI') updatedURI = URI;
-    else if (loginType === 'Credentials') updatedURI = `postgres://${username.value}:${password.value}@${host.value}:${updatedPort}/${database.value}`
+    else if (loginType === 'Credentials')
+      updatedURI = `postgres://${username.value}:${password.value}@${host.value}:${updatedPort}/${database.value}`;
 
     if (isSSL) updatedURI += '?ssl=true';
 
@@ -172,20 +175,19 @@ const Login = () => {
       (host.value && username.value && password.value && database.value)
     ) {
       setLoading(true);
-      ipcRenderer.send("uri-to-main", updatedURI);
+      ipcRenderer.send('uri-to-main', updatedURI);
     }
- 
   };
 
-  ipcRenderer.removeAllListeners("db-connection-error")
-  ipcRenderer.on("db-connection-error", (event, err) => {
+  ipcRenderer.removeAllListeners('db-connection-error');
+  ipcRenderer.on('db-connection-error', (event, err) => {
     // #TODO: Error handling for cases where unable to retrieve info from a valid connection
     setConnectionError(true);
     setLoading(false);
   });
 
-  ipcRenderer.removeAllListeners("tabledata-to-login")
-  ipcRenderer.on("tabledata-to-login", (event, databaseTables) => {
+  ipcRenderer.removeAllListeners('tabledata-to-login');
+  ipcRenderer.on('tabledata-to-login', (event, databaseTables) => {
     setConnectionError(false);
     setTableData(databaseTables);
     setLoading(false);
@@ -207,95 +209,107 @@ const Login = () => {
       );
   };
 
-
-
   return (
     <React.Fragment>
-    <InvisibleHeader></InvisibleHeader>
-    <FullPageWrapper>
+      <InvisibleHeader></InvisibleHeader>
+      <FullPageWrapper>
+        <LoginContainer>
+          {connectionError && (
+            <ConnectionErrorMessage>
+              Unable to connect to the database. Please try again.
+            </ConnectionErrorMessage>
+          )}
 
-    <LoginContainer>
+          <LoginTypeButtonContainer>
+            <LoginTypeButton
+              buttonType="URI"
+              selectedLoginType={loginType}
+              onClick={() => setLoginType('URI')}
+            >
+              URI
+            </LoginTypeButton>
+            <LoginTypeButton
+              buttonType="Credentials"
+              selectedLoginType={loginType}
+              onClick={() => setLoginType('Credentials')}
+            >
+              Credentials
+            </LoginTypeButton>
+          </LoginTypeButtonContainer>
 
-      {connectionError
-        && <ConnectionErrorMessage>Unable to connect to the database. Please try again.</ConnectionErrorMessage>
-      }
+          {loginType === 'Credentials' && (
+            <CredentialsContainer>
+              <CredentialsInput
+                type="text"
+                requiredErr={host.requiredError}
+                placeholder="host"
+                onChange={e =>
+                  setHost({ value: e.target.value, requiredError: false })
+                }
+              />
+              <CredentialsInput
+                type="text"
+                requiredErr={false}
+                placeholder="port (default 5432)"
+                onChange={e => setPort(e.target.value)}
+              />
+              <CredentialsInput
+                type="text"
+                requiredErr={username.requiredError}
+                placeholder="username"
+                onChange={e =>
+                  setUsername({ value: e.target.value, requiredError: false })
+                }
+              />
+              <CredentialsInput
+                type="text"
+                requiredErr={password.requiredError}
+                placeholder="password"
+                onChange={e =>
+                  setPassword({ value: e.target.value, requiredError: false })
+                }
+              />
+              <CredentialsInput
+                type="text"
+                requiredErr={database.requiredError}
+                placeholder="database"
+                onChange={e =>
+                  setDatabase({ value: e.target.value, requiredError: false })
+                }
+              />
+              {(host.requiredError ||
+                username.requiredError ||
+                password.requiredError ||
+                database.requiredError) && (
+                <RequiredWarning>This field is required</RequiredWarning>
+              )}
+            </CredentialsContainer>
+          )}
+          {loginType === 'URI' && (
+            <URIConnectionStringForm>
+              <InputLabel>URI Connection String</InputLabel>
+              <URIInput
+                requiredErr={requiredError}
+                onChange={captureURI}
+                placeholder="Enter your URI connection string..."
+              />
+            </URIConnectionStringForm>
+          )}
+          {requiredError && (
+            <RequiredWarning>This field is required</RequiredWarning>
+          )}
 
+          <ToggleSSL>
+            <input type="checkbox" onChange={e => setSSL(e.target.checked)} />
+            <label>ssl?</label>
+          </ToggleSSL>
 
-      <LoginTypeButtonContainer>
-        <LoginTypeButton
-          buttonType="URI"
-          selectedLoginType={loginType}
-          onClick={() => setLoginType('URI')}
-        >
-          URI
-        </LoginTypeButton>
-        <LoginTypeButton
-          buttonType="Credentials"
-          selectedLoginType={loginType}
-          onClick={() => setLoginType('Credentials')}
-        >
-          Credentials
-        </LoginTypeButton>
-      </LoginTypeButtonContainer>
+          {!isLoading && <LoginBtn onClick={sendLoginURI}>Login</LoginBtn>}
+          {isLoading && <LoginBtn disabled>Loading...</LoginBtn>}
 
-      {loginType === 'Credentials' &&
-        <CredentialsContainer>
-          <CredentialsInput type="text"
-            requiredErr={host.requiredError}
-            placeholder="host"
-            onChange={(e) => setHost({ value: e.target.value, requiredError: false })}
-          />
-          <CredentialsInput type="text"
-            requiredErr={false}
-            placeholder="port (default 5432)"
-            onChange={(e) => setPort(e.target.value)}
-          />
-          <CredentialsInput type="text"
-            requiredErr={username.requiredError}
-            placeholder="username"
-            onChange={(e) => setUsername({ value: e.target.value, requiredError: false })}
-          />
-          <CredentialsInput type="text"
-            requiredErr={password.requiredError}
-            placeholder="password"
-            onChange={(e) => setPassword({ value: e.target.value, requiredError: false })}
-          />
-          <CredentialsInput type="text"
-            requiredErr={database.requiredError}
-            placeholder="database"
-            onChange={(e) => setDatabase({ value: e.target.value, requiredError: false })}
-          />
-          {(host.requiredError || username.requiredError || password.requiredError || database.requiredError)
-            && <RequiredWarning>This field is required</RequiredWarning>
-          }
-        </CredentialsContainer>
-      }
-      {loginType === 'URI' &&
-      <URIConnectionStringForm>
-          <InputLabel>
-            URI Connection String
-          </InputLabel>
-          <URIInput
-            requiredErr={requiredError}
-            onChange={captureURI}
-            placeholder="Enter your URI connection string..."
-          />
-        </URIConnectionStringForm>
-      }
-      {requiredError &&
-        <RequiredWarning>This field is required</RequiredWarning>}
-
-      <ToggleSSL>
-        <input type="checkbox" onChange={(e) => setSSL(e.target.checked)} />
-        <label>ssl?</label>
-      </ToggleSSL>
-
-      {!isLoading && <LoginBtn onClick={sendLoginURI}>Login</LoginBtn>}
-      {isLoading && <LoginBtn disabled>Loading...</LoginBtn>}
-
-      {redirectHome()}
-    </LoginContainer>
-    </FullPageWrapper>
+          {redirectHome()}
+        </LoginContainer>
+      </FullPageWrapper>
     </React.Fragment>
   );
 };
