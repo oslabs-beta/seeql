@@ -1,14 +1,17 @@
-import * as React from "react";
-import styled from "styled-components";
+/* eslint-disable @typescript-eslint/interface-name-prefix */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import * as React from 'react';
+import styled from 'styled-components';
 
 interface ILeftPanelTableWrapperProps {
-  visible: boolean
+  // eslint-disable-next-line @typescript-eslint/member-delimiter-style
+  visible: boolean;
 }
 
 const LeftPanelTableListWrapper = styled.div<ILeftPanelTableWrapperProps>`
   color: black;
   padding: 40px;
-  width: ${({visible}) => visible ? '300px' : '0px'};
+  width: ${({ visible }) => (visible ? '300px' : '0px')};
   height: 100vh;
   background-color: #e8ecf1;
   transition: width 500ms ease-in-out;
@@ -16,7 +19,7 @@ const LeftPanelTableListWrapper = styled.div<ILeftPanelTableWrapperProps>`
 
 const InfoSection = styled.div`
   overflow-wrap: break-word;
-`
+`;
 
 const Title = styled.h1`
   color: black;
@@ -43,10 +46,7 @@ interface Props {
   visible: boolean;
 }
 
-const SearchPanel: React.SFC<Props> = ({
-  activeTableInPanel,
-  visible
-}) => {
+const SearchPanel: React.SFC<Props> = ({ activeTableInPanel, visible }) => {
   const {
     table_name,
     primaryKey,
@@ -58,23 +58,23 @@ const SearchPanel: React.SFC<Props> = ({
 
   if (foreignKeys) {
     foreignKeys.forEach(key => {
-        foreignKeyRelationships.push(
-          <li>
-            <Text>
-              {key.column_name} <Label as="span">from table</Label>{" "}
-              {key.foreign_table_name}({key.foreign_column_name})
-            </Text>
-          </li>
-        );
-    })
+      foreignKeyRelationships.push(
+        <li>
+          <Text>
+            {key.column_name} <Label as="span">from table</Label>{' '}
+            {key.foreign_table_name}({key.foreign_column_name})
+          </Text>
+        </li>
+      );
+    });
   }
 
   for (let foreignTableOfPrimary in foreignKeysOfPrimary) {
-      primaryKeyRelationships.push(
-        <li>
-          {foreignTableOfPrimary}({foreignKeysOfPrimary[foreignTableOfPrimary]})
-        </li>
-      );
+    primaryKeyRelationships.push(
+      <li>
+        {foreignTableOfPrimary}({foreignKeysOfPrimary[foreignTableOfPrimary]})
+      </li>
+    );
   }
 
   return (

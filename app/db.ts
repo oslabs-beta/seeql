@@ -95,7 +95,7 @@ async function composeTableData(client): Promise<any> {
       resolve(tablesArr);
     } else {
       // #TODO: add empty state trigger
-      reject(new Error("database empty"));
+      reject(new Error('database empty'));
     }
   });
 }

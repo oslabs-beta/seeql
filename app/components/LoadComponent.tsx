@@ -1,6 +1,6 @@
-import * as React from "react";
-import styled from "styled-components";
-import { Spring } from "react-spring/renderprops";
+import * as React from 'react';
+import styled from 'styled-components';
+import { Spring } from 'react-spring/renderprops';
 
 const Path = styled.path`
   display: flex;

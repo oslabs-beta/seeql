@@ -2,6 +2,8 @@
 logs
 *.log
 
+.stylelintrc
+
 # Runtime data
 pids
 *.pid

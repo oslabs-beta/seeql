@@ -11,15 +11,14 @@ const PanelWrapper = styled.div`
   display: flex;
   justify-content: center;
   background-color: #e8ecf1;
-`
+`;
 
 const FavoritesPanel = () => {
-    return (
-        <PanelWrapper>
-            Welcome to favorites, this feature is coming soon!
-        </PanelWrapper>
-    )
-
-}
+  return (
+    <PanelWrapper>
+      Welcome to favorites, this feature is coming soon!
+    </PanelWrapper>
+  );
+};
 
 export default FavoritesPanel;

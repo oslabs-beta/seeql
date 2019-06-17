@@ -25,8 +25,8 @@
     "test-e2e": "node -r @babel/register ./internals/scripts/CheckBuiltsExist.js && cross-env NODE_ENV=test testcafe electron:./ ./test/e2e/HomePage.e2e.ts",
     "test-e2e-live": "node -r @babel/register ./internals/scripts/CheckBuiltsExist.js && cross-env NODE_ENV=test testcafe-live electron:./ ./test/e2e/HomePage.e2e.ts",
     "test-watch": "yarn test --watch",
-    "eslint": "npx eslint -c .eslintrc.js ./ --fix",
-    "prettier": "npx prettier --ignore-path .eslintignore --single-quote --write '**/*.{*{js,jsx,json,ts,tsx},babelrc,eslintrc,prettierrc,stylelintrc}'"
+    "eslint": "./node_modules/eslint/bin/eslint.js ./app --fix",
+    "prettier": "node ./node_modules/prettier/bin-prettier.js --ignore-path .eslintignore --single-quote --write '**/*.{*{js,jsx,json,ts,tsx},babelrc,eslintrc,prettierrc,stylelintrc}'"
   },
   "lint-staged": {
     "{*.json,.{babelrc,eslintrc,prettierrc,stylelintrc}}": [
@@ -35,15 +35,6 @@
     "*.{js, jsx, ts, tsx}": [
       "eslint",
       "prettier",
-      "git add"
-    ],
-    "*.{css,scss}": [
-      "stylelint --ignore-path .eslintignore --syntax scss --fix",
-      "prettier --ignore-path .eslintignore --single-quote --write",
-      "git add"
-    ],
-    "*.{yml,md}": [
-      "prettier --ignore-path .eslintignore --single-quote --write",
       "git add"
     ]
   },
