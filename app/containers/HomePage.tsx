@@ -260,7 +260,7 @@ const HomePage = ({ location }) => {
   const [pinnedTableNames, dispatchPinned] = useReducer(changePinnedStatus, []);
   const [activePanel, dispatchSidePanelDisplay] = useReducer(
     changeDisplayOfSidePanel,
-    'search'
+    'info'
   );
   const [queryResultError, setQueryResultError] = useState({
     status: false,
@@ -585,7 +585,7 @@ const HomePage = ({ location }) => {
                 </TablesContainer>
               ) : (
                 <EmptyState>
-                  There were no search results. Please search again.
+                  There were no search results. <br/>Please search again.
                 </EmptyState>
               ))}
             {activeDisplayInBottomTab === 'queryresults' && (

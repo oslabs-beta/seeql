@@ -2,7 +2,7 @@ import * as React from 'react';
 import styled from 'styled-components';
 import SettingsPanel from '../components/SettingsPanel';
 import FavoritesPanel from '../components/FavoritesPanel';
-import SearchPanel from '../components/SearchPanel';
+import InfoPanel from '../components/InfoPanel';
 import * as actions from '../actions/actions';
 interface IPanelWrapperProps {
   visible: boolean;
@@ -118,8 +118,8 @@ const SidePanel: React.SFC<Props> = ({
     <PanelWrapper visible={visible}>
       {visible && (
         <div>
-          {activePanel === 'search' && (
-            <SearchPanel
+          {activePanel === 'info' && (
+            <InfoPanel
               visible={visible}
               activeTableInPanel={activeTableInPanel}
             />
@@ -140,8 +140,8 @@ const SidePanel: React.SFC<Props> = ({
         {visible && (
           <Tabs>
             <IndTab
-              data-panel="search"
-              panel="search"
+              data-panel="info"
+              panel="info"
               active={activePanel}
               onClick={() =>
                 dispatchSidePanelDisplay(actions.changeToInfoPanel())
