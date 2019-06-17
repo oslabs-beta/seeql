@@ -8,7 +8,7 @@ import changeDisplayOfLeftPanel from '../reducers/ChangeDisplayOfLeftPanel';
 import Tables from '../components/Tables';
 import LeftPanel from './Panel';
 import LoadingComponent from '../components/LoadComponent';
-import QueryResults from '../components/QueryResults';
+import QueryResults from "../components/QueryResults";
 
 const InvisibleHeader = styled.div`
   height: 30px;
