@@ -1,6 +1,9 @@
 import * as React from 'react';
+import { useReducer, useContext, useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import styled from 'styled-components';
+import Context from '../contexts/themeContext';
+import themeReducer from '../reducers/themeReducer';
 
 const PanelWrapper = styled.div`
   display: flex;
@@ -12,7 +15,8 @@ const PanelWrapper = styled.div`
   width: 300px;
   height: 100vh;
   padding: 40px;
-  background-color: #e8ecf1;
+  background-color: ${props => props.theme.backgroundColor};
+  color: ${props => props.theme.fontColor};
 `;
 
 const TopSection = styled.section`
@@ -29,16 +33,19 @@ const DivWrapper = styled.div`
   flex-direction: column;
 `;
 const Title = styled.h1`
-  color: black;
+  color: ${props => props.theme.fontColor};
   font-size: 30px;
 `;
 const Label = styled.label`
-  color: black;
+  color: ${props => props.theme.fontColor};
   padding: 10px 0;
 `;
 
 const SettingsPanel = () => {
-  //   const redirectHome = () => <Redirect to="/" />;
+  const [context, setContext] = useContext(Context);
+  const [state, dispatch] = useReducer(themeReducer, context);
+  const [toggle, setToggle] = useState(false);
+  const contextText = context.light.toString();
 
   return (
     <PanelWrapper>
@@ -47,13 +54,17 @@ const SettingsPanel = () => {
 
         <DivWrapper>
           <Label>Theme</Label>
-          <select>
-            <option value="">seeQl</option>
-            <option value="">'K'</option>
-            <option value="">'A'</option>
-            <option value="">'T'</option>
-            <option value="">'A'</option>
-          </select>
+          <button
+            onClick={() => {
+              setToggle(!toggle);
+              setContext(state);
+              toggle
+                ? dispatch({ type: 'TOGGLE_DARK' })
+                : dispatch({ type: 'TOGGLE_LIGHT' });
+            }}
+          >
+            {contextText}
+          </button>
         </DivWrapper>
         <DivWrapper>
           <Label>Font Size</Label>
@@ -66,7 +77,7 @@ const SettingsPanel = () => {
         </DivWrapper>
       </TopSection>
       <BottomSection>
-        <div></div>
+        <div style={state}>CHANGE ME HEY BLAHHSLAH</div>
         <NavLink to="/" activeStyle={{ color: 'black ' }}>
           Sign Out
         </NavLink>

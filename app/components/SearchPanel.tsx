@@ -10,7 +10,8 @@ const LeftPanelTableListWrapper = styled.div<ILeftPanelTableWrapperProps>`
   padding: 40px;
   width: ${({ visible }) => (visible ? '300px' : '0px')};
   height: 100vh;
-  background-color: #e8ecf1;
+  background-color: ${props => props.theme.backgroundColor};
+  color: ${props => props.theme.fontColor};
   transition: width 500ms ease-in-out;
 `;
 
@@ -19,7 +20,7 @@ const InfoSection = styled.div`
 `;
 
 const Title = styled.h1`
-  color: black;
+  color: ${props => props.theme.fontColor};
 `;
 
 const Text = styled.p`
@@ -29,6 +30,23 @@ const Text = styled.p`
 const Label = styled.label`
   font-size: 12px;
 `;
+
+// interface IForeignKeys {
+//   column_name?: string
+//   constraint_name?: string
+//   foreign_column_name?: string
+//   foreign_table_name?: string
+//   foreign_table_schema?: string
+//   table_name?: string
+//   table_schema?: string
+// }
+
+// interface IColumns {
+//   characterlength?: string
+//   columnname?: string
+//   datatype?: string
+//   defaultvalue?: string
+// }
 
 interface ISelectedTable {
   columns?: any[];
@@ -52,13 +70,12 @@ const SearchPanel: React.SFC<Props> = ({ activeTableInPanel, visible }) => {
   } = activeTableInPanel;
   const foreignKeyRelationships = [];
   const primaryKeyRelationships = [];
-
   if (foreignKeys) {
     foreignKeys.forEach(key => {
       foreignKeyRelationships.push(
         <li>
           <Text>
-            {key.column_name} <Label as="span">from table</Label>{' '}
+            {key.column_name} <Label as="span">from table</Label>
             {key.foreign_table_name}({key.foreign_column_name})
           </Text>
         </li>

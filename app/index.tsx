@@ -1,26 +1,28 @@
-import * as React from 'react';
-import { render } from 'react-dom';
-import { AppContainer } from 'react-hot-loader';
-import Root from './containers/Root';
-import './app.global.css';
-import 'react-table/react-table.css';
+import * as React from "react";
+import { render } from "react-dom";
+import { AppContainer } from "react-hot-loader";
+import "./app.global.css";
+import ThemeContext from "./contexts/themeContext";
+import themes from "./themes/themes";
+import Routes from "./Routes";
+import { BrowserRouter } from "react-router-dom";
+import { ThemeProvider } from "styled-components";
+import { useState } from "react";
 
-render(
-  <AppContainer>
-    <Root />
-  </AppContainer>,
-  document.getElementById('root')
-);
+const Index = () => {
+  const initialMode = { light: true, dark: false };
+  const [context, setContext] = useState(initialMode);
 
-if ((module as any).hot) {
-  (module as any).hot.accept('./containers/Root', () => {
-    // eslint-disable-next-line global-require
-    const NextRoot = require('./containers/Root').default;
-    render(
-      <AppContainer>
-        <NextRoot />
-      </AppContainer>,
-      document.getElementById('root')
-    );
-  });
-}
+  return (
+    <ThemeContext.Provider value={[context, setContext]}>
+      <ThemeProvider theme={context.light ? themes.default : themes.dark}>
+        <AppContainer>
+          <BrowserRouter>
+            <Routes />
+          </BrowserRouter>
+        </AppContainer>
+      </ThemeProvider>
+    </ThemeContext.Provider>
+  );
+};
+render(<Index />, document.getElementById("root"));

@@ -3,14 +3,14 @@ import styled from 'styled-components';
 
 const PanelWrapper = styled.div`
   color: black;
-  font-family: 'Poppins', sans-serif;
   padding: 40px;
   font-size: 30px;
   width: 300px;
   height: 100vh;
   display: flex;
   justify-content: center;
-  background-color: #e8ecf1;
+  background-color: ${props => props.theme.backgroundColor};
+  color: ${props => props.theme.fontColor};
 `;
 
 const FavoritesPanel = () => {
