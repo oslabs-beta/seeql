@@ -1,5 +1,5 @@
-import * as React from 'react';
-import styled from 'styled-components';
+import * as React from "react";
+import styled from "styled-components";
 
 const PanelWrapper = styled.div`
   color: black;
@@ -9,14 +9,16 @@ const PanelWrapper = styled.div`
   height: 100vh;
   display: flex;
   justify-content: center;
-  background-color: #e8ecf1;
-`
+  background-color: ${props => props.theme.backgroundColor};
+  color: ${props => props.theme.fontColor};
+`;
+
 const FavoritesPanel = () => {
-    return (
-        <PanelWrapper>
-            Welcome to favorites, this feature is coming soon!
-        </PanelWrapper>
-    )
-}
+  return (
+    <PanelWrapper>
+      Welcome to favorites, this feature is coming soon!
+    </PanelWrapper>
+  );
+};
 
 export default FavoritesPanel;
