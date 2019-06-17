@@ -61,7 +61,7 @@ interface Props {
   visible: boolean;
 }
 
-const SearchPanel: React.SFC<Props> = ({ activeTableInPanel, visible }) => {
+const InfoPanel: React.SFC<Props> = ({ activeTableInPanel, visible }) => {
   const {
     table_name,
     primaryKey,
@@ -129,4 +129,4 @@ const SearchPanel: React.SFC<Props> = ({ activeTableInPanel, visible }) => {
   );
 };
 
-export default SearchPanel;
+export default InfoPanel;
