@@ -390,8 +390,8 @@ const HomePage = ({ location }) => {
     } else if (queryResult.statusCode === 'Syntax Error') {
       setQueryResultError({
         status: true,
-        message: `Syntax error in retrieving query results. 
-        Error on: [${userInputQuery.slice(
+        message: `Syntax error in retrieving query results.
+        Error on: ${userInputQuery.slice(
           0,
           parseInt(queryResult.err.position) - 1
         )} "
@@ -399,7 +399,7 @@ const HomePage = ({ location }) => {
           parseInt(queryResult.err.position) - 1,
           parseInt(queryResult.err.position)
         )} "
-        ${userInputQuery.slice(parseInt(queryResult.err.position))};]`
+        ${userInputQuery.slice(parseInt(queryResult.err.position))};`
       });
     }
     setLoadingQueryStatus(false);
@@ -423,6 +423,7 @@ const HomePage = ({ location }) => {
         )}
         <RightPanel>
           <OmniBoxContainer 
+            userInputForTables={userInputForTables}
             loadingQueryStatus={loadingQueryStatus}
             userInputQuery={userInputQuery}
             setQueryResultError={setQueryResultError}

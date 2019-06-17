@@ -1,8 +1,8 @@
 import * as React from 'react';
 import styled from 'styled-components';
-import SettingsPanel from '../components/SettingsPanel';
-import FavoritesPanel from '../components/FavoritesPanel';
-import InfoPanel from '../components/InfoPanel';
+import SettingsPanel from '../components/panels/SettingsPanel';
+import FavoritesPanel from '../components/panels/FavoritesPanel';
+import InfoPanel from '../components/panels/InfoPanel';
 import * as actions from '../actions/actions';
 interface IPanelWrapperProps {
   visible: boolean;

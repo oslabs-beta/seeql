@@ -2,8 +2,8 @@ import * as React from 'react';
 import { useReducer, useContext, useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import styled from 'styled-components';
-import Context from '../contexts/themeContext';
-import themeReducer from '../reducers/themeReducer';
+import Context from '../../contexts/themeContext';
+import themeReducer from '../../reducers/themeReducer';
 
 const PanelWrapper = styled.div`
   display: flex;

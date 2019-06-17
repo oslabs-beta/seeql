@@ -2,45 +2,7 @@ import * as React from 'react';
 import { useState } from 'react';
 import { ipcRenderer } from 'electron';
 import styled from 'styled-components';
-
-const OMNIboxInput = styled.textarea`
-  font-family: 'Poppins', sans-serif;
-  border: 1px solid lightgrey;
-  padding: 8px;
-  height: 100px;
-  border-radius: 3px;
-  letter-spacing: 2px;
-  resize: none;
-  width: 100%;
-
-  :focus {
-    outline: none;
-  }
-`;
-
-const ExecuteQueryButton = styled.button`
-  font-family: 'Poppins', sans-serif;
-  border: none;
-  background-color: #013243;
-  transition: 0.2s;
-  color: #f2f1ef;
-  text-align: center;
-  padding: 5px;
-  font-size: 80%;
-
-  :hover {
-    background-color: #042d36;
-  }
-
-  :focus {
-    outline: none;
-  }
-`;
-
-const OMNIBoxWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-`;
+import OmniBoxInput from '../../components/omnibox/OmniBoxInput';
 
 const OmniBoxNav = styled.nav`
   display: flex;
@@ -57,12 +19,12 @@ const QueryResultError = styled.div`
   font-size: 80%;
 `;
 
-interface IOMNIBoxNavButtonsProps {
+interface IOmniBoxNavButtonProps {
     omniBoxView: string;
     selectedView: string;
   }
 
-const OMNIBoxNavButtons = styled.button<IOMNIBoxNavButtonsProps>`
+const OmniBoxNavButton = styled.button<IOmniBoxNavButtonProps>`
   padding: 5px;
   font-family: 'Poppins', sans-serif;
   border-radius: 3px 3px 0px 0px;
@@ -81,6 +43,7 @@ interface IOmniBoxProps {
     userInputQuery: string;
     loadingQueryStatus: boolean;
     queryResultError: any;
+    userInputForTables: string;
     setQueryResultError: (any) => any;
     setLoadingQueryStatus: (any) => any;
     setUserInputQuery: (any) => any;
@@ -94,72 +57,51 @@ const OmniBoxContainer: React.SFC<IOmniBoxProps>= ({
     setLoadingQueryStatus,
     setUserInputQuery,
     queryResultError,
-    setUserInputForTables
+    setUserInputForTables,
+    userInputForTables
 }) => {
 
   const [omniBoxView, setOmniBoxView] = useState('SQL');
-  
-    // #TODO: Connect this ipc communication with new query input
-    const executeQuery = (): void => {
-        if (!loadingQueryStatus) {
-            setQueryResultError({
-            status: false,
-            message: ''
-            });
-            ipcRenderer.send('query-to-main', userInputQuery);
-        }
-        setLoadingQueryStatus(true);
-        };
-  
+
+  const listOfTabNames = ['SQL', 'plain']
+  const navigationTabs = listOfTabNames.map((tabname) => {
+    return <OmniBoxNavButton onClick={() => {
+        setOmniBoxView(tabname)}} omniBoxView={omniBoxView} selectedView={tabname}>{tabname}</OmniBoxNavButton>
+  })
+
+  const generateInputBox = () => {
+      return (<OmniBoxInput 
+                userInputForTables={userInputForTables}
+                setUserInputForTables={setUserInputForTables}
+                omniBoxView={omniBoxView}
+                setUserInputQuery={setUserInputQuery}
+                userInputQuery={userInputQuery}
+                executeQuery={executeQuery}
+                loadingQueryStatus={loadingQueryStatus} />);
+  }
+
+  // #TODO: Connect this ipc communication with new query input
+  const executeQuery = (): void => {
+    if (!loadingQueryStatus) {
+        setQueryResultError({
+          status: false,
+          message: ''
+        });
+        ipcRenderer.send('query-to-main', userInputQuery);
+    }
+    setLoadingQueryStatus(true);
+  };
+
   return(
     <React.Fragment>
-    <OmniBoxNav>
-        <OMNIBoxNavButtons
-        onClick={() => {
-            setOmniBoxView('SQL');
-        }}
-        omniBoxView={omniBoxView}
-        selectedView="SQL"
-        >
-        SQL
-        </OMNIBoxNavButtons>
-        <OMNIBoxNavButtons
-        onClick={() => {
-            setOmniBoxView('plain');
-        }}
-        omniBoxView={omniBoxView}
-        selectedView="plain"
-        >
-        PLAIN
-        </OMNIBoxNavButtons>
-    </OmniBoxNav>
-    {omniBoxView === 'SQL' && (
-        <OMNIBoxWrapper>
-        <OMNIboxInput
-            onChange={e => setUserInputQuery(e.target.value)}
-            value={userInputQuery}
-        ></OMNIboxInput>
-        <ExecuteQueryButton
-            onClick={executeQuery}
-            disabled={loadingQueryStatus}
-        >
-            {loadingQueryStatus
-            ? 'Loading query results...'
-            : 'Execute Query'}
-        </ExecuteQueryButton>
-        </OMNIBoxWrapper>
-    )}
-    {omniBoxView === 'plain' && (
-        <OMNIboxInput
-        placeholder="Search for a table"
-        onChange={e => setUserInputForTables(e.target.value)}
-        ></OMNIboxInput>
-    )}
-    {queryResultError.status && (
-        <QueryResultError>{queryResultError.message}</QueryResultError>
-    )}
+        <OmniBoxNav>
+            {navigationTabs}
+        </OmniBoxNav>
+        {generateInputBox()}
+        {queryResultError.status && 
+            <QueryResultError>{queryResultError.message}</QueryResultError>
+        }
     </React.Fragment>
 )};
-
 
 export default OmniBoxContainer;
