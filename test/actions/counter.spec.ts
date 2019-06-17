@@ -1,5 +1,11 @@
-// import { spy } from 'sinon';
-// import * as actions from '../../app/actions/counter';
+ import { spy } from 'sinon';
+ import * as actions from '../../app/actions/actions';
+
+ describe('actions', () => {
+   it('should be gorgeous', () => {
+     expect(actions.removeFromPinned()).toMatchSnapshot();
+   });
+ })
 
 // describe('actions', () => {
 //   it('should increment should create increment action', () => {
