@@ -7,17 +7,13 @@ import themes from "./themes/themes";
 import Routes from "./Routes";
 import { BrowserRouter } from "react-router-dom";
 import { ThemeProvider } from "styled-components";
-// import { useContext } from "react";
+import { useState } from "react";
 
-const initialMode = { light: true, dark: false };
-//set state for a light theme and for a dark
-//dispatch an action that updates the state
 const Index = () => {
-  // const context = useContext(ThemeContext);
-
-  // console.log("INDEX FILE CONtext", context);
+  const initialMode = { light: true, dark: false };
+  const [context, setContext] = useState(initialMode);
   return (
-    <ThemeContext.Provider value={{ modes: initialMode }}>
+    <ThemeContext.Provider value={[context, setContext]}>
       <ThemeProvider theme={themes}>
         <AppContainer>
           <BrowserRouter>

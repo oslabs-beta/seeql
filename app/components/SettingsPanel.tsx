@@ -42,12 +42,10 @@ const Label = styled.label`
 `;
 
 const SettingsPanel = () => {
-  const context = useContext(Context);
+  const [context, setContext] = useContext(Context);
   const [state, dispatch] = useReducer(themeReducer, context);
   const [toggle, setToggle] = useState(false);
 
-  console.log("CONTEXT", context);
-  console.log("STAte", state);
   return (
     <PanelWrapper>
       <TopSection>
@@ -65,6 +63,7 @@ const SettingsPanel = () => {
           <button
             onClick={() => {
               setToggle(!toggle);
+              setContext(state);
               toggle
                 ? dispatch({ type: "TOGGLE_DARK" })
                 : dispatch({ type: "TOGGLE_LIGHT" });
