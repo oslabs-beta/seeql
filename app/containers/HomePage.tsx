@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { useState, useEffect, useReducer } from 'react';
+import { Redirect } from 'react-router-dom';
 import { ipcRenderer } from 'electron';
 import styled from 'styled-components';
 import * as actions from '../actions/actions';
@@ -228,7 +229,34 @@ const HomePage = ({ location }) => {
     message: []
   });
   const [visible, setVisible] = useState(true);
+  
+  // console.log('intervalId is', intervalId)
+  
+  // Track user inactivity, logout after 20 minutes
+  const [inactiveTime, setInactiveTime] = useState(0);
+  const [intervalId, captureIntervalId] = useState();
 
+  const signOut = () => {
+    ipcRenderer.send('logout-to-main', 'logout')
+    alert('You\'ve been signed out.')
+    return <Redirect to={{ pathname: '/login' } } />
+  }
+
+  useEffect(() => {
+    captureIntervalId(setInterval(() => {
+        if (inactiveTime >= 1200) {
+          console.log('gonna sign out')
+          clearInterval(intervalId);
+          signOut();
+        } else {
+          console.log('incrementing inactivetime, which is currently', inactiveTime)
+          setInactiveTime(inactiveTime + 1);
+        }
+      }, 1000));
+      return () => clearInterval(intervalId);
+  }, [])
+
+ 
   const captureQuerySelections = (e) => {
     let temp = selectedForQueryTables;
     let adding = true;
@@ -511,7 +539,13 @@ const HomePage = ({ location }) => {
   return (
     <React.Fragment>
       <InvisibleHeader></InvisibleHeader>
-      <HomepageWrapper className="homepage">
+      <HomepageWrapper 
+      // onMouseMove={() => setInactiveTime(0)} 
+      className="homepage">
+      <button onClick={() => {
+        console.log('intervalId is', intervalId)
+        console.log('inactivetime is', inactiveTime)
+      }}>inactive time butt</button>
         <LeftPanel
           activePanel={activePanel}
           dispatchLeftPanelDisplay={dispatchLeftPanelDisplay}
