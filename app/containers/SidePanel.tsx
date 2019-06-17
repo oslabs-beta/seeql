@@ -95,7 +95,7 @@ interface IAcitveTableInPanel {
   foreignKeysOfPrimary?: any;
 }
 
-interface IDispatchLeftPanelDisplayAction {
+interface IDispatchSidePanelDisplayAction {
   type: string;
 }
 
@@ -104,15 +104,15 @@ interface Props {
   visible: boolean;
   activePanel: string;
   togglePanelVisibility: () => void;
-  dispatchLeftPanelDisplay: (IDispatchLeftPanelDisplayAction) => any;
+  dispatchSidePanelDisplay: (IDispatchSidePanelDisplayAction) => any;
 }
 
-const Panel: React.SFC<Props> = ({
+const SidePanel: React.SFC<Props> = ({
   activeTableInPanel,
   visible,
   togglePanelVisibility,
   activePanel,
-  dispatchLeftPanelDisplay
+  dispatchSidePanelDisplay
 }) => {
   return (
     <PanelWrapper visible={visible}>
@@ -144,7 +144,7 @@ const Panel: React.SFC<Props> = ({
               panel="search"
               active={activePanel}
               onClick={() =>
-                dispatchLeftPanelDisplay(actions.changeToInfoPanel())
+                dispatchSidePanelDisplay(actions.changeToInfoPanel())
               }
             >
               Table Info
@@ -154,7 +154,7 @@ const Panel: React.SFC<Props> = ({
               panel="favorites"
               active={activePanel}
               onClick={() =>
-                dispatchLeftPanelDisplay(actions.changeToFavPanel())
+                dispatchSidePanelDisplay(actions.changeToFavPanel())
               }
             >
               Favorites
@@ -164,7 +164,7 @@ const Panel: React.SFC<Props> = ({
               panel="settings"
               active={activePanel}
               onClick={() =>
-                dispatchLeftPanelDisplay(actions.changeToSettingsPanel())
+                dispatchSidePanelDisplay(actions.changeToSettingsPanel())
               }
             >
               Settings
@@ -176,4 +176,4 @@ const Panel: React.SFC<Props> = ({
   );
 };
 
-export default Panel;
+export default SidePanel;

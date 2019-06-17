@@ -1,6 +1,6 @@
 import * as types from '../constants/actionTypes';
 
-export default function changedisplayOfLeftPanel(state, action) {
+export default function changedisplayOfSidePanel(state, action) {
   switch (action.type) {
     case types.CHANGE_TO_INFO_PANEL:
       return 'search';

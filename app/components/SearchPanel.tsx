@@ -1,11 +1,11 @@
 import * as React from 'react';
 import styled from 'styled-components';
 
-interface ILeftPanelTableWrapperProps {
+interface ISidePanelTableWrapperProps {
   visible: boolean;
 }
 
-const LeftPanelTableListWrapper = styled.div<ILeftPanelTableWrapperProps>`
+const SidePanelTableListWrapper = styled.div<ISidePanelTableWrapperProps>`
   color: black;
   padding: 40px;
   width: ${({ visible }) => (visible ? '300px' : '0px')};
@@ -92,7 +92,7 @@ const SearchPanel: React.SFC<Props> = ({ activeTableInPanel, visible }) => {
   }
 
   return (
-    <LeftPanelTableListWrapper visible={visible}>
+    <SidePanelTableListWrapper visible={visible}>
       <Title>Information</Title>
       {Object.keys(activeTableInPanel).length > 0 ? (
         <InfoSection>
@@ -125,7 +125,7 @@ const SearchPanel: React.SFC<Props> = ({ activeTableInPanel, visible }) => {
           information
         </div>
       )}
-    </LeftPanelTableListWrapper>
+    </SidePanelTableListWrapper>
   );
 };
 

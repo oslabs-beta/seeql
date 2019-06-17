@@ -4,9 +4,9 @@ import { ipcRenderer } from 'electron';
 import styled from 'styled-components';
 import * as actions from '../actions/actions';
 import changePinnedStatus from '../reducers/ChangePinnedStatus';
-import changeDisplayOfLeftPanel from '../reducers/ChangeDisplayOfLeftPanel';
+import changeDisplayOfSidePanel from '../reducers/ChangeDisplayOfSidePanel';
 import Tables from '../components/Tables';
-import LeftPanel from './Panel';
+import SidePanel from './SidePanel';
 import LoadingComponent from '../components/LoadComponent';
 import QueryResults from "../components/QueryResults";
 
@@ -258,8 +258,8 @@ const HomePage = ({ location }) => {
   };
 
   const [pinnedTableNames, dispatchPinned] = useReducer(changePinnedStatus, []);
-  const [activePanel, dispatchLeftPanelDisplay] = useReducer(
-    changeDisplayOfLeftPanel,
+  const [activePanel, dispatchSidePanelDisplay] = useReducer(
+    changeDisplayOfSidePanel,
     'search'
   );
   const [queryResultError, setQueryResultError] = useState({
@@ -293,7 +293,7 @@ const HomePage = ({ location }) => {
     });
 
     setActiveTableInPanel(selectedPanelInfo);
-    dispatchLeftPanelDisplay(actions.changeToInfoPanel());
+    dispatchSidePanelDisplay(actions.changeToInfoPanel());
   };
 
   useEffect(() => {
@@ -498,9 +498,9 @@ const HomePage = ({ location }) => {
     <React.Fragment>
       <InvisibleHeader></InvisibleHeader>
       <HomepageWrapper className="homepage">
-        <LeftPanel
+        <SidePanel
           activePanel={activePanel}
-          dispatchLeftPanelDisplay={dispatchLeftPanelDisplay}
+          dispatchSidePanelDisplay={dispatchSidePanelDisplay}
           activeTableInPanel={activeTableInPanel}
           togglePanelVisibility={togglePanelVisibility}
           visible={visible}
