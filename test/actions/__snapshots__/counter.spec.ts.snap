@@ -1,5 +1,14 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`actions should be gorgeous 1`] = `
+Object {
+  "payload": Object {
+    "tablename": undefined,
+  },
+  "type": "REMOVE_FROM_PINNED",
+}
+
+`;
 exports[`actions should decrement should create decrement action 1`] = `
 Object {
   "type": "DECREMENT_COUNTER",
@@ -11,3 +20,4 @@ Object {
   "type": "INCREMENT_COUNTER",
 }
 `;
+
