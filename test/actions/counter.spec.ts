@@ -1,9 +1,10 @@
- import { spy } from 'sinon';
+//  import { spy } from 'sinon';
  import * as actions from '../../app/actions/actions';
 
  describe('actions', () => {
    it('should be gorgeous', () => {
-     expect(actions.removeFromPinned()).toMatchSnapshot();
+     let x;
+     expect(actions.removeFromPinned(x)).toMatchSnapshot();
    });
  })
 
