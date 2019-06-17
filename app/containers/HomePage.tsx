@@ -188,11 +188,6 @@ const QueryResultError = styled.div`
   font-size: 80%;
 `;
 
-const ErrorChar = styled.span`
-  color: #ca333e;
-  font-weight: bold;
-`
-
 let isPrimaryKey: string;
 let isForeignKey: string;
 let primaryKeyTableForForeignKey: string;
@@ -429,12 +424,10 @@ const HomePage = ({location}) => {
       setQueryResultError({
         status: true,
         message: `Syntax error in retrieving query results. 
-        Error beginning on character '${userInputQuery.slice(parseInt(queryResult.err.position)-1, parseInt(queryResult.err.position))}'`
+        Error on: [${userInputQuery.slice(0, parseInt(queryResult.err.position)-1)} "
+        ${userInputQuery.slice(parseInt(queryResult.err.position)-1, parseInt(queryResult.err.position))} "
+        ${userInputQuery.slice(parseInt(queryResult.err.position))};]`
       })
-      let copyOfUserInput = userInputQuery.slice(0, parseInt(queryResult.err.position)-1) 
-      + <ErrorChar>userInputQuery.slice(parseInt(queryResult.err.position)-1, parseInt(queryResult.err.position))</ErrorChar>
-      + userInputQuery.slice(parseInt(queryResult.err.position));
-      setUserInputQuery(copyOfUserInput)
     }
     setLoadingQueryStatus(false);
   });
