@@ -4,6 +4,7 @@ import { NavLink } from 'react-router-dom';
 import styled from 'styled-components';
 import Context from '../contexts/themeContext';
 import themeReducer from '../reducers/themeReducer';
+import { ipcRenderer } from 'electron';
 
 const PanelWrapper = styled.div`
   display: flex;
@@ -40,6 +41,11 @@ const Label = styled.label`
   color: ${props => props.theme.fontColor};
   padding: 10px 0;
 `;
+
+const signOut = () => {
+  ipcRenderer.send('logout-to-main', 'logout')
+  alert('You\'ve been signed out.')
+}
 
 const SettingsPanel = () => {
   const [context, setContext] = useContext(Context);
@@ -78,7 +84,7 @@ const SettingsPanel = () => {
       </TopSection>
       <BottomSection>
         <div style={state}>CHANGE ME HEY BLAHHSLAH</div>
-        <NavLink to="/" activeStyle={{ color: 'black ' }}>
+        <NavLink to="/" activeStyle={{ color: 'black ' }} onClick={signOut}>
           Sign Out
         </NavLink>
       </BottomSection>

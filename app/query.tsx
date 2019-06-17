@@ -34,3 +34,5 @@ ipcRenderer.on("query-to-db", (event, query) => {
     ipcRenderer.send('query-result-to-main', { statusCode: 'Invalid Request', message: 'Invalid query input. The query can only be a SELECT statement.'})
   }
 });
+
+ipcRenderer.on('logout-to-db', () =>  client.end());

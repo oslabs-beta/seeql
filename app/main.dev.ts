@@ -108,6 +108,10 @@ app.on('ready', async () => {
     queryWindow.webContents.send('query-to-db', query);
   });
 
+  ipcMain.on('logout-to-main', () => {
+    queryWindow.webContents.send('logout-to-db');
+  });
+
   // Listening from database, to send to homepage
   ipcMain.on('database-tables-to-main', (event, databaseTables) => {
     mainWindow.webContents.send('tabledata-to-login', databaseTables);
