@@ -5,15 +5,16 @@ module.exports = {
         "plugin:@typescript-eslint/eslint-recommended",
         "plugin:@typescript-eslint/recommended",
         "react-app",
-        "plugin:prettier/recommended"
+        "plugin:prettier/recommended",
+        "prettier/prettier"
     ],
-    plugins: ["@typescript-eslint", "react"],
+    plugins: ["@typescript-eslint", "react", "prettier"],
     settings: {
         react: {
             version: require("./package.json").dependencies.react
         }
     },
-    rules: {
+    "rules": {
         // let prettier control indentation
         "@typescript-eslint/indent": "off",
 
