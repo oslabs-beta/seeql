@@ -15,8 +15,10 @@ const PanelWrapper = styled.div`
   width: 300px;
   height: 100vh;
   padding: 40px;
-  background-color: ${props => props.theme.backgroundColorLight};
+  background-color: ${props => props.theme.backgroundColor};
 `;
+
+// background-color: ${props => props.theme.backgroundColorLight};
 // background-color: #e8ecf1;
 
 const TopSection = styled.section`
@@ -45,6 +47,7 @@ const SettingsPanel = () => {
   const [context, setContext] = useContext(Context);
   const [state, dispatch] = useReducer(themeReducer, context);
   const [toggle, setToggle] = useState(false);
+  const contextText = context.light.toString();
 
   return (
     <PanelWrapper>
@@ -69,7 +72,7 @@ const SettingsPanel = () => {
                 : dispatch({ type: "TOGGLE_LIGHT" });
             }}
           >
-            TOGGLE THEME
+            {contextText}
           </button>
         </DivWrapper>
         <DivWrapper>

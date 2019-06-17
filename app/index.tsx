@@ -12,9 +12,10 @@ import { useState } from "react";
 const Index = () => {
   const initialMode = { light: true, dark: false };
   const [context, setContext] = useState(initialMode);
+
   return (
     <ThemeContext.Provider value={[context, setContext]}>
-      <ThemeProvider theme={themes}>
+      <ThemeProvider theme={context.light ? themes.light : themes.dark}>
         <AppContainer>
           <BrowserRouter>
             <Routes />

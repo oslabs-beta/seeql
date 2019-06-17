@@ -1,9 +1,6 @@
 const themes = {
-  backgroundColorLight: "pink",
-  backgroundColorDark: "blue"
+  light: { backgroundColor: "pink" },
+  dark: { backgroundColor: "blue" }
 };
 
 export default themes;
-
-//research on themes styled patterns
-//json? export? raw html?
