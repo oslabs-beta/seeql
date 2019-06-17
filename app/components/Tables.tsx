@@ -25,6 +25,7 @@ const TableRowsList = styled.ul`
 
 interface ITableRowProps {
   affected: boolean
+  inTheQuery: boolean
 }
 
 const TableRow = styled.li<ITableRowProps>`
@@ -39,7 +40,7 @@ const TableRow = styled.li<ITableRowProps>`
   :hover {
     transform: scale(1.01);
     background-color: #e8ecf1;
-    cursor: copy;
+    cursor: ${({inTheQuery}) => inTheQuery ? 'url(https://img.icons8.com/flat_round/20/000000/minus.png), auto' : 'url(https://img.icons8.com/flat_round/20/000000/plus.png), auto'};
   }
 `;
 
@@ -47,6 +48,9 @@ const TableCell = styled.p`
   font-size: 100%;
   display: flex;
   align-items: center;
+  :hover {
+    cursor: url(https://img.icons8.com/flat_round/20/000000/plus.png), auto;
+  }
 `;
 
 const TableTitle = styled.p`
@@ -55,7 +59,7 @@ const TableTitle = styled.p`
   padding: 5px;
   overflow-wrap: break-word;
   :hover{
-    cursor: copy;
+    cursor: url(https://img.icons8.com/flat_round/20/000000/plus.png), auto;
   }
 `
 interface IForeignKey {
@@ -102,9 +106,11 @@ type Props = {
   primaryKeyAffected: Array<IPrimaryKeyAffected>;
   foreignKeysAffected: Array<IForeignKeysAffected>;
   activeTableInPanel: IActiveTableInPanel;
+  selectedForQueryTables: Array<any>;
   captureMouseExit: () => void;
   captureMouseEnter: (Event) => void;
   captureSelectedTable: (Event) => void;
+  captureQuerySelections: (Event) => void;
 };
 
 const KeyIcon = styled.img`
@@ -122,7 +128,9 @@ const Tables: React.SFC<Props> = ({
   captureMouseExit,
   captureMouseEnter,
   captureSelectedTable,
-  activeTableInPanel
+  activeTableInPanel,
+  captureQuerySelections,
+  selectedForQueryTables
 }) => {
 
   let rows = [];
@@ -133,6 +141,11 @@ const Tables: React.SFC<Props> = ({
     let foreignKey: boolean = false;
     let foreignkeyTable: string = '';
     let foreignkeyColumn: string = '';
+    let inTheQuery: boolean = false;
+
+    selectedForQueryTables.forEach((table) => {
+      if(table.tablename === tableName && table.columnname === columns[keys]['columnname']) inTheQuery = true;
+    })
   
     if (
       primaryKeyAffected[0].primaryKeyColumn === columns[keys]['columnname'] &&
@@ -158,6 +171,8 @@ const Tables: React.SFC<Props> = ({
                 key={columns[keys]['columnname']}
                 onMouseOver={captureMouseEnter}
                 onMouseLeave={captureMouseExit}
+                onClick={captureQuerySelections}
+                inTheQuery={inTheQuery}
                 affected={affected}
                 data-isforeignkey={foreignKey}
                 data-foreignkeytable={foreignkeyTable}
@@ -174,6 +189,9 @@ const Tables: React.SFC<Props> = ({
                 data-columnname={columns[keys]['columnname']}
                 data-isprimarykey={primaryKey}
               >
+              {inTheQuery &&
+                <span>+</span>
+              }
                {foreignKey &&
                 <KeyIcon 
                 data-isforeignkey={foreignKey}
