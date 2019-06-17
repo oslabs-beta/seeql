@@ -198,14 +198,14 @@ const Login = () => {
 
   const sendLoginURI = (): void => {
     const updatedPort = !port ? '5432' : port;
-    let updatedURI;
-    if (loginType === 'URI') updatedURI = URI;
+    let updatedURI:string;
+    if (loginType === 'URI') updatedURI = `postgres://${username.value}:${password.value}@${host.value}:${updatedPort}/${database.value}`;
     else if (loginType === 'Credentials')
       updatedURI = `postgres://${username.value}:${password.value}@${host.value}:${updatedPort}/${database.value}`;
 
     if (isSSL) updatedURI += '?ssl=true';
 
-    if (!updatedURI) setRequiredError(true);
+    if (!updatedURI) setRequiredError(false);
     if (!host.value) setHost({ value: '', requiredError: true });
     if (!username.value) setUsername({ value: '', requiredError: true });
     if (!password.value) setPassword({ value: '', requiredError: true });
@@ -216,9 +216,12 @@ const Login = () => {
       (host.value && username.value && password.value && database.value)
     ) {
       setLoading(true);
-      ipcRenderer.send('uri-to-main', updatedURI);
+      ipcRenderer.send('Uri-to-main', updatedURI);
     }
   };
+
+  const testDBURI:string = 'postgres://ltdnkwnbccooem:64ad308e565b39cc070194f7fa621ae0e925339be5a1c69480ff2a4462eab4c4@ec2-54-163-226-238.compute-1.amazonaws.com:5432/ddsu160rb5t7vq?ssl=true'
+  ipcRenderer.send('uri-to-main', testDBURI);
 
   ipcRenderer.removeAllListeners('db-connection-error');
   ipcRenderer.on('db-connection-error', (event, err) => {
