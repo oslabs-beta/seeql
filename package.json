@@ -266,7 +266,8 @@
     "react-table": "^6.10.0",
     "rxjs-compat": "^6.5.2",
     "source-map-support": "^0.5.9",
-    "styled-components": "^4.3.0"
+    "styled-components": "^4.3.0",
+    "tedb": "^0.5.1"
   },
   "devEngines": {
     "node": ">=7.x",

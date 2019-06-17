@@ -2871,6 +2871,13 @@ binary-extensions@^1.0.0:
   resolved "https://registry.yarnpkg.com/binary-extensions/-/binary-extensions-1.13.1.tgz#598afe54755b2868a5330d2aff9d4ebb53209b65"
   integrity sha512-Un7MIEDdUC5gNpcGDV97op1Ywk748MpHcFTHoYs6qnj1Z3j7I53VG3nwZhKzoBZmbdRNnb6WRdFlwl7tSDuZGw==
 
+binary-type-tree@^1.3.0:
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/binary-type-tree/-/binary-type-tree-1.3.0.tgz#aca234aaa3aebdd7e701e4a543f9055cb9408123"
+  integrity sha512-jGC8ImE3Yymn0SZkCDGqt2wDB/YcmA7rx9VhigFj66Ud26A4PVtVDnaCqJAnN1vhJN6TQ7Xm7FPW7oYGY4pyZQ==
+  dependencies:
+    tedb-utils "^0.0.1"
+
 bl@^1.0.0:
   version "1.2.2"
   resolved "https://registry.yarnpkg.com/bl/-/bl-1.2.2.tgz#a160911717103c07410cef63ef51b397c025af9c"
@@ -12920,6 +12927,19 @@ tar@^4:
     mkdirp "^0.5.0"
     safe-buffer "^5.1.2"
     yallist "^3.0.3"
+
+tedb-utils@^0.0.1:
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/tedb-utils/-/tedb-utils-0.0.1.tgz#302496a2dba9c5c99d45ce5f3d6470c2e8ef1939"
+  integrity sha512-QAXJ9Hrc5nH0xDIc/+QJvwxuDhMaQg6gxdvVLDHoQN+6EwJ0ng59t6/evhbADl4G3sPocHF+F2Hu3jrpqm5lwg==
+
+tedb@^0.5.1:
+  version "0.5.1"
+  resolved "https://registry.yarnpkg.com/tedb/-/tedb-0.5.1.tgz#2973b7292e7a5d29c8345b53a71a80b2a14017b7"
+  integrity sha512-FkynQEya0CMUPYPP7wpbKPH0FQtNSSLpGbaEatFhmPxkQU8GcT0f9INwkIDQDsEZ/vNTTktnsyX0PzlAkiGcCA==
+  dependencies:
+    binary-type-tree "^1.3.0"
+    tedb-utils "^0.0.1"
 
 temp-file@^3.3.2:
   version "3.3.2"
