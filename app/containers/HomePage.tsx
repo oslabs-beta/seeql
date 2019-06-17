@@ -200,6 +200,7 @@ let selectedColumnName: string;
 
 const HomePage = ({ location }) => {
   const allTablesMetaData = location.state.tables;
+  const [selectedForQueryTables, setSelectedForQueryTables] = useState([]);
   const [loadingQueryStatus, setLoadingQueryStatus] = useState(false);
   const [activeDisplayInBottomTab, setActiveDisplayInBottomTab] = useState(
     'tables'
@@ -227,6 +228,29 @@ const HomePage = ({ location }) => {
     message: []
   });
   const [visible, setVisible] = useState(true);
+
+  const captureQuerySelections = (e) => {
+    let temp = selectedForQueryTables;
+    let adding = true;
+    for(let i=0; i < selectedForQueryTables.length; i++){
+      if((selectedForQueryTables[i].tablename === e.target.dataset.tablename) && (selectedForQueryTables[i].columnname === e.target.dataset.columnname)) {
+        console.log('hi', selectedForQueryTables[i].tablename, e.target.dataset.tablename)
+        temp = selectedForQueryTables.slice(0, i).concat(selectedForQueryTables.slice(i+1))
+        console.log('temp ', temp)
+        adding = false;
+        break;
+      }
+    }
+    if(adding){
+      console.log('adding :)')
+      temp.push({
+        tablename: e.target.dataset.tablename,
+        columnname: e.target.dataset.columnname
+      })
+    }
+    console.log('temp ', temp)
+    setSelectedForQueryTables(temp);
+  }
 
   const togglePanelVisibility = () => {
     if (visible) setVisible(false);
@@ -337,6 +361,8 @@ const HomePage = ({ location }) => {
                 UNPIN
               </PinBtn>
               <Tables
+                selectedForQueryTables={selectedForQueryTables}
+                captureQuerySelections={captureQuerySelections}
                 activeTableInPanel={activeTableInPanel}
                 tableName={table.table_name}
                 columns={table.columns}
@@ -375,6 +401,8 @@ const HomePage = ({ location }) => {
                 PIN
               </PinBtn>
               <Tables
+                selectedForQueryTables={selectedForQueryTables}
+                captureQuerySelections={captureQuerySelections}
                 activeTableInPanel={activeTableInPanel}
                 tableName={table.table_name}
                 columns={table.columns}
@@ -412,13 +440,15 @@ const HomePage = ({ location }) => {
     userInputForTables,
     pinnedTableNames,
     activeTableInPanel,
-    captureSelectedTable
+    selectedForQueryTables
   ]);
 
   const activeTabcapture = (e): void => {
     setActiveDisplayInBottomTab(e.target.dataset.activetabname);
     if (e.target.dataset.activetabname === 'plain') setUserInputQuery('');
-    if (e.target.dataset.activetabname === 'SQL') setUserInputForTables('');
+    if (e.target.dataset.activetabname === 'SQL') {
+      setUserInputForTables('')
+    };
   };
 
   const executeQueryOnEnter = (e): void => {
