@@ -35,8 +35,10 @@ ipcRenderer.on("query-to-db", (event, query) => {
   }
 });
 
-ipcRenderer.on('logout', (_event, message) => {
-  client.end()
+ipcRenderer.on('logout-to-db', (_event, message) => {
+  client.end();
   client = null;
-  ipcRenderer.on('login-mounted', () => ipcRenderer.send('inactivity-logout', 'logged out'));
+  ipcRenderer.on('login-mounted', () => {
+    ipcRenderer.send('logout-reason', message)
+  });
 });

@@ -108,8 +108,8 @@ app.on('ready', async () => {
     dbProcess.webContents.send('query-to-db', query);
   });
 
-  ipcMain.on('logout', (_event, message) => {
-    dbProcess.webContents.send('logout', message);
+  ipcMain.on('logout-to-main', (_event, message) => {
+    dbProcess.webContents.send('logout-to-db', message);
   });
 
   ipcMain.on('login-mounted', () => {
@@ -131,5 +131,9 @@ app.on('ready', async () => {
 
   ipcMain.on('inactivity-logout', (_event, message) => {
     mainWindow.webContents.send('inactivity-logout');
+  });
+
+  ipcMain.on('logout-reason', (_event, message) => {
+    mainWindow.webContents.send('logout-reason', message);
   });
 });

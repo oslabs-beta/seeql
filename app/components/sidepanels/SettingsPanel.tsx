@@ -2,6 +2,7 @@ import * as React from 'react';
 import { useReducer, useContext, useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import styled from 'styled-components';
+import { ipcRenderer } from 'electron';
 import Context from '../../contexts/themeContext';
 import themeReducer from '../../reducers/themeReducer';
 
@@ -41,10 +42,9 @@ const Label = styled.label`
   padding: 10px 0;
 `;
 
-const signOut = () => {
-  ipcRenderer.send('logout');
-  // alert('You\'ve been signed out.');
-}
+const logOut = () => {
+  ipcRenderer.send('logout-to-main', 'userlogout');
+};
 
 const SettingsPanel = () => {
   const [context, setContext] = useContext(Context);
@@ -83,9 +83,11 @@ const SettingsPanel = () => {
       </TopSection>
       <BottomSection>
         <div style={state}>CHANGE ME HEY BLAHHSLAH</div>
-        <NavLink to="/login" activeStyle={{ color: 'black ' }} onClick={signOut}>
-          Sign Out
-        </NavLink>
+        <div onClick={logOut}>
+          <NavLink to="/login" activeStyle={{ color: 'black ' }}>
+            Log Out
+          </NavLink>
+        </div>
       </BottomSection>
     </PanelWrapper>
   );

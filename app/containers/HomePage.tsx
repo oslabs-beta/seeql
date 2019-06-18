@@ -100,17 +100,17 @@ const HomePage = ({ location }) => {
   const [intervalId, captureIntervalId] = useState();
   const [redirectDueToInactivity, setRedirectDueToInactivity] = useState(false);
 
-  const signOut = () => {
+  const logOut = () => {
+    ipcRenderer.send('logout-to-main', 'inactivity');
     clearInterval(intervalId);
     setRedirectDueToInactivity(true);
-    ipcRenderer.send('logout', 'inactivity');
   }
 
   useEffect(() => {
     captureIntervalId(setInterval(() => setInactiveTime(inactiveTime => inactiveTime + 1), 200));
   }, []);
 
-  useEffect(() => { if (inactiveTime >= 15) signOut() }, [inactiveTime]);
+  useEffect(() => { if (inactiveTime >= 15) logOut() }, [inactiveTime]);
 
 
   const captureQuerySelections = e => {
@@ -276,7 +276,7 @@ const HomePage = ({ location }) => {
             selectedForQueryTables={selectedForQueryTables}
           />
         </MainPanel>
-        {redirectDueToInactivity && <Redirect to='/login' />}
+        {redirectDueToInactivity && <Redirect to='/' />}
       </HomepageWrapper>
     </React.Fragment>
   );

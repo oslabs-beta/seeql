@@ -176,7 +176,7 @@ const ConnectionErrorMessage = styled.div`
   font-size: 100%;
 `;
 
-const InactivityLogoutMessage = styled.div`
+const LogoutMessage = styled.div`
   background-color: #f1c7ca;
   width: 200px;
   color: #ca333e;
@@ -206,11 +206,11 @@ const Login = () => {
   const [connectionError, setConnectionError] = useState(false);
   const [loading, setLoading] = useState(false);
   const [redirectToHome, setRedirectToHome] = useState(false);
-  const [inactivityLoggedOut, setInactivityLoggedOut] = useState(false);
+  const [loggedOutMessage, setLoggedOutMessage] = useState('');
   const [tableData, setTableData] = useState([]);
 
   const sendLoginURI = (): void => {
-    if (inactivityLoggedOut) setInactivityLoggedOut(false);
+    if (loggedOutMessage) setLoggedOutMessage('');
     const updatedPort = !port ? '5432' : port;
     let updatedURI;
     if (loginType === 'URI') updatedURI = URI;
@@ -248,12 +248,12 @@ const Login = () => {
       setLoading(false);
       setRedirectToHome(true);
     });
-    ipcRenderer.on('inactivity-logout', () => setInactivityLoggedOut(true));
     ipcRenderer.send('login-mounted');
+    ipcRenderer.on('logout-reason', (_event, message) => setLoggedOutMessage(message));
     return () => {
       ipcRenderer.removeAllListeners('db-connection-error');
       ipcRenderer.removeAllListeners('tabledata-to-login');
-      ipcRenderer.removeAllListeners('inactivity-logout');
+      ipcRenderer.removeAllListeners('logout-reason');
     }
   }, []);
 
@@ -281,8 +281,10 @@ const Login = () => {
         </LeftPanel>
         <RightPanel>
           <LoginContainer>
-            {inactivityLoggedOut &&
-              <InactivityLogoutMessage>You've been logged out due to inactivity</InactivityLogoutMessage>}
+            {loggedOutMessage === 'inactivity' &&
+              <LogoutMessage>You've been logged out due to inactivity</LogoutMessage>}
+            {loggedOutMessage === 'userlogout' &&
+              <LogoutMessage>You logged out</LogoutMessage>}
             {connectionError && (
               <ConnectionErrorMessage>
                 Unable to connect to the database. Please try again.
