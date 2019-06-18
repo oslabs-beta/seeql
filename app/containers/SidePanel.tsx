@@ -14,7 +14,8 @@ interface IIndTabProps {
 }
 
 const PanelWrapper = styled.div<IPanelWrapperProps>`
-  width: ${({ sidePanelVisibility }) => (sidePanelVisibility ? '375px' : '0px')};
+  width: ${({ sidePanelVisibility }) =>
+    sidePanelVisibility ? '375px' : '0px'};
   display: flex;
   justify-content: flex-start;
   transition: width 500ms ease-in-out;
@@ -32,9 +33,10 @@ const IndTab = styled.button<IIndTabProps>`
   border: none;
   border-radius: 0px 6px 6px 0px;
   padding: 5px;
-  background-color: ${props =>
-    props.active === props.panel ? '#e8ecf1' : '#fdfdfe'}
-  
+
+  background-color: ${props => props.active ===props.panel? props.theme.tabs.baseColor :props.theme.panel.baseColorActive};
+  color: ${props=>props.theme.tabs.fontColor};
+
   :hover {
     font-weight: bold;
   }
@@ -143,3 +145,8 @@ const SidePanel: React.SFC<Props> = ({
 };
 
 export default SidePanel;
+
+// background-color: ${props =>
+//     props.active === props.panel ? 'black' : 'white'};
+//  color: ${props =>
+//       props.active === props.panel ? 'white' : 'black'};

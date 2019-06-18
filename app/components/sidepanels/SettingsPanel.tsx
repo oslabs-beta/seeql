@@ -33,25 +33,28 @@ const DivWrapper = styled.div`
   flex-direction: column;
 `;
 const Title = styled.h1`
-  color: ${props => props.theme.panel.fontColor};
+  color: ${props => props.theme.panel.headerColor};
   font-size: 30px;
 `;
 const Label = styled.label`
   color: ${props => props.theme.panel.fontColor};
   padding: 10px 0;
 `;
+const SignOut = styled.span`
+  color: ${props => props.theme.link.signOut};
+`;
 
 const SettingsPanel = () => {
   const [context, setContext] = useContext(Context);
   const [state, dispatch] = useReducer(themeReducer, context);
-  const [activeMode, setActiveMode] = useState('default')
-  
-  useEffect(()=>{
-    setContext(state)
-  },[state])
-  console.log ('context', context)
-  console.log ('active mode', activeMode)
-  console.log ('state', state)
+  const [activeMode, setActiveMode] = useState('default');
+
+  useEffect(() => {
+    setContext(state);
+  }, [state]);
+  console.log('context', context);
+  console.log('active mode', activeMode);
+  console.log('state', state);
   //when clicked, dispatch action to reducer with payload of active mode obj(to deactivate, and selected mode obj to activate)
   return (
     <PanelWrapper>
@@ -61,16 +64,18 @@ const SettingsPanel = () => {
         <DivWrapper>
           <Label>Theme</Label>
           <select
-            value={context}
             name="modeList"
             onChange={e => {
-              dispatch({type:'CHANGE_MODE', selected: e.target.value, payload: activeMode})
-              setActiveMode(e.target.value)
-            }
-          }
+              setActiveMode(e.target.value);
+              dispatch({
+                type: 'CHANGE_MODE',
+                selected: e.target.value,
+                payload: activeMode
+              });
+            }}
           >
             {context.map(modeObj => (
-              <option key={modeObj.value} value = {modeObj.value} >
+              <option key={modeObj.value} value={modeObj.value}>
                 {modeObj.value}
               </option>
             ))}
@@ -87,10 +92,9 @@ const SettingsPanel = () => {
         </DivWrapper>
       </TopSection>
       <BottomSection>
-        <div style={state}>CHANGE ME HEY BLAHHSLAH</div>
-        <NavLink to="/" activeStyle={{ color: 'black ' }}>
-          Sign Out
-        </NavLink>
+    
+          <NavLink to="/"><SignOut>SignOut </SignOut></NavLink>
+
       </BottomSection>
     </PanelWrapper>
   );

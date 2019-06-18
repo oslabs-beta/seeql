@@ -32,14 +32,14 @@ const TableRow = styled.li<ITableRowProps>`
   display: flex;
   justify-content: space-between;
   list-style: none;
-  background-color: ${ ({affected}) => affected ? '#00b5cc' : 'transparent'};
+  background-color: ${ (props) => props.affected ? props.theme.tables.row : 'transparent'};
   border: none;
   padding: 5px;
   transition: 0.3s;
 
   :hover {
     transform: scale(1.01);
-    background-color: #e8ecf1;
+    background-color: ${props=>props.theme.tables.highlight};
     cursor: ${({inTheQuery}) => inTheQuery ? 'url(https://img.icons8.com/flat_round/20/000000/minus.png), auto' : 'url(https://img.icons8.com/flat_round/20/000000/plus.png), auto'};
   }
 `;
@@ -85,27 +85,27 @@ interface IColumnsMetaData {
 }
 
 interface IActiveTableInPanel {
-  columns?: Array<IColumnsMetaData>
-  foreignKeys?: Array<IForeignKey>
+  columns?: IColumnsMetaData[]
+  foreignKeys?: IForeignKey[]
   foreignKeysOfPrimary?: any
   primaryKey?: string
   table_name?: string
 }
 
-type Props = {
+interface Props {
   key: string;
   tableName: string;
-  columns: Array<string>;
+  columns: string[];
   primarykey: string;
-  foreignkeys: Array<IForeignKey>;
-  primaryKeyAffected: Array<IPrimaryKeyAffected>;
-  foreignKeysAffected: Array<IForeignKeysAffected>;
+  foreignkeys: IForeignKey[];
+  primaryKeyAffected: IPrimaryKeyAffected[];
+  foreignKeysAffected: IForeignKeysAffected[];
   activeTableInPanel: IActiveTableInPanel;
-  selectedForQueryTables: Array<any>;
+  selectedForQueryTables: any[];
   captureMouseExit: () => void;
   captureMouseEnter: (Event) => void;
   captureQuerySelections: (Event) => void;
-};
+}
 
 const KeyIcon = styled.img`
   width: 15px;
@@ -130,11 +130,11 @@ const Tables: React.SFC<Props> = ({
 
   for (let keys in columns) {
     const primaryKey: boolean = (primarykey === columns[keys]['columnname']) ? true : false;
-    let affected: boolean = false;
-    let foreignKey: boolean = false;
-    let foreignkeyTable: string = '';
-    let foreignkeyColumn: string = '';
-    let inTheQuery: boolean = false;
+    let affected = false;
+    let foreignKey = false;
+    let foreignkeyTable = '';
+    let foreignkeyColumn = '';
+    let inTheQuery = false;
 
     if(Object.keys(selectedForQueryTables).includes(tableName)) {
       if(selectedForQueryTables[tableName].includes(columns[keys]['columnname'])) inTheQuery = true;

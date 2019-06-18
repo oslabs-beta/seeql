@@ -26,7 +26,7 @@ const ViewInfoButton = styled.button`
   transform: 0.3s;
 
   :hover {
-    color: #013243;
+    color: ${props=> props.theme.tables.infoButton};
     font-weight: bold;
   }
   :focus {
@@ -60,14 +60,14 @@ interface IPinButtonProps {
 
 const PinBtn = styled.button<IPinButtonProps>`
   border: none;
-  background-color: ${props => (props.pinned ? 'rgb(93, 0, 250)' : 'white')};
-  color: ${props => (props.pinned ? 'white' : 'black')};
+  background-color: ${props => (props.pinned ? props.theme.tables.pinnedButton : 'white')};
+  color: ${props => (props.pinned ? props.theme.tables.pinnedButtonFontColor : 'black')};
   padding: 5px;
   border-radius: 3px;
 
   :hover {
     font-weight: bold;
-    color: #00b5cc;
+    color: ${props=>props.theme.tables.pinnedHover};
   }
   :focus {
     outline: none;
