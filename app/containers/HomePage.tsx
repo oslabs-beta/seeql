@@ -231,23 +231,24 @@ const HomePage = ({ location }) => {
   const [visible, setVisible] = useState(true);
   
   
-  // Track user inactivity, logout after 20 minutes
+  // Track user inactivity, logout after 15 minutes
   const [inactiveTime, setInactiveTime] = useState(0);
   const [intervalId, captureIntervalId] = useState();
+  const [redirectDueToInactivity, setRedirectDueToInactivity] = useState(false);
 
   const signOut = () => {
     ipcRenderer.send('logout-to-main', 'logout');
     clearInterval(intervalId);
-    alert('You\'ve been signed out.');
-    return <Redirect to='/login' />;
+    alert('You\'ve been signed out due to inactivity.');
+    setRedirectDueToInactivity(true);
   }
 
   useEffect(() => {
-    captureIntervalId(setInterval(() => setInactiveTime(inactiveTime => inactiveTime + 1), 1000));
+    captureIntervalId(setInterval(() => setInactiveTime(inactiveTime => inactiveTime + 1), 60000));
   }, [])
 
   useEffect(() => {
-    if (inactiveTime >= 10) signOut();
+    if (inactiveTime >= 15) signOut();
   }, [inactiveTime])
 
  
@@ -537,10 +538,6 @@ const HomePage = ({ location }) => {
       onMouseMove={() => setInactiveTime(0)} 
       className="homepage">
 
-      <button onClick={() => {
-        console.log('inactivetime is', inactiveTime)
-      }}>console log inactive time</button>
-
         <LeftPanel
           activePanel={activePanel}
           dispatchLeftPanelDisplay={dispatchLeftPanelDisplay}
@@ -637,6 +634,7 @@ const HomePage = ({ location }) => {
             )}
           </BottomPanelContainer>
         </RightPanel>
+        {redirectDueToInactivity && <Redirect to='/login' />}
       </HomepageWrapper>
     </React.Fragment>
   );
