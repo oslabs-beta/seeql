@@ -1,6 +1,6 @@
 import * as React from 'react';
 import styled from 'styled-components';
-import QueryResults from "../../components/QueryResults";
+import QueryResults from "../../components/mainpanel/QueryResults";
 import TablesContainer from './TablesContainer';
 
 const ResultsWrapper = styled.div`

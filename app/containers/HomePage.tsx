@@ -21,9 +21,34 @@ const HomepageWrapper = styled.div`
   font-family: 'Poppins', sans-serif;
 `;
 
+interface ICollapseBtnProps {
+  sidePanelVisibility: boolean;
+}
+
+const CollapseBtn = styled.button<ICollapseBtnProps>`
+  border: none;
+  border-radius: 3px;
+  padding: 5px;
+  width: 25px;
+  height: 25px;
+  margin: 5px;
+  display: relative;
+  left: 100px;
+  margin-left: ${({ sidePanelVisibility }) => (sidePanelVisibility ? '0px' : '50px')};
+  text-align: center;
+  :focus {
+    outline: none;
+  }
+  :hover {
+    font-weight: bold;
+    background-color:  #013243;
+    color: white;
+  }
+`;
+
 const MainPanel = styled.div`
   background-color: #f2f1ef;
-  padding: 40px;
+  padding: 5px 20px;
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -98,12 +123,15 @@ const HomePage = ({ location }) => {
       const query = `SELECT  ` + columns + ` FROM ` + Object.keys(temp)[0];
       setUserInputQuery(query);
     }
-    console.log('t', temp)
+    //for multiple joins
     setSelectedForQueryTables(temp);
   }
 
   const togglePanelVisibility = () => {
-    if (sidePanelVisibility) setSidePanelVisibility(false);
+    if (sidePanelVisibility) {
+      setSidePanelVisibility(false);
+      setActiveTableInPanel({});
+    }
     else setSidePanelVisibility(true);
   };
 
@@ -132,6 +160,8 @@ const HomePage = ({ location }) => {
         }
       });
     });
+    setActiveTableInPanel('info');
+    setSidePanelVisibility(true);
     setActiveTableInPanel(selectedPanelInfo);
     dispatchSidePanelDisplay(actions.changeToInfoPanel());
   };
@@ -182,7 +212,6 @@ const HomePage = ({ location }) => {
           activePanel={activePanel}
           dispatchSidePanelDisplay={dispatchSidePanelDisplay}
           activeTableInPanel={activeTableInPanel}
-          togglePanelVisibility={togglePanelVisibility}
           sidePanelVisibility={sidePanelVisibility}
         />
         {toggleLoad && (
@@ -191,6 +220,14 @@ const HomePage = ({ location }) => {
           </LoadWrap>
         )}
         <MainPanel>
+          <CollapseBtn
+                onClick={togglePanelVisibility}
+                data-active={activePanel}
+                sidePanelVisibility={sidePanelVisibility}
+              >
+            {' '}
+            {sidePanelVisibility ? `<<` : `>>`}{' '}
+          </CollapseBtn>
           <OmniBoxContainer 
             userInputForTables={userInputForTables}
             loadingQueryStatus={loadingQueryStatus}

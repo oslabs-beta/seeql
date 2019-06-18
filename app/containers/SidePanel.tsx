@@ -1,8 +1,8 @@
 import * as React from 'react';
 import styled from 'styled-components';
-import SettingsPanel from '../components/panels/SettingsPanel';
-import FavoritesPanel from '../components/panels/FavoritesPanel';
-import InfoPanel from '../components/panels/InfoPanel';
+import SettingsPanel from '../components/sidepanels/SettingsPanel';
+import FavoritesPanel from '../components/sidepanels/FavoritesPanel';
+import InfoPanel from '../components/sidepanels/InfoPanel';
 import * as actions from '../actions/actions';
 interface IPanelWrapperProps {
   sidePanelVisibility: boolean;
@@ -14,7 +14,7 @@ interface IIndTabProps {
 }
 
 const PanelWrapper = styled.div<IPanelWrapperProps>`
-  width: ${({ sidePanelVisibility }) => (sidePanelVisibility ? '375px' : '100px')};
+  width: ${({ sidePanelVisibility }) => (sidePanelVisibility ? '375px' : '0px')};
   display: flex;
   justify-content: flex-start;
   transition: width 500ms ease-in-out;
@@ -51,30 +51,6 @@ const Tabs = styled.div`
   font-family: 'Poppins', sans-serif;
 `;
 
-interface ICollapseBtnProps {
-  sidePanelVisibility: boolean;
-}
-
-const CollapseBtn = styled.button<ICollapseBtnProps>`
-  border: none;
-  border-radius: 3px;
-  padding: 5px;
-  width: 25px;
-  height: 25px;
-  margin: 5px;
-  display: relative;
-  left: 100px;
-  margin-left: ${({ sidePanelVisibility }) => (sidePanelVisibility ? '5px' : '80px')};
-  text-align: center;
-  :focus {
-    outline: none;
-  }
-  :hover {
-    font-weight: bold;
-    background-color: #f2f1ef;
-  }
-`;
-
 interface IForeignKeysAffected {
   column: string;
   table: string;
@@ -103,14 +79,12 @@ interface Props {
   activeTableInPanel: IAcitveTableInPanel;
   sidePanelVisibility: boolean;
   activePanel: string;
-  togglePanelVisibility: () => void;
   dispatchSidePanelDisplay: (IDispatchSidePanelDisplayAction) => any;
 }
 
 const SidePanel: React.SFC<Props> = ({
   activeTableInPanel,
   sidePanelVisibility,
-  togglePanelVisibility,
   activePanel,
   dispatchSidePanelDisplay
 }) => {
@@ -129,14 +103,6 @@ const SidePanel: React.SFC<Props> = ({
         </div>
       )}
       <ButtonMenu>
-        <CollapseBtn
-          onClick={togglePanelVisibility}
-          data-active={activePanel}
-          sidePanelVisibility={sidePanelVisibility}
-        >
-          {' '}
-          {sidePanelVisibility ? `<<` : `>>`}{' '}
-        </CollapseBtn>
         {sidePanelVisibility && (
           <Tabs>
             <IndTab

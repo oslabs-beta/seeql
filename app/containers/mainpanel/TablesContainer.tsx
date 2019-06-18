@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {useState, useEffect, useReducer} from 'react';
 import * as actions from '../../actions/actions';
-import Tables from '../../components/Tables';
+import Tables from '../../components/mainpanel/Tables';
 import changePinnedStatus from '../../reducers/ChangePinnedStatus';
 import styled from 'styled-components';
 
@@ -15,16 +15,43 @@ const TablesWrapper = styled.div`
   height: 60vh;
 `;
 
+const IndTableNav = styled.div`
+  display: flex;
+  justify-content: space-around;
+` 
+
+const ViewInfoButton = styled.button`
+  border: none;
+  background-color: transparent;
+  transform: 0.3s;
+
+  :hover {
+    color: #013243;
+    font-weight: bold;
+  }
+  :focus {
+    outline: none;
+  }
+`
+
 const NoSearchResults = styled.div`
   padding: 20px;
 `;
 
 const NormalTableWrapper = styled.div`
   margin: 10px;
+  box-shadow: 2px 2px 8px lightgrey;
+  :hover {
+    transform: scale(1.03)
+  }
 `;
 
 const PinnedTableWrapper = styled.div`
   margin: 10px;
+  box-shadow: 2px 2px 8px lightgrey;
+  :hover {
+    transform: scale(1.03)
+  }
 `;
 
 interface IPinButtonProps {
@@ -74,7 +101,7 @@ const TablesContainer: React.SFC<ITablesContainerProps> = ({
     selectedForQueryTables,
     data,
     captureSelectedTable,
-    captureQuerySelections,
+    captureQuerySelections
 }) => {
 
     const [mouseOver, setMouseOver] = useState(); //data to detect if mouse is over a pk or fk
@@ -136,6 +163,7 @@ const TablesContainer: React.SFC<ITablesContainerProps> = ({
             if (pinnedTableNames.includes(table.table_name)) {
               pinned.push(
                 <PinnedTableWrapper>
+                  <IndTableNav>
                   <PinBtn
                     data-pinned={table.table_name}
                     onClick={() =>
@@ -145,7 +173,11 @@ const TablesContainer: React.SFC<ITablesContainerProps> = ({
                   >
                     UNPIN
                   </PinBtn>
-                  <button onClick={captureSelectedTable} data-tablename={table.table_name}>View Info</button>
+                  <ViewInfoButton 
+                      onClick={captureSelectedTable} 
+                      data-tablename={table.table_name}
+                      >View Info</ViewInfoButton>
+                  </IndTableNav>
                   <Tables
                     selectedForQueryTables={selectedForQueryTables}
                     captureQuerySelections={captureQuerySelections}
@@ -176,6 +208,7 @@ const TablesContainer: React.SFC<ITablesContainerProps> = ({
             } else if (regex.test(table.table_name)) {
               filtered.push(
                 <NormalTableWrapper>
+                  <IndTableNav>
                   <PinBtn
                     data-pinned={table.table_name}
                     onClick={() =>
@@ -185,7 +218,8 @@ const TablesContainer: React.SFC<ITablesContainerProps> = ({
                   >
                     PIN
                   </PinBtn>
-                  <button onClick={captureSelectedTable} data-tablename={table.table_name}>View Info</button>
+                  <ViewInfoButton onClick={captureSelectedTable} data-tablename={table.table_name}>View Info</ViewInfoButton>
+                  </IndTableNav>
                   <Tables
                     selectedForQueryTables={selectedForQueryTables}
                     captureQuerySelections={captureQuerySelections}

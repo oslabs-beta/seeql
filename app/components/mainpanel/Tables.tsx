@@ -14,12 +14,7 @@ const Table = styled.div<ITableProps>`
   width: 180px;
   border-radius: 3px;
   border: ${(props) => (props.selectedtable === props.tablename) ? '2px solid #00b5cc' : '2px solid transparent'};
-  box-shadow: 2px 2px 8px lightgrey;
   transition: 0.3s;
-
-  :hover {
-    transform: scale(1.03)
-  }
 `;
 
 const TableRowsList = styled.ul`
