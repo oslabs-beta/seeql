@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import * as React from 'react';
 import { useState, useEffect, useReducer } from 'react';
 import { ipcRenderer } from 'electron';
@@ -34,14 +35,15 @@ const CollapseBtn = styled.button<ICollapseBtnProps>`
   margin: 5px;
   display: relative;
   left: 100px;
-  margin-left: ${({ sidePanelVisibility }) => (sidePanelVisibility ? '0px' : '50px')};
+  margin-left: ${({ sidePanelVisibility }) =>
+    sidePanelVisibility ? '0px' : '50px'};
   text-align: center;
   :focus {
     outline: none;
   }
   :hover {
     font-weight: bold;
-    background-color:  #013243;
+    background-color: #013243;
     color: white;
   }
 `;
@@ -63,12 +65,16 @@ const HomePage = ({ location }) => {
   const allTablesMetaData = location.state.tables;
   const [selectedForQueryTables, setSelectedForQueryTables] = useState({});
   const [loadingQueryStatus, setLoadingQueryStatus] = useState(false);
-  const [activeDisplayInResultsTab, setActiveDisplayInResultsTab] = useState('Tables');
+  const [activeDisplayInResultsTab, setActiveDisplayInResultsTab] = useState(
+    'Tables'
+  );
   const [activeTableInPanel, setActiveTableInPanel] = useState({});
   const [userInputForTables, setUserInputForTables] = useState('');
   const [data, setData] = useState([]); //data from database
   const [toggleLoad, setToggleLoad] = useState(true);
-  const [userInputQuery, setUserInputQuery] = useState('SELECT * FROM [add a table name here]');
+  const [userInputQuery, setUserInputQuery] = useState(
+    'SELECT * FROM [add a table name here]'
+  );
   const [queryResult, setQueryResult] = useState({
     status: 'No query',
     message: []
@@ -85,20 +91,23 @@ const HomePage = ({ location }) => {
   });
 
   const resetQuerySelection = () => {
-    setUserInputQuery('SELECT * FROM [add a table name here]')
+    setUserInputQuery('SELECT * FROM [add a table name here]');
     setSelectedForQueryTables({});
-  }
+  };
 
-  const captureQuerySelections = (e) => {
+  const captureQuerySelections = e => {
     let selectedTableName = e.target.dataset.tablename;
     let selectedColumnName = e.target.dataset.columnname;
     let temp = selectedForQueryTables;
 
-    if(Object.keys(temp).includes(selectedTableName)) {
-      if(temp[selectedTableName].includes(selectedColumnName)){
-        const startIndex = temp[selectedTableName].indexOf(selectedColumnName)
-        temp[selectedTableName] = temp[selectedTableName].slice(0, startIndex).concat(temp[selectedTableName].slice(startIndex+1))
-        if(temp[selectedTableName].length === 0) delete temp[selectedTableName];
+    if (Object.keys(temp).includes(selectedTableName)) {
+      if (temp[selectedTableName].includes(selectedColumnName)) {
+        const startIndex = temp[selectedTableName].indexOf(selectedColumnName);
+        temp[selectedTableName] = temp[selectedTableName]
+          .slice(0, startIndex)
+          .concat(temp[selectedTableName].slice(startIndex + 1));
+        if (temp[selectedTableName].length === 0)
+          delete temp[selectedTableName];
       } else {
         temp[selectedTableName].push(selectedColumnName);
       }
@@ -106,33 +115,31 @@ const HomePage = ({ location }) => {
       temp[selectedTableName] = [selectedColumnName];
     }
 
-
     //for no tables
-    if(Object.keys(temp).length === 0){
-      setUserInputQuery('SELECT * FROM [add a table name here]')
+    if (Object.keys(temp).length === 0) {
+      setUserInputQuery('SELECT * FROM [add a table name here]');
     }
     //for one table
-    if(Object.keys(temp).length === 1) {
+    if (Object.keys(temp).length === 1) {
       let columns = '';
-      for(let table in temp){
-        for(let i=0; i < temp[table].length; i++){
-          if(i===0) columns += temp[table][i]
-          else columns += (', ' + temp[table][i])
-        } 
+      for (let table in temp) {
+        for (let i = 0; i < temp[table].length; i++) {
+          if (i === 0) columns += temp[table][i];
+          else columns += ', ' + temp[table][i];
+        }
       }
       const query = `SELECT  ` + columns + ` FROM ` + Object.keys(temp)[0];
       setUserInputQuery(query);
     }
     //for multiple joins
     setSelectedForQueryTables(temp);
-  }
+  };
 
   const togglePanelVisibility = () => {
     if (sidePanelVisibility) {
       setSidePanelVisibility(false);
       setActiveTableInPanel({});
-    }
-    else setSidePanelVisibility(true);
+    } else setSidePanelVisibility(true);
   };
 
   const captureSelectedTable = e => {
@@ -221,14 +228,14 @@ const HomePage = ({ location }) => {
         )}
         <MainPanel>
           <CollapseBtn
-                onClick={togglePanelVisibility}
-                data-active={activePanel}
-                sidePanelVisibility={sidePanelVisibility}
-              >
+            onClick={togglePanelVisibility}
+            data-active={activePanel}
+            sidePanelVisibility={sidePanelVisibility}
+          >
             {' '}
             {sidePanelVisibility ? `<<` : `>>`}{' '}
           </CollapseBtn>
-          <OmniBoxContainer 
+          <OmniBoxContainer
             userInputForTables={userInputForTables}
             loadingQueryStatus={loadingQueryStatus}
             userInputQuery={userInputQuery}
@@ -238,7 +245,7 @@ const HomePage = ({ location }) => {
             queryResultError={queryResultError}
             setUserInputForTables={setUserInputForTables}
           />
-          <ResultsContainer 
+          <ResultsContainer
             resetQuerySelection={resetQuerySelection}
             captureQuerySelections={captureQuerySelections}
             captureSelectedTable={captureSelectedTable}
