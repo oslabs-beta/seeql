@@ -188,7 +188,7 @@ const Tables: React.SFC<Props> = ({
                 data-isprimarykey={primaryKey}
               >
               {inTheQuery &&
-                <span>+</span>
+                <span><KeyIcon src="https://image.flaticon.com/icons/svg/291/291201.svg"></KeyIcon></span>
               }
                {foreignKey &&
                 <KeyIcon 

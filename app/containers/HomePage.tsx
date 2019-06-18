@@ -59,6 +59,11 @@ const HomePage = ({ location }) => {
     message: ''
   });
 
+  const resetQuerySelection = () => {
+    setUserInputQuery('SELECT * FROM [add a table name here]')
+    setSelectedForQueryTables({});
+  }
+
   const captureQuerySelections = (e) => {
     let selectedTableName = e.target.dataset.tablename;
     let selectedColumnName = e.target.dataset.columnname;
@@ -96,7 +101,6 @@ const HomePage = ({ location }) => {
     console.log('t', temp)
     setSelectedForQueryTables(temp);
   }
-  console.log('a', selectedForQueryTables)
 
   const togglePanelVisibility = () => {
     if (sidePanelVisibility) setSidePanelVisibility(false);
@@ -198,6 +202,7 @@ const HomePage = ({ location }) => {
             setUserInputForTables={setUserInputForTables}
           />
           <ResultsContainer 
+            resetQuerySelection={resetQuerySelection}
             captureQuerySelections={captureQuerySelections}
             captureSelectedTable={captureSelectedTable}
             activeDisplayInResultsTab={activeDisplayInResultsTab}

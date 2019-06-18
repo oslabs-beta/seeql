@@ -40,6 +40,26 @@ interface IResultsNavButtonProps {
     }
   `;
 
+const ResultsHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`
+
+const ResetQueryButton = styled.button`
+  border-radius: 3px;
+  border: none;
+  font-size: 80%;
+  background-color: transparent;
+  :hover{
+    font-weight: bold;
+    color: #ca333e;
+  }
+  :focus{
+    outline: none;
+  }
+`
+
 interface IResultsContainerProps {
     activeDisplayInResultsTab: string;
     queryResult:any;
@@ -47,6 +67,7 @@ interface IResultsContainerProps {
     userInputForTables: string;
     activeTableInPanel: any;
     selectedForQueryTables: any;
+    resetQuerySelection: (any) => any;
     captureQuerySelections: (any) => any;
     captureSelectedTable: (any) => any;
     setActiveDisplayInResultsTab: (any) => any;
@@ -61,7 +82,8 @@ const ResultsContainer: React.SFC<IResultsContainerProps> = ({
     data,
     captureSelectedTable,
     captureQuerySelections,
-    setActiveDisplayInResultsTab
+    setActiveDisplayInResultsTab,
+    resetQuerySelection
 }) => {
 
     const listOfTabNames = ['Tables', 'Query Results'];
@@ -77,9 +99,12 @@ const ResultsContainer: React.SFC<IResultsContainerProps> = ({
     
     return (
         <ResultsWrapper>
+            <ResultsHeader>
             <ResultsNav>
                 {resultsTabs}
             </ResultsNav>
+            <ResetQueryButton onClick={resetQuerySelection}>Reset Query</ResetQueryButton>
+            </ResultsHeader>
             {activeDisplayInResultsTab === 'Tables' &&
                 <TablesContainer 
                     userInputForTables={userInputForTables}
