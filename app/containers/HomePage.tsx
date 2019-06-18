@@ -93,6 +93,10 @@ const HomePage = ({ location }) => {
   const resetQuerySelection = () => {
     setUserInputQuery('SELECT * FROM [add a table name here]');
     setSelectedForQueryTables({});
+    setQueryResultError({
+      status: false,
+      message: ''
+    });
   };
 
   const captureQuerySelections = e => {
@@ -101,11 +105,14 @@ const HomePage = ({ location }) => {
     let firstColumn = true;
     let firstTable = true;
     let temp = selectedForQueryTables;
+    // let relationships = [];
     let columns = '';
     let tables = '';
     let query = '';
 
     console.log('data is ', data);
+
+    //get relationships
 
     //builds the object used to write the query
     for (let i = 0; i < data.length; i++) {
@@ -175,7 +182,7 @@ const HomePage = ({ location }) => {
     }
 
     //for multiple joins
-    if (Object.keys(temp).length === 2) {
+    if (Object.keys(temp).length > 2) {
       for (let table in temp) {
         //loop through each table
         let tableInitial = table[0] + '.'; //initial of each table
@@ -196,16 +203,17 @@ const HomePage = ({ location }) => {
             }
           }
         }
-        //create the table list
+        //create the table name
         if (firstTable) {
           tables += table + ` as ` + table[0];
           firstTable = false;
         } else {
           tables += ` INNER JOIN ` + table + ` as ` + table[0];
+          tables += ` ON `;
         }
       }
       //entire query
-      query = `SELECT ` + columns + ` FROM ` + tables + ` ON `;
+      query = `SELECT ` + columns + ` FROM ` + tables;
     }
 
     setUserInputQuery(query);
