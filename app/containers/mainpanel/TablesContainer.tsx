@@ -123,7 +123,7 @@ const TablesContainer: React.SFC<ITablesContainerProps> = ({
               setForeignKeysAffected(allForeignKeys);
             }
           }
-        }, [data, mouseOver]);
+        }, [data, mouseOver, selectedForQueryTables]);
 
        //Builds out tables to display
        useEffect((): void => {
@@ -145,6 +145,7 @@ const TablesContainer: React.SFC<ITablesContainerProps> = ({
                   >
                     UNPIN
                   </PinBtn>
+                  <button onClick={captureSelectedTable} data-tablename={table.table_name}>View Info</button>
                   <Tables
                     selectedForQueryTables={selectedForQueryTables}
                     captureQuerySelections={captureQuerySelections}
@@ -155,7 +156,6 @@ const TablesContainer: React.SFC<ITablesContainerProps> = ({
                     foreignkeys={table.foreignKeys}
                     primaryKeyAffected={primaryKeyAffected}
                     foreignKeysAffected={foreignKeysAffected}
-                    captureSelectedTable={captureSelectedTable}
                     captureMouseEnter={e => {
                       isPrimaryKey = e.target.dataset.isprimarykey;
                       isForeignKey = e.target.dataset.isforeignkey;
@@ -185,6 +185,7 @@ const TablesContainer: React.SFC<ITablesContainerProps> = ({
                   >
                     PIN
                   </PinBtn>
+                  <button onClick={captureSelectedTable} data-tablename={table.table_name}>View Info</button>
                   <Tables
                     selectedForQueryTables={selectedForQueryTables}
                     captureQuerySelections={captureQuerySelections}
@@ -195,7 +196,6 @@ const TablesContainer: React.SFC<ITablesContainerProps> = ({
                     foreignkeys={table.foreignKeys}
                     primaryKeyAffected={primaryKeyAffected}
                     foreignKeysAffected={foreignKeysAffected}
-                    captureSelectedTable={captureSelectedTable}
                     captureMouseEnter={e => {
                       isPrimaryKey = e.target.dataset.isprimarykey;
                       isForeignKey = e.target.dataset.isforeignkey;
@@ -238,7 +238,7 @@ const TablesContainer: React.SFC<ITablesContainerProps> = ({
     } else {
         return (
         <NoSearchResults>
-          There were no search results. <br/>Please search again.
+          There were no search results. <br/> Please search again.
         </NoSearchResults>
       )
   }

@@ -36,7 +36,7 @@ const LoadWrap = styled.div`
 
 const HomePage = ({ location }) => {
   const allTablesMetaData = location.state.tables;
-  const [selectedForQueryTables, setSelectedForQueryTables] = useState([]);
+  const [selectedForQueryTables, setSelectedForQueryTables] = useState({});
   const [loadingQueryStatus, setLoadingQueryStatus] = useState(false);
   const [activeDisplayInResultsTab, setActiveDisplayInResultsTab] = useState('Tables');
   const [activeTableInPanel, setActiveTableInPanel] = useState({});
@@ -60,23 +60,43 @@ const HomePage = ({ location }) => {
   });
 
   const captureQuerySelections = (e) => {
+    let selectedTableName = e.target.dataset.tablename;
+    let selectedColumnName = e.target.dataset.columnname;
     let temp = selectedForQueryTables;
-    let adding = true;
-    for(let i=0; i < selectedForQueryTables.length; i++){
-      if((selectedForQueryTables[i].tablename === e.target.dataset.tablename) && (selectedForQueryTables[i].columnname === e.target.dataset.columnname)) {
-        temp = selectedForQueryTables.slice(0, i).concat(selectedForQueryTables.slice(i+1))
-        adding = false;
-        break;
+
+    if(Object.keys(temp).includes(selectedTableName)) {
+      if(temp[selectedTableName].includes(selectedColumnName)){
+        const startIndex = temp[selectedTableName].indexOf(selectedColumnName)
+        temp[selectedTableName] = temp[selectedTableName].slice(0, startIndex).concat(temp[selectedTableName].slice(startIndex+1))
+        if(temp[selectedTableName].length === 0) delete temp[selectedTableName];
+      } else {
+        temp[selectedTableName].push(selectedColumnName);
       }
+    } else {
+      temp[selectedTableName] = [selectedColumnName];
     }
-    if(adding){
-      temp.push({
-        tablename: e.target.dataset.tablename,
-        columnname: e.target.dataset.columnname
-      })
+
+
+    //for no tables
+    if(Object.keys(temp).length === 0){
+      setUserInputQuery('SELECT * FROM [add a table name here]')
     }
+    //for one table
+    if(Object.keys(temp).length === 1) {
+      let columns = '';
+      for(let table in temp){
+        for(let i=0; i < temp[table].length; i++){
+          if(i===0) columns += temp[table][i]
+          else columns += (', ' + temp[table][i])
+        } 
+      }
+      const query = `SELECT  ` + columns + ` FROM ` + Object.keys(temp)[0];
+      setUserInputQuery(query);
+    }
+    console.log('t', temp)
     setSelectedForQueryTables(temp);
   }
+  console.log('a', selectedForQueryTables)
 
   const togglePanelVisibility = () => {
     if (sidePanelVisibility) setSidePanelVisibility(false);

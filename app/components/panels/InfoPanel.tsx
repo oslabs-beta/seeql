@@ -24,11 +24,11 @@ const Title = styled.h1`
 `;
 
 const Text = styled.p`
-  font-size: 14px;
+  font-size: 100%;
 `;
 
 const Label = styled.label`
-  font-size: 12px;
+  font-size: 80%;
 `;
 
 // interface IForeignKeys {
@@ -68,13 +68,15 @@ const InfoPanel: React.SFC<Props> = ({ activeTableInPanel, sidePanelVisibility }
     foreignKeys,
     foreignKeysOfPrimary
   } = activeTableInPanel;
+
   const foreignKeyRelationships = [];
   const primaryKeyRelationships = [];
+
   if (foreignKeys) {
     foreignKeys.forEach(key => {
       foreignKeyRelationships.push(
         <li>
-          <Text>
+          <Text key={key}>
             {key.column_name} <Label as="span">from table</Label>
             {key.foreign_table_name}({key.foreign_column_name})
           </Text>
@@ -121,8 +123,7 @@ const InfoPanel: React.SFC<Props> = ({ activeTableInPanel, sidePanelVisibility }
         </InfoSection>
       ) : (
         <div>
-          You haven't selected a table yet, click on a table to see their
-          information
+          You haven't selected a table yet, click on a table to see their information
         </div>
       )}
     </SidePanelTableListWrapper>
