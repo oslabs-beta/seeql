@@ -42,15 +42,17 @@ const Label = styled.label`
   padding: 10px 0;
 `;
 
-const logOut = () => {
-  ipcRenderer.send('logout-to-main', 'userlogout');
-};
 
-const SettingsPanel = () => {
+const SettingsPanel = ({ intervalId }) => {
   const [context, setContext] = useContext(Context);
   const [state, dispatch] = useReducer(themeReducer, context);
   const [toggle, setToggle] = useState(false);
   const contextText = context.light.toString();
+  
+  const logOut = () => {
+    clearInterval(intervalId);
+    ipcRenderer.send('logout-to-main', 'userlogout');
+  }
 
   return (
     <PanelWrapper>
@@ -83,11 +85,9 @@ const SettingsPanel = () => {
       </TopSection>
       <BottomSection>
         <div style={state}>CHANGE ME HEY BLAHHSLAH</div>
-        <div onClick={logOut}>
-          <NavLink to="/login" activeStyle={{ color: 'black ' }}>
+          <NavLink onClick={logOut} to="/" activeStyle={{ color: 'black ' }}>
             Log Out
           </NavLink>
-        </div>
       </BottomSection>
     </PanelWrapper>
   );

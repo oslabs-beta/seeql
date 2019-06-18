@@ -4,6 +4,7 @@ import SettingsPanel from '../components/sidepanels/SettingsPanel';
 import FavoritesPanel from '../components/sidepanels/FavoritesPanel';
 import InfoPanel from '../components/sidepanels/InfoPanel';
 import * as actions from '../actions/actions';
+
 interface IPanelWrapperProps {
   sidePanelVisibility: boolean;
 }
@@ -76,6 +77,7 @@ interface IDispatchSidePanelDisplayAction {
 }
 
 interface Props {
+  intervalId: number;
   activeTableInPanel: IAcitveTableInPanel;
   sidePanelVisibility: boolean;
   activePanel: string;
@@ -83,6 +85,7 @@ interface Props {
 }
 
 const SidePanel: React.SFC<Props> = ({
+  intervalId,
   activeTableInPanel,
   sidePanelVisibility,
   activePanel,
@@ -99,7 +102,7 @@ const SidePanel: React.SFC<Props> = ({
             />
           )}
           {activePanel === 'favorites' && <FavoritesPanel />}
-          {activePanel === 'settings' && <SettingsPanel />}
+          {activePanel === 'settings' && <SettingsPanel intervalId={intervalId} />}
         </div>
       )}
       <ButtonMenu>

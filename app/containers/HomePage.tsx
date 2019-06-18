@@ -101,13 +101,15 @@ const HomePage = ({ location }) => {
   const [redirectDueToInactivity, setRedirectDueToInactivity] = useState(false);
 
   const logOut = () => {
-    ipcRenderer.send('logout-to-main', 'inactivity');
     clearInterval(intervalId);
+    ipcRenderer.send('logout-to-main', 'inactivity');
     setRedirectDueToInactivity(true);
+    clearInterval(intervalId);
   }
 
   useEffect(() => {
-    captureIntervalId(setInterval(() => setInactiveTime(inactiveTime => inactiveTime + 1), 200));
+    captureIntervalId(setInterval(() => setInactiveTime(inactiveTime => inactiveTime + 1), 60000));
+    return () => clearInterval(intervalId);
   }, []);
 
   useEffect(() => { if (inactiveTime >= 15) logOut() }, [inactiveTime]);
@@ -198,42 +200,47 @@ const HomePage = ({ location }) => {
     setToggleLoad(false);
   }, [allTablesMetaData]);
 
-  ipcRenderer.removeAllListeners('query-result-to-homepage');
-  ipcRenderer.on('query-result-to-homepage', (event, queryResult) => {
-    if (queryResult.statusCode === 'Success') {
-      setQueryResult({
-        status: queryResult.message.length === 0 ? 'No results' : 'Success',
-        message: queryResult.message
-      });
-      setActiveDisplayInResultsTab('Query Results');
-    } else if (queryResult.statusCode === 'Invalid Request') {
-      setQueryResultError({
-        status: true,
-        message: queryResult.message
-      });
-    } else if (queryResult.statusCode === 'Syntax Error') {
-      setQueryResultError({
-        status: true,
-        message: `Syntax error in retrieving query results.
-        Error on: ${userInputQuery.slice(
-          0,
-          parseInt(queryResult.err.position) - 1
-        )} "
-        ${userInputQuery.slice(
-          parseInt(queryResult.err.position) - 1,
-          parseInt(queryResult.err.position)
-        )} "
-        ${userInputQuery.slice(parseInt(queryResult.err.position))};`
-      });
-    }
-    setLoadingQueryStatus(false);
-  });
+  useEffect(() => {
+    ipcRenderer.on('query-result-to-homepage', (event, queryResult) => {
+      if (queryResult.statusCode === 'Success') {
+        setQueryResult({
+          status: queryResult.message.length === 0 ? 'No results' : 'Success',
+          message: queryResult.message
+        });
+        setActiveDisplayInResultsTab('Query Results');
+      } else if (queryResult.statusCode === 'Invalid Request') {
+        setQueryResultError({
+          status: true,
+          message: queryResult.message
+        });
+      } else if (queryResult.statusCode === 'Syntax Error') {
+        setQueryResultError({
+          status: true,
+          message: `Syntax error in retrieving query results.
+          Error on: ${userInputQuery.slice(
+            0,
+            parseInt(queryResult.err.position) - 1
+          )} "
+          ${userInputQuery.slice(
+            parseInt(queryResult.err.position) - 1,
+            parseInt(queryResult.err.position)
+          )} "
+          ${userInputQuery.slice(parseInt(queryResult.err.position))};`
+        });
+      }
+      setLoadingQueryStatus(false);
+    });
+    return () => ipcRenderer.removeAllListeners('query-result-to-homepage');
+  }, []);
+
 
   return (
     <React.Fragment>
+      {redirectDueToInactivity && <Redirect to='/' />}
       <InvisibleHeader></InvisibleHeader>
       <HomepageWrapper onMouseMove={() => setInactiveTime(0)}>
         <SidePanel
+          intervalId={intervalId}
           activePanel={activePanel}
           dispatchSidePanelDisplay={dispatchSidePanelDisplay}
           activeTableInPanel={activeTableInPanel}
@@ -276,7 +283,6 @@ const HomePage = ({ location }) => {
             selectedForQueryTables={selectedForQueryTables}
           />
         </MainPanel>
-        {redirectDueToInactivity && <Redirect to='/' />}
       </HomepageWrapper>
     </React.Fragment>
   );
