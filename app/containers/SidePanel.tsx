@@ -1,11 +1,11 @@
 import * as React from 'react';
 import styled from 'styled-components';
-import SettingsPanel from '../components/SettingsPanel';
-import FavoritesPanel from '../components/FavoritesPanel';
-import SearchPanel from '../components/SearchPanel';
+import SettingsPanel from '../components/sidepanels/SettingsPanel';
+import FavoritesPanel from '../components/sidepanels/FavoritesPanel';
+import InfoPanel from '../components/sidepanels/InfoPanel';
 import * as actions from '../actions/actions';
 interface IPanelWrapperProps {
-  visible: boolean;
+  sidePanelVisibility: boolean;
 }
 
 interface IIndTabProps {
@@ -14,7 +14,7 @@ interface IIndTabProps {
 }
 
 const PanelWrapper = styled.div<IPanelWrapperProps>`
-  width: ${({ visible }) => (visible ? '375px' : '100px')};
+  width: ${({ sidePanelVisibility }) => (sidePanelVisibility ? '375px' : '0px')};
   display: flex;
   justify-content: flex-start;
   transition: width 500ms ease-in-out;
@@ -51,30 +51,6 @@ const Tabs = styled.div`
   font-family: 'Poppins', sans-serif;
 `;
 
-interface ICollapseBtnProps {
-  visible: boolean;
-}
-
-const CollapseBtn = styled.button<ICollapseBtnProps>`
-  border: none;
-  border-radius: 3px;
-  padding: 5px;
-  width: 25px;
-  height: 25px;
-  margin: 5px;
-  display: relative;
-  left: 100px;
-  margin-left: ${({ visible }) => (visible ? '5px' : '80px')};
-  text-align: center;
-  :focus {
-    outline: none;
-  }
-  :hover {
-    font-weight: bold;
-    background-color: #f2f1ef;
-  }
-`;
-
 interface IForeignKeysAffected {
   column: string;
   table: string;
@@ -95,32 +71,30 @@ interface IAcitveTableInPanel {
   foreignKeysOfPrimary?: any;
 }
 
-interface IDispatchLeftPanelDisplayAction {
+interface IDispatchSidePanelDisplayAction {
   type: string;
 }
 
 interface Props {
   activeTableInPanel: IAcitveTableInPanel;
-  visible: boolean;
+  sidePanelVisibility: boolean;
   activePanel: string;
-  togglePanelVisibility: () => void;
-  dispatchLeftPanelDisplay: (IDispatchLeftPanelDisplayAction) => any;
+  dispatchSidePanelDisplay: (IDispatchSidePanelDisplayAction) => any;
 }
 
-const Panel: React.SFC<Props> = ({
+const SidePanel: React.SFC<Props> = ({
   activeTableInPanel,
-  visible,
-  togglePanelVisibility,
+  sidePanelVisibility,
   activePanel,
-  dispatchLeftPanelDisplay
+  dispatchSidePanelDisplay
 }) => {
   return (
-    <PanelWrapper visible={visible}>
-      {visible && (
+    <PanelWrapper sidePanelVisibility={sidePanelVisibility}>
+      {sidePanelVisibility && (
         <div>
-          {activePanel === 'search' && (
-            <SearchPanel
-              visible={visible}
+          {activePanel === 'info' && (
+            <InfoPanel
+              sidePanelVisibility={sidePanelVisibility}
               activeTableInPanel={activeTableInPanel}
             />
           )}
@@ -129,22 +103,14 @@ const Panel: React.SFC<Props> = ({
         </div>
       )}
       <ButtonMenu>
-        <CollapseBtn
-          onClick={togglePanelVisibility}
-          data-active={activePanel}
-          visible={visible}
-        >
-          {' '}
-          {visible ? `<<` : `>>`}{' '}
-        </CollapseBtn>
-        {visible && (
+        {sidePanelVisibility && (
           <Tabs>
             <IndTab
-              data-panel="search"
-              panel="search"
+              data-panel="info"
+              panel="info"
               active={activePanel}
               onClick={() =>
-                dispatchLeftPanelDisplay(actions.changeToInfoPanel())
+                dispatchSidePanelDisplay(actions.changeToInfoPanel())
               }
             >
               Table Info
@@ -154,7 +120,7 @@ const Panel: React.SFC<Props> = ({
               panel="favorites"
               active={activePanel}
               onClick={() =>
-                dispatchLeftPanelDisplay(actions.changeToFavPanel())
+                dispatchSidePanelDisplay(actions.changeToFavPanel())
               }
             >
               Favorites
@@ -164,7 +130,7 @@ const Panel: React.SFC<Props> = ({
               panel="settings"
               active={activePanel}
               onClick={() =>
-                dispatchLeftPanelDisplay(actions.changeToSettingsPanel())
+                dispatchSidePanelDisplay(actions.changeToSettingsPanel())
               }
             >
               Settings
@@ -176,4 +142,4 @@ const Panel: React.SFC<Props> = ({
   );
 };
 
-export default Panel;
+export default SidePanel;

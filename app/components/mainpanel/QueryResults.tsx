@@ -9,7 +9,6 @@ const QueryResultWrapper = styled.div`
   background-color: white;
   border: 1px solid black;
   overflow: scroll;
-  width: 60vw;
   height: 60vh;
 `;
 

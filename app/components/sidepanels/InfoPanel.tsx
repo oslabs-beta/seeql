@@ -1,14 +1,14 @@
 import * as React from 'react';
 import styled from 'styled-components';
 
-interface ILeftPanelTableWrapperProps {
-  visible: boolean;
+interface ISidePanelTableWrapperProps {
+  sidePanelVisibility: boolean;
 }
 
-const LeftPanelTableListWrapper = styled.div<ILeftPanelTableWrapperProps>`
+const SidePanelTableListWrapper = styled.div<ISidePanelTableWrapperProps>`
   color: black;
   padding: 40px;
-  width: ${({ visible }) => (visible ? '300px' : '0px')};
+  width: ${({ sidePanelVisibility }) => (sidePanelVisibility ? '300px' : '0px')};
   height: 100vh;
   background-color: ${props => props.theme.backgroundColor};
   color: ${props => props.theme.fontColor};
@@ -24,11 +24,11 @@ const Title = styled.h1`
 `;
 
 const Text = styled.p`
-  font-size: 14px;
+  font-size: 100%;
 `;
 
 const Label = styled.label`
-  font-size: 12px;
+  font-size: 80%;
 `;
 
 // interface IForeignKeys {
@@ -58,23 +58,25 @@ interface ISelectedTable {
 
 interface Props {
   activeTableInPanel: ISelectedTable;
-  visible: boolean;
+  sidePanelVisibility: boolean;
 }
 
-const SearchPanel: React.SFC<Props> = ({ activeTableInPanel, visible }) => {
+const InfoPanel: React.SFC<Props> = ({ activeTableInPanel, sidePanelVisibility }) => {
   const {
     table_name,
     primaryKey,
     foreignKeys,
     foreignKeysOfPrimary
   } = activeTableInPanel;
+
   const foreignKeyRelationships = [];
   const primaryKeyRelationships = [];
+
   if (foreignKeys) {
     foreignKeys.forEach(key => {
       foreignKeyRelationships.push(
         <li>
-          <Text>
+          <Text key={key}>
             {key.column_name} <Label as="span">from table</Label>
             {key.foreign_table_name}({key.foreign_column_name})
           </Text>
@@ -92,7 +94,7 @@ const SearchPanel: React.SFC<Props> = ({ activeTableInPanel, visible }) => {
   }
 
   return (
-    <LeftPanelTableListWrapper visible={visible}>
+    <SidePanelTableListWrapper sidePanelVisibility={sidePanelVisibility}>
       <Title>Information</Title>
       {Object.keys(activeTableInPanel).length > 0 ? (
         <InfoSection>
@@ -121,12 +123,11 @@ const SearchPanel: React.SFC<Props> = ({ activeTableInPanel, visible }) => {
         </InfoSection>
       ) : (
         <div>
-          You haven't selected a table yet, click on a table to see their
-          information
+          You haven't selected a table yet, click on a table to see their information
         </div>
       )}
-    </LeftPanelTableListWrapper>
+    </SidePanelTableListWrapper>
   );
 };
 
-export default SearchPanel;
+export default InfoPanel;
