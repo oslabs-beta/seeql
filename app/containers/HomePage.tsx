@@ -62,6 +62,7 @@ const LoadWrap = styled.div`
 `;
 
 let relationships = {};
+let alias = {};
 
 const HomePage = ({ location }) => {
   const allTablesMetaData = location.state.tables;
@@ -113,7 +114,6 @@ const HomePage = ({ location }) => {
     let tables = '';
     let query = '';
     relationships[selectedTableName] = [];
-    console.log('data is ', data);
 
     //get relationships of FK
     data.forEach(table => {
@@ -180,6 +180,7 @@ const HomePage = ({ location }) => {
             //if empty after removing
             delete temp[selectedTableName];
             delete relationships[selectedTableName];
+            delete alias[selectedTableName];
           }
         } else {
           //first row and first table to be selected
@@ -219,10 +220,18 @@ const HomePage = ({ location }) => {
     let previousTablePointer;
     let previousInitial = '';
     //for multiple joins
-    if (Object.keys(temp).length >= 2) {
+    if (Object.keys(temp).length === 2) {
       for (let table in temp) {
         //loop through each table
-        let tableInitial = table[0] + '.'; //initial of each table
+        let aliasIndex = 0;
+        let tableInitial = table[0];
+        while (Object.values(alias).includes(table[aliasIndex])) {
+          tableInitial += table[aliasIndex + 1];
+          console.log('hi', 'initial', tableInitial);
+          aliasIndex++; //initial of each table
+        }
+        alias[table] = tableInitial;
+        tableInitial += '.';
         //check if all the columns have been selected
         if (temp[table].all) {
           if (firstColumn) {
@@ -246,22 +255,20 @@ const HomePage = ({ location }) => {
           firstTable = false;
         } else {
           tables += ` INNER JOIN ` + table + ` as ` + table[0];
-          let test2 = '';
+          let rel = '';
           relationships[table].forEach(relation => {
             if (
               relation.fktablename === previousTablePointer &&
               relation.tablename === table
             ) {
-              test2 =
+              rel =
                 previousInitial +
                 relation.fkcolname +
                 `=` +
                 (tableInitial + relation.colname);
             }
-            console.log('test2', test2);
           });
-          console.log('outtest2', test2);
-          tables += ` ON ` + test2;
+          tables += ` ON ` + rel;
         }
         previousTablePointer = table;
         previousInitial = tableInitial;
@@ -269,6 +276,7 @@ const HomePage = ({ location }) => {
       //entire query
       query = `SELECT ` + columns + ` FROM ` + tables;
     }
+    console.log('alias object', alias);
     setUserInputQuery(query);
     setSelectedForQueryTables(temp);
   };

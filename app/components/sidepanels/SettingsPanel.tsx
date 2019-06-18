@@ -12,7 +12,6 @@ const PanelWrapper = styled.div`
   color: black;
   font-family: 'Poppins', sans-serif;
   padding: 20px;
-  width: 300px;
   height: 100vh;
   padding: 40px;
   background-color: ${props => props.theme.backgroundColor};

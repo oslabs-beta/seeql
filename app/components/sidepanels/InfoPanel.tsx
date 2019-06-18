@@ -7,8 +7,7 @@ interface ISidePanelTableWrapperProps {
 
 const SidePanelTableListWrapper = styled.div<ISidePanelTableWrapperProps>`
   color: black;
-  padding: 40px;
-  width: ${({ sidePanelVisibility }) => (sidePanelVisibility ? '300px' : '0px')};
+  padding: 20px;
   height: 100vh;
   background-color: ${props => props.theme.backgroundColor};
   color: ${props => props.theme.fontColor};
@@ -61,7 +60,10 @@ interface Props {
   sidePanelVisibility: boolean;
 }
 
-const InfoPanel: React.SFC<Props> = ({ activeTableInPanel, sidePanelVisibility }) => {
+const InfoPanel: React.SFC<Props> = ({
+  activeTableInPanel,
+  sidePanelVisibility
+}) => {
   const {
     table_name,
     primaryKey,
@@ -123,7 +125,8 @@ const InfoPanel: React.SFC<Props> = ({ activeTableInPanel, sidePanelVisibility }
         </InfoSection>
       ) : (
         <div>
-          You haven't selected a table yet, click on a table to see their information
+          You haven't selected a table yet, click on a table to see their
+          information
         </div>
       )}
     </SidePanelTableListWrapper>
