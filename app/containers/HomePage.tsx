@@ -98,40 +98,117 @@ const HomePage = ({ location }) => {
   const captureQuerySelections = e => {
     let selectedTableName = e.target.dataset.tablename;
     let selectedColumnName = e.target.dataset.columnname;
+    let firstColumn = true;
+    let firstTable = true;
     let temp = selectedForQueryTables;
+    let columns = '';
+    let tables = '';
+    let query = '';
 
-    if (Object.keys(temp).includes(selectedTableName)) {
-      if (temp[selectedTableName].includes(selectedColumnName)) {
-        const startIndex = temp[selectedTableName].indexOf(selectedColumnName);
-        temp[selectedTableName] = temp[selectedTableName]
-          .slice(0, startIndex)
-          .concat(temp[selectedTableName].slice(startIndex + 1));
-        if (temp[selectedTableName].length === 0)
-          delete temp[selectedTableName];
-      } else {
-        temp[selectedTableName].push(selectedColumnName);
-      }
-    } else {
-      temp[selectedTableName] = [selectedColumnName];
-    }
+    console.log('data is ', data);
 
-    //for no tables
-    if (Object.keys(temp).length === 0) {
-      setUserInputQuery('SELECT * FROM [add a table name here]');
-    }
-    //for one table
-    if (Object.keys(temp).length === 1) {
-      let columns = '';
-      for (let table in temp) {
-        for (let i = 0; i < temp[table].length; i++) {
-          if (i === 0) columns += temp[table][i];
-          else columns += ', ' + temp[table][i];
+    //builds the object used to write the query
+    for (let i = 0; i < data.length; i++) {
+      if (data[i].table_name === selectedTableName) {
+        //builds query selection object
+        //check if table already exists in query
+        if (Object.keys(temp).includes(selectedTableName)) {
+          //check if column name already exists
+          if (temp[selectedTableName].columns.includes(selectedColumnName)) {
+            //remove the column if it exists
+            const startIndex = temp[selectedTableName].columns.indexOf(
+              selectedColumnName
+            );
+            temp[selectedTableName].columns = temp[selectedTableName].columns
+              .slice(0, startIndex)
+              .concat(temp[selectedTableName].columns.slice(startIndex + 1));
+            //add it to the columns
+          } else {
+            temp[selectedTableName].columns.push(selectedColumnName);
+          }
+          //check if all items are selected
+          if (
+            temp[selectedTableName].columns.length ===
+            temp[selectedTableName].columncount
+          ) {
+            temp[selectedTableName].all = true;
+          } else {
+            temp[selectedTableName].all = false;
+          }
+          //delete entire object if the columns are now empty
+          if (temp[selectedTableName].columns.length === 0)
+            //if empty after removing
+            delete temp[selectedTableName];
+        } else {
+          //first row and first table to be selected
+          temp[selectedTableName] = {
+            all: false,
+            columncount: data[i].columns.length,
+            columns: [selectedColumnName]
+          };
         }
       }
-      const query = `SELECT  ` + columns + ` FROM ` + Object.keys(temp)[0];
-      setUserInputQuery(query);
     }
+
+    //actually write the query
+    //for no tables
+    if (Object.keys(temp).length === 0) {
+      query = 'SELECT * FROM [add a table name here]';
+    }
+
+    //for one table
+    if (Object.keys(temp).length === 1) {
+      for (let table in temp) {
+        //check if all has been selected
+        if (temp[table].all) columns += '*';
+        else {
+          for (let i = 0; i < temp[table].columns.length; i++) {
+            if (firstColumn) {
+              columns += temp[table].columns[i];
+              firstColumn = false;
+            } else columns += ', ' + temp[table].columns[i];
+          }
+        }
+      }
+      tables = Object.keys(temp)[0];
+      query = `SELECT ` + columns + ` FROM ` + tables;
+    }
+
     //for multiple joins
+    if (Object.keys(temp).length === 2) {
+      for (let table in temp) {
+        //loop through each table
+        let tableInitial = table[0] + '.'; //initial of each table
+        //check if all the columns have been selected
+        if (temp[table].all) {
+          if (firstColumn) {
+            columns += tableInitial + '*';
+            firstColumn = false;
+          } else columns += ', ' + tableInitial + '*';
+        } else {
+          //add each individual column name
+          for (let i = 0; i < temp[table].columns.length; i++) {
+            if (firstColumn) {
+              columns += tableInitial + temp[table].columns[i];
+              firstColumn = false;
+            } else {
+              columns += ', ' + tableInitial + temp[table].columns[i];
+            }
+          }
+        }
+        //create the table list
+        if (firstTable) {
+          tables += table + ` as ` + table[0];
+          firstTable = false;
+        } else {
+          tables += ` INNER JOIN ` + table + ` as ` + table[0];
+        }
+      }
+      //entire query
+      query = `SELECT ` + columns + ` FROM ` + tables + ` ON `;
+    }
+
+    setUserInputQuery(query);
     setSelectedForQueryTables(temp);
   };
 
