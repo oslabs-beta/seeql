@@ -1,0 +1,26 @@
+// add these to settings.json in vscode to autoformat on save, paste, type
+
+// your other settings here 
+"editor.defaultFormatter": "esbenp.prettier-vscode",
+"prettier.jsxSingleQuote": true,
+"prettier.singleQuote": true,
+"prettier.eslintIntegration": true,
+"javascript.preferences.quoteStyle": "single",
+"typescript.preferences.quoteStyle": "single",
+"eslint.alwaysShowStatus": true,
+"eslint.autoFixOnSave": true,
+"eslint.validate": [
+  "javascript",
+  "javascriptreact",
+  {
+    "language": "typescript",
+    "autoFix": true
+  },
+  {
+    "language": "typescriptreact",
+    "autoFix": true
+  }
+],
+"editor.formatOnPaste": true,
+"editor.formatOnSave": true
+// your other settings

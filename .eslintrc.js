@@ -1,12 +1,16 @@
 module.exports = {
   parser: "@typescript-eslint/parser",
-  extends: [
-    "eslint:recommended",
-    "plugin:@typescript-eslint/eslint-recommended",
+  "extends": [
     "plugin:@typescript-eslint/recommended",
-    "plugin:prettier/recommended",
+    "prettier",
+    "prettier/@typescript-eslint"
   ],
-  plugins: ["@typescript-eslint", "react", "prettier"],
+  parserOptions: {
+    "jsx": true,
+    "useJSXTextNode": true
+  },
+  //plugins: ["@typescript-eslint", "react", "prettier"],
+  plugins: ["@typescript-eslint"],
   settings: {
     react: {
       version: require("./package.json").dependencies.react
