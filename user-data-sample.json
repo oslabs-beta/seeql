@@ -1,0 +1,173 @@
+{
+  "windowBounds": { "width": 840, "height": 491 },
+  "tabledata-to-lgoin": [
+    {
+      "columns": [
+        {
+          "characterlength": null,
+          "columnname": "id",
+          "datatype": "integer",
+          "defaultvalue": "nextval('projects_id_seq'::regclass)"
+        },
+        {
+          "characterlength": null,
+          "columnname": "user_id",
+          "datatype": "integer",
+          "defaultvalue": null
+        },
+        {
+          "characterlength": null,
+          "columnname": "name",
+          "datatype": "character varying",
+          "defaultvalue": null
+        },
+        {
+          "characterlength": null,
+          "columnname": "created_at",
+          "datatype": "date",
+          "defaultvalue": "now()"
+        }
+      ],
+      "foreignKeys": [
+        {
+          "column_name": "user_id",
+          "constraint_name": "projects_user_id_fkey",
+          "foreign_column_name": "id",
+          "foreign_table_name": "users",
+          "foreign_table_schema": "public",
+          "table_name": "projects",
+          "table_schema": "public"
+        }
+      ],
+      "primaryKey": "id",
+      "table_name": "projects"
+    },
+    {
+      "columns": [
+        {
+          "characterlength": null,
+          "columnname": "id",
+          "datatype": "integer",
+          "defaultvalue": "nextval('nodes_id_seq'::regclass)"
+        },
+        {
+          "characterlength": null,
+          "columnname": "project_id",
+          "datatype": "integer",
+          "defaultvalue": null
+        },
+        {
+          "characterlength": null,
+          "columnname": "parent_id",
+          "datatype": "integer",
+          "defaultvalue": null
+        },
+        {
+          "characterlength": null,
+          "columnname": "name",
+          "datatype": "character varying",
+          "defaultvalue": null
+        },
+        {
+          "characterlength": null,
+          "columnname": "stateful",
+          "datatype": "boolean",
+          "defaultvalue": "false"
+        },
+        {
+          "characterlength": null,
+          "columnname": "state",
+          "datatype": "json",
+          "defaultvalue": null
+        },
+        {
+          "characterlength": null,
+          "columnname": "props",
+          "datatype": "json",
+          "defaultvalue": null
+        },
+        {
+          "characterlength": null,
+          "columnname": "count",
+          "datatype": "character varying",
+          "defaultvalue": "'1'::character varying"
+        }
+      ],
+      "foreignKeys": [
+        {
+          "column_name": "project_id",
+          "constraint_name": "nodes_project_id_fkey",
+          "foreign_column_name": "id",
+          "foreign_table_name": "projects",
+          "foreign_table_schema": "public",
+          "table_name": "nodes",
+          "table_schema": "public"
+        },
+        {
+          "column_name": "parent_id",
+          "constraint_name": "nodes_parent_id_fkey",
+          "foreign_column_name": "id",
+          "foreign_table_name": "nodes",
+          "foreign_table_schema": "public",
+          "table_name": "nodes",
+          "table_schema": "public"
+        }
+      ],
+      "primaryKey": "id",
+      "table_name": "nodes"
+    },
+    {
+      "columns": [
+        {
+          "characterlength": null,
+          "columnname": "id",
+          "datatype": "integer",
+          "defaultvalue": "nextval('awesome_table_id_seq'::regclass)"
+        },
+        {
+          "characterlength": null,
+          "columnname": "sweet_column",
+          "datatype": "character varying",
+          "defaultvalue": null
+        }
+      ],
+      "foreignKeys": [],
+      "primaryKey": "id",
+      "table_name": "awesome_table"
+    },
+    {
+      "columns": [
+        {
+          "characterlength": null,
+          "columnname": "id",
+          "datatype": "integer",
+          "defaultvalue": "nextval('users_id_seq'::regclass)"
+        },
+        {
+          "characterlength": null,
+          "columnname": "first_name",
+          "datatype": "character varying",
+          "defaultvalue": null
+        },
+        {
+          "characterlength": null,
+          "columnname": "last_name",
+          "datatype": "character varying",
+          "defaultvalue": null
+        },
+        {
+          "characterlength": null,
+          "columnname": "email",
+          "datatype": "character varying",
+          "defaultvalue": null
+        }
+      ],
+      "foreignKeys": [],
+      "primaryKey": "id",
+      "table_name": "users"
+    }
+  ],
+  "queryFromUserInMainProcess": "SELECT  id FROM nodes",
+  "uri-to-main logged": "postgres://godugvmyduvduy:3b89454dd6a4090ac4a5574a00a2e13393dda232f258b3a6033c4ac4d24858ff@ec2-50-19-127-115.compute-1.amazonaws.com:5432/d16hrptvvsaq3f?ssl=true"
+}
+
