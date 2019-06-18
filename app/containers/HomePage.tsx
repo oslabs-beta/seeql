@@ -61,6 +61,8 @@ const LoadWrap = styled.div`
   width: 100%;
 `;
 
+let relationships = {};
+
 const HomePage = ({ location }) => {
   const allTablesMetaData = location.state.tables;
   const [selectedForQueryTables, setSelectedForQueryTables] = useState({});
@@ -91,6 +93,7 @@ const HomePage = ({ location }) => {
   });
 
   const resetQuerySelection = () => {
+    relationships = [];
     setUserInputQuery('SELECT * FROM [add a table name here]');
     setSelectedForQueryTables({});
     setQueryResultError({
@@ -104,15 +107,45 @@ const HomePage = ({ location }) => {
     let selectedColumnName = e.target.dataset.columnname;
     let firstColumn = true;
     let firstTable = true;
+    let pk = '';
     let temp = selectedForQueryTables;
-    // let relationships = [];
     let columns = '';
     let tables = '';
     let query = '';
-
+    relationships[selectedTableName] = [];
     console.log('data is ', data);
 
-    //get relationships
+    //get relationships of FK
+    data.forEach(table => {
+      if (table.table_name === selectedTableName) {
+        pk = table.primaryKey;
+        table.foreignKeys.forEach(foreignkey => {
+          relationships[selectedTableName].push({
+            tablename: foreignkey.table_name,
+            colname: foreignkey.column_name,
+            fktablename: foreignkey.foreign_table_name,
+            fkcolname: foreignkey.foreign_column_name
+          });
+        });
+      }
+    });
+
+    //get relationships of PK
+    data.forEach(table => {
+      table.foreignKeys.forEach(foreignkey => {
+        if (
+          foreignkey.foreign_column_name == pk &&
+          foreignkey.foreign_table_name == selectedTableName
+        ) {
+          relationships[selectedTableName].push({
+            tablename: foreignkey.foreign_table_name,
+            colname: foreignkey.foreign_column_name,
+            fktablename: foreignkey.table_name,
+            fkcolname: foreignkey.column_name
+          });
+        }
+      });
+    });
 
     //builds the object used to write the query
     for (let i = 0; i < data.length; i++) {
@@ -143,9 +176,11 @@ const HomePage = ({ location }) => {
             temp[selectedTableName].all = false;
           }
           //delete entire object if the columns are now empty
-          if (temp[selectedTableName].columns.length === 0)
+          if (temp[selectedTableName].columns.length === 0) {
             //if empty after removing
             delete temp[selectedTableName];
+            delete relationships[selectedTableName];
+          }
         } else {
           //first row and first table to be selected
           temp[selectedTableName] = {
@@ -181,8 +216,10 @@ const HomePage = ({ location }) => {
       query = `SELECT ` + columns + ` FROM ` + tables;
     }
 
+    let previousTablePointer;
+    let previousInitial = '';
     //for multiple joins
-    if (Object.keys(temp).length > 2) {
+    if (Object.keys(temp).length >= 2) {
       for (let table in temp) {
         //loop through each table
         let tableInitial = table[0] + '.'; //initial of each table
@@ -209,13 +246,29 @@ const HomePage = ({ location }) => {
           firstTable = false;
         } else {
           tables += ` INNER JOIN ` + table + ` as ` + table[0];
-          tables += ` ON `;
+          let test2 = '';
+          relationships[table].forEach(relation => {
+            if (
+              relation.fktablename === previousTablePointer &&
+              relation.tablename === table
+            ) {
+              test2 =
+                previousInitial +
+                relation.fkcolname +
+                `=` +
+                (tableInitial + relation.colname);
+            }
+            console.log('test2', test2);
+          });
+          console.log('outtest2', test2);
+          tables += ` ON ` + test2;
         }
+        previousTablePointer = table;
+        previousInitial = tableInitial;
       }
       //entire query
       query = `SELECT ` + columns + ` FROM ` + tables;
     }
-
     setUserInputQuery(query);
     setSelectedForQueryTables(temp);
   };
