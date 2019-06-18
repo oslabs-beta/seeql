@@ -8,7 +8,6 @@ import Routes from "./Routes";
 import { BrowserRouter } from "react-router-dom";
 import { ThemeProvider } from "styled-components";
 import { useState } from "react";
-
 const Index = () => {
   const initialMode = { light: true, dark: false };
   const [context, setContext] = useState(initialMode);

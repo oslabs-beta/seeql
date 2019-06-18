@@ -3,6 +3,7 @@ import { useState } from 'react';
 import styled from 'styled-components';
 import { Redirect } from 'react-router-dom';
 import { ipcRenderer } from 'electron';
+import { promises as fs } from 'fs';
 
 const InvisibleHeader = styled.div`
   height: 30px;
@@ -122,6 +123,15 @@ const ToggleSSL = styled.div`
   align-items: center;
 `;
 
+const RememberMe = styled.div`
+  display: flex;
+  justify-content: center;
+  padding: 5px;
+  margin: 10px;
+  display: flex;
+  align-items: center;
+`;
+
 const LoginBtn = styled.button`
   padding: 5px;
   border-radius: 3px;
@@ -196,9 +206,11 @@ const Login = () => {
   const [redirectToHome, setRedirectToHome] = useState(false);
   const [tableData, setTableData] = useState([]);
 
+  const [rememberURI, setRememberURI] = useState(false);
+
   const sendLoginURI = (): void => {
     const updatedPort = !port ? '5432' : port;
-    let updatedURI;
+    let updatedURI: any;
     if (loginType === 'URI') updatedURI = URI;
     else if (loginType === 'Credentials')
       updatedURI = `postgres://${username.value}:${password.value}@${host.value}:${updatedPort}/${database.value}`;
@@ -216,19 +228,24 @@ const Login = () => {
       (host.value && username.value && password.value && database.value)
     ) {
       setLoading(true);
+      if (rememberURI) {
+        (async () => {
+          await fs.writeFile('./userData.txt', updatedURI, 'utf8');
+        })();
+      }
       ipcRenderer.send('uri-to-main', updatedURI);
     }
   };
 
   ipcRenderer.removeAllListeners('db-connection-error');
-  ipcRenderer.on('db-connection-error', (event, err) => {
+  ipcRenderer.on('db-connection-error', (_event, err) => {
     // #TODO: Error handling for cases where unable to retrieve info from a valid connection
     setConnectionError(true);
     setLoading(false);
   });
 
   ipcRenderer.removeAllListeners('tabledata-to-login');
-  ipcRenderer.on('tabledata-to-login', (event, databaseTables) => {
+  ipcRenderer.on('tabledata-to-login', (_event, databaseTables) => {
     setConnectionError(false);
     setTableData(databaseTables);
     setLoading(false);
@@ -241,14 +258,14 @@ const Login = () => {
     if (requiredError) setRequiredError(false);
   };
 
-  const redirectHome = () => {
-    if (redirectToHome)
-      return (
-        <Redirect
-          to={{ pathname: '/homepage', state: { tables: tableData } }}
-        />
-      );
-  };
+  // const redirectHome = () => {
+  //   if (redirectToHome)
+  //     return (
+  //     );
+  // };
+
+  //const testDBURI:string = 'postgres://ltdnkwnbccooem:64ad308e565b39cc070194f7fa621ae0e925339be5a1c69480ff2a4462eab4c4@ec2-54-163-226-238.compute-1.amazonaws.com:5432/ddsu160rb5t7vq?ssl=true'
+  //ipcRenderer.send('uri-to-main', testDBURI);
 
   return (
     <React.Fragment>
@@ -379,9 +396,21 @@ const Login = () => {
               <input type="checkbox" onChange={e => setSSL(e.target.checked)} />
               <InputLabel>ssl?</InputLabel>
             </ToggleSSL>
+            <RememberMe>
+              <input
+                type="checkbox"
+                onChange={e => setRememberURI(e.target.checked)}
+              />
+              <InputLabel>remember me</InputLabel>
+            </RememberMe>
             {!loading && <LoginBtn onClick={sendLoginURI}>Login</LoginBtn>}
             {loading && <LoginBtn disabled>Loading...</LoginBtn>}
-            {redirectHome()}
+            {/* {redirectHome()} */}
+            {redirectToHome && (
+              <Redirect
+                to={{ pathname: '/homepage', state: { tables: tableData } }}
+              />
+            )}
           </LoginContainer>
         </RightPanel>
       </LoginPageWrapper>

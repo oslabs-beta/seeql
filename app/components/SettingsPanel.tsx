@@ -41,6 +41,12 @@ const Label = styled.label`
   padding: 10px 0;
 `;
 
+const GithubLink = styled.button`
+  width: 200px;
+  background-color: ${props => props.theme.backgroundColor};
+  color: ${props => props.theme.fontColor};
+`;
+
 const SettingsPanel = () => {
   const [context, setContext] = useContext(Context);
   const [state, dispatch] = useReducer(themeReducer, context);
@@ -51,7 +57,6 @@ const SettingsPanel = () => {
     <PanelWrapper>
       <TopSection>
         <Title>Settings</Title>
-
         <DivWrapper>
           <Label>Theme</Label>
           <button
@@ -81,6 +86,7 @@ const SettingsPanel = () => {
         <NavLink to="/" activeStyle={{ color: 'black ' }}>
           Sign Out
         </NavLink>
+        <GithubLink>SeeQL is Open Source Software</GithubLink>
       </BottomSection>
     </PanelWrapper>
   );

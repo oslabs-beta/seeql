@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 /* eslint global-require: off */
 
 /**
@@ -14,7 +15,7 @@ import log from 'electron-log';
 import MenuBuilder from './menu';
 
 export default class AppUpdater {
-  constructor() {
+  public constructor() {
     log.transports.file.level = 'info';
     autoUpdater.logger = log;
     autoUpdater.checkForUpdatesAndNotify();
@@ -76,7 +77,7 @@ app.on('ready', async () => {
   mainWindow.loadURL(`file://${__dirname}/app.html`);
 
   // @TODO: Use 'ready-to-show' event
-  //        https://github.com/electron/electron/blob/master/docs/api/browser-window.md#using-ready-to-show-event
+  // https://github.com/electron/electron/blob/master/docs/api/browser-window.md#using-ready-to-show-event
   mainWindow.webContents.on('did-finish-load', () => {
     if (!mainWindow) {
       throw new Error('"mainWindow" is not defined');
@@ -100,24 +101,24 @@ app.on('ready', async () => {
   queryWindow.loadURL(`file://${__dirname}/query.html`);
 
   // Listening from homepage, to send to database
-  ipcMain.on('uri-to-main', (event, uri) => {
+  ipcMain.on('uri-to-main', (_event, uri) => {
     queryWindow.webContents.send('uri-to-db', uri);
   });
 
-  ipcMain.on('query-to-main', (event, query) => {
+  ipcMain.on('query-to-main', (_event, query) => {
     queryWindow.webContents.send('query-to-db', query);
   });
 
   // Listening from database, to send to homepage
-  ipcMain.on('database-tables-to-main', (event, databaseTables) => {
+  ipcMain.on('database-tables-to-main', (_event, databaseTables) => {
     mainWindow.webContents.send('tabledata-to-login', databaseTables);
   });
 
-  ipcMain.on('db-connection-error', (event, err) => {
+  ipcMain.on('db-connection-error', (_event, err) => {
     mainWindow.webContents.send('db-connection-error', err);
   });
 
-  ipcMain.on('query-result-to-main', (event, messagePayload) => {
+  ipcMain.on('query-result-to-main', (_event, messagePayload) => {
     mainWindow.webContents.send('query-result-to-homepage', messagePayload);
   });
 });
