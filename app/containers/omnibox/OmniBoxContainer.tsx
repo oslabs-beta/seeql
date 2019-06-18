@@ -65,12 +65,15 @@ const OmniBoxContainer: React.SFC<IOmniBoxProps>= ({
 
   const listOfTabNames = ['SQL', 'plain']
   const navigationTabs = listOfTabNames.map((tabname) => {
-    return <OmniBoxNavButton onClick={() => {
+    return <OmniBoxNavButton 
+    key={tabname}
+    onClick={() => {
         setOmniBoxView(tabname)}} omniBoxView={omniBoxView} selectedView={tabname}>{tabname}</OmniBoxNavButton>
   })
 
   const generateInputBox = () => {
       return (<OmniBoxInput 
+                key={omniBoxView}
                 userInputForTables={userInputForTables}
                 setUserInputForTables={setUserInputForTables}
                 omniBoxView={omniBoxView}

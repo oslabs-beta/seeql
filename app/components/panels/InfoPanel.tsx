@@ -2,13 +2,13 @@ import * as React from 'react';
 import styled from 'styled-components';
 
 interface ISidePanelTableWrapperProps {
-  visible: boolean;
+  sidePanelVisibility: boolean;
 }
 
 const SidePanelTableListWrapper = styled.div<ISidePanelTableWrapperProps>`
   color: black;
   padding: 40px;
-  width: ${({ visible }) => (visible ? '300px' : '0px')};
+  width: ${({ sidePanelVisibility }) => (sidePanelVisibility ? '300px' : '0px')};
   height: 100vh;
   background-color: ${props => props.theme.backgroundColor};
   color: ${props => props.theme.fontColor};
@@ -58,10 +58,10 @@ interface ISelectedTable {
 
 interface Props {
   activeTableInPanel: ISelectedTable;
-  visible: boolean;
+  sidePanelVisibility: boolean;
 }
 
-const InfoPanel: React.SFC<Props> = ({ activeTableInPanel, visible }) => {
+const InfoPanel: React.SFC<Props> = ({ activeTableInPanel, sidePanelVisibility }) => {
   const {
     table_name,
     primaryKey,
@@ -92,7 +92,7 @@ const InfoPanel: React.SFC<Props> = ({ activeTableInPanel, visible }) => {
   }
 
   return (
-    <SidePanelTableListWrapper visible={visible}>
+    <SidePanelTableListWrapper sidePanelVisibility={sidePanelVisibility}>
       <Title>Information</Title>
       {Object.keys(activeTableInPanel).length > 0 ? (
         <InfoSection>

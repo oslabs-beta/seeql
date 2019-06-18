@@ -38,19 +38,17 @@ const HomePage = ({ location }) => {
   const allTablesMetaData = location.state.tables;
   const [selectedForQueryTables, setSelectedForQueryTables] = useState([]);
   const [loadingQueryStatus, setLoadingQueryStatus] = useState(false);
-  const [activeDisplayInResultsTab, setActiveDisplayInResultsTab] = useState('tables');
+  const [activeDisplayInResultsTab, setActiveDisplayInResultsTab] = useState('Tables');
   const [activeTableInPanel, setActiveTableInPanel] = useState({});
   const [userInputForTables, setUserInputForTables] = useState('');
   const [data, setData] = useState([]); //data from database
   const [toggleLoad, setToggleLoad] = useState(true);
-  const [userInputQuery, setUserInputQuery] = useState(
-    'SELECT * FROM [add a table name here]'
-  );
+  const [userInputQuery, setUserInputQuery] = useState('SELECT * FROM [add a table name here]');
   const [queryResult, setQueryResult] = useState({
     status: 'No query',
     message: []
   });
-  const [visible, setVisible] = useState(true);
+  const [sidePanelVisibility, setSidePanelVisibility] = useState(true);
 
   const [activePanel, dispatchSidePanelDisplay] = useReducer(
     changeDisplayOfSidePanel,
@@ -81,8 +79,8 @@ const HomePage = ({ location }) => {
   }
 
   const togglePanelVisibility = () => {
-    if (visible) setVisible(false);
-    else setVisible(true);
+    if (sidePanelVisibility) setSidePanelVisibility(false);
+    else setSidePanelVisibility(true);
   };
 
   const captureSelectedTable = e => {
@@ -110,7 +108,6 @@ const HomePage = ({ location }) => {
         }
       });
     });
-
     setActiveTableInPanel(selectedPanelInfo);
     dispatchSidePanelDisplay(actions.changeToInfoPanel());
   };
@@ -129,7 +126,7 @@ const HomePage = ({ location }) => {
         status: queryResult.message.length === 0 ? 'No results' : 'Success',
         message: queryResult.message
       });
-      setActiveDisplayInResultsTab('queryresults');
+      setActiveDisplayInResultsTab('Query Results');
     } else if (queryResult.statusCode === 'Invalid Request') {
       setQueryResultError({
         status: true,
@@ -162,7 +159,7 @@ const HomePage = ({ location }) => {
           dispatchSidePanelDisplay={dispatchSidePanelDisplay}
           activeTableInPanel={activeTableInPanel}
           togglePanelVisibility={togglePanelVisibility}
-          visible={visible}
+          sidePanelVisibility={sidePanelVisibility}
         />
         {toggleLoad && (
           <LoadWrap>

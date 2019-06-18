@@ -5,7 +5,7 @@ import FavoritesPanel from '../components/panels/FavoritesPanel';
 import InfoPanel from '../components/panels/InfoPanel';
 import * as actions from '../actions/actions';
 interface IPanelWrapperProps {
-  visible: boolean;
+  sidePanelVisibility: boolean;
 }
 
 interface IIndTabProps {
@@ -14,7 +14,7 @@ interface IIndTabProps {
 }
 
 const PanelWrapper = styled.div<IPanelWrapperProps>`
-  width: ${({ visible }) => (visible ? '375px' : '100px')};
+  width: ${({ sidePanelVisibility }) => (sidePanelVisibility ? '375px' : '100px')};
   display: flex;
   justify-content: flex-start;
   transition: width 500ms ease-in-out;
@@ -52,7 +52,7 @@ const Tabs = styled.div`
 `;
 
 interface ICollapseBtnProps {
-  visible: boolean;
+  sidePanelVisibility: boolean;
 }
 
 const CollapseBtn = styled.button<ICollapseBtnProps>`
@@ -64,7 +64,7 @@ const CollapseBtn = styled.button<ICollapseBtnProps>`
   margin: 5px;
   display: relative;
   left: 100px;
-  margin-left: ${({ visible }) => (visible ? '5px' : '80px')};
+  margin-left: ${({ sidePanelVisibility }) => (sidePanelVisibility ? '5px' : '80px')};
   text-align: center;
   :focus {
     outline: none;
@@ -101,7 +101,7 @@ interface IDispatchSidePanelDisplayAction {
 
 interface Props {
   activeTableInPanel: IAcitveTableInPanel;
-  visible: boolean;
+  sidePanelVisibility: boolean;
   activePanel: string;
   togglePanelVisibility: () => void;
   dispatchSidePanelDisplay: (IDispatchSidePanelDisplayAction) => any;
@@ -109,18 +109,18 @@ interface Props {
 
 const SidePanel: React.SFC<Props> = ({
   activeTableInPanel,
-  visible,
+  sidePanelVisibility,
   togglePanelVisibility,
   activePanel,
   dispatchSidePanelDisplay
 }) => {
   return (
-    <PanelWrapper visible={visible}>
-      {visible && (
+    <PanelWrapper sidePanelVisibility={sidePanelVisibility}>
+      {sidePanelVisibility && (
         <div>
           {activePanel === 'info' && (
             <InfoPanel
-              visible={visible}
+              sidePanelVisibility={sidePanelVisibility}
               activeTableInPanel={activeTableInPanel}
             />
           )}
@@ -132,12 +132,12 @@ const SidePanel: React.SFC<Props> = ({
         <CollapseBtn
           onClick={togglePanelVisibility}
           data-active={activePanel}
-          visible={visible}
+          sidePanelVisibility={sidePanelVisibility}
         >
           {' '}
-          {visible ? `<<` : `>>`}{' '}
+          {sidePanelVisibility ? `<<` : `>>`}{' '}
         </CollapseBtn>
-        {visible && (
+        {sidePanelVisibility && (
           <Tabs>
             <IndTab
               data-panel="info"
