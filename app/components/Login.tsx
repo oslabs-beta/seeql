@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { Redirect } from 'react-router-dom';
 import { ipcRenderer } from 'electron';
@@ -176,6 +176,18 @@ const ConnectionErrorMessage = styled.div`
   font-size: 100%;
 `;
 
+const InactivityLogoutMessage = styled.div`
+  background-color: #f1c7ca;
+  width: 200px;
+  color: #ca333e;
+  border-radius: 3px;
+  padding: 5px;
+  margin: 5px;
+  font-family: 'Poppins', sans-serif;
+  border-left: 3px solid #ca333e;
+  font-size: 100%;
+`;
+
 const RequiredWarning = styled.span`
   color: #ca333e;
   font-size: 80%;
@@ -194,9 +206,11 @@ const Login = () => {
   const [connectionError, setConnectionError] = useState(false);
   const [loading, setLoading] = useState(false);
   const [redirectToHome, setRedirectToHome] = useState(false);
+  const [inactivityLoggedOut, setInactivityLoggedOut] = useState(false);
   const [tableData, setTableData] = useState([]);
 
   const sendLoginURI = (): void => {
+    if (inactivityLoggedOut) setInactivityLoggedOut(false);
     const updatedPort = !port ? '5432' : port;
     let updatedURI;
     if (loginType === 'URI') updatedURI = URI;
@@ -220,20 +234,28 @@ const Login = () => {
     }
   };
 
-  ipcRenderer.removeAllListeners('db-connection-error');
-  ipcRenderer.on('db-connection-error', (event, err) => {
-    // #TODO: Error handling for cases where unable to retrieve info from a valid connection
-    setConnectionError(true);
-    setLoading(false);
-  });
 
-  ipcRenderer.removeAllListeners('tabledata-to-login');
-  ipcRenderer.on('tabledata-to-login', (event, databaseTables) => {
-    setConnectionError(false);
-    setTableData(databaseTables);
-    setLoading(false);
-    setRedirectToHome(true);
-  });
+  // IPC messaging listeners
+  useEffect(() => {
+    ipcRenderer.on('db-connection-error', (_event, err) => {
+      // #TODO: Error handling for cases where unable to retrieve info from a valid connection
+      setConnectionError(true);
+      setLoading(false);
+    });
+    ipcRenderer.on('tabledata-to-login', (_event, databaseTables) => {
+      setConnectionError(false);
+      setTableData(databaseTables);
+      setLoading(false);
+      setRedirectToHome(true);
+    });
+    ipcRenderer.on('inactivity-logout', () => setInactivityLoggedOut(true));
+    ipcRenderer.send('login-mounted');
+    return () => {
+      ipcRenderer.removeAllListeners('db-connection-error');
+      ipcRenderer.removeAllListeners('tabledata-to-login');
+      ipcRenderer.removeAllListeners('inactivity-logout');
+    }
+  }, []);
 
   const captureURI = (e): void => {
     const sanitizedURI = e.target.value.replace(/\s+/g, '');
@@ -259,6 +281,8 @@ const Login = () => {
         </LeftPanel>
         <RightPanel>
           <LoginContainer>
+            {inactivityLoggedOut &&
+              <InactivityLogoutMessage>You've been logged out due to inactivity</InactivityLogoutMessage>}
             {connectionError && (
               <ConnectionErrorMessage>
                 Unable to connect to the database. Please try again.

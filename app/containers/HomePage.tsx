@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import * as React from 'react';
 import { useState, useEffect, useReducer } from 'react';
 import { Redirect } from 'react-router-dom';
@@ -71,7 +70,7 @@ const HomePage = ({ location }) => {
   );
   const [activeTableInPanel, setActiveTableInPanel] = useState({});
   const [userInputForTables, setUserInputForTables] = useState('');
-  const [data, setData] = useState([]); //data from database
+  const [data, setData] = useState([]); // data from database
   const [toggleLoad, setToggleLoad] = useState(true);
   const [userInputQuery, setUserInputQuery] = useState(
     'SELECT * FROM [add a table name here]'
@@ -80,33 +79,6 @@ const HomePage = ({ location }) => {
     status: 'No query',
     message: []
   });
-<<<<<<< HEAD
-  const [visible, setVisible] = useState(true);
-  
-  
-  // Track user inactivity, logout after 15 minutes
-  const [inactiveTime, setInactiveTime] = useState(0);
-  const [intervalId, captureIntervalId] = useState();
-  const [redirectDueToInactivity, setRedirectDueToInactivity] = useState(false);
-
-  useEffect(() => {
-    captureIntervalId(setInterval(() => setInactiveTime(inactiveTime => inactiveTime + 1), 200));
-  }, []);
-
-  useEffect(() => {
-    if (inactiveTime >= 15) signOut();
-  }, [inactiveTime]);
-  
-  const signOut = () => {
-    ipcRenderer.send('logout-to-main', 'logout');
-    clearInterval(intervalId);
-    setRedirectDueToInactivity(true);
-  }
-
-
- 
-  const captureQuerySelections = (e) => {
-=======
   const [sidePanelVisibility, setSidePanelVisibility] = useState(true);
 
   const [activePanel, dispatchSidePanelDisplay] = useReducer(
@@ -123,11 +95,28 @@ const HomePage = ({ location }) => {
     setSelectedForQueryTables({});
   };
 
+  // Track user inactivity, logout after 15 minutes
+  const [inactiveTime, setInactiveTime] = useState(0);
+  const [intervalId, captureIntervalId] = useState();
+  const [redirectDueToInactivity, setRedirectDueToInactivity] = useState(false);
+
+  const signOut = () => {
+    clearInterval(intervalId);
+    setRedirectDueToInactivity(true);
+    ipcRenderer.send('logout', 'inactivity');
+  }
+
+  useEffect(() => {
+    captureIntervalId(setInterval(() => setInactiveTime(inactiveTime => inactiveTime + 1), 200));
+  }, []);
+
+  useEffect(() => { if (inactiveTime >= 15) signOut() }, [inactiveTime]);
+
+
   const captureQuerySelections = e => {
-    let selectedTableName = e.target.dataset.tablename;
-    let selectedColumnName = e.target.dataset.columnname;
->>>>>>> dev
-    let temp = selectedForQueryTables;
+    const selectedTableName = e.target.dataset.tablename;
+    const selectedColumnName = e.target.dataset.columnname;
+    const temp = selectedForQueryTables;
 
     if (Object.keys(temp).includes(selectedTableName)) {
       if (temp[selectedTableName].includes(selectedColumnName)) {
@@ -144,23 +133,23 @@ const HomePage = ({ location }) => {
       temp[selectedTableName] = [selectedColumnName];
     }
 
-    //for no tables
+    // for no tables
     if (Object.keys(temp).length === 0) {
       setUserInputQuery('SELECT * FROM [add a table name here]');
     }
-    //for one table
+    // for one table
     if (Object.keys(temp).length === 1) {
       let columns = '';
-      for (let table in temp) {
+      for (const table in temp) {
         for (let i = 0; i < temp[table].length; i++) {
           if (i === 0) columns += temp[table][i];
-          else columns += ', ' + temp[table][i];
+          else columns += `, ${temp[table][i]}`;
         }
       }
-      const query = `SELECT  ` + columns + ` FROM ` + Object.keys(temp)[0];
+      const query = `SELECT  ${columns} FROM ${Object.keys(temp)[0]}`;
       setUserInputQuery(query);
     }
-    //for multiple joins
+    // for multiple joins
     setSelectedForQueryTables(temp);
   };
 
@@ -172,7 +161,7 @@ const HomePage = ({ location }) => {
   };
 
   const captureSelectedTable = e => {
-    const tablename = e.target.dataset.tablename;
+    const { tablename } = e.target.dataset;
     let selectedPanelInfo;
     let primaryKey;
 
@@ -202,7 +191,7 @@ const HomePage = ({ location }) => {
     dispatchSidePanelDisplay(actions.changeToInfoPanel());
   };
 
-  //Fetches database information
+  // Fetches database information
   useEffect((): void => {
     setToggleLoad(true);
     setData(allTablesMetaData);
@@ -243,16 +232,8 @@ const HomePage = ({ location }) => {
   return (
     <React.Fragment>
       <InvisibleHeader></InvisibleHeader>
-<<<<<<< HEAD
-      <HomepageWrapper 
-      onMouseMove={() => setInactiveTime(0)} 
-      className="homepage">
-
-        <LeftPanel
-=======
-      <HomepageWrapper>
+      <HomepageWrapper onMouseMove={() => setInactiveTime(0)}>
         <SidePanel
->>>>>>> dev
           activePanel={activePanel}
           dispatchSidePanelDisplay={dispatchSidePanelDisplay}
           activeTableInPanel={activeTableInPanel}
@@ -263,93 +244,6 @@ const HomePage = ({ location }) => {
             <LoadingComponent />
           </LoadWrap>
         )}
-<<<<<<< HEAD
-        <RightPanel>
-          <OMNIBoxContainer>
-            <OmniBoxNav>
-              <OMNIBoxNavButtons
-                onClick={() => {
-                  setOmniBoxView('SQL');
-                }}
-                omniBoxView={omniBoxView}
-                selectedView="SQL"
-              >
-                SQL
-              </OMNIBoxNavButtons>
-              <OMNIBoxNavButtons
-                onClick={() => {
-                  setOmniBoxView('plain');
-                }}
-                omniBoxView={omniBoxView}
-                selectedView="plain"
-              >
-                PLAIN
-              </OMNIBoxNavButtons>
-            </OmniBoxNav>
-            {omniBoxView === 'SQL' && (
-              <OMNIBoxWrapper>
-                <OMNIboxInput
-                  onChange={e => setUserInputQuery(e.target.value)}
-                  onKeyPress={executeQueryOnEnter}
-                  value={userInputQuery}
-                ></OMNIboxInput>
-                <ExecuteQueryButton
-                  onClick={executeQuery}
-                  disabled={loadingQueryStatus}
-                >
-                  {loadingQueryStatus
-                    ? 'Loading query results...'
-                    : 'Execute Query'}
-                </ExecuteQueryButton>
-              </OMNIBoxWrapper>
-            )}
-            {omniBoxView === 'plain' && (
-              <OMNIboxInput
-                placeholder="Search for a table"
-                onChange={e => setUserInputForTables(e.target.value)}
-              ></OMNIboxInput>
-            )}
-            {queryResultError.status && (
-              <QueryResultError>{queryResultError.message}</QueryResultError>
-            )}
-          </OMNIBoxContainer>
-          <BottomPanelContainer>
-            <BottomPanelNav>
-              <BottomPanelNavButton
-                activeDisplayInBottomTab={activeDisplayInBottomTab}
-                activetabname="tables"
-                data-activetabname="tables"
-                onClick={activeTabcapture}
-              >
-                Tables
-              </BottomPanelNavButton>
-              <BottomPanelNavButton
-                activeDisplayInBottomTab={activeDisplayInBottomTab}
-                activetabname="queryresults"
-                data-activetabname="queryresults"
-                onClick={activeTabcapture}
-              >
-                Query Results
-              </BottomPanelNavButton>
-            </BottomPanelNav>
-            {activeDisplayInBottomTab === 'tables' &&
-              (pinnedTables.length || filteredTables.length ? (
-                <TablesContainer>
-                  {pinnedTables}
-                  {filteredTables}
-                </TablesContainer>
-              ) : (
-                <EmptyState>
-                  There were no search results. Please search again.
-                </EmptyState>
-              ))}
-            {activeDisplayInBottomTab === 'queryresults' && (
-              <QueryResults queryResult={queryResult} />
-            )}
-          </BottomPanelContainer>
-        </RightPanel>
-        {redirectDueToInactivity && <Redirect to='/login' />}
-=======
         <MainPanel>
           <CollapseBtn
             onClick={togglePanelVisibility}
@@ -382,7 +276,7 @@ const HomePage = ({ location }) => {
             selectedForQueryTables={selectedForQueryTables}
           />
         </MainPanel>
->>>>>>> dev
+        {redirectDueToInactivity && <Redirect to='/login' />}
       </HomepageWrapper>
     </React.Fragment>
   );

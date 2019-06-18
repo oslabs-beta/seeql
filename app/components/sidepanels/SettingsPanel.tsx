@@ -42,8 +42,8 @@ const Label = styled.label`
 `;
 
 const signOut = () => {
-  ipcRenderer.send('logout-to-main', 'logout');
-  alert('You\'ve been signed out.');
+  ipcRenderer.send('logout');
+  // alert('You\'ve been signed out.');
 }
 
 const SettingsPanel = () => {
@@ -83,7 +83,7 @@ const SettingsPanel = () => {
       </TopSection>
       <BottomSection>
         <div style={state}>CHANGE ME HEY BLAHHSLAH</div>
-        <NavLink to="/" activeStyle={{ color: 'black ' }} onClick={signOut}>
+        <NavLink to="/login" activeStyle={{ color: 'black ' }} onClick={signOut}>
           Sign Out
         </NavLink>
       </BottomSection>

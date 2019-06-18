@@ -22,7 +22,7 @@ export default class AppUpdater {
 }
 
 let mainWindow = null;
-let queryWindow = null;
+let dbProcess = null;
 
 if (process.env.NODE_ENV === 'production') {
   const sourceMapSupport = require('source-map-support');
@@ -96,32 +96,40 @@ app.on('ready', async () => {
   const menuBuilder = new MenuBuilder(mainWindow);
   menuBuilder.buildMenu();
 
-  queryWindow = new BrowserWindow({ show: false });
-  queryWindow.loadURL(`file://${__dirname}/query.html`);
+  dbProcess = new BrowserWindow({ show: false });
+  dbProcess.loadURL(`file://${__dirname}/dbProcess.html`);
 
   // Listening from homepage, to send to database
-  ipcMain.on('uri-to-main', (event, uri) => {
-    queryWindow.webContents.send('uri-to-db', uri);
+  ipcMain.on('uri-to-main', (_event, uri) => {
+    dbProcess.webContents.send('uri-to-db', uri);
   });
 
-  ipcMain.on('query-to-main', (event, query) => {
-    queryWindow.webContents.send('query-to-db', query);
+  ipcMain.on('query-to-main', (_event, query) => {
+    dbProcess.webContents.send('query-to-db', query);
   });
 
-  ipcMain.on('logout-to-main', () => {
-    queryWindow.webContents.send('logout-to-db');
+  ipcMain.on('logout', (_event, message) => {
+    dbProcess.webContents.send('logout', message);
+  });
+
+  ipcMain.on('login-mounted', () => {
+    dbProcess.webContents.send('login-mounted');
   });
 
   // Listening from database, to send to homepage
-  ipcMain.on('database-tables-to-main', (event, databaseTables) => {
+  ipcMain.on('database-tables-to-main', (_event, databaseTables) => {
     mainWindow.webContents.send('tabledata-to-login', databaseTables);
   });
 
-  ipcMain.on('db-connection-error', (event, err) => {
+  ipcMain.on('db-connection-error', (_event, err) => {
     mainWindow.webContents.send('db-connection-error', err);
   });
 
-  ipcMain.on('query-result-to-main', (event, messagePayload) => {
+  ipcMain.on('query-result-to-main', (_event, messagePayload) => {
     mainWindow.webContents.send('query-result-to-homepage', messagePayload);
+  });
+
+  ipcMain.on('inactivity-logout', (_event, message) => {
+    mainWindow.webContents.send('inactivity-logout');
   });
 });
