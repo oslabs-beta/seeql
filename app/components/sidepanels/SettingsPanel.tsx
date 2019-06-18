@@ -44,9 +44,11 @@ const Label = styled.label`
 const SettingsPanel = () => {
   const [context, setContext] = useContext(Context);
   const [state, dispatch] = useReducer(themeReducer, context);
-  const [toggle, setToggle] = useState(false);
-  const contextText = context.light.toString();
+  const [activeMode, setActiveMode] = useState('default')
+  setContext(state)
 
+
+//when clicked, dispatch action to reducer with payload of active mode obj(to deactivate, and selected mode obj to activate)
   return (
     <PanelWrapper>
       <TopSection>
@@ -54,17 +56,20 @@ const SettingsPanel = () => {
 
         <DivWrapper>
           <Label>Theme</Label>
-          <button
-            onClick={() => {
-              setToggle(!toggle);
-              setContext(state);
-              toggle
-                ? dispatch({ type: 'TOGGLE_DARK' })
-                : dispatch({ type: 'TOGGLE_LIGHT' });
+          <select
+            value={context}
+            name="modeList"
+            onChange={e => {
+              dispatch({type:'CHANGE_MODE', selected: e.target.value, payload: activeMode})
+              setActiveMode(e.target.value)
             }}
           >
-            {contextText}
-          </button>
+            {context.map(modeObj => (
+              <option key={modeObj.value} value = {modeObj.value} >
+                {modeObj.value}
+              </option>
+            ))}
+          </select>
         </DivWrapper>
         <DivWrapper>
           <Label>Font Size</Label>
@@ -87,3 +92,5 @@ const SettingsPanel = () => {
 };
 
 export default SettingsPanel;
+
+

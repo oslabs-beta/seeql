@@ -8,14 +8,20 @@ import Routes from "./Routes";
 import { BrowserRouter } from "react-router-dom";
 import { ThemeProvider } from "styled-components";
 import { useState } from "react";
-
+//memo to persist users active theme? for right now use default as user's first theme
 const Index = () => {
-  const initialMode = { light: true, dark: false };
+  const initialMode = [{ value:'default', active: true },
+   { value:'dark', active: false },
+    { value: 'kate',active: false },
+   { value:'ariel', active: false },
+   {value:'tyler', active: false },
+  {value:'alice', active: false }]
+  ;
   const [context, setContext] = useState(initialMode);
 
   return (
     <ThemeContext.Provider value={[context, setContext]}>
-      <ThemeProvider theme={context.light ? themes.default : themes.dark}>
+      <ThemeProvider theme ={themes}>
         <AppContainer>
           <BrowserRouter>
             <Routes />
@@ -26,3 +32,5 @@ const Index = () => {
   );
 };
 render(<Index />, document.getElementById("root"));
+
+// theme={context.light ? themes.default : themes.dark}
