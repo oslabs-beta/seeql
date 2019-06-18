@@ -236,20 +236,20 @@ const HomePage = ({ location }) => {
   const [intervalId, captureIntervalId] = useState();
   const [redirectDueToInactivity, setRedirectDueToInactivity] = useState(false);
 
-  const signOut = () => {
-    ipcRenderer.send('logout-to-main', 'logout');
-    clearInterval(intervalId);
-    alert('You\'ve been signed out due to inactivity.');
-    setRedirectDueToInactivity(true);
-  }
-
   useEffect(() => {
-    captureIntervalId(setInterval(() => setInactiveTime(inactiveTime => inactiveTime + 1), 60000));
-  }, [])
+    captureIntervalId(setInterval(() => setInactiveTime(inactiveTime => inactiveTime + 1), 200));
+  }, []);
 
   useEffect(() => {
     if (inactiveTime >= 15) signOut();
-  }, [inactiveTime])
+  }, [inactiveTime]);
+  
+  const signOut = () => {
+    ipcRenderer.send('logout-to-main', 'logout');
+    clearInterval(intervalId);
+    setRedirectDueToInactivity(true);
+  }
+
 
  
   const captureQuerySelections = (e) => {

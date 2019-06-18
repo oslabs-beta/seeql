@@ -43,8 +43,8 @@ const Label = styled.label`
 `;
 
 const signOut = () => {
-  ipcRenderer.send('logout-to-main', 'logout')
-  alert('You\'ve been signed out.')
+  ipcRenderer.send('logout-to-main', 'logout');
+  alert('You\'ve been signed out.');
 }
 
 const SettingsPanel = () => {

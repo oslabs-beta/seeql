@@ -38,4 +38,5 @@ ipcRenderer.on("query-to-db", (event, query) => {
 ipcRenderer.on('logout-to-db', () =>  {
   client.end()
   client = null;
+
 });
