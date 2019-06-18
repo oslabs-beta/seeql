@@ -13,8 +13,8 @@ const Table = styled.div<ITableProps>`
   font-size: 70%;
   width: 180px;
   border-radius: 3px;
-  border: ${(props) => (props.selectedtable === props.tablename) ? '2px solid #00b5cc' : '1px solid grey'};
-  box-shadow: ${(props) => (props.selectedtable === props.tablename) ? '4px 4px 10px  #99f3ff' : 'none'};
+  border: ${(props) => (props.selectedtable === props.tablename) ? '2px solid #00b5cc' : '2px solid transparent'};
+  transition: 0.3s;
 `;
 
 const TableRowsList = styled.ul`
@@ -48,9 +48,7 @@ const TableCell = styled.p`
   font-size: 100%;
   display: flex;
   align-items: center;
-  :hover {
-    cursor: url(https://img.icons8.com/flat_round/20/000000/plus.png), auto;
-  }
+
 `;
 
 const TableTitle = styled.p`
@@ -58,9 +56,6 @@ const TableTitle = styled.p`
   font-size: 140%;
   padding: 5px;
   overflow-wrap: break-word;
-  :hover{
-    cursor: url(https://img.icons8.com/flat_round/20/000000/plus.png), auto;
-  }
 `
 interface IForeignKey {
   column_name?: string
@@ -109,7 +104,6 @@ type Props = {
   selectedForQueryTables: Array<any>;
   captureMouseExit: () => void;
   captureMouseEnter: (Event) => void;
-  captureSelectedTable: (Event) => void;
   captureQuerySelections: (Event) => void;
 };
 
@@ -127,7 +121,6 @@ const Tables: React.SFC<Props> = ({
   primaryKeyAffected,
   captureMouseExit,
   captureMouseEnter,
-  captureSelectedTable,
   activeTableInPanel,
   captureQuerySelections,
   selectedForQueryTables
@@ -143,10 +136,10 @@ const Tables: React.SFC<Props> = ({
     let foreignkeyColumn: string = '';
     let inTheQuery: boolean = false;
 
-    selectedForQueryTables.forEach((table) => {
-      if(table.tablename === tableName && table.columnname === columns[keys]['columnname']) inTheQuery = true;
-    })
-  
+    if(Object.keys(selectedForQueryTables).includes(tableName)) {
+      if(selectedForQueryTables[tableName].includes(columns[keys]['columnname'])) inTheQuery = true;
+    }
+
     if (
       primaryKeyAffected[0].primaryKeyColumn === columns[keys]['columnname'] &&
       primaryKeyAffected[0].primaryKeyTable === tableName
@@ -190,7 +183,7 @@ const Tables: React.SFC<Props> = ({
                 data-isprimarykey={primaryKey}
               >
               {inTheQuery &&
-                <span>+</span>
+                <span><KeyIcon src="https://image.flaticon.com/icons/svg/291/291201.svg"></KeyIcon></span>
               }
                {foreignKey &&
                 <KeyIcon 
@@ -212,14 +205,7 @@ const Tables: React.SFC<Props> = ({
                 data-isprimarykey={primaryKey}
                 src="https://image.flaticon.com/icons/svg/179/179543.svg"></KeyIcon>
                } 
-                <label
-                 data-isforeignkey={foreignKey}
-                 data-foreignkeytable={foreignkeyTable}
-                 data-foreignkeycolumn={foreignkeyColumn}
-                 data-tablename={tableName}
-                 data-columnname={columns[keys]['columnname']}
-                 data-isprimarykey={primaryKey}
-                >{ columns[keys]['columnname']}</label>
+               {columns[keys]['columnname']}
               </TableCell>
               <TableCell
                 data-isforeignkey={foreignKey}
@@ -234,7 +220,7 @@ const Tables: React.SFC<Props> = ({
   }
 
   return (
-    <Table key={tableName} onClick={captureSelectedTable} selectedtable={activeTableInPanel.table_name} tablename={tableName}>
+    <Table key={tableName} selectedtable={activeTableInPanel.table_name} tablename={tableName}>
       <TableTitle data-tablename={tableName}>{tableName}</TableTitle>
       <TableRowsList>
         {rows}
