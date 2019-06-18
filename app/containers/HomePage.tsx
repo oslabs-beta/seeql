@@ -230,31 +230,25 @@ const HomePage = ({ location }) => {
   });
   const [visible, setVisible] = useState(true);
   
-  // console.log('intervalId is', intervalId)
   
   // Track user inactivity, logout after 20 minutes
   const [inactiveTime, setInactiveTime] = useState(0);
   const [intervalId, captureIntervalId] = useState();
 
   const signOut = () => {
-    ipcRenderer.send('logout-to-main', 'logout')
-    alert('You\'ve been signed out.')
-    return <Redirect to={{ pathname: '/login' } } />
+    ipcRenderer.send('logout-to-main', 'logout');
+    clearInterval(intervalId);
+    alert('You\'ve been signed out.');
+    return <Redirect to='/login' />;
   }
 
   useEffect(() => {
-    captureIntervalId(setInterval(() => {
-        if (inactiveTime >= 1200) {
-          console.log('gonna sign out')
-          clearInterval(intervalId);
-          signOut();
-        } else {
-          console.log('incrementing inactivetime, which is currently', inactiveTime)
-          setInactiveTime(inactiveTime + 1);
-        }
-      }, 1000));
-      return () => clearInterval(intervalId);
+    captureIntervalId(setInterval(() => setInactiveTime(inactiveTime => inactiveTime + 1), 1000));
   }, [])
+
+  useEffect(() => {
+    if (inactiveTime >= 10) signOut();
+  }, [inactiveTime])
 
  
   const captureQuerySelections = (e) => {
@@ -540,12 +534,13 @@ const HomePage = ({ location }) => {
     <React.Fragment>
       <InvisibleHeader></InvisibleHeader>
       <HomepageWrapper 
-      // onMouseMove={() => setInactiveTime(0)} 
+      onMouseMove={() => setInactiveTime(0)} 
       className="homepage">
+
       <button onClick={() => {
-        console.log('intervalId is', intervalId)
         console.log('inactivetime is', inactiveTime)
-      }}>inactive time butt</button>
+      }}>console log inactive time</button>
+
         <LeftPanel
           activePanel={activePanel}
           dispatchLeftPanelDisplay={dispatchLeftPanelDisplay}
