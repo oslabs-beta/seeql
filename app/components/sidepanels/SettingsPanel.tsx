@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useReducer, useContext, useState } from 'react';
+import { useReducer, useContext, useState, useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
 import styled from 'styled-components';
 import Context from '../../contexts/themeContext';
@@ -15,8 +15,8 @@ const PanelWrapper = styled.div`
   width: 300px;
   height: 100vh;
   padding: 40px;
-  background-color: ${props => props.theme.backgroundColor};
-  color: ${props => props.theme.fontColor};
+  background-color: ${props => props.theme.panel.baseColor};
+  color: ${props => props.theme.panel.fontColor};
 `;
 
 const TopSection = styled.section`
@@ -33,11 +33,11 @@ const DivWrapper = styled.div`
   flex-direction: column;
 `;
 const Title = styled.h1`
-  color: ${props => props.theme.fontColor};
+  color: ${props => props.theme.panel.fontColor};
   font-size: 30px;
 `;
 const Label = styled.label`
-  color: ${props => props.theme.fontColor};
+  color: ${props => props.theme.panel.fontColor};
   padding: 10px 0;
 `;
 
@@ -45,10 +45,14 @@ const SettingsPanel = () => {
   const [context, setContext] = useContext(Context);
   const [state, dispatch] = useReducer(themeReducer, context);
   const [activeMode, setActiveMode] = useState('default')
-  setContext(state)
-
-
-//when clicked, dispatch action to reducer with payload of active mode obj(to deactivate, and selected mode obj to activate)
+  
+  useEffect(()=>{
+    setContext(state)
+  },[state])
+  console.log ('context', context)
+  console.log ('active mode', activeMode)
+  console.log ('state', state)
+  //when clicked, dispatch action to reducer with payload of active mode obj(to deactivate, and selected mode obj to activate)
   return (
     <PanelWrapper>
       <TopSection>
@@ -62,7 +66,8 @@ const SettingsPanel = () => {
             onChange={e => {
               dispatch({type:'CHANGE_MODE', selected: e.target.value, payload: activeMode})
               setActiveMode(e.target.value)
-            }}
+            }
+          }
           >
             {context.map(modeObj => (
               <option key={modeObj.value} value = {modeObj.value} >
@@ -93,4 +98,4 @@ const SettingsPanel = () => {
 
 export default SettingsPanel;
 
-
+// ${props => props.theme.backgroundColor}

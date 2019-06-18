@@ -5,8 +5,8 @@ export default function themeReducer(state, action) {
   switch (action.type) {
     case 'CHANGE_MODE': {
       const newState = state.map(mode => {
-        if (mode.value === action.selected.toLowerCase()) mode = { value: action.selected, active: true } 
-        if (mode.value ===action.payload) mode = {value: action.payload, active:false}
+        if (mode.value === action.selected) mode = { value: action.selected, active: true } 
+        if (mode.value ===action.payload && action.payload !== action.selected) mode = {value: action.payload, active:false}
         return mode;
       });
       return newState;

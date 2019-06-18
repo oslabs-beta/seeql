@@ -10,7 +10,7 @@ const SidePanelTableListWrapper = styled.div<ISidePanelTableWrapperProps>`
   padding: 40px;
   width: ${({ sidePanelVisibility }) => (sidePanelVisibility ? '300px' : '0px')};
   height: 100vh;
-  background-color: ${props => props.theme.backgroundColor};
+  background-color: ${props => props.theme.panel.baseColor};
   color: ${props => props.theme.fontColor};
   transition: width 500ms ease-in-out;
 `;
@@ -20,7 +20,7 @@ const InfoSection = styled.div`
 `;
 
 const Title = styled.h1`
-  color: ${props => props.theme.fontColor};
+  color: ${props => props.theme.panel.fontColor};
 `;
 
 const Text = styled.p`

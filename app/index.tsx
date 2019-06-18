@@ -1,27 +1,32 @@
-import * as React from "react";
-import { render } from "react-dom";
-import { AppContainer } from "react-hot-loader";
-import "./app.global.css";
-import ThemeContext from "./contexts/themeContext";
-import themes from "./themes/themes";
-import Routes from "./Routes";
-import { BrowserRouter } from "react-router-dom";
-import { ThemeProvider } from "styled-components";
-import { useState } from "react";
+import * as React from 'react';
+import { render } from 'react-dom';
+import { AppContainer } from 'react-hot-loader';
+import './app.global.css';
+import ThemeContext from './contexts/themeContext';
+import themes from './themes/themes';
+import Routes from './Routes';
+import { BrowserRouter } from 'react-router-dom';
+import { ThemeProvider } from 'styled-components';
+import { useState } from 'react';
 //memo to persist users active theme? for right now use default as user's first theme
 const Index = () => {
-  const initialMode = [{ value:'default', active: true },
-   { value:'dark', active: false },
-    { value: 'kate',active: false },
-   { value:'ariel', active: false },
-   {value:'tyler', active: false },
-  {value:'alice', active: false }]
-  ;
-  const [context, setContext] = useState(initialMode);
+  const modes = [
+    { value: 'default', active: true },
+    { value: 'dark', active: false },
+    { value: 'kate', active: false },
+    { value: 'ariel', active: false },
+    { value: 'tyler', active: false },
+    { value: 'alice', active: false }
+  ];
+  const [context, setContext] = useState(modes);
+  const serveMode = context.reduce((acc, mode) => {
+      if (mode.active) acc = mode.value;
+      return acc;
+    }, 'default');
 
   return (
     <ThemeContext.Provider value={[context, setContext]}>
-      <ThemeProvider theme ={themes}>
+      <ThemeProvider theme={themes[serveMode]}>
         <AppContainer>
           <BrowserRouter>
             <Routes />
@@ -31,6 +36,6 @@ const Index = () => {
     </ThemeContext.Provider>
   );
 };
-render(<Index />, document.getElementById("root"));
+render(<Index />, document.getElementById('root'));
 
 // theme={context.light ? themes.default : themes.dark}
