@@ -52,10 +52,7 @@ const SettingsPanel = () => {
   useEffect(() => {
     setContext(state);
   }, [state]);
-  console.log('context', context);
-  console.log('active mode', activeMode);
-  console.log('state', state);
-  //when clicked, dispatch action to reducer with payload of active mode obj(to deactivate, and selected mode obj to activate)
+ 
   return (
     <PanelWrapper>
       <TopSection>
@@ -102,4 +99,3 @@ const SettingsPanel = () => {
 
 export default SettingsPanel;
 
-// ${props => props.theme.backgroundColor}

@@ -10,7 +10,7 @@ import { ThemeProvider } from 'styled-components';
 import { useState } from 'react';
 //memo to persist users active theme? for right now use default as user's first theme
 const Index = () => {
-console.log ('themes', themes)
+
   const modes = [
     { value: 'defaultTheme', active: true },
     { value: 'darkTheme', active: false },
@@ -25,7 +25,6 @@ console.log ('themes', themes)
       return acc;
     }, 'defaultTheme');
 
-    console.log ('serveMode', serveMode)
   return (
     <ThemeContext.Provider value={[context, setContext]}>
       <ThemeProvider theme={themes[serveMode]}>
