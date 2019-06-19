@@ -218,7 +218,6 @@ const HomePage = ({ location }) => {
     }
 
     let previousTablePointer;
-    let previousInitial = '';
     //for multiple joins
     if (Object.keys(temp).length === 2) {
       for (let table in temp) {
@@ -227,7 +226,6 @@ const HomePage = ({ location }) => {
         let tableInitial = table[0];
         while (Object.values(alias).includes(table[aliasIndex])) {
           tableInitial += table[aliasIndex + 1];
-          console.log('hi', 'initial', tableInitial);
           aliasIndex++; //initial of each table
         }
         alias[table] = tableInitial;
@@ -254,15 +252,17 @@ const HomePage = ({ location }) => {
           tables += table + ` as ` + table[0];
           firstTable = false;
         } else {
-          tables += ` INNER JOIN ` + table + ` as ` + table[0];
+          tables += ` INNER JOIN ` + table + ` as ` + alias[table];
           let rel = '';
           relationships[table].forEach(relation => {
             if (
               relation.fktablename === previousTablePointer &&
               relation.tablename === table
             ) {
+              console.log('alias', alias);
               rel =
-                previousInitial +
+                alias[previousTablePointer] +
+                '.' +
                 relation.fkcolname +
                 `=` +
                 (tableInitial + relation.colname);
@@ -271,12 +271,10 @@ const HomePage = ({ location }) => {
           tables += ` ON ` + rel;
         }
         previousTablePointer = table;
-        previousInitial = tableInitial;
       }
       //entire query
       query = `SELECT ` + columns + ` FROM ` + tables;
     }
-    console.log('alias object', alias);
     setUserInputQuery(query);
     setSelectedForQueryTables(temp);
   };

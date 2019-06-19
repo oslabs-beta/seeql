@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useState } from 'react';
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 import { Redirect } from 'react-router-dom';
 import { ipcRenderer } from 'electron';
 
@@ -32,13 +32,22 @@ const Panel = styled.div`
   align-items: center;
 `;
 
+const funtimes = keyframes`
+    0%{background-position:0% 50%}
+    50%{background-position:100% 50%}
+    100%{background-position:0% 50%}
+`;
+
 const LeftPanel = styled(Panel)`
-  background-color: #013243;
-  color: #f2f1ef;
+  background-color: white;
+  color: white;
+  animation: ${funtimes} 8s ease infinite;
+  background: linear-gradient(270deg, #49cefe, #c647bc);
+  background-size: 400% 400%;
 `;
 
 const RightPanel = styled(Panel)`
-  background-color: #f2f1ef;
+  background-color: white;
 `;
 
 const LoginContainer = styled.div`
@@ -70,11 +79,11 @@ const LoginTypeButton = styled.button<LoginTypeButtonProps>`
   border: none;
   border-bottom: ${({ selectedLoginType, buttonType }) =>
     selectedLoginType === buttonType
-      ? '3px solid #013243'
+      ? '3px solid #E55982'
       : '3px solid transparent'};
   transition: 0.3s;
   :hover {
-    border-bottom: 3px solid #013243;
+    border-bottom: 3px solid #e55982;
     cursor: pointer;
   }
   :focus {
