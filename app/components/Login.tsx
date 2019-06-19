@@ -3,6 +3,49 @@ import { useState } from 'react';
 import styled from 'styled-components';
 import { Redirect } from 'react-router-dom';
 import { ipcRenderer } from 'electron';
+import { shell } from 'electron';
+import path from 'path';
+const BrowserWindow = require('electron').remote.BrowserWindow;
+const dialog = require('electron').remote.dialog;
+
+const ProcessCrashBtn = styled.button`
+  width: 200px;
+  background-color: green;
+`;
+
+const GithubLink = styled.button`
+  width: 200px;
+  background-color: ${props => props.theme.backgroundColor};
+  color: ${props => props.theme.fontColor};
+`;
+
+const crashProcess = () => {
+  const crashWinPath = path.join(
+    'file://',
+    __dirname,
+    '../app/crash-dialog.html'
+  );
+  let win = new BrowserWindow({ width: 400, height: 320 });
+
+  win.webContents.on('crashed', () => {
+    const options = {
+      type: 'info',
+      title: 'Renderer Process Crashed',
+      message: 'This process has crashed.',
+      buttons: ['Reload', 'Close']
+    };
+    dialog.showMessageBox(options, index => {
+      if (index === 0) win.reload();
+      else win.close();
+    });
+  });
+
+  win.on('close', () => {
+    win = null;
+  });
+  win.loadURL(crashWinPath);
+  win.show();
+};
 
 const InvisibleHeader = styled.div`
   height: 30px;
@@ -382,6 +425,18 @@ const Login = () => {
             {!loading && <LoginBtn onClick={sendLoginURI}>Login</LoginBtn>}
             {loading && <LoginBtn disabled>Loading...</LoginBtn>}
             {redirectHome()}
+            <GithubLink
+              onClick={() =>
+                shell.openExternal(
+                  `https://https://github.com/oslabs-beta/seeql`
+                )
+              }
+            >
+              SeeQL is Open Source
+            </GithubLink>
+            <ProcessCrashBtn onClick={crashProcess}>
+              crash process
+            </ProcessCrashBtn>
           </LoginContainer>
         </RightPanel>
       </LoginPageWrapper>
