@@ -1,6 +1,10 @@
 # Logs
+debug.txt
 logs
 *.log
+
+notes*
+*notes
 
 # Runtime data
 pids

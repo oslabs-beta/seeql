@@ -1,20 +1,26 @@
 /* eslint global-require: off */
 
-/**
- * This module executes inside of electron's main process. You can start
- * electron renderer process from here and communicate with the other processes
- * through IPC.
- *
- * When running `yarn build` or `yarn build-main`, this file is compiled to
- * `./app/main.prod.js` using webpack. This gives us some performance wins.
- */
 import { app, BrowserWindow, ipcMain } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
 import MenuBuilder from './menu';
+import unhandled from 'electron-unhandled';
+import { openNewGitHubIssue, debugInfo } from 'electron-util';
+
+// this will give actual error messages rather than "unhandled promise rejections"
+// the config object allows the user to auto-open a github issue
+unhandled({
+  reportButton: error => {
+    openNewGitHubIssue({
+      user: 'oslabs-beta',
+      repo: 'seeql',
+      body: `\n${error.stack}\`\n---\n${debugInfo()}`
+    });
+  }
+});
 
 export default class AppUpdater {
-  constructor() {
+  public constructor() {
     log.transports.file.level = 'info';
     autoUpdater.logger = log;
     autoUpdater.checkForUpdatesAndNotify();
@@ -23,11 +29,6 @@ export default class AppUpdater {
 
 let mainWindow = null;
 let queryWindow = null;
-
-if (process.env.NODE_ENV === 'production') {
-  const sourceMapSupport = require('source-map-support');
-  sourceMapSupport.install();
-}
 
 if (
   process.env.NODE_ENV === 'development' ||
@@ -75,8 +76,7 @@ app.on('ready', async () => {
 
   mainWindow.loadURL(`file://${__dirname}/app.html`);
 
-  // @TODO: Use 'ready-to-show' event
-  //        https://github.com/electron/electron/blob/master/docs/api/browser-window.md#using-ready-to-show-event
+  // @TODO: Use 'ready-to-show' event https://github.com/electron/electron/blob/master/docs/api/browser-window.md#using-ready-to-show-event
   mainWindow.webContents.on('did-finish-load', () => {
     if (!mainWindow) {
       throw new Error('"mainWindow" is not defined');
