@@ -259,7 +259,6 @@ const HomePage = ({ location }) => {
               relation.fktablename === previousTablePointer &&
               relation.tablename === table
             ) {
-              console.log('alias', alias);
               rel =
                 alias[previousTablePointer] +
                 '.' +
