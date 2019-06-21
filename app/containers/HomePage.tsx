@@ -61,6 +61,9 @@ const LoadWrap = styled.div`
   width: 100%;
 `;
 
+let relationships = {};
+let alias = {};
+
 const HomePage = ({ location }) => {
   const allTablesMetaData = location.state.tables;
   const [selectedForQueryTables, setSelectedForQueryTables] = useState({});
@@ -91,8 +94,13 @@ const HomePage = ({ location }) => {
   });
 
   const resetQuerySelection = () => {
+    relationships = [];
     setUserInputQuery('SELECT * FROM [add a table name here]');
     setSelectedForQueryTables({});
+    setQueryResultError({
+      status: false,
+      message: ''
+    });
   };
 
   // Track user inactivity, logout after 15 minutes
@@ -116,42 +124,180 @@ const HomePage = ({ location }) => {
 
 
   const captureQuerySelections = e => {
-    const selectedTableName = e.target.dataset.tablename;
-    const selectedColumnName = e.target.dataset.columnname;
-    const temp = selectedForQueryTables;
+    let selectedTableName = e.target.dataset.tablename;
+    let selectedColumnName = e.target.dataset.columnname;
+    let firstColumn = true;
+    let firstTable = true;
+    let pk = '';
+    let temp = selectedForQueryTables;
+    let columns = '';
+    let tables = '';
+    let query = '';
+    relationships[selectedTableName] = [];
 
-    if (Object.keys(temp).includes(selectedTableName)) {
-      if (temp[selectedTableName].includes(selectedColumnName)) {
-        const startIndex = temp[selectedTableName].indexOf(selectedColumnName);
-        temp[selectedTableName] = temp[selectedTableName]
-          .slice(0, startIndex)
-          .concat(temp[selectedTableName].slice(startIndex + 1));
-        if (temp[selectedTableName].length === 0)
-          delete temp[selectedTableName];
-      } else {
-        temp[selectedTableName].push(selectedColumnName);
+    //get relationships of FK
+    data.forEach(table => {
+      if (table.table_name === selectedTableName) {
+        pk = table.primaryKey;
+        table.foreignKeys.forEach(foreignkey => {
+          relationships[selectedTableName].push({
+            tablename: foreignkey.table_name,
+            colname: foreignkey.column_name,
+            fktablename: foreignkey.foreign_table_name,
+            fkcolname: foreignkey.foreign_column_name
+          });
+        });
       }
-    } else {
-      temp[selectedTableName] = [selectedColumnName];
-    }
+    });
 
-    // for no tables
-    if (Object.keys(temp).length === 0) {
-      setUserInputQuery('SELECT * FROM [add a table name here]');
-    }
-    // for one table
-    if (Object.keys(temp).length === 1) {
-      let columns = '';
-      for (const table in temp) {
-        for (let i = 0; i < temp[table].length; i++) {
-          if (i === 0) columns += temp[table][i];
-          else columns += `, ${temp[table][i]}`;
+    //get relationships of PK
+    data.forEach(table => {
+      table.foreignKeys.forEach(foreignkey => {
+        if (
+          foreignkey.foreign_column_name == pk &&
+          foreignkey.foreign_table_name == selectedTableName
+        ) {
+          relationships[selectedTableName].push({
+            tablename: foreignkey.foreign_table_name,
+            colname: foreignkey.foreign_column_name,
+            fktablename: foreignkey.table_name,
+            fkcolname: foreignkey.column_name
+          });
+        }
+      });
+    });
+
+    //builds the object used to write the query
+    for (let i = 0; i < data.length; i++) {
+      if (data[i].table_name === selectedTableName) {
+        //builds query selection object
+        //check if table already exists in query
+        if (Object.keys(temp).includes(selectedTableName)) {
+          //check if column name already exists
+          if (temp[selectedTableName].columns.includes(selectedColumnName)) {
+            //remove the column if it exists
+            const startIndex = temp[selectedTableName].columns.indexOf(
+              selectedColumnName
+            );
+            temp[selectedTableName].columns = temp[selectedTableName].columns
+              .slice(0, startIndex)
+              .concat(temp[selectedTableName].columns.slice(startIndex + 1));
+            //add it to the columns
+          } else {
+            temp[selectedTableName].columns.push(selectedColumnName);
+          }
+          //check if all items are selected
+          if (
+            temp[selectedTableName].columns.length ===
+            temp[selectedTableName].columncount
+          ) {
+            temp[selectedTableName].all = true;
+          } else {
+            temp[selectedTableName].all = false;
+          }
+          //delete entire object if the columns are now empty
+          if (temp[selectedTableName].columns.length === 0) {
+            //if empty after removing
+            delete temp[selectedTableName];
+            delete relationships[selectedTableName];
+            delete alias[selectedTableName];
+          }
+        } else {
+          //first row and first table to be selected
+          temp[selectedTableName] = {
+            all: false,
+            columncount: data[i].columns.length,
+            columns: [selectedColumnName]
+          };
         }
       }
-      const query = `SELECT  ${columns} FROM ${Object.keys(temp)[0]}`;
-      setUserInputQuery(query);
     }
-    // for multiple joins
+    
+    // query generation
+    // for no tables
+    if (Object.keys(temp).length === 0) {
+      query = 'SELECT * FROM [add a table name here]';
+    }
+    
+    //for one table
+    if (Object.keys(temp).length === 1) {
+      for (let table in temp) {
+        //check if all has been selected
+        if (temp[table].all) columns += '*';
+        else {
+          for (let i = 0; i < temp[table].columns.length; i++) {
+            if (firstColumn) {
+              columns += temp[table].columns[i];
+              firstColumn = false;
+            } else columns += ', ' + temp[table].columns[i];
+          }
+        }
+      }
+      tables = Object.keys(temp)[0];
+      query = `SELECT ` + columns + ` FROM ` + tables;
+    }
+
+    let previousTablePointer;
+    
+    //for multiple joins
+    if (Object.keys(temp).length === 2) {
+      for (let table in temp) {
+        //loop through each table
+        let aliasIndex = 0;
+        let tableInitial = table[0];
+        while (Object.values(alias).includes(table[aliasIndex])) {
+          tableInitial += table[aliasIndex + 1];
+          aliasIndex++; //initial of each table
+        }
+        alias[table] = tableInitial;
+        tableInitial += '.';
+        //check if all the columns have been selected
+        if (temp[table].all) {
+          if (firstColumn) {
+            columns += tableInitial + '*';
+            firstColumn = false;
+          } else columns += ', ' + tableInitial + '*';
+        } else {
+          //add each individual column name
+          for (let i = 0; i < temp[table].columns.length; i++) {
+            if (firstColumn) {
+              columns += tableInitial + temp[table].columns[i];
+              firstColumn = false;
+            } else {
+              columns += ', ' + tableInitial + temp[table].columns[i];
+            }
+          }
+        }
+        
+        //create the table name
+        if (firstTable) {
+          tables += table + ` as ` + table[0];
+          firstTable = false;
+        } else {
+          tables += ` INNER JOIN ` + table + ` as ` + alias[table];
+          let rel = '';
+          relationships[table].forEach(relation => {
+            if (
+              relation.fktablename === previousTablePointer &&
+              relation.tablename === table
+            ) {
+              rel =
+                alias[previousTablePointer] +
+                '.' +
+                relation.fkcolname +
+                `=` +
+                (tableInitial + relation.colname);
+            }
+          });
+          tables += ` ON ` + rel;
+        }
+        previousTablePointer = table;
+      }
+      
+      // final query
+      query = `SELECT ` + columns + ` FROM ` + tables;
+    }
+    setUserInputQuery(query);
     setSelectedForQueryTables(temp);
   };
 
@@ -233,7 +379,6 @@ const HomePage = ({ location }) => {
     return () => ipcRenderer.removeAllListeners('query-result-to-homepage');
   }, []);
 
-
   return (
     <React.Fragment>
       {redirectDueToInactivity && <Redirect to='/' />}
@@ -257,8 +402,7 @@ const HomePage = ({ location }) => {
             data-active={activePanel}
             sidePanelVisibility={sidePanelVisibility}
           >
-            {' '}
-            {sidePanelVisibility ? `<<` : `>>`}{' '}
+            {sidePanelVisibility ? `<<` : `>>`}
           </CollapseBtn>
           <OmniBoxContainer
             userInputForTables={userInputForTables}
