@@ -15,9 +15,8 @@ interface IIndTabProps {
 }
 
 const PanelWrapper = styled.div<IPanelWrapperProps>`
-  visibility: ${({ sidePanelVisibility }) =>
-    sidePanelVisibility ? 'visible' : 'collapse'};
-  width: 300px;
+  width: ${({ sidePanelVisibility }) =>
+    sidePanelVisibility ? '375px' : '0px'};
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -34,9 +33,10 @@ const IndTab = styled.button<IIndTabProps>`
   font-family: 'Poppins', sans-serif;
   border: none;
   padding: 5px;
-  background-color: ${props =>
-    props.active === props.panel ? '#e8ecf1' : '#fdfdfe'}
-  
+
+  background-color: ${props => props.active ===props.panel? props.theme.tabs.baseColor :props.theme.panel.baseColorActive};
+  color: ${props=>props.theme.tabs.fontColor};
+
   :hover {
     font-weight: bold;
   }

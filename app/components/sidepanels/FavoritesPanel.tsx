@@ -8,8 +8,8 @@ const PanelWrapper = styled.div`
   height: 100vh;
   display: flex;
   justify-content: center;
-  background-color: ${props => props.theme.backgroundColor};
-  color: ${props => props.theme.fontColor};
+  background-color: ${props => props.theme.panel.baseColor};
+  color: ${props => props.theme.panel.fontColor};
 `;
 
 const FavoritesPanel = () => {
