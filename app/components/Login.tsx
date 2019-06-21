@@ -132,21 +132,50 @@ const ToggleSSL = styled.div`
 `;
 
 const LoginBtn = styled.button`
-  padding: 5px;
-  border-radius: 3px;
+  padding: 8px;
   font-family: 'Poppins', sans-serif;
-  width: 100px;
+  width: 150px;
   border: none;
   transition: 0.2s;
+  border-radius: 3px;
   font-size: 120%;
+  color: white;
+  text-align: center;
+  background: linear-gradient(180deg, #3fc380, #3fc380);
+  transition: all 0.2s;
+  span {
+    cursor: pointer;
+    display: inline-block;
+    position: relative;
+    transition: 0.5s;
+  }
+  span:after {
+    content: '\00bb';
+    position: absolute;
+    opacity: 0;
+    top: 0;
+    right: -20px;
+    transition: 0.5s;
+  }   
   :hover {
-    color: white;
-    background-color: #1ea196;
+    box-shadow: 0px 5px 10px #bdc3c7;
+    span {
+      padding-right: 15px;
+    } 
+    span:after {
+    opacity: 1;
+    right: 0;
+  }
   }
   :focus {
     outline: none;
   }
+  :active{
+    transform: translateY(3px);
+    box-shadow: 0px 2px 10px #bdc3c7;
+  }
 `;
+
 
 const CredentialsContainer = styled.div`
   display: flex;
@@ -425,7 +454,7 @@ const Login = () => {
               <input type="checkbox" onChange={e => setSSL(e.target.checked)} />
               <InputLabel>ssl?</InputLabel>
             </ToggleSSL>
-            {!loading && <LoginBtn onClick={sendLoginURI}>Login</LoginBtn>}
+            {!loading && <><LoginBtn onClick={sendLoginURI}><span>Login</span></LoginBtn></>}
             {loading && <LoginBtn disabled>Loading...</LoginBtn>}
             {redirectHome()}
           </LoginContainer>

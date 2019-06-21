@@ -49,7 +49,7 @@ const CollapseBtn = styled.button<ICollapseBtnProps>`
 `;
 
 const MainPanel = styled.div`
-  background-color: ${props=>props.theme.main.baseColor};
+  background-color: ${props => props.theme.main.baseColor};
   padding: 5px 20px;
   display: flex;
   flex-direction: column;
@@ -212,13 +212,13 @@ const HomePage = ({ location }) => {
         }
       }
     }
-    
+
     // query generation
     // for no tables
     if (Object.keys(temp).length === 0) {
       query = 'SELECT * FROM [add a table name here]';
     }
-    
+
     //for one table
     if (Object.keys(temp).length === 1) {
       for (let table in temp) {
@@ -238,7 +238,7 @@ const HomePage = ({ location }) => {
     }
 
     let previousTablePointer;
-    
+
     //for multiple joins
     if (Object.keys(temp).length === 2) {
       for (let table in temp) {
@@ -268,7 +268,7 @@ const HomePage = ({ location }) => {
             }
           }
         }
-        
+
         //create the table name
         if (firstTable) {
           tables += table + ` as ` + table[0];
@@ -293,7 +293,7 @@ const HomePage = ({ location }) => {
         }
         previousTablePointer = table;
       }
-      
+
       // final query
       query = `SELECT ` + columns + ` FROM ` + tables;
     }
