@@ -1,6 +1,6 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import * as React from 'react';
 import { useState, useEffect, useReducer } from 'react';
+import { Redirect } from 'react-router-dom';
 import { ipcRenderer } from 'electron';
 import styled from 'styled-components';
 import * as actions from '../actions/actions';
@@ -73,7 +73,7 @@ const HomePage = ({ location }) => {
   );
   const [activeTableInPanel, setActiveTableInPanel] = useState({});
   const [userInputForTables, setUserInputForTables] = useState('');
-  const [data, setData] = useState([]); //data from database
+  const [data, setData] = useState([]); // data from database
   const [toggleLoad, setToggleLoad] = useState(true);
   const [userInputQuery, setUserInputQuery] = useState(
     'SELECT * FROM [add a table name here]'
@@ -102,6 +102,26 @@ const HomePage = ({ location }) => {
       message: ''
     });
   };
+
+  // Track user inactivity, logout after 15 minutes
+  const [inactiveTime, setInactiveTime] = useState(0);
+  const [intervalId, captureIntervalId] = useState();
+  const [redirectDueToInactivity, setRedirectDueToInactivity] = useState(false);
+
+  const logOut = () => {
+    clearInterval(intervalId);
+    ipcRenderer.send('logout-to-main', 'inactivity');
+    setRedirectDueToInactivity(true);
+    clearInterval(intervalId);
+  }
+
+  useEffect(() => {
+    captureIntervalId(setInterval(() => setInactiveTime(inactiveTime => inactiveTime + 1), 60000));
+    return () => clearInterval(intervalId);
+  }, []);
+
+  useEffect(() => { if (inactiveTime >= 15) logOut() }, [inactiveTime]);
+
 
   const captureQuerySelections = e => {
     let selectedTableName = e.target.dataset.tablename;
@@ -192,13 +212,13 @@ const HomePage = ({ location }) => {
         }
       }
     }
-
-    //actually write the query
-    //for no tables
+    
+    // query generation
+    // for no tables
     if (Object.keys(temp).length === 0) {
       query = 'SELECT * FROM [add a table name here]';
     }
-
+    
     //for one table
     if (Object.keys(temp).length === 1) {
       for (let table in temp) {
@@ -218,6 +238,7 @@ const HomePage = ({ location }) => {
     }
 
     let previousTablePointer;
+    
     //for multiple joins
     if (Object.keys(temp).length === 2) {
       for (let table in temp) {
@@ -247,6 +268,7 @@ const HomePage = ({ location }) => {
             }
           }
         }
+        
         //create the table name
         if (firstTable) {
           tables += table + ` as ` + table[0];
@@ -271,7 +293,8 @@ const HomePage = ({ location }) => {
         }
         previousTablePointer = table;
       }
-      //entire query
+      
+      // final query
       query = `SELECT ` + columns + ` FROM ` + tables;
     }
     setUserInputQuery(query);
@@ -286,7 +309,7 @@ const HomePage = ({ location }) => {
   };
 
   const captureSelectedTable = e => {
-    const tablename = e.target.dataset.tablename;
+    const { tablename } = e.target.dataset;
     let selectedPanelInfo;
     let primaryKey;
 
@@ -316,49 +339,53 @@ const HomePage = ({ location }) => {
     dispatchSidePanelDisplay(actions.changeToInfoPanel());
   };
 
-  //Fetches database information
+  // Fetches database information
   useEffect((): void => {
     setToggleLoad(true);
     setData(allTablesMetaData);
     setToggleLoad(false);
   }, [allTablesMetaData]);
 
-  ipcRenderer.removeAllListeners('query-result-to-homepage');
-  ipcRenderer.on('query-result-to-homepage', (event, queryResult) => {
-    if (queryResult.statusCode === 'Success') {
-      setQueryResult({
-        status: queryResult.message.length === 0 ? 'No results' : 'Success',
-        message: queryResult.message
-      });
-      setActiveDisplayInResultsTab('Query Results');
-    } else if (queryResult.statusCode === 'Invalid Request') {
-      setQueryResultError({
-        status: true,
-        message: queryResult.message
-      });
-    } else if (queryResult.statusCode === 'Syntax Error') {
-      setQueryResultError({
-        status: true,
-        message: `Syntax error in retrieving query results.
-        Error on: ${userInputQuery.slice(
-          0,
-          parseInt(queryResult.err.position) - 1
-        )} "
-        ${userInputQuery.slice(
-          parseInt(queryResult.err.position) - 1,
-          parseInt(queryResult.err.position)
-        )} "
-        ${userInputQuery.slice(parseInt(queryResult.err.position))};`
-      });
-    }
-    setLoadingQueryStatus(false);
-  });
+  useEffect(() => {
+    ipcRenderer.on('query-result-to-homepage', (event, queryResult) => {
+      if (queryResult.statusCode === 'Success') {
+        setQueryResult({
+          status: queryResult.message.length === 0 ? 'No results' : 'Success',
+          message: queryResult.message
+        });
+        setActiveDisplayInResultsTab('Query Results');
+      } else if (queryResult.statusCode === 'Invalid Request') {
+        setQueryResultError({
+          status: true,
+          message: queryResult.message
+        });
+      } else if (queryResult.statusCode === 'Syntax Error') {
+        setQueryResultError({
+          status: true,
+          message: `Syntax error in retrieving query results.
+          Error on: ${userInputQuery.slice(
+            0,
+            parseInt(queryResult.err.position) - 1
+          )} "
+          ${userInputQuery.slice(
+            parseInt(queryResult.err.position) - 1,
+            parseInt(queryResult.err.position)
+          )} "
+          ${userInputQuery.slice(parseInt(queryResult.err.position))};`
+        });
+      }
+      setLoadingQueryStatus(false);
+    });
+    return () => ipcRenderer.removeAllListeners('query-result-to-homepage');
+  }, []);
 
   return (
     <React.Fragment>
+      {redirectDueToInactivity && <Redirect to='/' />}
       <InvisibleHeader></InvisibleHeader>
-      <HomepageWrapper>
+      <HomepageWrapper onMouseMove={() => setInactiveTime(0)}>
         <SidePanel
+          intervalId={intervalId}
           activePanel={activePanel}
           dispatchSidePanelDisplay={dispatchSidePanelDisplay}
           activeTableInPanel={activeTableInPanel}
@@ -375,8 +402,7 @@ const HomePage = ({ location }) => {
             data-active={activePanel}
             sidePanelVisibility={sidePanelVisibility}
           >
-            {' '}
-            {sidePanelVisibility ? `<<` : `>>`}{' '}
+            {sidePanelVisibility ? `<<` : `>>`}
           </CollapseBtn>
           <OmniBoxContainer
             userInputForTables={userInputForTables}
