@@ -3,9 +3,8 @@ import styled from 'styled-components';
 
 const PanelWrapper = styled.div`
   color: black;
-  padding: 40px;
+  padding: 20px;
   font-size: 30px;
-  width: 300px;
   height: 100vh;
   display: flex;
   justify-content: center;

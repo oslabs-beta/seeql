@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { useState } from 'react';
+import styled, { keyframes } from 'styled-components';
+import { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { Redirect } from 'react-router-dom';
 import { ipcRenderer } from 'electron';
@@ -32,13 +33,22 @@ const Panel = styled.div`
   align-items: center;
 `;
 
+const funtimes = keyframes`
+    0%{background-position:0% 50%}
+    50%{background-position:100% 50%}
+    100%{background-position:0% 50%}
+`;
+
 const LeftPanel = styled(Panel)`
-  background-color: #013243;
-  color: #f2f1ef;
+  background-color: white;
+  color: white;
+  animation: ${funtimes} 8s ease infinite;
+  background: linear-gradient(270deg, #49cefe, #c647bc);
+  background-size: 400% 400%;
 `;
 
 const RightPanel = styled(Panel)`
-  background-color: #f2f1ef;
+  background-color: white;
 `;
 
 const LoginContainer = styled.div`
@@ -70,11 +80,11 @@ const LoginTypeButton = styled.button<LoginTypeButtonProps>`
   border: none;
   border-bottom: ${({ selectedLoginType, buttonType }) =>
     selectedLoginType === buttonType
-      ? '3px solid #013243'
+      ? '3px solid #E55982'
       : '3px solid transparent'};
   transition: 0.3s;
   :hover {
-    border-bottom: 3px solid #013243;
+    border-bottom: 3px solid #e55982;
     cursor: pointer;
   }
   :focus {
@@ -176,6 +186,18 @@ const ConnectionErrorMessage = styled.div`
   font-size: 100%;
 `;
 
+const LogoutMessage = styled.div`
+  background-color: #f1c7ca;
+  width: 200px;
+  color: #ca333e;
+  border-radius: 3px;
+  padding: 5px;
+  margin: 5px;
+  font-family: 'Poppins', sans-serif;
+  border-left: 3px solid #ca333e;
+  font-size: 100%;
+`;
+
 const RequiredWarning = styled.span`
   color: #ca333e;
   font-size: 80%;
@@ -194,9 +216,11 @@ const Login = () => {
   const [connectionError, setConnectionError] = useState(false);
   const [loading, setLoading] = useState(false);
   const [redirectToHome, setRedirectToHome] = useState(false);
+  const [loggedOutMessage, setLoggedOutMessage] = useState('');
   const [tableData, setTableData] = useState([]);
 
   const sendLoginURI = (): void => {
+    if (loggedOutMessage) setLoggedOutMessage('');
     const updatedPort = !port ? '5432' : port;
     let updatedURI;
     if (loginType === 'URI') updatedURI = URI;
@@ -220,20 +244,28 @@ const Login = () => {
     }
   };
 
-  ipcRenderer.removeAllListeners('db-connection-error');
-  ipcRenderer.on('db-connection-error', (event, err) => {
-    // #TODO: Error handling for cases where unable to retrieve info from a valid connection
-    setConnectionError(true);
-    setLoading(false);
-  });
 
-  ipcRenderer.removeAllListeners('tabledata-to-login');
-  ipcRenderer.on('tabledata-to-login', (event, databaseTables) => {
-    setConnectionError(false);
-    setTableData(databaseTables);
-    setLoading(false);
-    setRedirectToHome(true);
-  });
+  // IPC messaging listeners
+  useEffect(() => {
+    ipcRenderer.on('db-connection-error', (_event, err) => {
+      // #TODO: Error handling for cases where unable to retrieve info from a valid connection
+      setConnectionError(true);
+      setLoading(false);
+    });
+    ipcRenderer.on('tabledata-to-login', (_event, databaseTables) => {
+      setConnectionError(false);
+      setTableData(databaseTables);
+      setLoading(false);
+      setRedirectToHome(true);
+    });
+    ipcRenderer.send('login-mounted');
+    ipcRenderer.on('logout-reason', (_event, message) => setLoggedOutMessage(message));
+    return () => {
+      ipcRenderer.removeAllListeners('db-connection-error');
+      ipcRenderer.removeAllListeners('tabledata-to-login');
+      ipcRenderer.removeAllListeners('logout-reason');
+    }
+  }, []);
 
   const captureURI = (e): void => {
     const sanitizedURI = e.target.value.replace(/\s+/g, '');
@@ -259,6 +291,10 @@ const Login = () => {
         </LeftPanel>
         <RightPanel>
           <LoginContainer>
+            {loggedOutMessage === 'inactivity' &&
+              <LogoutMessage>You've been logged out due to inactivity</LogoutMessage>}
+            {loggedOutMessage === 'userlogout' &&
+              <LogoutMessage>You logged out</LogoutMessage>}
             {connectionError && (
               <ConnectionErrorMessage>
                 Unable to connect to the database. Please try again.
@@ -292,6 +328,7 @@ const Login = () => {
                     type="text"
                     requiredError={host.requiredError}
                     placeholder="host"
+                    value={host.value}
                     onChange={e =>
                       setHost({ value: e.target.value, requiredError: false })
                     }
@@ -306,6 +343,7 @@ const Login = () => {
                     type="text"
                     requiredError={false}
                     placeholder="port (default 5432)"
+                    value={port}
                     onChange={e => setPort(e.target.value)}
                   />
                 </InputAndLabelWrapper>
@@ -315,6 +353,7 @@ const Login = () => {
                     type="text"
                     requiredError={username.requiredError}
                     placeholder="username"
+                    value={username.value}
                     onChange={e =>
                       setUsername({
                         value: e.target.value,
@@ -332,6 +371,7 @@ const Login = () => {
                     type="password"
                     requiredError={password.requiredError}
                     placeholder="password"
+                    value={password.value}
                     onChange={e =>
                       setPassword({
                         value: e.target.value,
@@ -349,6 +389,7 @@ const Login = () => {
                     type="text"
                     requiredError={database.requiredError}
                     placeholder="database"
+                    value={database.value}
                     onChange={e =>
                       setDatabase({
                         value: e.target.value,
@@ -369,6 +410,7 @@ const Login = () => {
                   requiredError={requiredError}
                   onChange={captureURI}
                   placeholder="Enter your URI connection string..."
+                  value={URI}
                 />
                 {requiredError && (
                   <RequiredWarning>URI is required</RequiredWarning>

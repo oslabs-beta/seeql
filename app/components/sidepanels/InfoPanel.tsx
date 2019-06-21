@@ -121,20 +121,3 @@ const InfoPanel: React.SFC<Props> = ({
 };
 
 export default InfoPanel;
-
-// interface IForeignKeys {
-//   column_name?: string
-//   constraint_name?: string
-//   foreign_column_name?: string
-//   foreign_table_name?: string
-//   foreign_table_schema?: string
-//   table_name?: string
-//   table_schema?: string
-// }
-
-// interface IColumns {
-//   characterlength?: string
-//   columnname?: string
-//   datatype?: string
-//   defaultvalue?: string
-// }

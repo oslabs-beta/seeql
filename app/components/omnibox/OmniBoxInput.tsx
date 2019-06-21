@@ -30,9 +30,10 @@ const ExecuteQueryButton = styled.button`
   text-align: center;
   padding: 5px;
   font-size: 80%;
+  transition: 1s;
 
   :hover {
-    background-color: #042d36;
+    background-image: linear-gradient(to bottom right, #49cefe, #c647bc);
   }
 
   :focus {
@@ -41,51 +42,49 @@ const ExecuteQueryButton = styled.button`
 `;
 
 interface IOmniBoxInputProps {
-    omniBoxView: string;
-    userInputQuery: string;
-    loadingQueryStatus: boolean;
-    userInputForTables: string;
-    setUserInputQuery: (any) => any;
-    executeQuery: (any) => any;
-    setUserInputForTables: (any) => any;
+  omniBoxView: string;
+  userInputQuery: string;
+  loadingQueryStatus: boolean;
+  userInputForTables: string;
+  setUserInputQuery: (any) => any;
+  executeQuery: (any) => any;
+  setUserInputForTables: (any) => any;
 }
 
 const OmniBoxInput: React.SFC<IOmniBoxInputProps> = ({
-    omniBoxView,
-    setUserInputQuery,
-    userInputQuery,
-    executeQuery,
-    loadingQueryStatus,
-    setUserInputForTables,
-    userInputForTables
+  omniBoxView,
+  setUserInputQuery,
+  userInputQuery,
+  executeQuery,
+  loadingQueryStatus,
+  setUserInputForTables,
+  userInputForTables
 }) => {
-    if (omniBoxView === 'SQL'){
-      return (
-        <OmniBoxWrapper>
-            <OmniBoxInputText
-                onChange={e => setUserInputQuery(e.target.value)}
-                value={userInputQuery}
-            ></OmniBoxInputText>
-            <ExecuteQueryButton
-                onClick={executeQuery}
-                disabled={loadingQueryStatus}
-            >
-            {loadingQueryStatus
-            ? 'Loading query results...'
-            : 'Execute Query'}
-            </ExecuteQueryButton>
-        </OmniBoxWrapper>
-        )
-    }
-    if (omniBoxView === 'plain'){
-        return (
-            <OmniBoxInputText
-            placeholder="Search for a table"
-            onChange={e => setUserInputForTables(e.target.value)}
-            value={userInputForTables}
-            ></OmniBoxInputText>
-        )
-    }
-}
+  if (omniBoxView === 'SQL') {
+    return (
+      <OmniBoxWrapper>
+        <OmniBoxInputText
+          onChange={e => setUserInputQuery(e.target.value)}
+          value={userInputQuery}
+        ></OmniBoxInputText>
+        <ExecuteQueryButton
+          onClick={executeQuery}
+          disabled={loadingQueryStatus}
+        >
+          {loadingQueryStatus ? 'Loading query results...' : 'Execute Query'}
+        </ExecuteQueryButton>
+      </OmniBoxWrapper>
+    );
+  }
+  if (omniBoxView === 'plain') {
+    return (
+      <OmniBoxInputText
+        placeholder="Search for a table"
+        onChange={e => setUserInputForTables(e.target.value)}
+        value={userInputForTables}
+      ></OmniBoxInputText>
+    );
+  }
+};
 
 export default OmniBoxInput;

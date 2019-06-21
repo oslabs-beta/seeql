@@ -25,6 +25,8 @@ module.exports = {
     '@typescript-eslint/explicit-function-return-type': 'off', // function does not have a return type
     '@typescript-eslint/member-delimiter-style': 'off', // semicolons to delemit interface properties? who cares!
     '@typescript-eslint/interface-name-prefix': 'off', // its ok to have interfaces start with IAnInterface
-    '@typescript-eslint/no-unused-vars': 'off'
+    '@typescript-eslint/no-unused-vars': 'off',
+    'import/no-duplicates': 'off',
+    'import/no-unresolved': 'off'
   }
 };

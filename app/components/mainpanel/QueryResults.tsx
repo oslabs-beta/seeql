@@ -12,6 +12,11 @@ const QueryResultWrapper = styled.div`
   height: 60vh;
 `;
 
+const reactTableStyle = {
+  fontSize: '60%',
+  backgroundColor: 'transparent'
+};
+
 interface IQueryResult {
   status: string;
   message: any[];
@@ -37,7 +42,11 @@ const QueryResults: React.SFC<IQueryResultsProps> = ({ queryResult }) => {
   return (
     <QueryResultWrapper>
       {queryResult.message.length > 0 && (
-        <ReactTable data={queryResult.message} columns={columns} />
+        <ReactTable
+          style={reactTableStyle}
+          data={queryResult.message}
+          columns={columns}
+        />
       )}
       {queryResult.message.length === 0 &&
         queryResult.status === 'No results' && (

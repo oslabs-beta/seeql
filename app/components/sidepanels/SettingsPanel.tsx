@@ -2,6 +2,7 @@ import * as React from 'react';
 import { useReducer, useContext, useState, useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
 import styled from 'styled-components';
+import { ipcRenderer } from 'electron';
 import Context from '../../contexts/themeContext';
 import themeReducer from '../../reducers/themeReducer';
 
@@ -12,7 +13,6 @@ const PanelWrapper = styled.div`
   color: black;
   font-family: 'Poppins', sans-serif;
   padding: 20px;
-  width: 300px;
   height: 100vh;
   padding: 40px;
   background-color: ${props => props.theme.panel.baseColor};
@@ -44,10 +44,18 @@ const SignOut = styled.span`
   color: ${props => props.theme.link.signOut};
 `;
 
-const SettingsPanel = () => {
+
+const SettingsPanel = ({ intervalId }) => {
   const [context, setContext] = useContext(Context);
   const [state, dispatch] = useReducer(themeReducer, context);
   const [activeMode, setActiveMode] = useState('default');
+  const [toggle, setToggle] = useState(false);
+  const contextText = context.light.toString();
+  
+  const logOut = () => {
+    clearInterval(intervalId);
+    ipcRenderer.send('logout-to-main', 'userlogout');
+  }
 
   useEffect(() => {
     setContext(state);
@@ -88,10 +96,12 @@ const SettingsPanel = () => {
           </select>
         </DivWrapper>
       </TopSection>
-      <BottomSection>
-    
-          <NavLink to="/"><SignOut>SignOut </SignOut></NavLink>
-
+      <BottomSection>  
+        <NavLink onClick={logOut} to="/">
+          <SignOut>
+            SignOut
+          </SignOut>
+        </NavLink>
       </BottomSection>
     </PanelWrapper>
   );
