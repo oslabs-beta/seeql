@@ -1,7 +1,6 @@
 import * as React from 'react';
 import styled, { keyframes } from 'styled-components';
 import { useState, useEffect } from 'react';
-import styled from 'styled-components';
 import { Redirect } from 'react-router-dom';
 import { ipcRenderer } from 'electron';
 
@@ -244,7 +243,6 @@ const Login = () => {
     }
   };
 
-
   // IPC messaging listeners
   useEffect(() => {
     ipcRenderer.on('db-connection-error', (_event, err) => {
@@ -259,12 +257,14 @@ const Login = () => {
       setRedirectToHome(true);
     });
     ipcRenderer.send('login-mounted');
-    ipcRenderer.on('logout-reason', (_event, message) => setLoggedOutMessage(message));
+    ipcRenderer.on('logout-reason', (_event, message) =>
+      setLoggedOutMessage(message)
+    );
     return () => {
       ipcRenderer.removeAllListeners('db-connection-error');
       ipcRenderer.removeAllListeners('tabledata-to-login');
       ipcRenderer.removeAllListeners('logout-reason');
-    }
+    };
   }, []);
 
   const captureURI = (e): void => {
@@ -291,10 +291,14 @@ const Login = () => {
         </LeftPanel>
         <RightPanel>
           <LoginContainer>
-            {loggedOutMessage === 'inactivity' &&
-              <LogoutMessage>You've been logged out due to inactivity</LogoutMessage>}
-            {loggedOutMessage === 'userlogout' &&
-              <LogoutMessage>You logged out</LogoutMessage>}
+            {loggedOutMessage === 'inactivity' && (
+              <LogoutMessage>
+                You've been logged out due to inactivity
+              </LogoutMessage>
+            )}
+            {loggedOutMessage === 'userlogout' && (
+              <LogoutMessage>You logged out</LogoutMessage>
+            )}
             {connectionError && (
               <ConnectionErrorMessage>
                 Unable to connect to the database. Please try again.

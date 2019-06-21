@@ -44,23 +44,20 @@ const SignOut = styled.span`
   color: ${props => props.theme.link.signOut};
 `;
 
-
 const SettingsPanel = ({ intervalId }) => {
   const [context, setContext] = useContext(Context);
   const [state, dispatch] = useReducer(themeReducer, context);
   const [activeMode, setActiveMode] = useState('default');
-  const [toggle, setToggle] = useState(false);
-  const contextText = context.light.toString();
-  
+
   const logOut = () => {
     clearInterval(intervalId);
     ipcRenderer.send('logout-to-main', 'userlogout');
-  }
+  };
 
   useEffect(() => {
     setContext(state);
   }, [state]);
- 
+
   return (
     <PanelWrapper>
       <TopSection>
@@ -96,11 +93,9 @@ const SettingsPanel = ({ intervalId }) => {
           </select>
         </DivWrapper>
       </TopSection>
-      <BottomSection>  
+      <BottomSection>
         <NavLink onClick={logOut} to="/">
-          <SignOut>
-            SignOut
-          </SignOut>
+          <SignOut>SignOut</SignOut>
         </NavLink>
       </BottomSection>
     </PanelWrapper>
@@ -108,4 +103,3 @@ const SettingsPanel = ({ intervalId }) => {
 };
 
 export default SettingsPanel;
-
