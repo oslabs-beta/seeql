@@ -292,6 +292,7 @@ const Login = () => {
                     type="text"
                     requiredError={host.requiredError}
                     placeholder="host"
+                    value={host.value}
                     onChange={e =>
                       setHost({ value: e.target.value, requiredError: false })
                     }
@@ -306,6 +307,7 @@ const Login = () => {
                     type="text"
                     requiredError={false}
                     placeholder="port (default 5432)"
+                    value={port}
                     onChange={e => setPort(e.target.value)}
                   />
                 </InputAndLabelWrapper>
@@ -315,6 +317,7 @@ const Login = () => {
                     type="text"
                     requiredError={username.requiredError}
                     placeholder="username"
+                    value={username.value}
                     onChange={e =>
                       setUsername({
                         value: e.target.value,
@@ -332,6 +335,7 @@ const Login = () => {
                     type="password"
                     requiredError={password.requiredError}
                     placeholder="password"
+                    value={password.value}
                     onChange={e =>
                       setPassword({
                         value: e.target.value,
@@ -349,6 +353,7 @@ const Login = () => {
                     type="text"
                     requiredError={database.requiredError}
                     placeholder="database"
+                    value={database.value}
                     onChange={e =>
                       setDatabase({
                         value: e.target.value,
@@ -369,6 +374,7 @@ const Login = () => {
                   requiredError={requiredError}
                   onChange={captureURI}
                   placeholder="Enter your URI connection string..."
+                  value={URI}
                 />
                 {requiredError && (
                   <RequiredWarning>URI is required</RequiredWarning>
