@@ -62,7 +62,6 @@ module.exports = api => {
       require('@babel/plugin-syntax-import-meta'),
       [require('@babel/plugin-proposal-class-properties'), { loose: true }],
       require('@babel/plugin-proposal-json-strings'),
-      // require('babel-plugin-transform-object-rest-spread'),
       require('@babel/plugin-proposal-object-rest-spread'),
 
       ...(development ? developmentPlugins : productionPlugins)

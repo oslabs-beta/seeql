@@ -12,6 +12,7 @@ import { app, BrowserWindow, ipcMain } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
 import MenuBuilder from './menu';
+import sourceMapSupport from 'source-map-support';
 
 export default class AppUpdater {
   public constructor() {
@@ -20,6 +21,8 @@ export default class AppUpdater {
     autoUpdater.checkForUpdatesAndNotify();
   }
 }
+// just for development obvs (hehe) gets rid of console errors covering more relevant errors
+process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true';
 
 let mainWindow = null;
 let queryWindow = null;

@@ -7,6 +7,8 @@ import { shell } from 'electron';
 import path from 'path';
 const BrowserWindow = require('electron').remote.BrowserWindow;
 const dialog = require('electron').remote.dialog;
+import unhandled from 'electron-unhandled';
+import { openNewGitHubIssue, debugInfo } from 'electron-util';
 
 const ProcessCrashBtn = styled.button`
   width: 200px;
