@@ -2,6 +2,7 @@ import * as React from 'react';
 import { useReducer, useContext, useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import styled from 'styled-components';
+import { ipcRenderer } from 'electron';
 import Context from '../../contexts/themeContext';
 import themeReducer from '../../reducers/themeReducer';
 
@@ -41,11 +42,17 @@ const Label = styled.label`
   padding: 10px 0;
 `;
 
-const SettingsPanel = () => {
+
+const SettingsPanel = ({ intervalId }) => {
   const [context, setContext] = useContext(Context);
   const [state, dispatch] = useReducer(themeReducer, context);
   const [toggle, setToggle] = useState(false);
   const contextText = context.light.toString();
+  
+  const logOut = () => {
+    clearInterval(intervalId);
+    ipcRenderer.send('logout-to-main', 'userlogout');
+  }
 
   return (
     <PanelWrapper>
@@ -78,9 +85,9 @@ const SettingsPanel = () => {
       </TopSection>
       <BottomSection>
         <div style={state}>CHANGE ME HEY BLAHHSLAH</div>
-        <NavLink to="/" activeStyle={{ color: 'black ' }}>
-          Sign Out
-        </NavLink>
+          <NavLink onClick={logOut} to="/" activeStyle={{ color: 'black ' }}>
+            Log Out
+          </NavLink>
       </BottomSection>
     </PanelWrapper>
   );
