@@ -8,14 +8,15 @@ const OmniBoxWrapper = styled.div`
 
 const OmniBoxInputText = styled.textarea`
   font-family: 'Poppins', sans-serif;
-  border: 1px solid lightgrey;
+  border: none;
+  background-color: #E8ECF1;
   padding: 8px;
   height: 100px;
   border-radius: 3px;
   letter-spacing: 2px;
   resize: none;
   width: 100%;
-
+  box-shadow: 3px 3px 8px #E8ECF1;
   :focus {
     outline: none;
   }
@@ -23,17 +24,39 @@ const OmniBoxInputText = styled.textarea`
 
 const ExecuteQueryButton = styled.button`
   font-family: 'Poppins', sans-serif;
-  border: ${props=>props.theme.executeButton.border};
-  background-color: ${props=>props.theme.executeButton.baseColor};
+  border: ${props => props.theme.executeButton.border};
+  background-color: ${props => props.theme.executeButton.baseColor};
   transition: 0.2s;
-  color: ${props =>props.theme.executeButton.fontColor};
+  color: ${props => props.theme.executeButton.fontColor};
   text-align: center;
-  padding: 5px;
+  padding: 8px;
   font-size: 80%;
-  transition: 1s;
+  border-radius: 0px 0px 3px 3px;
+  box-shadow: 2px 2px 8px #E8ECF1;
+  transition: 0.2s;
+  span {
+    cursor: pointer;
+    display: inline - block;
+    position: relative;
+    transition: 0.5s;
+  }
 
+  span:after {
+  content: '\00bb';
+  position: absolute;
+  opacity: 0;
+  top: 0;
+  right: -20px;
+  transition: 0.5s;
+}   
   :hover {
-    background-image: linear-gradient(to bottom right, #49cefe, #c647bc);
+    span {
+      padding-right: 15px;
+    }
+    span:after {
+      opacity: 1;
+      right: 0;
+    }
   }
 
   :focus {
@@ -71,7 +94,7 @@ const OmniBoxInput: React.SFC<IOmniBoxInputProps> = ({
           onClick={executeQuery}
           disabled={loadingQueryStatus}
         >
-          {loadingQueryStatus ? 'Loading query results...' : 'Execute Query'}
+          <span>{loadingQueryStatus ? 'Loading query results...' : 'Execute Query'}</span>
         </ExecuteQueryButton>
       </OmniBoxWrapper>
     );

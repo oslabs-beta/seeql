@@ -6,6 +6,7 @@ import OmniBoxInput from '../../components/omnibox/OmniBoxInput';
 
 const OmniBoxNav = styled.nav`
   display: flex;
+  margin: 0px 5px;
 `;
 
 const QueryResultError = styled.div`
@@ -28,6 +29,7 @@ const OmniBoxNavButton = styled.button<IOmniBoxNavButtonProps>`
   padding: 5px;
   font-family: 'Poppins', sans-serif;
   border-radius: 3px 3px 0px 0px;
+  margin: 5px 0px 0px 5px;
   border: none;
   background-color: ${props =>
     props.selectedView === props.omniBoxView
@@ -80,6 +82,17 @@ const OmniBoxContainer: React.SFC<IOmniBoxProps> = ({
     );
   });
 
+  // #TODO: Connect this ipc communication with new query input
+  const executeQuery = (): void => {
+    if (!loadingQueryStatus) {
+      setQueryResultError({
+        status: false,
+        message: ''
+      });
+      ipcRenderer.send('query-to-main', userInputQuery);
+    }
+    setLoadingQueryStatus(true);
+  };
   const generateInputBox = () => {
     return (
       <OmniBoxInput
@@ -95,17 +108,6 @@ const OmniBoxContainer: React.SFC<IOmniBoxProps> = ({
     );
   };
 
-  // #TODO: Connect this ipc communication with new query input
-  const executeQuery = (): void => {
-    if (!loadingQueryStatus) {
-      setQueryResultError({
-        status: false,
-        message: ''
-      });
-      ipcRenderer.send('query-to-main', userInputQuery);
-    }
-    setLoadingQueryStatus(true);
-  };
 
   return (
     <React.Fragment>

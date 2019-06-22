@@ -17,15 +17,6 @@ interface IIndTabProps {
 const PanelWrapper = styled.div<IPanelWrapperProps>`
   width: ${({ sidePanelVisibility }) =>
     sidePanelVisibility ? '375px' : '0px'};
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  transition: visibility 500ms ease-in-out;
-`;
-const ButtonMenu = styled.div`
-  display: flex;
-  justify-content: center;
-  background-color: #e8ecf1;
 `;
 
 const IndTab = styled.button<IIndTabProps>`
@@ -34,8 +25,8 @@ const IndTab = styled.button<IIndTabProps>`
   border: none;
   padding: 5px;
 
-  background-color: ${props => props.active ===props.panel? props.theme.tabs.baseColor :props.theme.panel.baseColorActive};
-  color: ${props=>props.theme.tabs.fontColor};
+  background-color: ${props => props.active === props.panel ? props.theme.tabs.baseColor : props.theme.panel.baseColorActive};
+  color: ${props => props.theme.tabs.fontColor};
 
   :hover {
     font-weight: bold;
@@ -47,9 +38,9 @@ const IndTab = styled.button<IIndTabProps>`
 
 const Tabs = styled.div`
   display: flex;
-  padding: 50px 0px 5px 5px;
-  justify-content: space-between;
-  font-family: 'Poppins', sans-serif;
+  position: relative;
+  left: 150px;
+  font-family: 'Poppins', sans-serif;;
 `;
 
 interface IForeignKeysAffected {
@@ -95,40 +86,38 @@ const SidePanel: React.SFC<Props> = ({
     <React.Fragment>
       {sidePanelVisibility && (
         <PanelWrapper sidePanelVisibility={sidePanelVisibility}>
-          <ButtonMenu>
-            <Tabs>
-              <IndTab
-                data-panel="info"
-                panel="info"
-                active={activePanel}
-                onClick={() =>
-                  dispatchSidePanelDisplay(actions.changeToInfoPanel())
-                }
-              >
-                Table Info
+          <Tabs>
+            <IndTab
+              data-panel="info"
+              panel="info"
+              active={activePanel}
+              onClick={() =>
+                dispatchSidePanelDisplay(actions.changeToInfoPanel())
+              }
+            >
+              I
               </IndTab>
-              <IndTab
-                data-panel="favorites"
-                panel="favorites"
-                active={activePanel}
-                onClick={() =>
-                  dispatchSidePanelDisplay(actions.changeToFavPanel())
-                }
-              >
-                Favorites
+            <IndTab
+              data-panel="favorites"
+              panel="favorites"
+              active={activePanel}
+              onClick={() =>
+                dispatchSidePanelDisplay(actions.changeToFavPanel())
+              }
+            >
+              F
               </IndTab>
-              <IndTab
-                data-panel="settings"
-                panel="settings"
-                active={activePanel}
-                onClick={() =>
-                  dispatchSidePanelDisplay(actions.changeToSettingsPanel())
-                }
-              >
-                Settings
+            <IndTab
+              data-panel="settings"
+              panel="settings"
+              active={activePanel}
+              onClick={() =>
+                dispatchSidePanelDisplay(actions.changeToSettingsPanel())
+              }
+            >
+              S
               </IndTab>
-            </Tabs>
-          </ButtonMenu>
+          </Tabs>
           <div>
             {activePanel === 'info' && (
               <InfoPanel
