@@ -85,11 +85,17 @@ const SettingsPanel = ({ intervalId }) => {
         </DivWrapper>
         <DivWrapper>
           <Label>Font Size</Label>
-          <select>
-            <option value="">Normal</option>
-            <option value="">small</option>
-            <option value="">large</option>
-            <option value="">Extra-Large</option>
+          <select
+            defaultValue="normal"
+            onChange={e => {
+              console.log(e.target)
+              if (e.target.value === 'small') document.body.style.fontSize = '10px';
+              if (e.target.value === 'normal') document.body.style.fontSize = '16px';
+              if (e.target.value === 'large') document.body.style.fontSize = '28px';
+            }}>
+            <option value="small">Small</option>
+            <option value="normal">Normal</option>
+            <option value="large">Large</option>
           </select>
         </DivWrapper>
       </TopSection>
