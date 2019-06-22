@@ -36,7 +36,7 @@ class AppDb {
   logErr(err) {
     this.data['error-log'] = `
       ${dateTime.create().format('Y-m-d H:M:S')}
-      : 
+      :
       err ${err}
     `;
     fs.writeFileSync(this.path, JSON.stringify(this.data));

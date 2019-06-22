@@ -4,6 +4,33 @@ import styled from 'styled-components';
 import { Redirect } from 'react-router-dom';
 import { ipcRenderer } from 'electron';
 
+import { Box, Grommet, CheckBox, Button } from "grommet";
+import { grommet } from "grommet/themes";
+import { Add } from "grommet-icons";
+
+// const AppBar = (props) => (
+//   <Box
+//     tag='header'
+//     direction='row'
+//     align='center'
+//     justify='between'
+//     background='light-2'
+//     pad={{ vertical: 'small', horizontal: 'medium' }}
+//     elevation='medium'
+//     {...props}
+//   />
+// );
+
+const tylersTheme = {
+  global: {
+    font: {
+      family: 'Courier',
+      size: '18px',
+      height: '20px',
+    },
+  },
+};
+
 const savedConnectionStrings = [
   {
     body: 'https://postgresetc',
@@ -248,6 +275,11 @@ const Login = () => {
     }
   };
 
+  ipcRenderer.on('load-saved-connection-strings', (savedUserConnStrs, _err) => {
+    // #TODOD
+    // renderSavedConnectionStrings(savedUserConnStrs) 
+  })
+
   ipcRenderer.removeAllListeners('db-connection-error');
   ipcRenderer.on('db-connection-error', (_event, _err) => {
     // #TODO: Error handling for cases where unable to retrieve info from a valid connection
@@ -278,8 +310,18 @@ const Login = () => {
       );
   };
 
+  //  onCheck = (event, value) => {
+  //   const { checked } = this.state;
+  //   if (event.target.checked) {
+  //     checked.push(value);
+  //   } else {
+  //     this.setState({ checked: checked.filter(item => item !== value) });
+  //   }
+  // };
+
   return (
-    <React.Fragment>
+    <Grommet theme={tylersTheme}>
+
       <InvisibleHeader></InvisibleHeader>
       <LoginPageWrapper>
         <UriConnectionTab>
@@ -418,7 +460,34 @@ const Login = () => {
               />
               <InputLabel>remember this connection?</InputLabel>
             </ToggleRememberMe>
-            {!loading && <LoginBtn onClick={sendLoginURI}>Login</LoginBtn>}
+
+
+
+                <Box align="center" pad="medium">
+                  <Box direction="row" gap="large">
+                    <CheckBox
+                      label="SSL?"
+                      onChange={e => setSSL(e.target.checked)} />
+                    <CheckBox
+                      // if use clicks remember me, their connection is saved
+                      // #TODO: send an event to main process to write the saved uri to a persisted array
+                      // #TODO: render those URIs to the "saved connections" panel
+                      label="remember this connection?"
+                      // this.setState({ checked });
+                      onChange={e => setSaveConnection(e.target.checked)} />
+                  </Box>
+                </Box>
+               { !loading &&
+                <Button
+                    onClick={sendLoginURI}
+                    color="dark-1"
+                    primary
+                    icon={<Add />}
+                    label="Login"
+                />
+               }
+
+
             {loading && <LoginBtn disabled>Loading...</LoginBtn>}
             {redirectHome()}
           </LoginContainer>
@@ -438,7 +507,8 @@ const Login = () => {
           </ul>
         </SavedConnectionTab>
       </LoginPageWrapper>
-    </React.Fragment>
+      {/* <AppBar /> */}
+    </Grommet>
   );
 };
 

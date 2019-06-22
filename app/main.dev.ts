@@ -93,6 +93,13 @@ app.on('ready', async () => {
   queryWindow = new BrowserWindow({ show: false });
   queryWindow.loadURL(`file://${__dirname}/query.html`);
 
+
+  // when the application launches, if the user has saved connections,
+  // main.dev.ts will send an array of connection strings
+  ipcRenderer.on('db-connection-error', (_event, _err) => {
+    // #TODO
+  })
+
   // Listening from homepage, to send to database
   ipcMain.on('uri-to-main', (_event: void, uri: string) => {
     queryWindow.webContents.send('uri-to-db', uri);
@@ -130,6 +137,7 @@ app.on('ready', async () => {
     'remember-connection',
     (savedConnectionString: string, err: Error) => {
       if (err) this.appDb.logErr(`logErr: `, err);
+      log.verbose('user clicked remember connection for ', savedConnectionString)
       appDb.set({
         savedConnectionString: savedConnectionString,
         savedConnectionStringId: uuid()
