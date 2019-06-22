@@ -1,6 +1,7 @@
 import electron from 'electron';
 import path from 'path';
 import fs from 'fs';
+import dateTime from 'node-datetime';
 
 // checks if user settings file exists
 const parseDataFile = (filePath, defaults) => {
@@ -11,6 +12,7 @@ const parseDataFile = (filePath, defaults) => {
   }
 };
 
+// use sync write methods to avoid losing data (idle state etc.)
 class AppDb {
   constructor(opts) {
     // allows both render and main process to get reference to app
@@ -28,7 +30,15 @@ class AppDb {
 
   set(key, val) {
     this.data[key] = val;
-    // use sync to avoid losing data (idle state etc.)
+    fs.writeFileSync(this.path, JSON.stringify(this.data));
+  }
+
+  logErr(err) {
+    this.data['error-log'] = `
+      ${dateTime.create().format('Y-m-d H:M:S')}
+      : 
+      err ${err}
+    `;
     fs.writeFileSync(this.path, JSON.stringify(this.data));
   }
 }

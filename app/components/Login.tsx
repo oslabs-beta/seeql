@@ -4,6 +4,17 @@ import styled from 'styled-components';
 import { Redirect } from 'react-router-dom';
 import { ipcRenderer } from 'electron';
 
+const savedConnectionStrings = [
+  {
+    body: 'https://postgresetc',
+    id: 1
+  },
+  {
+    body: 'https://postgresetc',
+    id: 2
+  }
+];
+
 const InvisibleHeader = styled.div`
   height: 30px;
   -webkit-app-region: drag;
@@ -32,12 +43,16 @@ const Panel = styled.div`
   align-items: center;
 `;
 
-const LeftPanel = styled(Panel)`
+const UriConnectionTab = styled(Panel)`
   background-color: #013243;
   color: #f2f1ef;
 `;
 
-const RightPanel = styled(Panel)`
+const MultiFormConnectionTab = styled(Panel)`
+  background-color: #f2f1ef;
+`;
+
+const SavedConnectionTab = styled(Panel)`
   background-color: #f2f1ef;
 `;
 
@@ -181,6 +196,15 @@ const RequiredWarning = styled.span`
   font-size: 80%;
 `;
 
+const ToggleRememberMe = styled.div`
+  display: flex;
+  justify-content: center;
+  padding: 5px;
+  margin: 10px;
+  display: flex;
+  align-items: center;
+`;
+
 const Login = () => {
   const [loginType, setLoginType] = useState('URI');
   const [host, setHost] = useState({ value: '', requiredError: false });
@@ -195,6 +219,7 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
   const [redirectToHome, setRedirectToHome] = useState(false);
   const [tableData, setTableData] = useState([]);
+  const [saveConnection, setSaveConnection] = useState(false);
 
   const sendLoginURI = (): void => {
     const updatedPort = !port ? '5432' : port;
@@ -215,20 +240,23 @@ const Login = () => {
       URI ||
       (host.value && username.value && password.value && database.value)
     ) {
+      if (saveConnection) {
+        ipcRenderer.send('remember-connection', updatedURI);
+      }
       setLoading(true);
       ipcRenderer.send('uri-to-main', updatedURI);
     }
   };
 
   ipcRenderer.removeAllListeners('db-connection-error');
-  ipcRenderer.on('db-connection-error', (event, err) => {
+  ipcRenderer.on('db-connection-error', (_event, _err) => {
     // #TODO: Error handling for cases where unable to retrieve info from a valid connection
     setConnectionError(true);
     setLoading(false);
   });
 
   ipcRenderer.removeAllListeners('tabledata-to-login');
-  ipcRenderer.on('tabledata-to-login', (event, databaseTables) => {
+  ipcRenderer.on('tabledata-to-login', (_event, databaseTables) => {
     setConnectionError(false);
     setTableData(databaseTables);
     setLoading(false);
@@ -254,10 +282,10 @@ const Login = () => {
     <React.Fragment>
       <InvisibleHeader></InvisibleHeader>
       <LoginPageWrapper>
-        <LeftPanel>
+        <UriConnectionTab>
           <Title>SeeQL</Title>
-        </LeftPanel>
-        <RightPanel>
+        </UriConnectionTab>
+        <MultiFormConnectionTab>
           <LoginContainer>
             {connectionError && (
               <ConnectionErrorMessage>
@@ -342,6 +370,7 @@ const Login = () => {
                   {password.requiredError && (
                     <RequiredWarning>password is required</RequiredWarning>
                   )}
+                  <p>#TODO: add remember here too</p>
                 </InputAndLabelWrapper>
                 <InputAndLabelWrapper>
                   <InputLabel>Database</InputLabel>
@@ -379,11 +408,35 @@ const Login = () => {
               <input type="checkbox" onChange={e => setSSL(e.target.checked)} />
               <InputLabel>ssl?</InputLabel>
             </ToggleSSL>
+            <ToggleRememberMe>
+              <input
+                type="checkbox"
+                // if use clicks remember me, their connection is saved
+                // #TODO: send an event to main process to write the saved uri to a persisted array
+                // #TODO: render those URIs to the "saved connections" panel
+                onChange={e => setSaveConnection(e.target.checked)}
+              />
+              <InputLabel>remember this connection?</InputLabel>
+            </ToggleRememberMe>
             {!loading && <LoginBtn onClick={sendLoginURI}>Login</LoginBtn>}
             {loading && <LoginBtn disabled>Loading...</LoginBtn>}
             {redirectHome()}
           </LoginContainer>
-        </RightPanel>
+        </MultiFormConnectionTab>
+        <SavedConnectionTab>
+          <ul>
+            {savedConnectionStrings.map(connStr => (
+              <li
+                key={Math.random()} // lol
+                // data-id={item.get('id')}
+                // onClick={this.handleClick}
+              >
+                {/* {item.get('connectionName')} */}
+                {connStr.body}
+              </li>
+            ))}
+          </ul>
+        </SavedConnectionTab>
       </LoginPageWrapper>
     </React.Fragment>
   );
