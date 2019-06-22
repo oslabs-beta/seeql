@@ -70,6 +70,8 @@ app.on('ready', async () => {
     show: false,
     width: 1024,
     height: 728,
+    minHeight: 300,
+    minWidth: 600,
     titleBarStyle: 'hiddenInset'
   });
 

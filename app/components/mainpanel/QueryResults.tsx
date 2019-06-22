@@ -9,7 +9,6 @@ const QueryResultWrapper = styled.div`
   background-color: white;
   border: 1px solid black;
   overflow: scroll;
-  height: 60vh;
 `;
 
 const reactTableStyle = {

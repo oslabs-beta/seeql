@@ -19,6 +19,7 @@ const PanelWrapper = styled.div<IPanelWrapperProps>`
     sidePanelVisibility ? '300px' : '0px'};
   box-shadow: 2px 2px 8px lightgrey;
   margin: 20px;
+  margin-left: 0px;
   border-radius: 3px;
   height: 80%;
 `;

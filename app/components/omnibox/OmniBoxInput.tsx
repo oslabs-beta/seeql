@@ -12,11 +12,9 @@ const OmniBoxInputText = styled.textarea`
   background-color: #E8ECF1;
   padding: 8px;
   height: 100px;
-  border-radius: 3px;
   letter-spacing: 2px;
   resize: none;
   width: 100%;
-  box-shadow: 3px 3px 8px #E8ECF1;
   :focus {
     outline: none;
   }
@@ -32,7 +30,6 @@ const ExecuteQueryButton = styled.button`
   padding: 8px;
   font-size: 80%;
   border-radius: 0px 0px 3px 3px;
-  box-shadow: 2px 2px 8px #E8ECF1;
   transition: 0.2s;
   span {
     cursor: pointer;

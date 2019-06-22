@@ -51,11 +51,10 @@ const CollapseBtn = styled.button<ICollapseBtnProps>`
 
 const MainPanel = styled.div`
   background-color: ${props => props.theme.main.baseColor};
-  padding: 5px 20px;
+  margin: 20px;
   display: flex;
   flex-direction: column;
   width: 100%;
-  height: 100%;
 `;
 
 const LoadWrap = styled.div`

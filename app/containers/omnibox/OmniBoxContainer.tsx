@@ -6,11 +6,9 @@ import OmniBoxInput from '../../components/omnibox/OmniBoxInput';
 
 const OmniBoxNav = styled.nav`
   display: flex;
-  margin: 0px 5px;
 `;
 
 const OmniBoxWrapper = styled.div`
-margin: 20px;
 `
 
 const QueryResultError = styled.div`
@@ -18,7 +16,6 @@ const QueryResultError = styled.div`
   color: #ca333e;
   border-radius: 3px;
   padding: 5px;
-  margin: 5px;
   font-family: 'Poppins', sans-serif;
   border-left: 3px solid #ca333e;
   font-size: 80%;

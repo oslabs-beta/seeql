@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 const PanelWrapper = styled.div`
   color: black;
-  padding: 20px;
+  padding: 40px;
   font-size: 30px;
   width: 300px;
   display: flex;
