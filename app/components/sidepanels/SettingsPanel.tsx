@@ -1,7 +1,8 @@
 import * as React from 'react';
-import { useReducer, useContext, useState } from 'react';
+import { useReducer, useContext, useState, useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
 import styled from 'styled-components';
+import { ipcRenderer } from 'electron';
 import Context from '../../contexts/themeContext';
 import themeReducer from '../../reducers/themeReducer';
 
@@ -12,11 +13,10 @@ const PanelWrapper = styled.div`
   color: black;
   font-family: 'Poppins', sans-serif;
   padding: 20px;
-  width: 300px;
   height: 100vh;
   padding: 40px;
-  background-color: ${props => props.theme.backgroundColor};
-  color: ${props => props.theme.fontColor};
+  background-color: ${props => props.theme.panel.baseColor};
+  color: ${props => props.theme.panel.fontColor};
 `;
 
 const TopSection = styled.section`
@@ -33,19 +33,30 @@ const DivWrapper = styled.div`
   flex-direction: column;
 `;
 const Title = styled.h1`
-  color: ${props => props.theme.fontColor};
+  color: ${props => props.theme.panel.headerColor};
   font-size: 30px;
 `;
 const Label = styled.label`
-  color: ${props => props.theme.fontColor};
+  color: ${props => props.theme.panel.fontColor};
   padding: 10px 0;
 `;
+const SignOut = styled.span`
+  color: ${props => props.theme.link.signOut};
+`;
 
-const SettingsPanel = () => {
+const SettingsPanel = ({ intervalId }) => {
   const [context, setContext] = useContext(Context);
   const [state, dispatch] = useReducer(themeReducer, context);
-  const [toggle, setToggle] = useState(false);
-  const contextText = context.light.toString();
+  const [activeMode, setActiveMode] = useState('default');
+
+  const logOut = () => {
+    clearInterval(intervalId);
+    ipcRenderer.send('logout-to-main', 'userlogout');
+  };
+
+  useEffect(() => {
+    setContext(state);
+  }, [state]);
 
   return (
     <PanelWrapper>
@@ -54,17 +65,23 @@ const SettingsPanel = () => {
 
         <DivWrapper>
           <Label>Theme</Label>
-          <button
-            onClick={() => {
-              setToggle(!toggle);
-              setContext(state);
-              toggle
-                ? dispatch({ type: 'TOGGLE_DARK' })
-                : dispatch({ type: 'TOGGLE_LIGHT' });
+          <select
+            name="modeList"
+            onChange={e => {
+              setActiveMode(e.target.value);
+              dispatch({
+                type: 'CHANGE_MODE',
+                selected: e.target.value,
+                payload: activeMode
+              });
             }}
           >
-            {contextText}
-          </button>
+            {context.map(modeObj => (
+              <option key={modeObj.value} value={modeObj.value}>
+                {modeObj.value}
+              </option>
+            ))}
+          </select>
         </DivWrapper>
         <DivWrapper>
           <Label>Font Size</Label>
@@ -77,9 +94,8 @@ const SettingsPanel = () => {
         </DivWrapper>
       </TopSection>
       <BottomSection>
-        <div style={state}>CHANGE ME HEY BLAHHSLAH</div>
-        <NavLink to="/" activeStyle={{ color: 'black ' }}>
-          Sign Out
+        <NavLink onClick={logOut} to="/">
+          <SignOut>SignOut</SignOut>
         </NavLink>
       </BottomSection>
     </PanelWrapper>

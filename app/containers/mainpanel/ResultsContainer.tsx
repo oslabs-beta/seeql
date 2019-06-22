@@ -26,17 +26,18 @@ interface IResultsNavButtonProps {
     border: none;
     border-bottom: ${({ activeDisplayInResultsTab, activetabname }) =>
       activeDisplayInResultsTab === activetabname
-        ? '3px solid #013243'
+        ? `3px solid ${props=>props.theme.tables.navButtonSelect}`
         : '3px solid transparent'};
     padding: 8px;
     transition: 0.3s;
     font-size: 80%;
-    background-color: transparent;
+    background-color: ${props=>props.theme.tables.navButtonBase};
+    color: ${props=>props.theme.tables.navButtonFontColor}
     :focus {
       outline: none;
     }
     :hover {
-      border-bottom: 3px solid black;
+      border-bottom: 3px solid ${props=> props.theme.tables.navButtonHover};
     }
   `;
 
@@ -53,7 +54,7 @@ const ResetQueryButton = styled.button`
   background-color: transparent;
   :hover{
     font-weight: bold;
-    color: #ca333e;
+    color: ${props=> props.theme.tables.resetButton};
   }
   :focus{
     outline: none;

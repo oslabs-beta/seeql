@@ -8,9 +8,10 @@ interface ISidePanelTableWrapperProps {
 const SidePanelTableListWrapper = styled.div<ISidePanelTableWrapperProps>`
   color: black;
   padding: 40px;
-  width: ${({ sidePanelVisibility }) => (sidePanelVisibility ? '300px' : '0px')};
+  width: ${({ sidePanelVisibility }) =>
+    sidePanelVisibility ? '300px' : '0px'};
   height: 100vh;
-  background-color: ${props => props.theme.backgroundColor};
+  background-color: ${props => props.theme.panel.baseColor};
   color: ${props => props.theme.fontColor};
   transition: width 500ms ease-in-out;
 `;
@@ -20,33 +21,18 @@ const InfoSection = styled.div`
 `;
 
 const Title = styled.h1`
-  color: ${props => props.theme.fontColor};
+  color: ${props => props.theme.panel.fontColor};
 `;
 
 const Text = styled.p`
   font-size: 100%;
+  color: ${props => props.theme.panel.fontColor};
 `;
 
 const Label = styled.label`
   font-size: 80%;
+  color: ${props => props.theme.panel.fontColor};
 `;
-
-// interface IForeignKeys {
-//   column_name?: string
-//   constraint_name?: string
-//   foreign_column_name?: string
-//   foreign_table_name?: string
-//   foreign_table_schema?: string
-//   table_name?: string
-//   table_schema?: string
-// }
-
-// interface IColumns {
-//   characterlength?: string
-//   columnname?: string
-//   datatype?: string
-//   defaultvalue?: string
-// }
 
 interface ISelectedTable {
   columns?: any[];
@@ -61,7 +47,10 @@ interface Props {
   sidePanelVisibility: boolean;
 }
 
-const InfoPanel: React.SFC<Props> = ({ activeTableInPanel, sidePanelVisibility }) => {
+const InfoPanel: React.SFC<Props> = ({
+  activeTableInPanel,
+  sidePanelVisibility
+}) => {
   const {
     table_name,
     primaryKey,
@@ -123,7 +112,8 @@ const InfoPanel: React.SFC<Props> = ({ activeTableInPanel, sidePanelVisibility }
         </InfoSection>
       ) : (
         <div>
-          You haven't selected a table yet, click on a table to see their information
+          You haven't selected a table yet, click on a table to see their
+          information
         </div>
       )}
     </SidePanelTableListWrapper>

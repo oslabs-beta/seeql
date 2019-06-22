@@ -4,6 +4,7 @@ import SettingsPanel from '../components/sidepanels/SettingsPanel';
 import FavoritesPanel from '../components/sidepanels/FavoritesPanel';
 import InfoPanel from '../components/sidepanels/InfoPanel';
 import * as actions from '../actions/actions';
+
 interface IPanelWrapperProps {
   sidePanelVisibility: boolean;
 }
@@ -14,27 +15,28 @@ interface IIndTabProps {
 }
 
 const PanelWrapper = styled.div<IPanelWrapperProps>`
-  width: ${({ sidePanelVisibility }) => (sidePanelVisibility ? '375px' : '0px')};
+  width: ${({ sidePanelVisibility }) =>
+    sidePanelVisibility ? '375px' : '0px'};
   display: flex;
+  flex-direction: column;
   justify-content: flex-start;
-  transition: width 500ms ease-in-out;
+  transition: visibility 500ms ease-in-out;
 `;
 const ButtonMenu = styled.div`
   display: flex;
-  flex-direction: column;
-  height: 100vh;
-  width: 60px;
+  justify-content: center;
+  background-color: #e8ecf1;
 `;
 
 const IndTab = styled.button<IIndTabProps>`
   border: none;
   font-family: 'Poppins', sans-serif;
   border: none;
-  border-radius: 0px 6px 6px 0px;
   padding: 5px;
-  background-color: ${props =>
-    props.active === props.panel ? '#e8ecf1' : '#fdfdfe'}
-  
+
+  background-color: ${props => props.active ===props.panel? props.theme.tabs.baseColor :props.theme.panel.baseColorActive};
+  color: ${props=>props.theme.tabs.fontColor};
+
   :hover {
     font-weight: bold;
   }
@@ -45,8 +47,7 @@ const IndTab = styled.button<IIndTabProps>`
 
 const Tabs = styled.div`
   display: flex;
-  flex-direction: column;
-  height: 100px;
+  padding: 50px 0px 5px 5px;
   justify-content: space-between;
   font-family: 'Poppins', sans-serif;
 `;
@@ -76,6 +77,7 @@ interface IDispatchSidePanelDisplayAction {
 }
 
 interface Props {
+  intervalId: number;
   activeTableInPanel: IAcitveTableInPanel;
   sidePanelVisibility: boolean;
   activePanel: string;
@@ -83,62 +85,63 @@ interface Props {
 }
 
 const SidePanel: React.SFC<Props> = ({
+  intervalId,
   activeTableInPanel,
   sidePanelVisibility,
   activePanel,
   dispatchSidePanelDisplay
 }) => {
   return (
-    <PanelWrapper sidePanelVisibility={sidePanelVisibility}>
+    <React.Fragment>
       {sidePanelVisibility && (
-        <div>
-          {activePanel === 'info' && (
-            <InfoPanel
-              sidePanelVisibility={sidePanelVisibility}
-              activeTableInPanel={activeTableInPanel}
-            />
-          )}
-          {activePanel === 'favorites' && <FavoritesPanel />}
-          {activePanel === 'settings' && <SettingsPanel />}
-        </div>
+        <PanelWrapper sidePanelVisibility={sidePanelVisibility}>
+          <ButtonMenu>
+            <Tabs>
+              <IndTab
+                data-panel="info"
+                panel="info"
+                active={activePanel}
+                onClick={() =>
+                  dispatchSidePanelDisplay(actions.changeToInfoPanel())
+                }
+              >
+                Table Info
+              </IndTab>
+              <IndTab
+                data-panel="favorites"
+                panel="favorites"
+                active={activePanel}
+                onClick={() =>
+                  dispatchSidePanelDisplay(actions.changeToFavPanel())
+                }
+              >
+                Favorites
+              </IndTab>
+              <IndTab
+                data-panel="settings"
+                panel="settings"
+                active={activePanel}
+                onClick={() =>
+                  dispatchSidePanelDisplay(actions.changeToSettingsPanel())
+                }
+              >
+                Settings
+              </IndTab>
+            </Tabs>
+          </ButtonMenu>
+          <div>
+            {activePanel === 'info' && (
+              <InfoPanel
+                sidePanelVisibility={sidePanelVisibility}
+                activeTableInPanel={activeTableInPanel}
+              />
+            )}
+            {activePanel === 'favorites' && <FavoritesPanel />}
+            {activePanel === 'settings' && <SettingsPanel intervalId={intervalId} />}
+          </div>
+        </PanelWrapper>
       )}
-      <ButtonMenu>
-        {sidePanelVisibility && (
-          <Tabs>
-            <IndTab
-              data-panel="info"
-              panel="info"
-              active={activePanel}
-              onClick={() =>
-                dispatchSidePanelDisplay(actions.changeToInfoPanel())
-              }
-            >
-              Table Info
-            </IndTab>
-            <IndTab
-              data-panel="favorites"
-              panel="favorites"
-              active={activePanel}
-              onClick={() =>
-                dispatchSidePanelDisplay(actions.changeToFavPanel())
-              }
-            >
-              Favorites
-            </IndTab>
-            <IndTab
-              data-panel="settings"
-              panel="settings"
-              active={activePanel}
-              onClick={() =>
-                dispatchSidePanelDisplay(actions.changeToSettingsPanel())
-              }
-            >
-              Settings
-            </IndTab>
-          </Tabs>
-        )}
-      </ButtonMenu>
-    </PanelWrapper>
+    </React.Fragment>
   );
 };
 

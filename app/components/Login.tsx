@@ -1,11 +1,10 @@
 import * as React from 'react';
-import { useState } from 'react';
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
+import { useState, useEffect } from 'react';
 import { Redirect } from 'react-router-dom';
 import { ipcRenderer } from 'electron';
 
 import { Box, Grommet, CheckBox, Button } from "grommet";
-import { grommet } from "grommet/themes";
 import { Add } from "grommet-icons";
 
 // const AppBar = (props) => (
@@ -21,14 +20,22 @@ import { Add } from "grommet-icons";
 //   />
 // );
 
-const tylersTheme = {
-  global: {
-    font: {
-      family: 'Courier',
-      size: '18px',
-      height: '20px',
-    },
-  },
+interface ITheme {
+  active: string;
+  black: string;
+  border: {
+      dark: string;
+      light: string;
+  };
+};
+
+const tylersTheme:ITheme = {
+  active: "red",
+  black: "black",
+  border: {
+    dark: "black",
+    light: "white"
+  }
 };
 
 const savedConnectionStrings = [
@@ -70,17 +77,27 @@ const Panel = styled.div`
   align-items: center;
 `;
 
-const UriConnectionTab = styled(Panel)`
-  background-color: #013243;
-  color: #f2f1ef;
+
+const RightPanel = styled(Panel)`
+  background-color: #f2f1ef;
 `;
 
-const MultiFormConnectionTab = styled(Panel)`
-  background-color: #f2f1ef;
+const funtimes = keyframes`
+    0%{background-position:0% 50%}
+    50%{background-position:100% 50%}
+    100%{background-position:0% 50%}
+`;
+
+const LeftPanel = styled(Panel)`
+  background-color: white;
+  color: white;
+  animation: ${funtimes} 8s ease infinite;
+  background: linear-gradient(270deg, #49cefe, #c647bc);
+  background-size: 400% 400%;
 `;
 
 const SavedConnectionTab = styled(Panel)`
-  background-color: #f2f1ef;
+  background-color: green;
 `;
 
 const LoginContainer = styled.div`
@@ -112,11 +129,11 @@ const LoginTypeButton = styled.button<LoginTypeButtonProps>`
   border: none;
   border-bottom: ${({ selectedLoginType, buttonType }) =>
     selectedLoginType === buttonType
-      ? '3px solid #013243'
+      ? '3px solid #E55982'
       : '3px solid transparent'};
   transition: 0.3s;
   :hover {
-    border-bottom: 3px solid #013243;
+    border-bottom: 3px solid #e55982;
     cursor: pointer;
   }
   :focus {
@@ -218,6 +235,18 @@ const ConnectionErrorMessage = styled.div`
   font-size: 100%;
 `;
 
+const LogoutMessage = styled.div`
+  background-color: #f1c7ca;
+  width: 200px;
+  color: #ca333e;
+  border-radius: 3px;
+  padding: 5px;
+  margin: 5px;
+  font-family: 'Poppins', sans-serif;
+  border-left: 3px solid #ca333e;
+  font-size: 100%;
+`;
+
 const RequiredWarning = styled.span`
   color: #ca333e;
   font-size: 80%;
@@ -245,10 +274,14 @@ const Login = () => {
   const [connectionError, setConnectionError] = useState(false);
   const [loading, setLoading] = useState(false);
   const [redirectToHome, setRedirectToHome] = useState(false);
+  const [loggedOutMessage, setLoggedOutMessage] = useState('');
   const [tableData, setTableData] = useState([]);
+
   const [saveConnection, setSaveConnection] = useState(false);
+  // const [userHasSavedConnStrs, setUserHasSavedConnStrs] = useState(false);
 
   const sendLoginURI = (): void => {
+    if (loggedOutMessage) setLoggedOutMessage('');
     const updatedPort = !port ? '5432' : port;
     let updatedURI;
     if (loginType === 'URI') updatedURI = URI;
@@ -267,35 +300,59 @@ const Login = () => {
       URI ||
       (host.value && username.value && password.value && database.value)
     ) {
-      if (saveConnection) {
-        ipcRenderer.send('remember-connection', updatedURI);
-      }
       setLoading(true);
       ipcRenderer.send('uri-to-main', updatedURI);
+      // if (saveConnection) {
+        // ipcRenderer.send('remember-connection', updatedURI);
+      // }
     }
   };
 
-  ipcRenderer.on('load-saved-connection-strings', (savedUserConnStrs, _err) => {
-    // #TODOD
-    // renderSavedConnectionStrings(savedUserConnStrs) 
-  })
-
-  ipcRenderer.removeAllListeners('db-connection-error');
-  ipcRenderer.on('db-connection-error', (_event, _err) => {
-    // #TODO: Error handling for cases where unable to retrieve info from a valid connection
+  const renderSavedUserConnStrs = (connStrs:string[]) => {
+    return (
+      <ul>
+      {connStrs.map(str => <li> {str} </li> )}
+      </ul>
+    )
+  }
+    
+  ipcRenderer.on('db-connection-error', () => {
     setConnectionError(true);
     setLoading(false);
   });
 
-  ipcRenderer.removeAllListeners('tabledata-to-login');
-  ipcRenderer.on('tabledata-to-login', (_event, databaseTables) => {
-    setConnectionError(false);
-    setTableData(databaseTables);
-    setLoading(false);
-    setRedirectToHome(true);
-  });
+  // IPC messaging listeners
+  useEffect(() => {
+    ipcRenderer.on('tabledata-to-login', (_event: Event, databaseTables: string[]) => {
+      setConnectionError(false);
+      setTableData(databaseTables);
+      setLoading(false);
+      setRedirectToHome(true);
+    });
+    ipcRenderer.on('load-saved-connection-strings', (savedUserConnStrs: string[], _err: Error) => {
+      renderSavedUserConnStrs(savedUserConnStrs)
+    })
+    ipcRenderer.on('tabledata-to-login', (_event: Event, databaseTables: string[]) => {
+      setConnectionError(false);
+      setTableData(databaseTables);
+      setLoading(false);
+      setRedirectToHome(true);
+    });
+    ipcRenderer.send('login-mounted');
+    ipcRenderer.on('logout-reason', (_event, message) =>
+      setLoggedOutMessage(message)
+    );
+    return () => {
+      ipcRenderer.removeAllListeners('db-connection-error');
+      ipcRenderer.removeAllListeners('tabledata-to-login');
+      ipcRenderer.removeAllListeners('load-saved-connnection-strings');
+      ipcRenderer.removeAllListeners('tabledata-to-login');
+      ipcRenderer.removeAllListeners('logout-mounted');
+      ipcRenderer.removeAllListeners('logout-reason');
+    };
+  }, []);
 
-  const captureURI = (e): void => {
+  const captureURI = (e: any) => {
     const sanitizedURI = e.target.value.replace(/\s+/g, '');
     setURI(sanitizedURI);
     if (requiredError) setRequiredError(false);
@@ -310,25 +367,24 @@ const Login = () => {
       );
   };
 
-  //  onCheck = (event, value) => {
-  //   const { checked } = this.state;
-  //   if (event.target.checked) {
-  //     checked.push(value);
-  //   } else {
-  //     this.setState({ checked: checked.filter(item => item !== value) });
-  //   }
-  // };
-
   return (
     <Grommet theme={tylersTheme}>
-
       <InvisibleHeader></InvisibleHeader>
       <LoginPageWrapper>
-        <UriConnectionTab>
+        <LeftPanel>
           <Title>SeeQL</Title>
-        </UriConnectionTab>
-        <MultiFormConnectionTab>
+        </LeftPanel>
+        <RightPanel>
+          {/* #TODO: extract to a separate component  */}
           <LoginContainer>
+            {loggedOutMessage === 'inactivity' && (
+              <LogoutMessage>
+                You've been logged out due to inactivity
+              </LogoutMessage>
+            )}
+            {loggedOutMessage === 'userlogout' && (
+              <LogoutMessage>You logged out</LogoutMessage>
+            )}
             {connectionError && (
               <ConnectionErrorMessage>
                 Unable to connect to the database. Please try again.
@@ -362,6 +418,7 @@ const Login = () => {
                     type="text"
                     requiredError={host.requiredError}
                     placeholder="host"
+                    value={host.value}
                     onChange={e =>
                       setHost({ value: e.target.value, requiredError: false })
                     }
@@ -376,6 +433,7 @@ const Login = () => {
                     type="text"
                     requiredError={false}
                     placeholder="port (default 5432)"
+                    value={port}
                     onChange={e => setPort(e.target.value)}
                   />
                 </InputAndLabelWrapper>
@@ -385,6 +443,7 @@ const Login = () => {
                     type="text"
                     requiredError={username.requiredError}
                     placeholder="username"
+                    value={username.value}
                     onChange={e =>
                       setUsername({
                         value: e.target.value,
@@ -402,6 +461,7 @@ const Login = () => {
                     type="password"
                     requiredError={password.requiredError}
                     placeholder="password"
+                    value={password.value}
                     onChange={e =>
                       setPassword({
                         value: e.target.value,
@@ -420,6 +480,7 @@ const Login = () => {
                     type="text"
                     requiredError={database.requiredError}
                     placeholder="database"
+                    value={database.value}
                     onChange={e =>
                       setDatabase({
                         value: e.target.value,
@@ -440,12 +501,14 @@ const Login = () => {
                   requiredError={requiredError}
                   onChange={captureURI}
                   placeholder="Enter your URI connection string..."
+                  value={URI}
                 />
                 {requiredError && (
                   <RequiredWarning>URI is required</RequiredWarning>
                 )}
               </URIConnectionContainer>
             )}
+
             <ToggleSSL>
               <input type="checkbox" onChange={e => setSSL(e.target.checked)} />
               <InputLabel>ssl?</InputLabel>
@@ -461,37 +524,35 @@ const Login = () => {
               <InputLabel>remember this connection?</InputLabel>
             </ToggleRememberMe>
 
+            <Box align="center" pad="medium">
+              <Box direction="row" gap="large">
+                <CheckBox
+                  label="SSL?"
+                  onChange={(e: { target: { checked: React.SetStateAction<boolean>; }; }) => setSSL(e.target.checked)} />
+                <CheckBox
+                  // if use clicks remember me, their connection is saved
+                  // #TODO: send an event to main process to write the saved uri to a persisted array
+                  // #TODO: render those URIs to the "saved connections" panel
+                  label="remember this connection?"
+                  onChange={(e: { target: { checked: React.SetStateAction<boolean>; }; }) => setSaveConnection(e.target.checked)} />
+              </Box>
+            </Box>
 
-
-                <Box align="center" pad="medium">
-                  <Box direction="row" gap="large">
-                    <CheckBox
-                      label="SSL?"
-                      onChange={e => setSSL(e.target.checked)} />
-                    <CheckBox
-                      // if use clicks remember me, their connection is saved
-                      // #TODO: send an event to main process to write the saved uri to a persisted array
-                      // #TODO: render those URIs to the "saved connections" panel
-                      label="remember this connection?"
-                      // this.setState({ checked });
-                      onChange={e => setSaveConnection(e.target.checked)} />
-                  </Box>
-                </Box>
-               { !loading &&
-                <Button
-                    onClick={sendLoginURI}
-                    color="dark-1"
-                    primary
-                    icon={<Add />}
-                    label="Login"
-                />
-               }
-
-
+            { !loading &&
+              <Button
+                  onClick={sendLoginURI}
+                  color="dark-1"
+                  primary
+                  icon={<Add />}
+                  label="Login"
+              />
+            }
             {loading && <LoginBtn disabled>Loading...</LoginBtn>}
+
             {redirectHome()}
           </LoginContainer>
-        </MultiFormConnectionTab>
+        </RightPanel>
+
         <SavedConnectionTab>
           <ul>
             {savedConnectionStrings.map(connStr => (
@@ -507,7 +568,6 @@ const Login = () => {
           </ul>
         </SavedConnectionTab>
       </LoginPageWrapper>
-      {/* <AppBar /> */}
     </Grommet>
   );
 };

@@ -7,7 +7,7 @@ import uuid from 'uuid/v4';
 import log from 'electron-log';
 
 let mainWindow = null;
-let queryWindow = null;
+let dbProcess = null;
 
 if (
   process.env.NODE_ENV === 'development' ||
@@ -15,7 +15,7 @@ if (
 ) {
   // just for development obvs (hehe) gets rid of console errors covering more relevant errors
   process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true';
-  log.verbose(`app started in ${process.env.NODE_ENV} mode`);
+  log.verbose(`\napp started in ${process.env.NODE_ENV} mode\n`);
   require('electron-debug')();
 }
 
@@ -56,7 +56,6 @@ app.on('ready', async () => {
     width,
     height,
     vibrancy: 'appearance-based',
-    // icon: '#TODO'
     title: 'SeeQL',
     titleBarStyle: 'hiddenInset',
     backgroundColor: '#FAF' // make app feel more native by settings a background color
@@ -72,7 +71,6 @@ app.on('ready', async () => {
   mainWindow.loadURL(`file://${__dirname}/app.html`);
 
   mainWindow.webContents.on('ready-to-show', () => {
-    const preferences = appDb.get('userPreferences');
     if (!mainWindow) throw new Error('"mainWindow" is not defined');
 
     if (process.env.START_MINIMIZED) {
@@ -82,79 +80,97 @@ app.on('ready', async () => {
       mainWindow.focus();
     }
 
-    // send all user preferences before window loads
+    // const preferences = appDb.get('userPreferences');
+    // send all user preferences, savedSettings, etc. before window loads, but after window launches
+    // (#TODO: display a spinner in the meantime where it's merely pink rn)
     // #TODO: merge latest theme branch so i can properly set this var
-    mainWindow.webContents.send('user-theme', preferences.theme);
+    // mainWindow.webContents.send('user-theme', preferences.theme);
   });
 
   const menuBuilder = new MenuBuilder(mainWindow);
   menuBuilder.buildMenu();
 
-  queryWindow = new BrowserWindow({ show: false });
-  queryWindow.loadURL(`file://${__dirname}/query.html`);
-
-
-  // when the application launches, if the user has saved connections,
-  // main.dev.ts will send an array of connection strings
-  ipcRenderer.on('db-connection-error', (_event, _err) => {
-    // #TODO
-  })
-
-  // Listening from homepage, to send to database
-  ipcMain.on('uri-to-main', (_event: void, uri: string) => {
-    queryWindow.webContents.send('uri-to-db', uri);
-  });
-
-  ipcMain.on('query-to-main', (_event: void, query: string) => {
-    log.silly(query); // this logs in the browsers console and not the electron process!
-    queryWindow.webContents.send('query-to-db', query);
-    appDb.set('queryFromUserInMainProcess', query);
-  });
+  dbProcess = new BrowserWindow({ show: false });
+  dbProcess.loadURL(`file://${__dirname}/dbProcess.html`);
 
   // Listening from database, to send to homepage
-  ipcMain.on('database-tables-to-main', (event: Event, databaseTables: any) => {
-    mainWindow.webContents.send('tabledata-to-login', databaseTables);
-    appDb.set(`database-tables-to-main logged: ${event} ${databaseTables}`);
-  });
 
-  ipcMain.on('db-connection-error', (event: Event, err: Error) => {
-    mainWindow.webContents.send('db-connection-error', err);
-    appDb.set(`db-connection-error logged: ${event} ${err}`);
-  });
-
-  // query results
-  ipcMain.on('query-result-to-main', (_event: void, messagePayload: any) => {
-    mainWindow.webContents.send('query-result-to-homepage', messagePayload);
-    // #TODO: decide if we want to save history query
-    // appDb.set(`query-result-to-main logged: ${event} ${messagePayload}`);
-  });
-
-  ipcMain.on('custom-theme-selected', (_event: void, theme: string) => {
-    appDb.set('user-theme', theme);
-  });
-
-  ipcMain.on(
-    'remember-connection',
-    (savedConnectionString: string, err: Error) => {
-      if (err) this.appDb.logErr(`logErr: `, err);
-      log.verbose('user clicked remember connection for ', savedConnectionString)
-      appDb.set({
-        savedConnectionString: savedConnectionString,
-        savedConnectionStringId: uuid()
-      });
-    }
-  );
+  // ipcMain.on('remember-connection', (savedConnectionString: string, err: Error) => {
+  //     if (err) this.appDb.logErr(`logErr: `, err);
+  //     log.verbose('user clicked remember connection for ', savedConnectionString)
+  //     appDb.set({
+  //       savedConnectionString: savedConnectionString,
+  //       savedConnectionStringId: uuid()
+  //     });
+  //   }
+  // );
 
   // save their theme settings (default = true)
-  ipcMain.on('custom-theme-selected', (userTheme: string, err: Error) => {
-    appDb.set('user-theme', userTheme);
+  // ipcMain.on('custom-theme-selected', (userTheme: string, err: Error) => {
+  //   appDb.set('user-theme', userTheme);
+  // });
+
+  ipcMain.on('query-to-main', (_event: void, query: string) => {
+    log.verbose([`ipcMain.on('query-to-main') recieved :`, query]); // this logs in the browsers console and not the electron process!
+    // logs:
+    // 17:05:05.901 › [ 'ipcMain.on('query-to-main') recieved :', 'SELECT * FROM awesome_table' ]
+    dbProcess.webContents.send('query-to-db', query);
+    appDb.set('queryFromUserInMainProcess', query);
   });
 
   mainWindow.on('closed', () => {
     mainWindow = null;
   });
-});
 
+ ipcMain.on('uri-to-main', (_event, uri) => {
+    dbProcess.webContents.send('uri-to-db', uri);
+  });
+
+  ipcMain.on('query-to-main', (_event, query) => {
+    dbProcess.webContents.send('query-to-db', query);
+  });
+
+  // Listening from homepage, to send to CLIENT's DATABASE
+  ipcMain.on('uri-to-main', (_event, uri) => {
+    dbProcess.webContents.send('uri-to-db', uri);
+  });
+
+  // Listening from database, to send to HOMEPAGE
+  ipcMain.on('database-tables-to-main', (_event: Event, databaseTables: any) => {
+    mainWindow.webContents.send('tabledata-to-login', databaseTables);
+    appDb.set(`database-tables-to-main logged`, databaseTables);
+  });
+
+  ipcMain.on('query-to-main', (_event, query) => {
+    dbProcess.webContents.send('query-to-db', query);
+  });
+
+  ipcMain.on('logout-to-main', (_event, message) => {
+    dbProcess.webContents.send('logout-to-db', message);
+  });
+
+  ipcMain.on('login-mounted', () => {
+    dbProcess.webContents.send('login-mounted');
+  });
+
+  ipcMain.on('db-connection-error', (event, err) => {
+    mainWindow.webContents.send('db-connection-error', err);
+    // appDb.set(`db-connection-error logged: ${event} ${err}`);
+  });
+
+  ipcMain.on('query-result-to-main', (_event, messagePayload) => {
+    mainWindow.webContents.send('query-result-to-homepage', messagePayload);
+    // appDb.set(`query-result-to-main logged: ${event + messagePayload}`); // #TODO: decide if we want to save history query
+  });
+
+  ipcMain.on('inactivity-logout', (_event, message) => {
+    mainWindow.webContents.send('inactivity-logout');
+  });
+
+  ipcMain.on('logout-reason', (_event, message) => {
+    mainWindow.webContents.send('logout-reason', message);
+  });
+});
 export default class AppUpdater {
   public constructor() {
     log.transports.file.level = 'info';
