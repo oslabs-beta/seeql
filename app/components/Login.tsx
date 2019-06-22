@@ -15,8 +15,8 @@ const LoginPageWrapper = styled.div`
   align-items: center;
   justify-content: center;
   font-family: 'Poppins', sans-serif;
-  height: 100vh;
-  width: 100vw;
+  height: 100%;
+  width: 100%;
 `;
 
 const Title = styled.h1`

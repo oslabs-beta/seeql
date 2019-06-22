@@ -8,9 +8,7 @@ interface ISidePanelTableWrapperProps {
 const SidePanelTableListWrapper = styled.div<ISidePanelTableWrapperProps>`
   color: black;
   padding: 40px;
-  width: ${({ sidePanelVisibility }) =>
-    sidePanelVisibility ? '300px' : '0px'};
-  height: 100vh;
+  width: 300px;
   background-color: ${props => props.theme.panel.baseColor};
   color: ${props => props.theme.fontColor};
   transition: width 500ms ease-in-out;
@@ -111,11 +109,11 @@ const InfoPanel: React.SFC<Props> = ({
           )}
         </InfoSection>
       ) : (
-        <div>
-          You haven't selected a table yet, click on a table to see their
-          information
+          <div>
+            You haven't selected a table yet, click on a table to see their
+            information
         </div>
-      )}
+        )}
     </SidePanelTableListWrapper>
   );
 };

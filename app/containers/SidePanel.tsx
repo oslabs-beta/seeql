@@ -16,7 +16,11 @@ interface IIndTabProps {
 
 const PanelWrapper = styled.div<IPanelWrapperProps>`
   width: ${({ sidePanelVisibility }) =>
-    sidePanelVisibility ? '375px' : '0px'};
+    sidePanelVisibility ? '300px' : '0px'};
+  box-shadow: 2px 2px 8px lightgrey;
+  margin: 20px;
+  border-radius: 3px;
+  height: 80%;
 `;
 
 const IndTab = styled.button<IIndTabProps>`
@@ -38,8 +42,6 @@ const IndTab = styled.button<IIndTabProps>`
 
 const Tabs = styled.div`
   display: flex;
-  position: relative;
-  left: 150px;
   font-family: 'Poppins', sans-serif;;
 `;
 

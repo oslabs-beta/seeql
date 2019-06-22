@@ -13,7 +13,7 @@ const PanelWrapper = styled.div`
   color: black;
   font-family: 'Poppins', sans-serif;
   padding: 20px;
-  height: 100vh;
+  width: 300px;
   padding: 40px;
   background-color: ${props => props.theme.panel.baseColor};
   color: ${props => props.theme.panel.fontColor};

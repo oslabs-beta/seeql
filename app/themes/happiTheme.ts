@@ -4,8 +4,8 @@ const black = 'black';
 const green = '#4DAF7C';
 
 const happi = {
-  panel: { baseColor: 'red', fontColor: 'blue', headerColor: 'orange' },
-  tabs: { baseColor: 'yellow', baseColorActive: 'black', fontColor: 'white' },
+  panel: { baseColor: white, fontColor: black, headerColor: black },
+  tabs: { baseColor: 'transparent', baseColorActive: 'transparent', fontColor: black },
   omniBox: {
     buttonColor: white,
     buttonColorActive: grey,
@@ -13,7 +13,7 @@ const happi = {
     fontColorActive: black
   },
   main: {
-    baseColor: white
+    baseColor: 'transparent'
   },
   executeButton: {
     baseColor: green,

@@ -5,7 +5,7 @@ const PanelWrapper = styled.div`
   color: black;
   padding: 20px;
   font-size: 30px;
-  height: 100vh;
+  width: 300px;
   display: flex;
   justify-content: center;
   background-color: ${props => props.theme.panel.baseColor};

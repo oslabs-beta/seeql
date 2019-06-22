@@ -9,6 +9,10 @@ const OmniBoxNav = styled.nav`
   margin: 0px 5px;
 `;
 
+const OmniBoxWrapper = styled.div`
+margin: 20px;
+`
+
 const QueryResultError = styled.div`
   background-color: #f1c7ca;
   color: #ca333e;
@@ -27,9 +31,9 @@ interface IOmniBoxNavButtonProps {
 
 const OmniBoxNavButton = styled.button<IOmniBoxNavButtonProps>`
   padding: 5px;
+  width: 50%;
   font-family: 'Poppins', sans-serif;
   border-radius: 3px 3px 0px 0px;
-  margin: 5px 0px 0px 5px;
   border: none;
   background-color: ${props =>
     props.selectedView === props.omniBoxView
@@ -37,6 +41,8 @@ const OmniBoxNavButton = styled.button<IOmniBoxNavButtonProps>`
       : props.theme.omniBox.buttonColor};
   color: ${(props) =>
     props.selectedView === props.omniBoxView ? props.theme.omniBox.fontColorActive : props.theme.omniBox.fontColor};
+  font-weight: ${(props) =>
+    props.selectedView === props.omniBoxView ? 'bold' : 'none'};
 
   :focus {
     outline: none;
@@ -110,13 +116,13 @@ const OmniBoxContainer: React.SFC<IOmniBoxProps> = ({
 
 
   return (
-    <React.Fragment>
+    <OmniBoxWrapper>
       <OmniBoxNav>{navigationTabs}</OmniBoxNav>
       {generateInputBox()}
       {queryResultError.status && (
         <QueryResultError>{queryResultError.message}</QueryResultError>
       )}
-    </React.Fragment>
+    </OmniBoxWrapper>
   );
 };
 

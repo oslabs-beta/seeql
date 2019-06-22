@@ -11,14 +11,17 @@ import ResultsContainer from './mainpanel/ResultsContainer';
 import OmniBoxContainer from '../containers/omnibox/OmniBoxContainer';
 
 const InvisibleHeader = styled.div`
-  height: 30px;
-  display: relative;
+  height: 40px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  background: linear-gradient(270deg, #FB2B91, #B42CD3);
+  box-shadow: 0px 0px 8px #FB2B91;
   -webkit-app-region: drag;
 `;
 
 const HomepageWrapper = styled.div`
   display: flex;
-  margin-top: -30px;
   font-family: 'Poppins', sans-serif;
 `;
 
@@ -33,11 +36,9 @@ const CollapseBtn = styled.button<ICollapseBtnProps>`
   width: 25px;
   height: 25px;
   margin: 5px;
-  display: relative;
-  left: 100px;
-  margin-left: ${({ sidePanelVisibility }) =>
-    sidePanelVisibility ? '0px' : '50px'};
-  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   :focus {
     outline: none;
   }
@@ -54,7 +55,7 @@ const MainPanel = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
-  height: 100vh;
+  height: 100%;
 `;
 
 const LoadWrap = styled.div`
@@ -383,28 +384,22 @@ const HomePage = ({ location }) => {
   return (
     <React.Fragment>
       {redirectDueToInactivity && <Redirect to='/' />}
-      <InvisibleHeader></InvisibleHeader>
-      <HomepageWrapper onMouseMove={() => setInactiveTime(0)}>
-        <SidePanel
-          intervalId={intervalId}
-          activePanel={activePanel}
-          dispatchSidePanelDisplay={dispatchSidePanelDisplay}
-          activeTableInPanel={activeTableInPanel}
+      <InvisibleHeader>
+        <CollapseBtn
+          onClick={togglePanelVisibility}
+          data-active={activePanel}
           sidePanelVisibility={sidePanelVisibility}
-        />
+        >
+          <span>{sidePanelVisibility ? `<<` : `>>`}</span>
+        </CollapseBtn>
+      </InvisibleHeader>
+      <HomepageWrapper onMouseMove={() => setInactiveTime(0)}>
         {toggleLoad && (
           <LoadWrap>
             <LoadingComponent />
           </LoadWrap>
         )}
         <MainPanel>
-          <CollapseBtn
-            onClick={togglePanelVisibility}
-            data-active={activePanel}
-            sidePanelVisibility={sidePanelVisibility}
-          >
-            {sidePanelVisibility ? `<<` : `>>`}
-          </CollapseBtn>
           <OmniBoxContainer
             userInputForTables={userInputForTables}
             loadingQueryStatus={loadingQueryStatus}
@@ -428,6 +423,13 @@ const HomePage = ({ location }) => {
             selectedForQueryTables={selectedForQueryTables}
           />
         </MainPanel>
+        <SidePanel
+          intervalId={intervalId}
+          activePanel={activePanel}
+          dispatchSidePanelDisplay={dispatchSidePanelDisplay}
+          activeTableInPanel={activeTableInPanel}
+          sidePanelVisibility={sidePanelVisibility}
+        />
       </HomepageWrapper>
     </React.Fragment>
   );
