@@ -33,6 +33,7 @@ if (
   process.env.NODE_ENV === 'development' ||
   process.env.DEBUG_PROD === 'true'
 ) {
+  process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true';
   require('electron-debug')();
 }
 
