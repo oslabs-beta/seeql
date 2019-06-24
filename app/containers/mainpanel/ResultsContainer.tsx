@@ -13,6 +13,7 @@ const ResultsNav = styled.nav`
   display: flex;
   justify-content: center;
   align-self: flex-start;
+
 `;
 
 interface IResultsNavButtonProps {
@@ -24,14 +25,15 @@ const ResultsNavButton = styled.button<IResultsNavButtonProps>`
     font-family: 'Poppins', sans-serif;
     border: none;
     border-bottom: ${({ activeDisplayInResultsTab, activetabname }) =>
-    activeDisplayInResultsTab === activetabname
-      ? `3px solid ${props => props.theme.tables.navButtonSelect}`
+    (activeDisplayInResultsTab === activetabname)
+      ? '3px solid #E55982'
       : '3px solid transparent'};
     padding: 8px;
     transition: 0.3s;
     font-size: 80%;
     background-color: ${props => props.theme.tables.navButtonBase};
     color: ${props => props.theme.tables.navButtonFontColor}
+
     :focus {
       outline: none;
     }
@@ -44,6 +46,7 @@ const ResultsHeader = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin: 5px 0px;
 `
 
 const ResetQueryButton = styled.button`

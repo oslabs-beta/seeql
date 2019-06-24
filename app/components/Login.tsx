@@ -157,7 +157,7 @@ const LoginBtn = styled.button`
     right: -20px;
     transition: 0.5s;
   }   
-  :hover {
+  :hover 
     box-shadow: 0px 5px 10px #bdc3c7;
     span {
       padding-right: 15px;

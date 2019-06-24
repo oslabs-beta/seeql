@@ -7,8 +7,9 @@ interface ISidePanelTableWrapperProps {
 
 const SidePanelTableListWrapper = styled.div<ISidePanelTableWrapperProps>`
   color: black;
-  padding: 40px;
+  padding: 0px 40px;
   width: 300px;
+  height: 600px;
   background-color: ${props => props.theme.panel.baseColor};
   color: ${props => props.theme.fontColor};
   transition: width 500ms ease-in-out;

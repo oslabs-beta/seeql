@@ -41,9 +41,20 @@ const IndTab = styled.button<IIndTabProps>`
   }
 `;
 
+const NavIcon = styled.img`
+  height: 20px;
+  width: auto;
+  transition: all 0.2s;
+
+  :hover{
+    transform: scale(1.05);
+  }
+`
+
 const Tabs = styled.div`
   display: flex;
-  font-family: 'Poppins', sans-serif;;
+  font-family: 'Poppins', sans-serif;
+  margin: 10px;
 `;
 
 interface IForeignKeysAffected {
@@ -98,8 +109,8 @@ const SidePanel: React.SFC<Props> = ({
                 dispatchSidePanelDisplay(actions.changeToInfoPanel())
               }
             >
-              I
-              </IndTab>
+              <NavIcon src="https://res.cloudinary.com/djexjg6o8/image/upload/v1561234789/info_rhfrjg.svg" alt="info-icon"></NavIcon>
+            </IndTab>
             <IndTab
               data-panel="favorites"
               panel="favorites"
@@ -108,8 +119,8 @@ const SidePanel: React.SFC<Props> = ({
                 dispatchSidePanelDisplay(actions.changeToFavPanel())
               }
             >
-              F
-              </IndTab>
+              <NavIcon src="https://res.cloudinary.com/djexjg6o8/image/upload/v1561234789/favIcon.svg" alt="favorites-icon"></NavIcon>
+            </IndTab>
             <IndTab
               data-panel="settings"
               panel="settings"
@@ -118,8 +129,8 @@ const SidePanel: React.SFC<Props> = ({
                 dispatchSidePanelDisplay(actions.changeToSettingsPanel())
               }
             >
-              S
-              </IndTab>
+              <NavIcon src="https://res.cloudinary.com/djexjg6o8/image/upload/v1561234789/settings.svg" alt="settings-icon"></NavIcon>
+            </IndTab>
           </Tabs>
           <div>
             {activePanel === 'info' && (

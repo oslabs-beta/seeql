@@ -23,17 +23,17 @@ const happi = {
   tables: {
     highlight: 'orange',
     row: 'lightblue',
-    navButtonSelect: 'orange',
+    navButtonSelect: '#E55982',
     navButtonBase: 'transparent',
-    navButtonFontColor: 'white',
-    navButtonHover: 'blue',
-    resetButton: 'orange',
+    navButtonFontColor: black,
+    navButtonHover: '#E55982',
+    resetButton: '#E55982',
     infoButton: 'orange',
     pinnedButton: 'red',
     pinnedButtonFontColor: 'blue',
     pinnedHover: 'pink'
   },
-  link: { signOut: 'purple' }
+  link: { signOut: '#E55982' }
 }
 
 export default happi;

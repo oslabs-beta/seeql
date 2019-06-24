@@ -3,9 +3,10 @@ import styled from 'styled-components';
 
 const PanelWrapper = styled.div`
   color: black;
-  padding: 40px;
+  padding: 0px 40px;
   font-size: 30px;
   width: 300px;
+  height: 600px;
   display: flex;
   justify-content: center;
   background-color: ${props => props.theme.panel.baseColor};
