@@ -23,11 +23,6 @@ const TopSection = styled.section`
   display: flex;
   flex-direction: column;
 `;
-const BottomSection = styled.section`
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-`;
 const DivWrapper = styled.div`
   display: flex;
   flex-direction: column;
@@ -43,7 +38,6 @@ const Label = styled.label`
 const SignOut = styled.span`
   color: ${props => props.theme.link.signOut};
 `;
-
 const SettingsPanel = ({ intervalId }) => {
   const [context, setContext] = useContext(Context);
   const [state, dispatch] = useReducer(themeReducer, context);
@@ -56,13 +50,17 @@ const SettingsPanel = ({ intervalId }) => {
 
   useEffect(() => {
     setContext(state);
+    ipcRenderer.send('user-theme-selected', activeMode)
   }, [state]);
+  
 
   return (
     <PanelWrapper>
       <TopSection>
         <Title>Settings</Title>
-
+        <NavLink onClick={logOut} to="/">
+          <SignOut>SignOut</SignOut>
+        </NavLink>
         <DivWrapper>
           <Label>Theme</Label>
           <select
@@ -74,13 +72,12 @@ const SettingsPanel = ({ intervalId }) => {
                 selected: e.target.value,
                 payload: activeMode
               });
-            }}
-          >
-            {context.map(modeObj => (
-              <option key={modeObj.value} value={modeObj.value}>
+            }}>
+            {context.map(modeObj => {
+              return (<option key={modeObj.value} value={modeObj.value}>
                 {modeObj.value}
-              </option>
-            ))}
+              </option>);
+            })}
           </select>
         </DivWrapper>
         <DivWrapper>
@@ -93,11 +90,6 @@ const SettingsPanel = ({ intervalId }) => {
           </select>
         </DivWrapper>
       </TopSection>
-      <BottomSection>
-        <NavLink onClick={logOut} to="/">
-          <SignOut>SignOut</SignOut>
-        </NavLink>
-      </BottomSection>
     </PanelWrapper>
   );
 };

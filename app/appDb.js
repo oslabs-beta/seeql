@@ -1,25 +1,52 @@
 import electron from 'electron';
 import path from 'path';
 import fs from 'fs';
-import dateTime from 'node-datetime';
 
-// checks if user settings file exists
-const parseDataFile = (filePath, defaults) => {
+// windowBounds: { width: 500, height: 562 },
+// connStr:
+//  '{ 
+//   "connectionName":"tylersFirstSavedDatabase",
+//   "connectionString":"postgres://ltdnkwnbccooem:64ad308e565b39cc070194f7fa621ae0e925339be5a1c69480ff2a4462eab4c4@ec2-54-163-226-238.compute-1.amazonaws.com:5432/ddsu160rb5t7vq?ssl=true"
+// }',
+// 'database-tables-to-main logged': [ 
+//   { columns: [Array],
+//     foreignKeys: [],
+//     primaryKey: 'id',
+//     table_name: 'awesome_table' },
+//   { columns: [Array],
+//     foreignKeys: [Array],
+//     primaryKey: 'id',
+//     table_name: 'nodes' },
+//   { columns: [Array],
+//     foreignKeys: [Array],
+//     primaryKey: 'id',
+//     table_name: 'projects' },
+//   { columns: [Array],
+//     foreignKeys: [],
+//     primaryKey: 'id',
+//     table_name: 'users' } 
+//  ],
+//  readyEventFired: false,
+//  userQueryHistory: [
+//     
+//  ], 
+//  theme: "default"
+//  }
+
+const parseDataFile = async (filePath, defaults) => {
   try {
-    return JSON.parse(fs.readFileSync(filePath));
+    const dataParsed = await JSON.parse(fs.readFileSync(filePath));
+    return dataParsed
   } catch (error) {
     return defaults;
   }
 };
 
-// use sync write methods to avoid losing data (idle state etc.)
-class AppDb {
+class AppDb { // use sync methods to avoid losing data (idle state etc.)
   constructor(opts) {
-    // allows both render and main process to get reference to app
-    const userDataPath = (electron.app || electron.remote.app).getPath(
-      'userData'
-    );
-    // pass a file name to config object to get full file path
+    const userDataPath = ( // allows both render and main process to get reference to app
+      electron.app || electron.remote.app
+    ).getPath('userData');
     this.path = path.join(userDataPath, opts.configName + '.json');
     this.data = parseDataFile(this.path, opts.defaults);
   }
@@ -30,16 +57,11 @@ class AppDb {
 
   set(key, val) {
     this.data[key] = val;
-    fs.writeFileSync(this.path, JSON.stringify(this.data));
+    return fs.writeFileSync(this.path, JSON.stringify(this.data));
   }
 
-  logErr(err) {
-    this.data['error-log'] = `
-      ${dateTime.create().format('Y-m-d H:M:S')}
-      :
-      err ${err}
-    `;
-    fs.writeFileSync(this.path, JSON.stringify(this.data));
+  fetchAll() { 
+    return this.data
   }
 }
 

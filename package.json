@@ -1,5 +1,5 @@
 {
-  "name": "SeeQL",
+  "name": "seeql",
   "productName": "SeeQL",
   "version": "0.0.1",
   "description": "SeeQL is a database viz tool #TODO",
@@ -31,7 +31,7 @@
   "main": "./app/main.prod.js",
   "build": {
     "productName": "Seeeql",
-    "appId": "org.develar.Seeql.todo",
+    "appId": "todo.todo.Seeql.todo",
     "files": [
       "app/dist/",
       "app/app.html",
@@ -181,7 +181,7 @@
     "babel-plugin-dev-expression": "^0.2.1",
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "babel-plugin-transform-react-remove-prop-types": "^0.4.21",
-    "chalk": "^2.4.1",
+    "chalk": "^2.4.2",
     "concurrently": "^4.1.0",
     "connected-react-router": "^6.1.0",
     "core-js": "3",
@@ -257,6 +257,7 @@
     "electron": "^4.0.1",
     "electron-debug": "^2.0.0",
     "electron-log": "3.0.6",
+    "electron-store": "^4.0.0",
     "electron-unhandled": "^2.2.0",
     "electron-updater": "^4.0.6",
     "electron-util": "^0.12.1",
