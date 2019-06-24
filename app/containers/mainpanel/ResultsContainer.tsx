@@ -1,7 +1,6 @@
 import * as React from 'react';
 import QueryResults from "../../components/mainpanel/QueryResults";
 import TablesContainer from './TablesContainer';
-import { useState } from 'react';
 import { Tabs, Tab, Grommet, Button } from "grommet";
 import { grommet } from 'grommet/themes';
 import { FormTrash } from 'grommet-icons';
@@ -40,19 +39,21 @@ const ResultsContainer: React.SFC<IResultsContainerProps> = ({
     return <Tab
       title={tabname}
     >
-      {tabname === 'Tables' ?
-        <TablesContainer
-          relationships={relationships}
-          userInputForTables={userInputForTables}
-          activeTableInPanel={activeTableInPanel}
-          selectedForQueryTables={selectedForQueryTables}
-          data={data}
-          captureSelectedTable={captureSelectedTable}
-          captureQuerySelections={captureQuerySelections}
-        />
-        :
-        <QueryResults queryResult={queryResult} />
-      }
+      <div>
+        {tabname === 'Tables' ?
+          <TablesContainer
+            relationships={relationships}
+            userInputForTables={userInputForTables}
+            activeTableInPanel={activeTableInPanel}
+            selectedForQueryTables={selectedForQueryTables}
+            data={data}
+            captureSelectedTable={captureSelectedTable}
+            captureQuerySelections={captureQuerySelections}
+          />
+          :
+          <QueryResults queryResult={queryResult} />
+        }
+      </div>
     </Tab>
   })
 

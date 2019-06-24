@@ -10,6 +10,12 @@ import { Pin, Inspect } from 'grommet-icons';
 
 const TempWrapper = styled.div`
   display: flex;
+  height: 60vh;
+    flex-wrap: wrap;
+    overflow: scroll;
+    border: 1px solid white;
+    border-radius: 3px;
+    box-shadow: 2px 2px 8px lightgrey;
 `
 
 interface ITableWrapperProps {

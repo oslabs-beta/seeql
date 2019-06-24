@@ -7,7 +7,9 @@ const QueryResultWrapper = styled.div`
   display: flex;
   flex-wrap: wrap;
   background-color: white;
-  border: 1px solid black;
+      border: 1px solid white;
+    border-radius: 3px;
+    box-shadow: 2px 2px 8px lightgrey;
   overflow: scroll;
   height: 60vh;
 `;

@@ -31,13 +31,12 @@ const TableRow = styled.li<ITableRowProps>`
   display: flex;
   justify-content: space-between;
   list-style: none;
-  background-color: ${ (props) => props.affected ? 'rgb(240, 240, 240)' : 'transparent'};
-  border: none;
+  border: ${ (props) => props.affected ? '2px solid #28C3AA' : '2px solid transparent'};
   padding: 5px;
   transition: 0.3s;
 
   :hover {
-  background-color: 'lightgrey';
+    background-color: #ececec;
    transform: scale(1.01);
    
     cursor: ${({ inTheQuery }) =>
