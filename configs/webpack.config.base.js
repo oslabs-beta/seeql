@@ -18,7 +18,7 @@ export default {
             presets: [
               [
                 '@babel/preset-env',
-                { targets: { browsers: 'last 2 versions' } } // or whatever your project requires
+                { targets: { browsers: 'last 2 versions' } } // #TODO: electron@our.version?
               ],
               '@babel/preset-typescript',
               '@babel/preset-react'
@@ -35,39 +35,18 @@ export default {
     ]
   },
 
-  // module: {
-  //   rules: [
-  //     {
-  //       test: /\.[jt]sx?$/,
-  //       exclude: /node_modules/,
-  //       use: [
-  //         {
-  //           loader: 'babel-loader',
-  //           options: {
-  //             cacheDirectory: true
-  //           }
-  //         },
-  //         'ts-loader'
-  //       ]
-  //     }
-  //   ]
-  // },
-
   output: {
     path: path.join(__dirname, '..', 'app'),
-    // https://github.com/webpack/webpack/issues/1114
-    libraryTarget: 'commonjs2'
+    libraryTarget: 'commonjs2' // https://github.com/webpack/webpack/issues/1114
   },
 
-  /**
-   * Determine the array of extensions that should be used to resolve modules.
-   */
   resolve: {
     extensions: ['.js', '.ts', '.tsx', '.json'],
     alias: {
       'react-dom': '@hot-loader/react-dom'
     }
   },
+
   plugins: [
     new webpack.EnvironmentPlugin({
       NODE_ENV: 'development'

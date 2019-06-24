@@ -4,8 +4,8 @@ import { autoUpdater } from 'electron-updater';
 import MenuBuilder from './menu';
 import AppDb from './appDb';
 const chalk = require('chalk');
-const { log } = console
-const P = (...args:any[]) => log(chalk.blue(...args))
+const { log } = console;
+const P = (...args: any[]) => log(chalk.blue(...args));
 
 // let mainWindow: Electron.BrowserWindow = null;
 // let dbProcess: Electron.BrowserWindow = null;
@@ -16,9 +16,7 @@ if (
   process.env.NODE_ENV === 'development' ||
   process.env.DEBUG_PROD === 'true'
 ) {
-  // #TODO: resolve these
   process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true';
-  log(chalk.yellow(`\t\napp started in ${process.env.NODE_ENV} mode\n`))
   require('electron-debug')();
 }
 
@@ -26,12 +24,12 @@ if (
 // $HOME/Library/Application\ Support/electron/seeql-user-data.json
 // if nothing's there, use these defaults
 const defaults = {
-  configName: 'user-data', 
+  configName: 'user-data',
   width: 700,
   height: 850,
   savedConnections: [],
   theme: 'default'
-}
+};
 const appDb = new AppDb(defaults);
 
 const installExtensions = async () => {
@@ -43,7 +41,8 @@ const installExtensions = async () => {
   ).catch(console.log);
 };
 
-app.on('ready', async () => { P(`
+app.on('ready', async () => {
+  P(`
 
      ('-').->  ('-')               <-.('-')            
      ( OO)_    ( OO).->             __( OO)     <-.    
@@ -57,13 +56,13 @@ app.on('ready', async () => { P(`
                   Have a question? 
         Contact us on github.com/oslabs-beta/seeql
         
- `)
+ `);
   if (
     process.env.NODE_ENV === 'development' ||
     process.env.DEBUG_PROD === 'true'
   ) {
     await installExtensions();
-  } 
+  }
 
   // #TODO: fetch from db x event listener
   // let { width, height } = appDb.get('windowBounds');
@@ -89,8 +88,8 @@ app.on('ready', async () => { P(`
     if (process.env.START_MINIMIZED) {
       mainWindow.minimize();
     } else {
-      // #TODO: decide do we show the app window immediately with a spinner? or wait? 
-      const connStrs = appDb.get('savedConnections') // this is a sync|blocking process, but doesn't have to be
+      // #TODO: decide do we show the app window immediately with a spinner? or wait?
+      const connStrs = appDb.get('savedConnections'); // this is a sync|blocking process, but doesn't have to be
       mainWindow.webContents.send('saved-connection-strings', connStrs);
 
       mainWindow.show();
@@ -104,9 +103,8 @@ app.on('ready', async () => { P(`
   dbProcess = new BrowserWindow({ show: false });
   dbProcess.loadURL(`file://${__dirname}/dbProcess.html`);
 
-
   ipcMain.on('remember-connection', (_event: any, connStr: string) => {
-    appDb.set('connStr', connStr)
+    appDb.set('connStr', connStr);
   });
 
   ipcMain.on('query-to-main', (_event: void, query: string) => {
@@ -128,9 +126,12 @@ app.on('ready', async () => { P(`
   });
 
   // Listening from database, to send to HOMEPAGE
-  ipcMain.on('database-tables-to-main', (_event: Event, databaseTables: any) => {
-    mainWindow.webContents.send('tabledata-to-login', databaseTables);
-  });
+  ipcMain.on(
+    'database-tables-to-main',
+    (_event: Event, databaseTables: any) => {
+      mainWindow.webContents.send('tabledata-to-login', databaseTables);
+    }
+  );
 
   ipcMain.on('query-to-main', (_event, query) => {
     dbProcess.webContents.send('query-to-db', query);
@@ -161,8 +162,8 @@ app.on('ready', async () => { P(`
   });
 
   ipcMain.on('user-theme-selected', (_event: Event, theme: string) => {
-    appDb.set('theme', theme)
-  })
+    appDb.set('theme', theme);
+  });
 
   mainWindow.on('closed', () => {
     mainWindow = null;
@@ -171,7 +172,6 @@ app.on('ready', async () => { P(`
 
 export default class AppUpdater {
   public constructor() {
-    autoUpdater.logger = log;
     autoUpdater.checkForUpdatesAndNotify();
   }
 }

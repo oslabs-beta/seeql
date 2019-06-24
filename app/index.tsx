@@ -11,7 +11,6 @@ import themes from './themes/themes';
 
 //memo to persist users active theme? for right now use default as user's first theme
 const Index = () => {
-
   const modes = [
     { value: 'defaultTheme', active: true },
     { value: 'darkTheme', active: false },
@@ -22,16 +21,16 @@ const Index = () => {
   ];
   const [context, setContext] = useState(modes);
   const serveMode = context.reduce((acc, mode) => {
-      if (mode.active) acc = mode.value;
-      return acc;
-    }, 'defaultTheme');
+    if (mode.active) acc = mode.value;
+    return acc;
+  }, 'defaultTheme');
 
   return (
     <ThemeContext.Provider value={[context, setContext]}>
       <ThemeProvider theme={themes[serveMode]}>
-          <BrowserRouter>
-            <Routes />
-          </BrowserRouter>
+        <BrowserRouter>
+          <Routes />
+        </BrowserRouter>
       </ThemeProvider>
     </ThemeContext.Provider>
   );
