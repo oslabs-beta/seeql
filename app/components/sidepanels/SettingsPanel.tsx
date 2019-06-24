@@ -69,6 +69,7 @@ const SettingsPanel = ({ intervalId }) => {
             name="modeList"
             onChange={e => {
               setActiveMode(e.target.value);
+              ipcRenderer.send('user-theme-selected', e.target.value);
               dispatch({
                 type: 'CHANGE_MODE',
                 selected: e.target.value,
@@ -92,12 +93,10 @@ const SettingsPanel = ({ intervalId }) => {
             <option value="">Extra-Large</option>
           </select>
         </DivWrapper>
-      </TopSection>
-      <BottomSection>
         <NavLink onClick={logOut} to="/">
           <SignOut>SignOut</SignOut>
         </NavLink>
-      </BottomSection>
+      </TopSection>
     </PanelWrapper>
   );
 };
