@@ -15,12 +15,10 @@ interface IIndTabProps {
 }
 
 const PanelWrapper = styled.div<IPanelWrapperProps>`
-  width: ${({ sidePanelVisibility }) =>
-    sidePanelVisibility ? '375px' : '0px'};
+  width: 275px;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  transition: visibility 500ms ease-in-out;
 `;
 const ButtonMenu = styled.div`
   display: flex;
@@ -34,8 +32,8 @@ const IndTab = styled.button<IIndTabProps>`
   border: none;
   padding: 5px;
 
-  background-color: ${props => props.active === props.panel ? props.theme.tabs.baseColor : props.theme.panel.baseColorActive};
-  color: ${props => props.theme.tabs.fontColor};
+  background-color: ${props => props.active === props.panel ? 'lightgrey' : 'white'};
+  color: 'black';
 
   :hover {
     font-weight: bold;

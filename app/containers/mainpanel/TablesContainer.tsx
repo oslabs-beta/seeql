@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { useState, useEffect, useReducer } from 'react';
+import styled from 'styled-components';
 import * as actions from '../../actions/actions';
 import Tables from '../../components/mainpanel/Tables';
 import changePinnedStatus from '../../reducers/ChangePinnedStatus';
-import styled from 'styled-components';
 
 interface ITableWrapperProps {
   highlightForRelationship: string;
@@ -30,7 +30,7 @@ const ViewInfoButton = styled.button`
   transform: 0.3s;
 
   :hover {
-    color: ${props => props.theme.tables.infoButton};
+    color: black;
     font-weight: bold;
   }
   :focus {
@@ -57,14 +57,14 @@ interface IPinButtonProps {
 
 const PinBtn = styled.button<IPinButtonProps>`
   border: none;
-  background-color: ${props => (props.pinned ? props.theme.tables.pinnedButton : 'white')};
-  color: ${props => (props.pinned ? props.theme.tables.pinnedButtonFontColor : 'black')};
+  background-color: ${props => (props.pinned ? 'grey' : 'white')};
+  color: ${props => (props.pinned ? 'blue' : 'black')};
   padding: 5px;
   border-radius: 3px;
 
   :hover {
     font-weight: bold;
-    color: ${props => props.theme.tables.pinnedHover};
+    color: ${props => 'darkblue'};
   }
   :focus {
     outline: none;
@@ -288,13 +288,13 @@ const TablesContainer: React.SFC<ITablesContainerProps> = ({
         {filteredTables}
       </TablesWrapper>
     )
-  } else {
+  } 
     return (
       <NoSearchResults>
         There were no search results. <br /> Please search again.
         </NoSearchResults>
     )
-  }
+  
 }
 
 export default TablesContainer;

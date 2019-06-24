@@ -1,14 +1,16 @@
 import * as React from 'react';
 import styled from 'styled-components';
+import { Box, Button, Grommet } from 'grommet';
+import { grommet } from 'grommet/themes';
 import QueryResults from "../../components/mainpanel/QueryResults";
 import TablesContainer from './TablesContainer';
 
-const ResultsWrapper = styled.div`
-  background-color: transparent;
-  display: flex;
-  flex-direction: column;
-  margin-top: 40px;
-`;
+// const ResultsWrapper = styled.div`
+//   background-color: transparent;
+//   display: flex;
+//   flex-direction: column;
+//   margin-top: 40px;
+// `;
 
 const ResultsNav = styled.nav`
   display: flex;
@@ -26,18 +28,18 @@ const ResultsNavButton = styled.button<IResultsNavButtonProps>`
     border: none;
     border-bottom: ${({ activeDisplayInResultsTab, activetabname }) =>
     activeDisplayInResultsTab === activetabname
-      ? `3px solid ${props => props.theme.tables.navButtonSelect}`
+      ? `3px solid black`
       : '3px solid transparent'};
     padding: 8px;
     transition: 0.3s;
     font-size: 80%;
-    background-color: ${props => props.theme.tables.navButtonBase};
-    color: ${props => props.theme.tables.navButtonFontColor}
+    background-color: white;
+    color: black;
     :focus {
       outline: none;
     }
     :hover {
-      border-bottom: 3px solid ${props => props.theme.tables.navButtonHover};
+      border-bottom: 3px solid black;
     }
   `;
 
@@ -54,7 +56,7 @@ const ResetQueryButton = styled.button`
   background-color: transparent;
   :hover{
     font-weight: bold;
-    color: ${props => props.theme.tables.resetButton};
+    color: black;
   }
   :focus{
     outline: none;
@@ -101,28 +103,45 @@ const ResultsContainer: React.SFC<IResultsContainerProps> = ({
   })
 
   return (
-    <ResultsWrapper>
-      <ResultsHeader>
-        <ResultsNav>
-          {resultsTabs}
-        </ResultsNav>
-        <ResetQueryButton onClick={resetQuerySelection}>Reset Query</ResetQueryButton>
-      </ResultsHeader>
-      {activeDisplayInResultsTab === 'Tables' &&
-        <TablesContainer
-          relationships={relationships}
-          userInputForTables={userInputForTables}
-          activeTableInPanel={activeTableInPanel}
-          selectedForQueryTables={selectedForQueryTables}
-          data={data}
-          captureSelectedTable={captureSelectedTable}
-          captureQuerySelections={captureQuerySelections}
-        />
-      }
-      {activeDisplayInResultsTab === 'Query Results' && (
-        <QueryResults queryResult={queryResult} />
-      )}
-    </ResultsWrapper>
+    // <ResultsWrapper>
+    <Grommet theme={grommet}>
+      <Box
+        margin="small"
+        pad="large"
+        align="left"
+        background={{ color: "light-2", opacity: "strong" }}
+        round
+        gap="small"
+      >
+        <ResultsHeader>
+          <ResultsNav>
+            {resultsTabs}
+          </ResultsNav>
+
+          <Button
+            onClick={resetQuerySelection}
+            label="Reset Query"
+          />
+
+          {/* <ResetQueryButton onClick={resetQuerySelection}>Reset Query</ResetQueryButton> */}
+        </ResultsHeader>
+        {activeDisplayInResultsTab === 'Tables' &&
+          <TablesContainer
+            relationships={relationships}
+            userInputForTables={userInputForTables}
+            activeTableInPanel={activeTableInPanel}
+            selectedForQueryTables={selectedForQueryTables}
+            data={data}
+            captureSelectedTable={captureSelectedTable}
+            captureQuerySelections={captureQuerySelections}
+          />
+        }
+        {activeDisplayInResultsTab === 'Query Results' && (
+          <QueryResults queryResult={queryResult} />
+        )}
+      </Box>
+    </Grommet>
+    // </ResultsWrapper>
   )
 }
 
