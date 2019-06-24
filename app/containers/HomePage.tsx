@@ -311,7 +311,7 @@ const HomePage = ({ location }) => {
 
   const captureSelectedTable = e => {
     const { tablename } = e.target.dataset;
-    let selectedPanelInfo;
+    let selectedPanelInfo = {};
     let primaryKey;
 
     data.forEach(table => {
@@ -321,7 +321,7 @@ const HomePage = ({ location }) => {
       }
     });
 
-    selectedPanelInfo.foreignKeysOfPrimary = {};
+    selectedPanelInfo['foreignKeysOfPrimary'] = {};
 
     data.forEach(table => {
       table.foreignKeys.forEach(foreignKey => {
@@ -329,7 +329,7 @@ const HomePage = ({ location }) => {
           foreignKey.foreign_column_name == primaryKey &&
           foreignKey.foreign_table_name == tablename
         ) {
-          selectedPanelInfo.foreignKeysOfPrimary[foreignKey.table_name] =
+          selectedPanelInfo['foreignKeysOfPrimary'][foreignKey.table_name] =
             foreignKey.column_name;
         }
       });

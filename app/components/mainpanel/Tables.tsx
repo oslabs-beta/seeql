@@ -14,10 +14,6 @@ const Table = styled.div<ITableProps>`
   font-size: 70%;
   width: 180px;
   border-radius: 3px;
-  border: ${props =>
-    props.selectedtable === props.tablename
-      ? '2px solid #00b5cc'
-      : '2px solid transparent'};
   transition: 0.3s;
 `;
 
@@ -36,7 +32,7 @@ const TableRow = styled.li<ITableRowProps>`
   display: flex;
   justify-content: space-between;
   list-style: none;
-  background-color: ${ (props) => props.affected ? 'lightgrey': 'transparent'};
+  background-color: ${ (props) => props.affected ? 'lightgrey' : 'transparent'};
   border: none;
   padding: 5px;
   transition: 0.3s;
@@ -46,9 +42,9 @@ const TableRow = styled.li<ITableRowProps>`
    transform: scale(1.01);
    
     cursor: ${({ inTheQuery }) =>
-      inTheQuery
-        ? 'url(https://img.icons8.com/flat_round/20/000000/minus.png), auto'
-        : 'url(https://img.icons8.com/flat_round/20/000000/plus.png), auto'};
+    inTheQuery
+      ? 'url(https://img.icons8.com/flat_round/20/000000/minus.png), auto'
+      : 'url(https://img.icons8.com/flat_round/20/000000/plus.png), auto'};
   }
 `;
 

@@ -1,5 +1,4 @@
 import * as React from 'react';
-import styled from 'styled-components';
 import QueryResults from "../../components/mainpanel/QueryResults";
 import TablesContainer from './TablesContainer';
 import { Tabs, Tab, Grommet, Button } from "grommet";

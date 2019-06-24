@@ -4,43 +4,10 @@ import * as actions from '../../actions/actions';
 import Tables from '../../components/mainpanel/Tables';
 import changePinnedStatus from '../../reducers/ChangePinnedStatus';
 import styled from 'styled-components';
+import { Text, Grommet } from "grommet";
+import { grommet } from 'grommet/themes';
+import { Pin, Inspect } from 'grommet-icons';
 
-interface ITableWrapperProps {
-  highlightForRelationship: string;
-}
-
-const TablesWrapper = styled.div`
-  padding: 20px;
-  display: flex;
-  flex-wrap: wrap;
-  background-color: white;
-  border: 1px solid black;
-  overflow: scroll;
-  height: 60vh;
-`;
-
-const IndTableNav = styled.div`
-  display: flex;
-  justify-content: space-around;
-`
-
-const ViewInfoButton = styled.button`
-  border: none;
-  background-color: transparent;
-  transform: 0.3s;
-
-  :hover {
-    color: 'red';
-    font-weight: bold;
-  }
-  :focus {
-    outline: none;
-  }
-`
-
-const NoSearchResults = styled.div`
-  padding: 20px;
-`;
 
 const TableWrapper = styled.div<ITableWrapperProps>`
   margin: 10px;
@@ -48,25 +15,6 @@ const TableWrapper = styled.div<ITableWrapperProps>`
   border: ${({ highlightForRelationship }) => (highlightForRelationship == 'true' ? '3px solid #8106E9' : '3px solid transparent')};
   :hover {
     transform: scale(1.03)
-  }
-`;
-
-interface IPinButtonProps {
-  pinned: boolean;
-}
-
-const PinBtn = styled.button<IPinButtonProps>`
-  border: none;
-  background-color: ${props => (props.pinned ? 'black' : 'white')};
-  color: ${props => (props.pinned ?'red' : 'black')};
-  padding: 5px;
-  border-radius: 3px;
-
-  :hover {
-    font-weight: bold;
-  }
-  :focus {
-    outline: none;
   }
 `;
 
@@ -173,29 +121,26 @@ const TablesContainer: React.SFC<ITablesContainerProps> = ({
       data.forEach(table => {
         let highlightForRelationship = 'false';
         if (tablesRelated.includes(table.table_name)) {
-          console.log('related', tablesRelated)
-          console.log('in her for', table.table_name)
           highlightForRelationship = 'true';
         }
-        console.log(highlightForRelationship)
         if (pinnedTableNames.includes(table.table_name)) {
           pinned.push(
             <TableWrapper highlightForRelationship={highlightForRelationship}>
-              <IndTableNav>
-                <PinBtn
-                  data-pinned={table.table_name}
-                  onClick={() =>
-                    dispatchPinned(actions.removeFromPinned(table.table_name))
-                  }
-                  pinned={true}
-                >
-                  UNPIN
-                  </PinBtn>
-                <ViewInfoButton
-                  onClick={captureSelectedTable}
-                  data-tablename={table.table_name}
-                >View Info</ViewInfoButton>
-              </IndTableNav>
+              <Pin
+                data-pinned={table.table_name}
+                onClick={() =>
+                  dispatchPinned(actions.removeFromPinned(table.table_name))
+                }
+                pinned={true}
+                color="#149BD2"
+                size="medium"
+              />
+              <Inspect
+                onClick={captureSelectedTable}
+                data-tablename={table.table_name}
+                size="medium"
+                color={(table.table_name === activeTableInPanel.table_name) ? "#149BD2" : 'black'}
+              />
               <Tables
                 selectedForQueryTables={selectedForQueryTables}
                 captureQuerySelections={captureQuerySelections}
@@ -224,20 +169,24 @@ const TablesContainer: React.SFC<ITablesContainerProps> = ({
             </TableWrapper>
           );
         } else if (regex.test(table.table_name)) {
+          console.log('active ', table.table_name, activeTableInPanel.table_name)
           filtered.push(
             <TableWrapper highlightForRelationship={highlightForRelationship}>
-              <IndTableNav>
-                <PinBtn
-                  data-pinned={table.table_name}
-                  onClick={() =>
-                    dispatchPinned(actions.addToPinned(table.table_name))
-                  }
-                  pinned={false}
-                >
-                  PIN
-                  </PinBtn>
-                <ViewInfoButton onClick={captureSelectedTable} data-tablename={table.table_name}>View Info</ViewInfoButton>
-              </IndTableNav>
+              <Pin
+                size="medium"
+                data-pinned={table.table_name}
+                onClick={() =>
+                  dispatchPinned(actions.addToPinned(table.table_name))
+                }
+                pinned={false}
+                color="black"
+              />
+              <Inspect
+                onClick={captureSelectedTable}
+                data-tablename={table.table_name}
+                size="medium"
+                color={(table.table_name === activeTableInPanel.table_name) ? "#149BD2" : 'black'}
+              />
               <Tables
                 selectedForQueryTables={selectedForQueryTables}
                 captureQuerySelections={captureQuerySelections}
@@ -282,16 +231,16 @@ const TablesContainer: React.SFC<ITablesContainerProps> = ({
 
   if (pinnedTables.length || filteredTables.length) {
     return (
-      <TablesWrapper>
+      <Grommet theme={grommet}>
         {pinnedTables}
         {filteredTables}
-      </TablesWrapper>
+      </Grommet>
     )
   } else {
     return (
-      <NoSearchResults>
+      <Text>
         There were no search results. <br /> Please search again.
-        </NoSearchResults>
+      </Text>
     )
   }
 }
