@@ -45,7 +45,7 @@ const NoSearchResults = styled.div`
 const TableWrapper = styled.div<ITableWrapperProps>`
   margin: 10px;
   box-shadow: 2px 2px 8px lightgrey;
-  border: ${({ highlightForRelationship }) => (highlightForRelationship == 'true' ? '2px solid green' : '1px solid black')};
+  border: ${({ highlightForRelationship }) => (highlightForRelationship == 'true' ? '3px solid #8106E9' : '3px solid transparent')};
   :hover {
     transform: scale(1.03)
   }
