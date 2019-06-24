@@ -59,6 +59,8 @@ app.on('ready', async () => {
     show: true,
     width: appDb.get('width') || defaults.width,
     height: appDb.get('height') || defaults.height,
+    'min-width': 500,
+    'min-height': 300,
     titleBarStyle: 'hiddenInset'
   });
 
