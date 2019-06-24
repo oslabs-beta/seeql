@@ -113,7 +113,6 @@ app.on('ready', async () => {
 
   ipcMain.on('query-to-main', (_event: void, query: string) => {
     dbProcess.webContents.send('query-to-db', query);
-    appDb.push('query', query);
   });
 
   ipcMain.on('logout-to-main', (_event: void, message: string) => {
