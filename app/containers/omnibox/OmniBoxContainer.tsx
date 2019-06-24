@@ -3,13 +3,9 @@ import { useState } from 'react';
 import { ipcRenderer } from 'electron';
 import styled from 'styled-components';
 import OmniBoxInput from '../../components/omnibox/OmniBoxInput';
-import { Tabs, Tab, Grommet } from "grommet";
+import { Tabs, Tab, Grommet, Box } from "grommet";
 import { grommet } from 'grommet/themes';
 
-
-const OmniBoxNav = styled.nav`
-  display: flex;
-`;
 
 const QueryResultError = styled.div`
   background-color: #f1c7ca;
@@ -20,28 +16,6 @@ const QueryResultError = styled.div`
   font-family: 'Poppins', sans-serif;
   border-left: 3px solid #ca333e;
   font-size: 80%;
-`;
-
-interface IOmniBoxNavButtonProps {
-  omniBoxView: string;
-  selectedView: string;
-}
-
-const OmniBoxNavButton = styled.button<IOmniBoxNavButtonProps>`
-  padding: 5px;
-  font-family: 'Poppins', sans-serif;
-  border-radius: 3px 3px 0px 0px;
-  border: none;
-  background-color: ${props =>
-    props.selectedView === props.omniBoxView
-      ? 'black'
-      : 'black'};
-  color: ${(props) =>
-    props.selectedView === props.omniBoxView ? 'black' : 'black'};
-
-  :focus {
-    outline: none;
-  }
 `;
 
 interface IOmniBoxProps {
@@ -101,10 +75,13 @@ const OmniBoxContainer: React.SFC<IOmniBoxProps> = ({
 
   return (
     <Grommet theme={grommet}>
-      <Tabs>{navigationTabs}</Tabs>
-      {queryResultError.status && (
-        <QueryResultError>{queryResultError.message}</QueryResultError>
-      )}
+      <Box
+      >
+        <Tabs>{navigationTabs}</Tabs>
+        {queryResultError.status && (
+          <QueryResultError>{queryResultError.message}</QueryResultError>
+        )}
+      </Box>
     </Grommet>
   );
 };

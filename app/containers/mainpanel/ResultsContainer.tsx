@@ -1,12 +1,13 @@
 import * as React from 'react';
 import QueryResults from "../../components/mainpanel/QueryResults";
 import TablesContainer from './TablesContainer';
+import { useState } from 'react';
 import { Tabs, Tab, Grommet, Button } from "grommet";
 import { grommet } from 'grommet/themes';
 import { FormTrash } from 'grommet-icons';
 
 interface IResultsContainerProps {
-  activeDisplayInResultsTab: string;
+  activeDisplayInResultsTab: number;
   queryResult: any;
   data: any;
   userInputForTables: string;
@@ -39,7 +40,7 @@ const ResultsContainer: React.SFC<IResultsContainerProps> = ({
     return <Tab
       title={tabname}
     >
-        {tabname === 'Tables' ?
+      {tabname === 'Tables' ?
         <TablesContainer
           relationships={relationships}
           userInputForTables={userInputForTables}
@@ -56,11 +57,11 @@ const ResultsContainer: React.SFC<IResultsContainerProps> = ({
   })
 
   return (
-    <Grommet theme={grommet}> 
-        <Button  icon={<FormTrash />} label="Reset Query"onClick={resetQuerySelection} />
-        <Tabs>
-          {resultsTabs}
-        </Tabs>
+    <Grommet theme={grommet}>
+      <Button style={{ fontSize: '10px', padding: '0px 5px' }} gap="xxsmall" icon={<FormTrash size="small" />} label="Reset Query" onClick={resetQuerySelection} />
+      <Tabs activeIndex={activeDisplayInResultsTab} onActive={(index) => setActiveDisplayInResultsTab(index)}>
+        {resultsTabs}
+      </Tabs>
     </Grommet>
   )
 }

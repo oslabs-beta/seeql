@@ -70,7 +70,7 @@ const HomePage = ({ location }) => {
   const [selectedForQueryTables, setSelectedForQueryTables] = useState({});
   const [loadingQueryStatus, setLoadingQueryStatus] = useState(false);
   const [activeDisplayInResultsTab, setActiveDisplayInResultsTab] = useState(
-    'Tables'
+    0
   );
   const [activeTableInPanel, setActiveTableInPanel] = useState({});
   const [userInputForTables, setUserInputForTables] = useState('');
@@ -354,13 +354,15 @@ const HomePage = ({ location }) => {
           status: queryResult.message.length === 0 ? 'No results' : 'Success',
           message: queryResult.message
         });
-        setActiveDisplayInResultsTab('Query Results');
-      } else if (queryResult.statusCode === 'Invalid Request') {
+        setActiveDisplayInResultsTab(1);
+      }
+      if (queryResult.statusCode === 'Invalid Request') {
         setQueryResultError({
           status: true,
           message: queryResult.message
         });
-      } else if (queryResult.statusCode === 'Syntax Error') {
+      }
+      if (queryResult.statusCode === 'Syntax Error') {
         setQueryResultError({
           status: true,
           message: `Syntax error in retrieving query results.
@@ -378,7 +380,7 @@ const HomePage = ({ location }) => {
       setLoadingQueryStatus(false);
     });
     return () => ipcRenderer.removeAllListeners('query-result-to-homepage');
-  }, []);
+  }, [userInputQuery]);
 
   return (
     <React.Fragment>

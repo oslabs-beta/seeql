@@ -8,9 +8,18 @@ import { Text, Grommet } from "grommet";
 import { grommet } from 'grommet/themes';
 import { Pin, Inspect } from 'grommet-icons';
 
+const TempWrapper = styled.div`
+  display: flex;
+`
+
+interface ITableWrapperProps {
+  highlightForRelationship: string;
+}
 
 const TableWrapper = styled.div<ITableWrapperProps>`
   margin: 10px;
+  width: 200px;
+  border-radius: 3px;
   box-shadow: 2px 2px 8px lightgrey;
   border: ${({ highlightForRelationship }) => (highlightForRelationship == 'true' ? '3px solid #8106E9' : '3px solid transparent')};
   :hover {
@@ -169,7 +178,6 @@ const TablesContainer: React.SFC<ITablesContainerProps> = ({
             </TableWrapper>
           );
         } else if (regex.test(table.table_name)) {
-          console.log('active ', table.table_name, activeTableInPanel.table_name)
           filtered.push(
             <TableWrapper highlightForRelationship={highlightForRelationship}>
               <Pin
@@ -232,8 +240,10 @@ const TablesContainer: React.SFC<ITablesContainerProps> = ({
   if (pinnedTables.length || filteredTables.length) {
     return (
       <Grommet theme={grommet}>
-        {pinnedTables}
-        {filteredTables}
+        <TempWrapper>
+          {pinnedTables}
+          {filteredTables}
+        </TempWrapper>
       </Grommet>
     )
   } else {

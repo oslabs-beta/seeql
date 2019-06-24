@@ -12,7 +12,6 @@ const Table = styled.div<ITableProps>`
   flex-direction: column;
   background-color: white;
   font-size: 70%;
-  width: 180px;
   border-radius: 3px;
   transition: 0.3s;
 `;
@@ -32,7 +31,7 @@ const TableRow = styled.li<ITableRowProps>`
   display: flex;
   justify-content: space-between;
   list-style: none;
-  background-color: ${ (props) => props.affected ? 'lightgrey' : 'transparent'};
+  background-color: ${ (props) => props.affected ? 'rgb(240, 240, 240)' : 'transparent'};
   border: none;
   padding: 5px;
   transition: 0.3s;
