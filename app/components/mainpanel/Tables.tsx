@@ -36,14 +36,15 @@ const TableRow = styled.li<ITableRowProps>`
   display: flex;
   justify-content: space-between;
   list-style: none;
-  background-color: ${ (props) => props.affected ? props.theme.tables.row : 'transparent'};
+  background-color: ${ (props) => props.affected ? 'lightgrey': 'transparent'};
   border: none;
   padding: 5px;
   transition: 0.3s;
 
   :hover {
-    transform: scale(1.01);
-    background-color: ${props=>props.theme.tables.highlight};
+  background-color: 'lightgrey';
+   transform: scale(1.01);
+   
     cursor: ${({ inTheQuery }) =>
       inTheQuery
         ? 'url(https://img.icons8.com/flat_round/20/000000/minus.png), auto'
