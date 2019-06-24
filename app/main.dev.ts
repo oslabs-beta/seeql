@@ -17,8 +17,8 @@ let dbProcess = null;
 
 const defaults = {
   configName: 'user-data',
-  width: 700, // will be the default window size if they haven't resized ever
-  height: 850,
+  width: 800, // will be the default window size if they haven't resized ever
+  height: 600,
   savedConnections: [],
   theme: 'default'
 };
@@ -59,8 +59,8 @@ app.on('ready', async () => {
     show: true,
     width: appDb.get('width') || defaults.width,
     height: appDb.get('height') || defaults.height,
-    'min-width': 500,
-    'min-height': 300,
+    minWidth: 500,
+    minHeight: 300,
     titleBarStyle: 'hiddenInset'
   });
 
@@ -94,13 +94,13 @@ app.on('ready', async () => {
   // sent * from * the renderer process when the user selects "remember me"
   // savedConnStr = { name: "name for connStr", uri: 'postgres://etc' }
   ipcMain.on('remember-connection', (_event: Event, savedConnStr: any) => {
-    appDb.push('connStr', savedConnStr);
+    appDb.set('connStr', savedConnStr);
   });
 
   // saves queries to display in side-panel @ some point
   ipcMain.on('query-to-main', (_event: void, query: string) => {
     dbProcess.webContents.send('query-to-db', query);
-    appDb.push('userQueryHistory', query);
+    appDb.set('userQueryHistory', query);
   });
 
   // saves users theme if they select one which isn't default

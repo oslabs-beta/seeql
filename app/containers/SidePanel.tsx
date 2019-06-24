@@ -4,8 +4,6 @@ import SettingsPanel from '../components/sidepanels/SettingsPanel';
 import FavoritesPanel from '../components/sidepanels/FavoritesPanel';
 import InfoPanel from '../components/sidepanels/InfoPanel';
 import * as actions from '../actions/actions';
-import { Icon, Intent } from "@blueprintjs/core";
-import { IconNames } from "@blueprintjs/icons";
 
 interface IPanelWrapperProps {
   sidePanelVisibility: boolean;
@@ -99,7 +97,6 @@ const SidePanel: React.SFC<Props> = ({
         <PanelWrapper sidePanelVisibility={sidePanelVisibility}>
           <ButtonMenu>
             <Tabs>
-              <Icon icon={IconNames.GLOBE} iconSize={Icon.SIZE_LARGE} intent={Intent.PRIMARY} />
               <IndTab
                 data-panel="info"
                 panel="info"
