@@ -108,16 +108,6 @@ const SidePanel: React.SFC<Props> = ({
                 Table Info
               </IndTab>
               <IndTab
-                data-panel="favorites"
-                panel="favorites"
-                active={activePanel}
-                onClick={() =>
-                  dispatchSidePanelDisplay(actions.changeToFavPanel())
-                }
-              >
-                Favorites
-              </IndTab>
-              <IndTab
                 data-panel="settings"
                 panel="settings"
                 active={activePanel}
