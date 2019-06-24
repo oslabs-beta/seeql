@@ -34,9 +34,6 @@ class AppDb {
   push(arr, obj) {
     return fs.writeFileSync(this.path, JSON.stringify(arr.push(obj)));
   }
-  fetchAll() {
-    return this.data;
-  }
 }
 
 export default AppDb;

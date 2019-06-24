@@ -22,7 +22,6 @@ const defaults = {
   savedConnections: [],
   theme: 'default'
 };
-
 const appDb = new AppDb(defaults);
 
 if (process.env.NODE_ENV === 'production') {
@@ -48,18 +47,6 @@ const installExtensions = async () => {
   ).catch(console.log);
 };
 
-/**
- * Add event listeners...
- */
-
-app.on('window-all-closed', () => {
-  // Respect the OSX convention of having the application in memory even
-  // after all windows have been closed
-  if (process.platform !== 'darwin') {
-    app.quit();
-  }
-});
-
 app.on('ready', async () => {
   if (
     process.env.NODE_ENV === 'development' ||
@@ -68,13 +55,10 @@ app.on('ready', async () => {
     await installExtensions();
   }
 
-  console.log(appDb.get('windowBounds'));
-  let { width, height } = mainWindow.getBounds();
-
   mainWindow = new BrowserWindow({
-    show: false,
-    width,
-    height,
+    show: true,
+    width: appDb.get('width') || defaults.width,
+    height: 500 || appDb.get('height') || defaults.height,
     titleBarStyle: 'hiddenInset'
   });
 
@@ -87,14 +71,12 @@ app.on('ready', async () => {
       mainWindow.minimize();
     } else {
       // #TODO: decide do we show the app window
-      // these method is blocking but don't have to be
-      // this data has to be fetched before the login page renders to avoid FOUC
 
-      const connStrs = appDb.get('savedConnections');
-      mainWindow.webContents.send('saved-connections', connStrs);
+      // const connStrs = appDb.get('savedConnections');
+      // mainWindow.webContents.send('saved-connections', connStrs);
 
-      const userTheme = appDb.get('userThemePreference');
-      mainWindow.webContents.send('user-theme-preference', userTheme);
+      // const userTheme = appDb.get('userThemePreference');
+      // mainWindow.webContents.send('user-theme-preference', userTheme);
 
       mainWindow.show();
       mainWindow.focus();
@@ -170,7 +152,7 @@ app.on('ready', async () => {
   });
 
   mainWindow.on('resize', () => {
-    mainWindow.getBounds();
+    let { width, height } = mainWindow.getBounds();
     appDb.set('windowBounds', { width, height }); // getBounds returns an object with the height, width, x and y
   });
 
@@ -179,17 +161,25 @@ app.on('ready', async () => {
   });
 
   console.log(`\n\n
-  ('-').->  ('-')               <-.('-')            
- ( OO)_    ( OO).->             __( OO)     <-.    
-(_)--\_)  (,------.  ,------.  '-'---\_)  ,--. )   
-/    _ /   |  .---'  |  .---' |  .-.  |   |  ('-') 
-\_..'--.  (|  '--.   |  '--.  |  | |  |   |  |OO ) 
-.-._)   \  |  .--'   |  .--'  |  | |  |  (|  '__ | 
-\       /  |  '---.  |  '---. '  '-'  '-. |     |' 
- '-----'   '------'  '------'  '-----'--' '-----'  
+   ('-').->  ('-')               <-.('-')
+  ( OO)_    ( OO).->             __( OO)     <-.
+ (_)--\_)  (,------.  ,------.  '-'---\_)  ,--. )
+ /    _ /   |  .---'  |  .---' |  .-.  |   |  ('-')
+ \_..'--.  (|  '--.   |  '--.  |  | |  |   |  |OO )
+ .-._)   \  |  .--'   |  .--'  |  | |  |  (|  '__ |
+ \       /  |  '---.  |  '---. '  '-'  '-. |     |'
+  '-----'   '------'  '------'  '-----'--' '-----'
 
-              Have a question? 
+              Have a question?
     Contact us on github.com/oslabs-beta/seeql
 \n\n
 `);
+});
+
+app.on('window-all-closed', () => {
+  // Respect the OSX convention of having the application in memory even
+  // after all windows have been closed
+  if (process.platform !== 'darwin') {
+    app.quit();
+  }
 });
