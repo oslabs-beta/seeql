@@ -1,5 +1,6 @@
 import * as React from 'react';
 import styled from 'styled-components';
+import { ipcRenderer } from 'electron';
 
 interface ITableProps {
   selectedtable: string;
@@ -61,6 +62,10 @@ const TableTitle = styled.p`
   font-size: 140%;
   padding: 5px;
   overflow-wrap: break-word;
+  :hover {
+    transform: scale(1.01);
+    background-color: rgb(240, 240, 240);
+  }
 `;
 
 interface IForeignKey {
@@ -245,7 +250,7 @@ const Tables: React.SFC<Props> = ({
       selectedtable={activeTableInPanel.table_name}
       tablename={tableName}
     >
-      <TableTitle data-tablename={tableName}>{tableName}</TableTitle>
+      <TableTitle onClick={() => ipcRenderer.send('query-to-main', `SELECT * FROM ${tableName}`)} data-tablename={tableName}>{tableName}</TableTitle>
       <TableRowsList>{rows}</TableRowsList>
     </Table>
   );
