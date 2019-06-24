@@ -1,5 +1,7 @@
 import * as React from 'react';
 import styled from 'styled-components';
+import { Button, Grommet } from 'grommet';
+import { grommet } from 'grommet/themes';
 
 const OmniBoxWrapper = styled.div`
   display: flex;
@@ -21,62 +23,62 @@ const OmniBoxInputText = styled.textarea`
   }
 `;
 
-const ExecuteQueryButton = styled.button`
-  font-family: 'Poppins', sans-serif;
-  border: ${props=>props.theme.executeButton.border};
-  background-color: ${props=>props.theme.executeButton.baseColor};
-  transition: 0.2s;
-  color: ${props =>props.theme.executeButton.fontColor};
-  text-align: center;
-  padding: 5px;
-  font-size: 80%;
-  transition: 1s;
+// const ExecuteQueryButton = styled.button`
+//   font-family: 'Poppins', sans-serif;
+//   background-color: 'black';
+//   transition: 0.2s;
+//   color: 'black';
+//   text-align: center;
+//   padding: 5px;
+//   font-size: 80%;
+//   transition: 1s;
 
-  :hover {
-    background-image: linear-gradient(to bottom right, #49cefe, #c647bc);
-  }
+//   :hover {
+//     background-image: linear-gradient(to bottom right, #49cefe, #c647bc);
+//   }
 
-  :focus {
-    outline: none;
-  }
-`;
+//   :focus {
+//     outline: none;
+//   }
+// `;
 
 interface IOmniBoxInputProps {
-  omniBoxView: string;
   userInputQuery: string;
   loadingQueryStatus: boolean;
   userInputForTables: string;
+  tabname: string;
   setUserInputQuery: (any) => any;
   executeQuery: (any) => any;
   setUserInputForTables: (any) => any;
 }
 
 const OmniBoxInput: React.SFC<IOmniBoxInputProps> = ({
-  omniBoxView,
   setUserInputQuery,
   userInputQuery,
   executeQuery,
   loadingQueryStatus,
   setUserInputForTables,
-  userInputForTables
+  userInputForTables,
+  tabname
 }) => {
-  if (omniBoxView === 'SQL') {
+  if (tabname === 'SQL') {
     return (
-      <OmniBoxWrapper>
-        <OmniBoxInputText
-          onChange={e => setUserInputQuery(e.target.value)}
-          value={userInputQuery}
-        ></OmniBoxInputText>
-        <ExecuteQueryButton
-          onClick={executeQuery}
-          disabled={loadingQueryStatus}
-        >
-          {loadingQueryStatus ? 'Loading query results...' : 'Execute Query'}
-        </ExecuteQueryButton>
-      </OmniBoxWrapper>
+      <Grommet theme={grommet}>
+        <OmniBoxWrapper>
+          <OmniBoxInputText
+            onChange={e => setUserInputQuery(e.target.value)}
+            value={userInputQuery}
+          ></OmniBoxInputText>
+          <Button
+            onClick={executeQuery}
+            disabled={loadingQueryStatus}
+            label={loadingQueryStatus ? 'Loading query results...' : 'Execute Query'}
+          />
+        </OmniBoxWrapper>
+      </Grommet>
     );
   }
-  if (omniBoxView === 'plain') {
+  if (tabname === 'plain') {
     return (
       <OmniBoxInputText
         placeholder="Search for a table"
