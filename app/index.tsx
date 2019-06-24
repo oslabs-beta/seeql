@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { render } from 'react-dom';
-import { AppContainer } from 'react-hot-loader';
+import { hot } from 'react-hot-loader/root';
 import './app.global.css';
 import ThemeContext from './contexts/themeContext';
 import themes from './themes/themes';
@@ -21,22 +21,21 @@ const Index = () => {
   ];
   const [context, setContext] = useState(modes);
   const serveMode = context.reduce((acc, mode) => {
-      if (mode.active) acc = mode.value;
-      return acc;
-    }, 'defaultTheme');
+    if (mode.active) acc = mode.value;
+    return acc;
+  }, 'defaultTheme');
 
   return (
     <ThemeContext.Provider value={[context, setContext]}>
       <ThemeProvider theme={themes[serveMode]}>
-        <AppContainer>
-          <BrowserRouter>
-            <Routes />
-          </BrowserRouter>
-        </AppContainer>
+        <BrowserRouter>
+          <Routes />
+        </BrowserRouter>
       </ThemeProvider>
     </ThemeContext.Provider>
   );
 };
+
+hot(Index);
+
 render(<Index />, document.getElementById('root'));
-
-
