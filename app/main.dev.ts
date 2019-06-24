@@ -58,7 +58,7 @@ app.on('ready', async () => {
   mainWindow = new BrowserWindow({
     show: true,
     width: appDb.get('width') || defaults.width,
-    height: 500 || appDb.get('height') || defaults.height,
+    height: appDb.get('height') || defaults.height,
     titleBarStyle: 'hiddenInset'
   });
 
