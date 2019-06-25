@@ -1,11 +1,6 @@
 import * as React from 'react';
 import styled from 'styled-components';
-
-import { InformationPanel } from './sidePanelMolecules/Headers'
-import { Grommet } from "grommet";
-import { grommet } from 'grommet/themes';
-import { License, CircleInformation } from 'grommet-icons';
-
+import { InformationPanel } from './sidePanelMolecules/titles'
 
 interface ISidePanelTableWrapperProps {
   sidePanelVisibility: boolean;
@@ -13,43 +8,30 @@ interface ISidePanelTableWrapperProps {
 
 const SidePanelTableListWrapper = styled.div<ISidePanelTableWrapperProps>`
   color: black;
-  padding: 20px;
-    width: 250px;
-  background-color: transparent;
+  padding: 40px;
+  width: ${({ sidePanelVisibility }) =>
+    sidePanelVisibility ? '300px' : '0px'};
+  height: 100vh;
+  background-color: white;
+  color: black;
   transition: width 500ms ease-in-out;
 `;
 
 const InfoSection = styled.div`
   overflow-wrap: break-word;
-  padding: 30px 0px;
 `;
+
+
 
 const Text = styled.p`
-  font-family: 'Poppins', sans-serif;
+  font-size: 100%;
   color: black;
-    font-size: 14px;
-  font-weight: bold;
-    padding: 1px 5px;
-  :hover{
-    background-color: #f4f4f4;
-  }
 `;
-
-const LabelTextWrapper = styled.div`
-  margin: 5px 0px;
-`
 
 const Label = styled.label`
-  font-size: 12px;
-  padding: 2px 5px;
+  font-size: 80%;
   color: black;
-    font-family: 'Poppins', sans-serif;
 `;
-
-const EmptyState = styled.div`
-  padding: 40px 0px;
-  font-size: 18px;
-`
 
 interface ISelectedTable {
   columns?: any[];
@@ -83,8 +65,8 @@ const InfoPanel: React.SFC<Props> = ({
       foreignKeyRelationships.push(
         <li>
           <Text key={key}>
-            {key.column_name} from table
-            {key.foreign_table_name}, {key.foreign_column_name}
+            {key.column_name} <Label as="span">from table</Label>
+            {key.foreign_table_name}({key.foreign_column_name})
           </Text>
         </li>
       );
@@ -94,7 +76,7 @@ const InfoPanel: React.SFC<Props> = ({
   for (const foreignTableOfPrimary in foreignKeysOfPrimary) {
     primaryKeyRelationships.push(
       <li>
-        <Text>{foreignTableOfPrimary}, {foreignKeysOfPrimary[foreignTableOfPrimary]}</Text>
+        {foreignTableOfPrimary}({foreignKeysOfPrimary[foreignTableOfPrimary]})
       </li>
     );
   }
@@ -126,8 +108,14 @@ const InfoPanel: React.SFC<Props> = ({
               <ul>{foreignKeyRelationships}</ul>
             </div>
           )}
-      </SidePanelTableListWrapper>
-    </Grommet>
+        </InfoSection>
+      ) : (
+          <div>
+            You haven't selected a table yet, click on a table to see their
+            information
+        </div>
+        )}
+    </SidePanelTableListWrapper>
   );
 };
 
