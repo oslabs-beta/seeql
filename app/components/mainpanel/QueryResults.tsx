@@ -1,8 +1,6 @@
 import * as React from 'react';
 import styled from 'styled-components';
-// import ReactTable from 'react-table';
-import { Grommet, Box, DataTable } from "grommet";
-import { grommet } from "grommet/themes";
+import { Box, DataTable } from "grommet";
 
 const QueryResultWrapper = styled.div`
   padding: 20px;
@@ -13,11 +11,6 @@ const QueryResultWrapper = styled.div`
   overflow: scroll;
   height: 60vh;
 `;
-
-// const reactTableStyle = {
-//   fontSize: '60%',
-//   backgroundColor: 'transparent'
-// };
 
 interface IQueryResult {
   status: string;
@@ -50,21 +43,14 @@ const QueryResults: React.SFC<IQueryResultsProps> = ({ queryResult }) => {
       <Box border overflow="scroll">
         {
           queryResult.message.length > 0 && (
-            <Grommet theme={grommet}>
-              <Box align="center" pad="medium">
-                <DataTable sortable resizable 
-                  columns={columns.map(c => ({
-                    ...c,
-                    search: true,
-                  }))}
-                  data={queryResult.message} step={10} />
-              </Box>
-            </Grommet>
-            // <ReactTable
-            //   style={reactTableStyle}
-            //   data={queryResult.message}
-            //   columns={columns}
-            // />
+            <Box align="center" pad="medium">
+              <DataTable sortable resizable
+                columns={columns.map(c => ({
+                  ...c,
+                  search: true,
+                }))}
+                data={queryResult.message} step={20} />
+            </Box>
           )
         }
         {

@@ -4,6 +4,7 @@ import { ipcRenderer } from 'electron';
 import styled from 'styled-components';
 import OmniBoxInput from '../../components/omnibox/OmniBoxInput';
 
+
 const OmniBoxNav = styled.nav`
   display: flex;
 `;
@@ -31,10 +32,10 @@ const OmniBoxNavButton = styled.button<IOmniBoxNavButtonProps>`
   border: none;
   background-color: ${props =>
     props.selectedView === props.omniBoxView
-      ? props.theme.omniBox.buttonColorActive
-      : props.theme.omniBox.buttonColor};
+      ? 'lightgrey'
+      : 'white'};
   color: ${(props) =>
-    props.selectedView === props.omniBoxView ? props.theme.omniBox.fontColorActive : props.theme.omniBox.fontColor};
+    props.selectedView === props.omniBoxView ? 'blue' : 'black'};
 
   :focus {
     outline: none;
@@ -95,7 +96,6 @@ const OmniBoxContainer: React.SFC<IOmniBoxProps> = ({
     );
   };
 
-  // #TODO: Connect this ipc communication with new query input
   const executeQuery = (): void => {
     if (!loadingQueryStatus) {
       setQueryResultError({

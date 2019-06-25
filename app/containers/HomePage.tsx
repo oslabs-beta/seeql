@@ -3,14 +3,16 @@ import { useState, useEffect, useReducer } from 'react';
 import { Redirect } from 'react-router-dom';
 import { ipcRenderer } from 'electron';
 import styled from 'styled-components';
-import { Button, Collapsible, Grommet } from 'grommet';
+import { Box, Button, Collapsible, Grommet } from 'grommet';
 import { grommet } from 'grommet/themes';
+import { FormPrevious, FormNext } from "grommet-icons";
 import * as actions from '../actions/actions';
 import changeDisplayOfSidePanel from '../reducers/ChangeDisplayOfSidePanel';
 import SidePanel from './SidePanel';
 import LoadingComponent from '../components/LoadComponent';
 import ResultsContainer from './mainpanel/ResultsContainer';
 import OmniBoxContainer from '../containers/omnibox/OmniBoxContainer';
+
 
 const InvisibleHeader = styled.div`
   height: 30px;
@@ -24,39 +26,6 @@ const HomepageWrapper = styled.div`
   font-family: 'Poppins', sans-serif;
 `;
 
-interface ICollapseBtnProps {
-  sidePanelVisibility: boolean;
-}
-
-const CollapseBtn = styled.button<ICollapseBtnProps>`
-  border: none;
-  border-radius: 3px;
-  padding: 5px;
-  width: 25px;
-  height: 25px;
-  margin: 5px;
-  display: relative;
-  left: 100px;
-  margin-left: ${({ sidePanelVisibility }) =>
-    sidePanelVisibility ? '0px' : '50px'};
-  text-align: center;
-  :focus {
-    outline: none;
-  }
-  :hover {
-    font-weight: bold;
-    background-color: #013243;
-    color: white;
-  }
-`;
-
-const MainPanel = styled.div`
-  background-color: ${props => props.theme.main.baseColor};
-  padding: 5px 20px;
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-`;
 
 const LoadWrap = styled.div`
   display: flex;
@@ -350,7 +319,7 @@ const HomePage = ({ location }) => {
   }, [allTablesMetaData]);
 
   useEffect(() => {
-    ipcRenderer.on('query-result-to-homepage', (event, queryResult) => {
+    ipcRenderer.on('query-result-to-homepage', (_event, queryResult) => {
       if (queryResult.statusCode === 'Success') {
         setQueryResult({
           status: queryResult.message.length === 0 ? 'No results' : 'Success',
@@ -382,12 +351,14 @@ const HomePage = ({ location }) => {
     return () => ipcRenderer.removeAllListeners('query-result-to-homepage');
   }, []);
 
+
   return (
     <React.Fragment>
       {redirectDueToInactivity && <Redirect to='/' />}
       <InvisibleHeader></InvisibleHeader>
-      <HomepageWrapper onMouseMove={() => setInactiveTime(0)}>
-        <Grommet theme={grommet}>
+      <Grommet theme={grommet}>
+
+        <HomepageWrapper onMouseMove={() => setInactiveTime(0)}>
           <Collapsible open={sidePanelVisibility} direction="horizontal" >
             <SidePanel
               intervalId={intervalId}
@@ -397,55 +368,50 @@ const HomePage = ({ location }) => {
               sidePanelVisibility={sidePanelVisibility}
             />
           </Collapsible>
-        </Grommet>
-        {toggleLoad && (
-          <LoadWrap>
-            <LoadingComponent />
-          </LoadWrap>
-        )}
+          {toggleLoad && (
+            <LoadWrap>
+              <LoadingComponent />
+            </LoadWrap>
+          )}
 
-        <MainPanel>
-          <Grommet theme={grommet}>
+          <Box margin="small">
             <Button
               onClick={togglePanelVisibility}
-              label={sidePanelVisibility ? `<<` : `>>`}
+              plain={true}
+              fill={false}
+              alignSelf="start"
+              icon={sidePanelVisibility ? <FormPrevious size="large" /> : <FormNext size="large" />}
+              margin={sidePanelVisibility ? { left: "small" } : { left: "xlarge" }}
             />
-          </Grommet>
 
-          {false && <CollapseBtn
-            onClick={togglePanelVisibility}
-            data-active={activePanel}
-            sidePanelVisibility={sidePanelVisibility}
-          >
-            {sidePanelVisibility ? `<<` : `>>`}
-          </CollapseBtn>}
+            <OmniBoxContainer
+              userInputForTables={userInputForTables}
+              loadingQueryStatus={loadingQueryStatus}
+              userInputQuery={userInputQuery}
+              setQueryResultError={setQueryResultError}
+              setLoadingQueryStatus={setLoadingQueryStatus}
+              setUserInputQuery={setUserInputQuery}
+              queryResultError={queryResultError}
+              setUserInputForTables={setUserInputForTables}
+            />
+            <ResultsContainer
+              relationships={relationships}
+              resetQuerySelection={resetQuerySelection}
+              captureQuerySelections={captureQuerySelections}
+              captureSelectedTable={captureSelectedTable}
+              activeDisplayInResultsTab={activeDisplayInResultsTab}
+              queryResult={queryResult}
+              data={data}
+              userInputForTables={userInputForTables}
+              setActiveDisplayInResultsTab={setActiveDisplayInResultsTab}
+              activeTableInPanel={activeTableInPanel}
+              selectedForQueryTables={selectedForQueryTables}
+            />
 
+          </Box>
+        </HomepageWrapper>
+      </Grommet>
 
-          <OmniBoxContainer
-            userInputForTables={userInputForTables}
-            loadingQueryStatus={loadingQueryStatus}
-            userInputQuery={userInputQuery}
-            setQueryResultError={setQueryResultError}
-            setLoadingQueryStatus={setLoadingQueryStatus}
-            setUserInputQuery={setUserInputQuery}
-            queryResultError={queryResultError}
-            setUserInputForTables={setUserInputForTables}
-          />
-          <ResultsContainer
-            relationships={relationships}
-            resetQuerySelection={resetQuerySelection}
-            captureQuerySelections={captureQuerySelections}
-            captureSelectedTable={captureSelectedTable}
-            activeDisplayInResultsTab={activeDisplayInResultsTab}
-            queryResult={queryResult}
-            data={data}
-            userInputForTables={userInputForTables}
-            setActiveDisplayInResultsTab={setActiveDisplayInResultsTab}
-            activeTableInPanel={activeTableInPanel}
-            selectedForQueryTables={selectedForQueryTables}
-          />
-        </MainPanel>
-      </HomepageWrapper>
     </React.Fragment>
   );
 };

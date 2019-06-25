@@ -15,15 +15,16 @@ interface IIndTabProps {
 }
 
 const PanelWrapper = styled.div<IPanelWrapperProps>`
-  width: 275px;
+  width: 325px;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
 `;
+
 const ButtonMenu = styled.div`
   display: flex;
   justify-content: center;
-  background-color: #e8ecf1;
+  background-color: white;
 `;
 
 const IndTab = styled.button<IIndTabProps>`

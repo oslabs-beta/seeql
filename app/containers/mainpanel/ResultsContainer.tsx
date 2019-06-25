@@ -5,12 +5,6 @@ import { grommet } from 'grommet/themes';
 import QueryResults from "../../components/mainpanel/QueryResults";
 import TablesContainer from './TablesContainer';
 
-// const ResultsWrapper = styled.div`
-//   background-color: transparent;
-//   display: flex;
-//   flex-direction: column;
-//   margin-top: 40px;
-// `;
 
 const ResultsNav = styled.nav`
   display: flex;
@@ -48,20 +42,6 @@ const ResultsHeader = styled.div`
   justify-content: space-between;
   align-items: center;
 `
-
-// const ResetQueryButton = styled.button`
-//   border-radius: 3px;
-//   border: none;
-//   font-size: 80%;
-//   background-color: transparent;
-//   :hover{
-//     font-weight: bold;
-//     color: black;
-//   }
-//   :focus{
-//     outline: none;
-//   }
-// `
 
 interface IResultsContainerProps {
   activeDisplayInResultsTab: string;
@@ -103,15 +83,15 @@ const ResultsContainer: React.SFC<IResultsContainerProps> = ({
   })
 
   return (
-    // <ResultsWrapper>
     <Grommet theme={grommet}>
       <Box
         margin="small"
-        pad="large"
+        pad="medium"
         align="start"
         background={{ color: "light-2", opacity: "strong" }}
-        round
+        round="xsmall"
         gap="small"
+        overflow="scroll"
       >
         <ResultsHeader>
           <ResultsNav>
@@ -119,11 +99,11 @@ const ResultsContainer: React.SFC<IResultsContainerProps> = ({
           </ResultsNav>
 
           <Button
+            alignSelf="start"
+            primary
             onClick={resetQuerySelection}
             label="Reset Query"
           />
-
-          {/* <ResetQueryButton onClick={resetQuerySelection}>Reset Query</ResetQueryButton> */}
         </ResultsHeader>
         {activeDisplayInResultsTab === 'Tables' &&
           <TablesContainer
@@ -141,7 +121,6 @@ const ResultsContainer: React.SFC<IResultsContainerProps> = ({
         )}
       </Box>
     </Grommet>
-    // </ResultsWrapper>
   )
 }
 
