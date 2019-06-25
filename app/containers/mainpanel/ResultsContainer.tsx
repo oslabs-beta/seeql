@@ -1,7 +1,7 @@
 import * as React from 'react';
 import QueryResults from "../../components/mainpanel/QueryResults";
 import TablesContainer from './TablesContainer';
-import { Tabs, Tab, Grommet, Button } from "grommet";
+import { Box, Tabs, Tab, Grommet, Button } from "grommet";
 import { grommet } from 'grommet/themes';
 import { FormTrash } from 'grommet-icons';
 
@@ -63,6 +63,7 @@ const ResultsContainer: React.SFC<IResultsContainerProps> = ({
       <Tabs activeIndex={activeDisplayInResultsTab} onActive={(index) => setActiveDisplayInResultsTab(index)}>
         {resultsTabs}
       </Tabs>
+
     </Grommet>
   )
 }

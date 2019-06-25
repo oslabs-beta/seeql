@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { useState, useEffect, useReducer } from 'react';
+import styled from 'styled-components';
 import * as actions from '../../actions/actions';
 import Tables from '../../components/mainpanel/Tables';
 import changePinnedStatus from '../../reducers/ChangePinnedStatus';
-import styled from 'styled-components';
 import { Text, Grommet } from "grommet";
 import { grommet } from 'grommet/themes';
 import { Pin, CircleInformation } from 'grommet-icons';
@@ -251,13 +251,13 @@ const TablesContainer: React.SFC<ITablesContainerProps> = ({
         </TempWrapper>
       </Grommet>
     )
-  } else {
+  } 
     return (
       <Text>
         There were no search results. <br /> Please search again.
       </Text>
     )
-  }
+  
 }
 
 export default TablesContainer;

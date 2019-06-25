@@ -25,7 +25,7 @@ const DivWrapper = styled.div`
   flex-direction: column;
 `;
 const Title = styled.h1`
-  font-size: 30px;
+font-size: 30px;
 `;
 const Label = styled.label`
   padding: 10px 0;

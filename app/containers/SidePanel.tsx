@@ -25,10 +25,10 @@ const PanelWrapper = styled.div<IPanelWrapperProps>`
   justify-content: flex-start;
   transition: width 500ms ease-in-out;
 `;
+
 const ButtonMenu = styled.div`
   display: flex;
   justify-content: center;
-  
 `;
 
 const IndTab = styled.button<IIndTabProps>`

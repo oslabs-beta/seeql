@@ -4,149 +4,43 @@ import { useState, useEffect } from 'react';
 import { Redirect } from 'react-router-dom';
 import { ipcRenderer } from 'electron';
 
-const InvisibleHeader = styled.div`
-  height: 30px;
-  -webkit-app-region: drag;
-`;
+import { CheckBox, Grommet, Box, Button, Text, Tab, Tabs, Heading, TextArea } from 'grommet';
+import { grommet } from 'grommet/themes';
+import { Login as LoginIcon } from 'grommet-icons';
 
-const LoginPageWrapper = styled.div`
-  margin-top: -30px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: 'Poppins', sans-serif;
-  height: 100vh;
-  width: 100vw;
-`;
-
-const Title = styled.h1`
-  font-size: 72px;
-  font-weight: none;
-`;
-
-const Panel = styled.div`
-  height: 100vh;
-  width: 50vw;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
+const myTheme = {
+  global: {
+    // changes here will affect more than one component at a time
+  },
+  anchor: {
+    // changes here will affect Anchor component only
+  }
+};
 
 const funtimes = keyframes`
-    0%{background-position:0% 50%}
-    50%{background-position:100% 50%}
-    100%{background-position:0% 50%}
-`;
+ 0%{background-position:0% 50%}
+ 50%{background-position:100% 50%}
+ 100%{background-position:0% 50%}
+ `;
 
-const LeftPanel = styled(Panel)`
-  background-color: white;
-  color: white;
-  animation: ${funtimes} 8s ease infinite;
-  background: linear-gradient(270deg, #49cefe, #c647bc);
-  background-size: 400% 400%;
-`;
-
-const RightPanel = styled(Panel)`
-  background-color: white;
-`;
-
-const LoginContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 20px;
-`;
-
-const LoginTypeNavigation = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-`;
-
-interface LoginTypeButtonProps {
-  readonly selectedLoginType: string;
-  readonly buttonType: string;
-}
-
-const LoginTypeButton = styled.button<LoginTypeButtonProps>`
-  padding: 5px;
-  font-size: 140%;
-  margin: 10px;
-  font-family: 'Poppins', sans-serif;
-  background-color: transparent;
-  display: flex;
-  border: none;
-  border-bottom: ${({ selectedLoginType, buttonType }) =>
-    selectedLoginType === buttonType
-      ? '3px solid #E55982'
-      : '3px solid transparent'};
-  transition: 0.3s;
-  :hover {
-    border-bottom: 3px solid #e55982;
-    cursor: pointer;
-  }
-  :focus {
-    outline: none;
-  }
-`;
-
-const URIConnectionContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  padding: 20px;
-`;
-
+const Gradient = styled.div`
+ backgroundColor:white;
+ animation:${funtimes} 8s ease infinite;
+ background:linear-gradient(270deg, #49cefe, #c647bc);
+`
 const InputLabel = styled.span`
   font-size: 100%;
   letter-spacing: 2px;
 `;
 
+const RequiredWarning = styled.span`
+  color: #ca333e;
+  font-size: 80%;
+`;
 interface IURIInputProps {
   requiredError: boolean;
 }
 
-const URIInput = styled.textarea<IURIInputProps>`
-  width: 200px;
-  height: 150px;
-  border-radius: 3px;
-  font-family: 'Poppins', sans-serif;
-  letter-spacing: 2px;
-  resize: none;
-  padding: 8px;
-  border: ${({ requiredError }) =>
-    requiredError ? '1px solid #ca333e' : '1px solid lightgrey'};
-
-  :focus {
-    outline: none;
-  }
-`;
-
-const ToggleSSL = styled.div`
-  display: flex;
-  justify-content: center;
-  padding: 5px;
-  margin: 10px;
-  display: flex;
-  align-items: center;
-`;
-
-const LoginBtn = styled.button`
-  padding: 5px;
-  border-radius: 3px;
-  font-family: 'Poppins', sans-serif;
-  width: 100px;
-  border: none;
-  transition: 0.2s;
-  font-size: 120%;
-  :hover {
-    color: white;
-    background-color: #1ea196;
-  }
-  :focus {
-    outline: none;
-  }
-`;
 
 const CredentialsContainer = styled.div`
   display: flex;
@@ -166,23 +60,10 @@ const CredentialsInput = styled.input<IURIInputProps>`
   width: 200px;
   font-family: 'Poppins', sans-serif;
   letter-spacing: 2px;
-  border: ${({ requiredError }) =>
-    requiredError ? '1px solid #ca333e' : '1px solid lightgrey'};
+  border: ${({ requiredError }) => requiredError ? '1px solid #ca333e' : '1px solid lightgrey'};
   :focus {
     outline: none;
   }
-`;
-
-const ConnectionErrorMessage = styled.div`
-  background-color: #f1c7ca;
-  width: 200px;
-  color: #ca333e;
-  border-radius: 3px;
-  padding: 5px;
-  margin: 5px;
-  font-family: 'Poppins', sans-serif;
-  border-left: 3px solid #ca333e;
-  font-size: 100%;
 `;
 
 const LogoutMessage = styled.div`
@@ -197,9 +78,46 @@ const LogoutMessage = styled.div`
   font-size: 100%;
 `;
 
-const RequiredWarning = styled.span`
-  color: #ca333e;
-  font-size: 80%;
+const URIInput = styled.textarea<IURIInputProps>`
+	  width: 200px;
+	  height: 150px;
+	  border-radius: 3px;
+	  font-family: 'Poppins', sans-serif;
+	  letter-spacing: 2px;
+	  resize: none;
+	  padding: 8px;
+	  border: ${({ requiredError }) =>
+	    requiredError ? '1px solid #ca333e' : '1px solid lightgrey'};
+	
+	  :focus {
+	    outline: none;
+	  }
+	`;
+
+const ToggleSSL = styled.div`
+	  display: flex;
+	  justify-content: center;
+	  padding: 5px;
+	  margin: 10px;
+	  display: flex;
+	  align-items: center;
+`;
+
+      const LoginBtn = styled.button`
+	  padding: 5px;
+  border-radius: 3px;
+  font-family: 'Poppins', sans-serif;
+  width: 100px;
+  border: none;
+  transition: 0.2s;
+  font-size: 120%;
+  :hover {
+    color: white;
+    background-color: #1ea196;
+  }
+  :focus {
+    outline: none;
+  }
 `;
 
 const Login = () => {
@@ -219,12 +137,19 @@ const Login = () => {
   const [tableData, setTableData] = useState([]);
 
   const sendLoginURI = (): void => {
+    const updatedPort: string = !port ? '5432' : port;
+    let updatedURI: string;
+
     if (loggedOutMessage) setLoggedOutMessage('');
-    const updatedPort = !port ? '5432' : port;
-    let updatedURI;
-    if (loginType === 'URI') updatedURI = URI;
-    else if (loginType === 'Credentials')
-      updatedURI = `postgres://${username.value}:${password.value}@${host.value}:${updatedPort}/${database.value}`;
+    if (loginType === 'URI') updatedURI = URI
+    if (loginType === 'Credentials') {
+      updatedURI = `postgres://
+        ${username.value}:
+        ${password.value}@
+        ${host.value}:
+        ${updatedPort}/
+        ${database.value}`;
+    }
 
     if (isSSL) updatedURI += '?ssl=true';
 
@@ -245,19 +170,19 @@ const Login = () => {
 
   // IPC messaging listeners
   useEffect(() => {
-    ipcRenderer.on('db-connection-error', (_event, err) => {
+    ipcRenderer.on('db-connection-error', () => {
       // #TODO: Error handling for cases where unable to retrieve info from a valid connection
       setConnectionError(true);
       setLoading(false);
     });
-    ipcRenderer.on('tabledata-to-login', (_event, databaseTables) => {
+    ipcRenderer.on('tabledata-to-login', (_: void, databaseTables: React.SetStateAction<any[]>) => {
       setConnectionError(false);
       setTableData(databaseTables);
       setLoading(false);
       setRedirectToHome(true);
     });
     ipcRenderer.send('login-mounted');
-    ipcRenderer.on('logout-reason', (_event, message) =>
+    ipcRenderer.on('logout-reason', (_: void, message: React.SetStateAction<string>) =>
       setLoggedOutMessage(message)
     );
     return () => {
@@ -267,64 +192,64 @@ const Login = () => {
     };
   }, []);
 
-  const captureURI = (e): void => {
-    const sanitizedURI = e.target.value.replace(/\s+/g, '');
-    setURI(sanitizedURI);
+  const sanitizeURI = (e: React.FormEvent<HTMLInputElement>): void => {
+    setURI(e.target.value.replace(/\s+/g, ''))
     if (requiredError) setRequiredError(false);
   };
 
   const redirectHome = () => {
     if (redirectToHome)
-      return (
-        <Redirect
-          to={{ pathname: '/homepage', state: { tables: tableData } }}
-        />
-      );
+      return (<Redirect to={{ pathname: '/homepage', state: { tables: tableData } }} />);
   };
 
   return (
-    <React.Fragment>
-      <InvisibleHeader></InvisibleHeader>
-      <LoginPageWrapper>
-        <LeftPanel>
-          <Title>SeeQL</Title>
-        </LeftPanel>
-        <RightPanel>
-          <LoginContainer>
-            {loggedOutMessage === 'inactivity' && (
-              <LogoutMessage>
-                You've been logged out due to inactivity
-              </LogoutMessage>
-            )}
-            {loggedOutMessage === 'userlogout' && (
-              <LogoutMessage>You logged out</LogoutMessage>
-            )}
-            {connectionError && (
-              <ConnectionErrorMessage>
-                Unable to connect to the database. Please try again.
-              </ConnectionErrorMessage>
-            )}
-            <LoginTypeNavigation>
-              <LoginTypeButton
-                buttonType="URI"
-                selectedLoginType={loginType}
-                onClick={() => {
-                  setLoginType('URI'), setConnectionError(false);
-                }}
-              >
-                URI
-              </LoginTypeButton>
-              <LoginTypeButton
-                buttonType="Credentials"
-                selectedLoginType={loginType}
-                onClick={() => {
-                  setLoginType('Credentials'), setConnectionError(false);
-                }}
-              >
-                Credentials
-              </LoginTypeButton>
-            </LoginTypeNavigation>
-            {loginType === 'Credentials' && (
+    <Grommet full theme={grommet}>
+      <Box background={Gradient} justify="center">
+        <Box width="medium" justify="center" alignSelf="center">
+          <Heading
+            margin="xxsmall"
+            level="1"
+            responsive={true}
+            size="xlarge"
+            textAlign="center"
+            truncate={false}>SeeQL</Heading>
+          {loggedOutMessage === 'inactivity' && (
+            <Text>
+              You've been logged out due to inactivity
+            </Text>
+          )}
+          {loggedOutMessage === 'userlogout' && (
+            <LogoutMessage>You logged out</LogoutMessage>
+          )}
+          {connectionError && (
+            <Box
+              color="status-error">
+              Unable to connect to the database. Please try again.
+            </Box>
+          )}
+          <Tabs>
+            <Tab
+              margin="large"
+              title="URI"
+              selectedLoginType={loginType}
+              onClick={() => { setLoginType('URI'), setConnectionError(false); 
+              }}>
+            <URIInput
+              requiredError={requiredError}
+              onChange={sanitizeURI}
+              placeholder="Enter your URI connection string..."
+              value={URI} 
+            />
+             {requiredError && (
+	             <RequiredWarning>URI is required</RequiredWarning>
+             )}
+            </Tab>
+
+
+            <Tab
+              title="Credentials"
+              selectedLoginType={loginType}
+              onClick={() => { setLoginType('Credentials'), setConnectionError(false); }}>
               <CredentialsContainer>
                 <InputAndLabelWrapper>
                   <InputLabel>Host</InputLabel>
@@ -401,37 +326,25 @@ const Login = () => {
                       })
                     }
                   />
-                  {database.requiredError && (
-                    <RequiredWarning>database is required</RequiredWarning>
-                  )}
+                  {database.requiredError && (<RequiredWarning>database is required</RequiredWarning>)}
                 </InputAndLabelWrapper>
               </CredentialsContainer>
-            )}
-            {loginType === 'URI' && (
-              <URIConnectionContainer>
-                <InputLabel>URI Connection String</InputLabel>
-                <URIInput
-                  requiredError={requiredError}
-                  onChange={captureURI}
-                  placeholder="Enter your URI connection string..."
-                  value={URI}
-                />
-                {requiredError && (
-                  <RequiredWarning>URI is required</RequiredWarning>
-                )}
-              </URIConnectionContainer>
-            )}
-            <ToggleSSL>
-              <input type="checkbox" onChange={e => setSSL(e.target.checked)} />
-              <InputLabel>ssl?</InputLabel>
-            </ToggleSSL>
-            {!loading && <LoginBtn onClick={sendLoginURI}>Login</LoginBtn>}
-            {loading && <LoginBtn disabled>Loading...</LoginBtn>}
-            {redirectHome()}
-          </LoginContainer>
-        </RightPanel>
-      </LoginPageWrapper>
-    </React.Fragment>
+            </Tab>
+          </Tabs>
+
+         <ToggleSSL>
+            <input type="checkbox" onChange={e => setSSL(e.target.checked)} />
+            <InputLabel>ssl?</InputLabel>
+          </ToggleSSL>
+
+          {!loading && <LoginBtn onClick={sendLoginURI}>Login</LoginBtn>}
+	        {loading && <LoginBtn disabled>Loading...</LoginBtn>}
+          {redirectHome()}
+        </Box>
+        {/* end box that wraps the entire fill */}
+      </Box>
+      {/* end Grommet provider */}
+    </Grommet >
   );
 };
 

@@ -6,7 +6,6 @@ import { Tabs, Tab, Grommet, Box } from "grommet";
 import { grommet } from 'grommet/themes';
 import { Search } from 'grommet-icons';
 
-
 const QueryResultError = styled.div`
   background-color: #f1c7ca;
   color: #ca333e;
@@ -43,7 +42,6 @@ const OmniBoxContainer: React.SFC<IOmniBoxProps> = ({
   const listOfTabNames = ['SQL', 'Search'];
 
 
-  // #TODO: Connect this ipc communication with new query input
   const executeQuery = (): void => {
     if (!loadingQueryStatus) {
       setQueryResultError({

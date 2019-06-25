@@ -38,7 +38,7 @@ const TableRow = styled.li<ITableRowProps>`
 
   :hover {
     background-color: #f4f4f4;
-   transform: scale(1.01);
+    transform: scale(1.01);
     cursor: pointer;
   }
 `;
@@ -126,10 +126,10 @@ const Tables: React.SFC<Props> = ({
   captureQuerySelections,
   selectedForQueryTables
 }) => {
-  let rows = [];
+  const rows = [];
 
-  for (let keys in columns) {
-    const primaryKey: boolean = (primarykey === columns[keys]['columnname']) ? true : false;
+  for (const keys in columns) {
+    const primaryKey: boolean = (primarykey === columns[keys]['columnname']);
     let affected = false;
     let foreignKey = false;
     let foreignkeyTable = '';
@@ -138,14 +138,14 @@ const Tables: React.SFC<Props> = ({
     if (Object.keys(selectedForQueryTables).includes(tableName)) {
       if (
         selectedForQueryTables[tableName].columns.includes(
-          columns[keys]['columnname']
+          columns[keys].columnname
         )
       )
         inTheQuery = true;
     }
 
     if (
-      primaryKeyAffected[0].primaryKeyColumn === columns[keys]['columnname'] &&
+      primaryKeyAffected[0].primaryKeyColumn === columns[keys].columnname &&
       primaryKeyAffected[0].primaryKeyTable === tableName
     )
       affected = true;
@@ -153,13 +153,13 @@ const Tables: React.SFC<Props> = ({
     foreignKeysAffected.forEach((option): void => {
       if (
         option.table === tableName &&
-        option.column === columns[keys]['columnname']
+        option.column === columns[keys].columnname
       )
         affected = true;
     });
 
     foreignkeys.forEach((key): void => {
-      if (key.column_name === columns[keys]['columnname']) {
+      if (key.column_name === columns[keys].columnname) {
         foreignKey = true;
         foreignkeyTable = key.foreign_table_name;
         foreignkeyColumn = key.foreign_column_name;
@@ -168,7 +168,7 @@ const Tables: React.SFC<Props> = ({
 
     rows.push(
       <TableRow
-        key={columns[keys]['columnname']}
+        key={columns[keys].columnname}
         onMouseOver={captureMouseEnter}
         onMouseLeave={captureMouseExit}
         onClick={captureQuerySelections}
@@ -178,7 +178,7 @@ const Tables: React.SFC<Props> = ({
         data-foreignkeytable={foreignkeyTable}
         data-foreignkeycolumn={foreignkeyColumn}
         data-tablename={tableName}
-        data-columnname={columns[keys]['columnname']}
+        data-columnname={columns[keys].columnname}
         data-isprimarykey={primaryKey}
       >
         <TableCell
@@ -186,7 +186,7 @@ const Tables: React.SFC<Props> = ({
           data-foreignkeytable={foreignkeyTable}
           data-foreignkeycolumn={foreignkeyColumn}
           data-tablename={tableName}
-          data-columnname={columns[keys]['columnname']}
+          data-columnname={columns[keys].columnname}
           data-isprimarykey={primaryKey}
         >
           {inTheQuery && (
@@ -200,7 +200,7 @@ const Tables: React.SFC<Props> = ({
               data-foreignkeytable={foreignkeyTable}
               data-foreignkeycolumn={foreignkeyColumn}
               data-tablename={tableName}
-              data-columnname={columns[keys]['columnname']}
+              data-columnname={columns[keys].columnname}
               data-isprimarykey={primaryKey}
             />
           )}
@@ -212,7 +212,7 @@ const Tables: React.SFC<Props> = ({
               data-foreignkeytable={foreignkeyTable}
               data-foreignkeycolumn={foreignkeyColumn}
               data-tablename={tableName}
-              data-columnname={columns[keys]['columnname']}
+              data-columnname={columns[keys].columnname}
               data-isprimarykey={primaryKey}
             />
           )}
@@ -223,12 +223,12 @@ const Tables: React.SFC<Props> = ({
           data-foreignkeytable={foreignkeyTable}
           data-foreignkeycolumn={foreignkeyColumn}
           data-tablename={tableName}
-          data-columnname={columns[keys]['columnname']}
+          data-columnname={columns[keys].columnname}
           data-isprimarykey={primaryKey}
         >
-          {columns[keys]['datatype'] === 'character varying'
+          {columns[keys].datatype === 'character varying'
             ? 'varchar'
-            : columns[keys]['datatype']}
+            : columns[keys].datatype}
         </TableCell>
       </TableRow>
     );
