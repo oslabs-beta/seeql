@@ -1,13 +1,10 @@
 import * as React from 'react';
-import { useState } from 'react';
 import { ipcRenderer } from 'electron';
 import styled from 'styled-components';
 import OmniBoxInput from '../../components/omnibox/OmniBoxInput';
-
-
-const OmniBoxNav = styled.nav`
-  display: flex;
-`;
+import { Tabs, Tab, Grommet, Box } from "grommet";
+import { grommet } from 'grommet/themes';
+import { Search } from 'grommet-icons';
 
 const QueryResultError = styled.div`
   background-color: #f1c7ca;
@@ -18,28 +15,6 @@ const QueryResultError = styled.div`
   font-family: 'Poppins', sans-serif;
   border-left: 3px solid #ca333e;
   font-size: 80%;
-`;
-
-interface IOmniBoxNavButtonProps {
-  omniBoxView: string;
-  selectedView: string;
-}
-
-const OmniBoxNavButton = styled.button<IOmniBoxNavButtonProps>`
-  padding: 5px;
-  font-family: 'Poppins', sans-serif;
-  border-radius: 3px 3px 0px 0px;
-  border: none;
-  background-color: ${props =>
-    props.selectedView === props.omniBoxView
-      ? 'lightgrey'
-      : 'white'};
-  color: ${(props) =>
-    props.selectedView === props.omniBoxView ? 'blue' : 'black'};
-
-  :focus {
-    outline: none;
-  }
 `;
 
 interface IOmniBoxProps {
@@ -63,38 +38,9 @@ const OmniBoxContainer: React.SFC<IOmniBoxProps> = ({
   setUserInputForTables,
   userInputForTables
 }) => {
-  const [omniBoxView, setOmniBoxView] = useState('SQL');
 
-  const listOfTabNames = ['SQL', 'plain'];
-  const navigationTabs = listOfTabNames.map(tabname => {
-    return (
-      <OmniBoxNavButton
-        key={tabname}
-        onClick={() => {
-          setOmniBoxView(tabname);
-        }}
-        omniBoxView={omniBoxView}
-        selectedView={tabname}
-      >
-        {tabname}
-      </OmniBoxNavButton>
-    );
-  });
+  const listOfTabNames = ['SQL', 'Search'];
 
-  const generateInputBox = () => {
-    return (
-      <OmniBoxInput
-        key={omniBoxView}
-        userInputForTables={userInputForTables}
-        setUserInputForTables={setUserInputForTables}
-        omniBoxView={omniBoxView}
-        setUserInputQuery={setUserInputQuery}
-        userInputQuery={userInputQuery}
-        executeQuery={executeQuery}
-        loadingQueryStatus={loadingQueryStatus}
-      />
-    );
-  };
 
   const executeQuery = (): void => {
     if (!loadingQueryStatus) {
@@ -106,15 +52,34 @@ const OmniBoxContainer: React.SFC<IOmniBoxProps> = ({
     }
     setLoadingQueryStatus(true);
   };
+  const navigationTabs = listOfTabNames.map(tabname => {
+    return (
+      <Tab
+        title={tabname === 'Search' ? <Search style={{ height: '25px' }} /> : tabname}
+      >
+        <OmniBoxInput
+          tabname={tabname}
+          userInputForTables={userInputForTables}
+          setUserInputForTables={setUserInputForTables}
+          setUserInputQuery={setUserInputQuery}
+          userInputQuery={userInputQuery}
+          executeQuery={executeQuery}
+          loadingQueryStatus={loadingQueryStatus}
+        />
+      </Tab>
+    );
+  });
 
   return (
-    <React.Fragment>
-      <OmniBoxNav>{navigationTabs}</OmniBoxNav>
-      {generateInputBox()}
-      {queryResultError.status && (
-        <QueryResultError>{queryResultError.message}</QueryResultError>
-      )}
-    </React.Fragment>
+    <Grommet theme={grommet}>
+      <Box
+      >
+        <Tabs>{navigationTabs}</Tabs>
+        {queryResultError.status && (
+          <QueryResultError>{queryResultError.message}</QueryResultError>
+        )}
+      </Box>
+    </Grommet>
   );
 };
 

@@ -2,14 +2,11 @@ import * as React from 'react';
 import styled from 'styled-components';
 
 const PanelWrapper = styled.div`
-  color: black;
   padding: 20px;
   font-size: 30px;
-  height: 100vh;
   display: flex;
+  width: 250px;
   justify-content: center;
-  background-color: white;
-  color: black;
 `;
 
 const FavoritesPanel = () => {

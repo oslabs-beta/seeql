@@ -10,38 +10,27 @@ const PanelWrapper = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  color: black;
   font-family: 'Poppins', sans-serif;
   padding: 20px;
-  height: 100vh;
   padding: 40px;
-  background-color: white;
-  color: black;
+    width: 250px;
 `;
 
 const TopSection = styled.section`
   display: flex;
   flex-direction: column;
 `;
-const BottomSection = styled.section`
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-`;
 const DivWrapper = styled.div`
   display: flex;
   flex-direction: column;
 `;
 const Title = styled.h1`
-  color: black;
-  font-size: 30px;
+font-size: 30px;
 `;
 const Label = styled.label`
-  color: black;
   padding: 10px 0;
 `;
 const SignOut = styled.span`
-  color: black;
 `;
 
 const SettingsPanel = ({ intervalId }) => {
