@@ -10,7 +10,6 @@ import { Pin, CircleInformation } from 'grommet-icons';
 
 const TempWrapper = styled.div`
   display: flex;
-  height: 60vh;
     flex-wrap: wrap;
     overflow: scroll;
     border: 1px solid white;

@@ -1,10 +1,10 @@
 import * as React from 'react';
-import { useState } from 'react';
 import { ipcRenderer } from 'electron';
 import styled from 'styled-components';
 import OmniBoxInput from '../../components/omnibox/OmniBoxInput';
 import { Tabs, Tab, Grommet, Box } from "grommet";
 import { grommet } from 'grommet/themes';
+import { Search } from 'grommet-icons';
 
 
 const QueryResultError = styled.div`
@@ -39,9 +39,8 @@ const OmniBoxContainer: React.SFC<IOmniBoxProps> = ({
   setUserInputForTables,
   userInputForTables
 }) => {
-  const [omniBoxView, setOmniBoxView] = useState('SQL');
 
-  const listOfTabNames = ['SQL', 'plain'];
+  const listOfTabNames = ['SQL', 'Search'];
 
 
   // #TODO: Connect this ipc communication with new query input
@@ -58,7 +57,7 @@ const OmniBoxContainer: React.SFC<IOmniBoxProps> = ({
   const navigationTabs = listOfTabNames.map(tabname => {
     return (
       <Tab
-        title={tabname}
+        title={tabname === 'Search' ? <Search style={{ height: '25px' }} /> : tabname}
       >
         <OmniBoxInput
           tabname={tabname}

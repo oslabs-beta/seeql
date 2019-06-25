@@ -10,10 +10,8 @@ interface ISidePanelTableWrapperProps {
 
 const SidePanelTableListWrapper = styled.div<ISidePanelTableWrapperProps>`
   color: black;
-  padding: 40px;
-  width: ${({ sidePanelVisibility }) =>
-    sidePanelVisibility ? '300px' : '0px'};
-  height: 100vh;
+  padding: 20px;
+    width: 250px;
   background-color: transparent;
   transition: width 500ms ease-in-out;
 `;
@@ -30,6 +28,8 @@ const Title = styled.p`
   display: flex;
   justify-content: center;
   align-items: center;
+  padding: 0px 0px 20px 0px;
+  border-bottom: 3px solid grey;
 `;
 
 const Text = styled.p`

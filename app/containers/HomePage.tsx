@@ -20,6 +20,7 @@ const HomepageWrapper = styled.div`
   display: flex;
   margin-top: -30px;
   font-family: 'Poppins', sans-serif;
+  height: 100vh;
 `;
 
 interface ICollapseBtnProps {
@@ -77,7 +78,7 @@ const HomePage = ({ location }) => {
   const [data, setData] = useState([]); // data from database
   const [toggleLoad, setToggleLoad] = useState(true);
   const [userInputQuery, setUserInputQuery] = useState(
-    'SELECT * FROM [add a table name here]'
+    'SELECT * FROM [table name]'
   );
   const [queryResult, setQueryResult] = useState({
     status: 'No query',
@@ -96,7 +97,7 @@ const HomePage = ({ location }) => {
 
   const resetQuerySelection = () => {
     relationships = {};
-    setUserInputQuery('SELECT * FROM [add a table name here]');
+    setUserInputQuery('SELECT * FROM[table name]');
     setSelectedForQueryTables({});
     setQueryResultError({
       status: false,
@@ -217,7 +218,7 @@ const HomePage = ({ location }) => {
     // query generation
     // for no tables
     if (Object.keys(temp).length === 0) {
-      query = 'SELECT * FROM [add a table name here]';
+      query = 'SELECT * FROM[table name]';
     }
 
     //for one table

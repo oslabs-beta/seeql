@@ -38,6 +38,7 @@ const OmniBoxInput: React.SFC<IOmniBoxInputProps> = ({
             style={{ height: '100px', fontSize: '14px' }}
           />
           <Button
+            color="#000"
             style={{ borderRadius: '0px', margin: '3px 0px' }}
             onClick={executeQuery}
             disabled={loadingQueryStatus}
@@ -47,7 +48,7 @@ const OmniBoxInput: React.SFC<IOmniBoxInputProps> = ({
       </Grommet>
     );
   }
-  if (tabname === 'plain') {
+  if (tabname === 'Search') {
     return (
       <TextArea
         resize={false}

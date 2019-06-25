@@ -10,21 +10,15 @@ const PanelWrapper = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  color: black;
   font-family: 'Poppins', sans-serif;
   padding: 20px;
-  height: 100vh;
   padding: 40px;
+    width: 250px;
 `;
 
 const TopSection = styled.section`
   display: flex;
   flex-direction: column;
-`;
-const BottomSection = styled.section`
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
 `;
 const DivWrapper = styled.div`
   display: flex;
