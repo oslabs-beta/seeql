@@ -33,7 +33,7 @@ if (
   process.env.NODE_ENV === 'development' ||
   process.env.DEBUG_PROD === 'true'
 ) {
-  process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true';
+  process.env.ELECTRON_DISABLE_SECURITY_WARNINGS = 'true';
   require('electron-debug')();
 }
 
@@ -46,6 +46,12 @@ const installExtensions = async () => {
     extensions.map(name => installer.default(installer[name], forceDownload))
   ).catch(console.log);
 };
+
+app.setAboutPanelOptions({
+  applicationName: 'SeeQL',
+  applicationVersion: '1.0.0',
+  version: '1.0.0'
+});
 
 app.on('ready', async () => {
   if (
@@ -65,7 +71,7 @@ app.on('ready', async () => {
   });
 
   mainWindow.loadURL(`file://${__dirname}/app.html`);
-  //https://github.com/electron/electron/blob/master/docs/api/browser-window.md#using-ready-to-show-event
+  // https://github.com/electron/electron/blob/master/docs/api/browser-window.md#using-ready-to-show-event
   mainWindow.webContents.on('ready-to-show', () => {
     if (!mainWindow) throw new Error('"mainWindow" is not defined');
 
@@ -153,7 +159,7 @@ app.on('ready', async () => {
   });
 
   mainWindow.on('resize', () => {
-    let { width, height } = mainWindow.getBounds();
+    const { width, height } = mainWindow.getBounds();
     appDb.set('windowBounds', { width, height }); // getBounds returns an object with the height, width, x and y
   });
 
