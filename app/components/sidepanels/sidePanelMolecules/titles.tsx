@@ -21,3 +21,12 @@ export const SignOutLink = () => {
         </Grommet>
     )
 }
+
+export const InformationPanel = () => {
+    return (
+        <Grommet theme={grommet}>
+            <Heading margin="none">Information
+            </Heading>
+        </Grommet>
+    )
+}

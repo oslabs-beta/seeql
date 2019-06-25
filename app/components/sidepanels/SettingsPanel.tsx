@@ -2,9 +2,10 @@ import * as React from 'react';
 import { NavLink } from 'react-router-dom';
 import styled from 'styled-components';
 import { ipcRenderer } from 'electron';
-import NestedCollapsible from './sidePanelMolecules/dropDownTheme'
+import NestedCollapsible from './sidePanelMolecules/doubleCollapsible'
 import SingleCollapsible from './sidePanelMolecules/SingleCollapsible'
-import { SettingsHead, SignOutLink } from './sidePanelMolecules/Headers'
+import { SettingsHead, SignOutLink } from './sidePanelMolecules/titles'
+
 
 const PanelWrapper = styled.div`
   display: flex;

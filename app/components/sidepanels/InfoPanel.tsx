@@ -1,5 +1,6 @@
 import * as React from 'react';
 import styled from 'styled-components';
+import { InformationPanel } from './sidePanelMolecules/Headers'
 
 interface ISidePanelTableWrapperProps {
   sidePanelVisibility: boolean;
@@ -18,9 +19,6 @@ const InfoSection = styled.div`
   overflow-wrap: break-word;
 `;
 
-const Title = styled.h1`
-  color: 'black';
-`;
 
 const Text = styled.p`
   font-size: 100%;
@@ -82,7 +80,7 @@ const InfoPanel: React.SFC<Props> = ({
 
   return (
     <SidePanelTableListWrapper sidePanelVisibility={sidePanelVisibility}>
-      <Title>Information</Title>
+      <InformationPanel />
       {Object.keys(activeTableInPanel).length > 0 ? (
         <InfoSection>
           <Label>table name</Label>
