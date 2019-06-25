@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { ipcRenderer } from 'electron';
 import NestedCollapsible from './sidePanelMolecules/doubleCollapsible'
 import SingleCollapsible from './sidePanelMolecules/SingleCollapsible'
-import { SettingsHead, SignOutLink } from './sidePanelMolecules/Headers'
+import { SettingsHead, SignOutLink } from './sidePanelMolecules/titles'
 
 
 const PanelWrapper = styled.div`
