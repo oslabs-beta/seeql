@@ -23,10 +23,10 @@ const OmniBoxInputText = styled.textarea`
 
 const ExecuteQueryButton = styled.button`
   font-family: 'Poppins', sans-serif;
-  border: ${props=>props.theme.executeButton.border};
-  background-color: ${props=>props.theme.executeButton.baseColor};
+  border: black;
+  background-color: white};
   transition: 0.2s;
-  color: ${props =>props.theme.executeButton.fontColor};
+  color: black;
   text-align: center;
   padding: 5px;
   font-size: 80%;
