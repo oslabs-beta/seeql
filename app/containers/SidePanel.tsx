@@ -4,6 +4,9 @@ import SettingsPanel from '../components/sidepanels/SettingsPanel';
 import FavoritesPanel from '../components/sidepanels/FavoritesPanel';
 import InfoPanel from '../components/sidepanels/InfoPanel';
 import * as actions from '../actions/actions';
+import { Grommet, Box } from "grommet";
+import { grommet } from 'grommet/themes';
+import { UserSettings, CircleInformation } from 'grommet-icons';
 
 interface IPanelWrapperProps {
   sidePanelVisibility: boolean;
@@ -15,29 +18,26 @@ interface IIndTabProps {
 }
 
 const PanelWrapper = styled.div<IPanelWrapperProps>`
-  width: 325px;
+  width: ${({ sidePanelVisibility }) =>
+    sidePanelVisibility ? '250px' : '0px'};
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
+  transition: width 500ms ease-in-out;
 `;
 
 const ButtonMenu = styled.div`
   display: flex;
   justify-content: center;
-  background-color: white;
 `;
 
 const IndTab = styled.button<IIndTabProps>`
   border: none;
-  font-family: 'Poppins', sans-serif;
-  border: none;
   padding: 5px;
-
-  background-color: ${props => props.active === props.panel ? 'lightgrey' : 'white'};
-  color: 'black';
+  cursor: pointer;
 
   :hover {
-    font-weight: bold;
+    transform: scale(1.1);
   }
   :focus {
     outline: none;
@@ -46,9 +46,9 @@ const IndTab = styled.button<IIndTabProps>`
 
 const Tabs = styled.div`
   display: flex;
-  padding: 50px 0px 5px 5px;
-  justify-content: space-between;
+  justify-content: flex-end;
   font-family: 'Poppins', sans-serif;
+  width: 250px;
 `;
 
 interface IForeignKeysAffected {
@@ -91,56 +91,53 @@ const SidePanel: React.SFC<Props> = ({
   dispatchSidePanelDisplay
 }) => {
   return (
-    <React.Fragment>
+    <Grommet theme={grommet}>
       {sidePanelVisibility && (
-        <PanelWrapper sidePanelVisibility={sidePanelVisibility}>
-          <ButtonMenu>
-            <Tabs>
-              <IndTab
-                data-panel="info"
-                panel="info"
-                active={activePanel}
-                onClick={() =>
-                  dispatchSidePanelDisplay(actions.changeToInfoPanel())
-                }
-              >
-                Table Info
-              </IndTab>
-              <IndTab
-                data-panel="favorites"
-                panel="favorites"
-                active={activePanel}
-                onClick={() =>
-                  dispatchSidePanelDisplay(actions.changeToFavPanel())
-                }
-              >
-                Favorites
-              </IndTab>
-              <IndTab
-                data-panel="settings"
-                panel="settings"
-                active={activePanel}
-                onClick={() =>
-                  dispatchSidePanelDisplay(actions.changeToSettingsPanel())
-                }
-              >
-                Settings
-              </IndTab>
-            </Tabs>
-          </ButtonMenu>
-          <div>
-            {activePanel === 'info' && (
-              <InfoPanel
-                sidePanelVisibility={sidePanelVisibility}
-                activeTableInPanel={activeTableInPanel}
-              />
-            )}
-            {activePanel === 'favorites' && <FavoritesPanel />}
-            {activePanel === 'settings' && <SettingsPanel intervalId={intervalId} />}
-          </div>
-        </PanelWrapper>
-      )}
-    </React.Fragment>
+        <Box cdirection="row"
+          border={{ color: 'brand', size: 'large' }}
+          pad="medium"
+          height='100%'
+        >
+          <PanelWrapper sidePanelVisibility={sidePanelVisibility}>
+            <ButtonMenu>
+              <Tabs>
+                <IndTab
+                  data-panel="info"
+                  panel="info"
+                  active={activePanel}
+                  onClick={() =>
+                    dispatchSidePanelDisplay(actions.changeToInfoPanel())
+                  }
+                >
+                  <CircleInformation />
+                </IndTab>
+                <IndTab
+                  data-panel="settings"
+                  panel="settings"
+                  active={activePanel}
+                  onClick={() =>
+                    dispatchSidePanelDisplay(actions.changeToSettingsPanel())
+                  }
+                >
+                  <UserSettings />
+                </IndTab>
+              </Tabs>
+            </ButtonMenu>
+            <div>
+              {activePanel === 'info' && (
+                <InfoPanel
+                  sidePanelVisibility={sidePanelVisibility}
+                  activeTableInPanel={activeTableInPanel}
+                />
+              )}
+              {activePanel === 'favorites' && <FavoritesPanel />}
+              {activePanel === 'settings' && <SettingsPanel intervalId={intervalId} />}
+            </div>
+          </PanelWrapper>
+        </Box>
+      )
+      }
+    </Grommet >
   );
 };
 

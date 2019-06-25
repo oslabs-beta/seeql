@@ -1,50 +1,12 @@
 import * as React from 'react';
-import styled from 'styled-components';
-import { Box, Button, Grommet } from 'grommet';
-import { grommet } from 'grommet/themes';
 import QueryResults from "../../components/mainpanel/QueryResults";
 import TablesContainer from './TablesContainer';
-
-
-const ResultsNav = styled.nav`
-  display: flex;
-  justify-content: center;
-  align-self: flex-start;
-`;
-
-interface IResultsNavButtonProps {
-  activeDisplayInResultsTab: string;
-  activetabname: string;
-}
-
-const ResultsNavButton = styled.button<IResultsNavButtonProps>`
-    font-family: 'Poppins', sans-serif;
-    border: none;
-    border-bottom: ${({ activeDisplayInResultsTab, activetabname }) =>
-    activeDisplayInResultsTab === activetabname
-      ? `3px solid black`
-      : '3px solid transparent'};
-    padding: 8px;
-    transition: 0.3s;
-    font-size: 80%;
-    background-color: white;
-    color: black;
-    :focus {
-      outline: none;
-    }
-    :hover {
-      border-bottom: 3px solid black;
-    }
-  `;
-
-const ResultsHeader = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-`
+import { Box, Tabs, Tab, Grommet, Button } from "grommet";
+import { grommet } from 'grommet/themes';
+import { FormTrash } from 'grommet-icons';
 
 interface IResultsContainerProps {
-  activeDisplayInResultsTab: string;
+  activeDisplayInResultsTab: number;
   queryResult: any;
   data: any;
   userInputForTables: string;
@@ -74,38 +36,11 @@ const ResultsContainer: React.SFC<IResultsContainerProps> = ({
   const listOfTabNames = ['Tables', 'Query Results'];
 
   const resultsTabs = listOfTabNames.map((tabname) => {
-    return <ResultsNavButton
-      key={tabname}
-      activeDisplayInResultsTab={activeDisplayInResultsTab}
-      activetabname={tabname}
-      onClick={() => setActiveDisplayInResultsTab(tabname)}
-    >{tabname}</ResultsNavButton>
-  })
-
-  return (
-    <Grommet theme={grommet}>
-      <Box
-        margin="small"
-        pad="medium"
-        align="start"
-        background={{ color: "light-2", opacity: "strong" }}
-        round="xsmall"
-        gap="small"
-        overflow="scroll"
-      >
-        <ResultsHeader>
-          <ResultsNav>
-            {resultsTabs}
-          </ResultsNav>
-
-          <Button
-            alignSelf="start"
-            primary
-            onClick={resetQuerySelection}
-            label="Reset Query"
-          />
-        </ResultsHeader>
-        {activeDisplayInResultsTab === 'Tables' &&
+    return <Tab
+      title={tabname}
+    >
+      <div>
+        {tabname === 'Tables' ?
           <TablesContainer
             relationships={relationships}
             userInputForTables={userInputForTables}
@@ -115,11 +50,20 @@ const ResultsContainer: React.SFC<IResultsContainerProps> = ({
             captureSelectedTable={captureSelectedTable}
             captureQuerySelections={captureQuerySelections}
           />
-        }
-        {activeDisplayInResultsTab === 'Query Results' && (
+          :
           <QueryResults queryResult={queryResult} />
-        )}
-      </Box>
+        }
+      </div>
+    </Tab>
+  })
+
+  return (
+    <Grommet theme={grommet}>
+      <Button style={{ fontSize: '10px', padding: '0px 5px' }} gap="xxsmall" icon={<FormTrash size="small" />} label="Reset Query" onClick={resetQuerySelection} />
+      <Tabs activeIndex={activeDisplayInResultsTab} onActive={(index) => setActiveDisplayInResultsTab(index)}>
+        {resultsTabs}
+      </Tabs>
+
     </Grommet>
   )
 }

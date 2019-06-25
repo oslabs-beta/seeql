@@ -14,17 +14,14 @@ const PanelWrapper = styled.div`
   color: black;
   font-family: 'Poppins', sans-serif;˜
   padding: 20px;
-  height: 100vh;
   padding: 40px;
-  background-color: white;
-  color: black;
+    width: 250px;
 `;
 
 const TopSection = styled.section`
   display: flex;
   flex-direction: column;
 `;
-
 
 const SettingsPanel = ({ intervalId }) => {
   const logOut = () => {

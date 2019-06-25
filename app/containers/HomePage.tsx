@@ -24,8 +24,8 @@ const HomepageWrapper = styled.div`
   display: flex;
   margin-top: -30px;
   font-family: 'Poppins', sans-serif;
+  height: 100vh;
 `;
-
 
 const LoadWrap = styled.div`
   display: flex;
@@ -41,14 +41,14 @@ const HomePage = ({ location }) => {
   const [selectedForQueryTables, setSelectedForQueryTables] = useState({});
   const [loadingQueryStatus, setLoadingQueryStatus] = useState(false);
   const [activeDisplayInResultsTab, setActiveDisplayInResultsTab] = useState(
-    'Tables'
+    0
   );
   const [activeTableInPanel, setActiveTableInPanel] = useState({});
   const [userInputForTables, setUserInputForTables] = useState('');
   const [data, setData] = useState([]); // data from database
   const [toggleLoad, setToggleLoad] = useState(true);
   const [userInputQuery, setUserInputQuery] = useState(
-    'SELECT * FROM [add a table name here]'
+    'SELECT * FROM [table name]'
   );
   const [queryResult, setQueryResult] = useState({
     status: 'No query',
@@ -67,8 +67,8 @@ const HomePage = ({ location }) => {
 
   const resetQuerySelection = () => {
     relationships = {};
-    setUserInputQuery('SELECT * FROM [add a table name here]');
-    setSelectedForQueryTables({}); ``
+    setUserInputQuery('SELECT * FROM[table name]');
+    setSelectedForQueryTables({});
     setQueryResultError({
       status: false,
       message: ''
@@ -188,7 +188,7 @@ const HomePage = ({ location }) => {
     // query generation
     // for no tables
     if (Object.keys(temp).length === 0) {
-      query = 'SELECT * FROM [add a table name here]';
+      query = 'SELECT * FROM[table name]';
     }
 
     // for one table
@@ -282,7 +282,7 @@ const HomePage = ({ location }) => {
 
   const captureSelectedTable = e => {
     const { tablename } = e.target.dataset;
-    let selectedPanelInfo;
+    let selectedPanelInfo = {};
     let primaryKey;
 
     data.forEach(table => {
@@ -292,7 +292,7 @@ const HomePage = ({ location }) => {
       }
     });
 
-    selectedPanelInfo.foreignKeysOfPrimary = {};
+    selectedPanelInfo['foreignKeysOfPrimary'] = {};
 
     data.forEach(table => {
       table.foreignKeys.forEach(foreignKey => {
@@ -300,7 +300,7 @@ const HomePage = ({ location }) => {
           foreignKey.foreign_column_name == primaryKey &&
           foreignKey.foreign_table_name == tablename
         ) {
-          selectedPanelInfo.foreignKeysOfPrimary[foreignKey.table_name] =
+          selectedPanelInfo['foreignKeysOfPrimary'][foreignKey.table_name] =
             foreignKey.column_name;
         }
       });
@@ -325,13 +325,15 @@ const HomePage = ({ location }) => {
           status: queryResult.message.length === 0 ? 'No results' : 'Success',
           message: queryResult.message
         });
-        setActiveDisplayInResultsTab('Query Results');
-      } else if (queryResult.statusCode === 'Invalid Request') {
+        setActiveDisplayInResultsTab(1);
+      }
+      if (queryResult.statusCode === 'Invalid Request') {
         setQueryResultError({
           status: true,
           message: queryResult.message
         });
-      } else if (queryResult.statusCode === 'Syntax Error') {
+      }
+      if (queryResult.statusCode === 'Syntax Error') {
         setQueryResultError({
           status: true,
           message: `Syntax error in retrieving query results.
@@ -349,7 +351,7 @@ const HomePage = ({ location }) => {
       setLoadingQueryStatus(false);
     });
     return () => ipcRenderer.removeAllListeners('query-result-to-homepage');
-  }, []);
+  }, [userInputQuery]);
 
 
   return (
