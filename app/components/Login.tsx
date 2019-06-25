@@ -4,10 +4,9 @@ import { useState, useEffect } from 'react';
 import { Redirect } from 'react-router-dom';
 import { ipcRenderer } from 'electron';
 
-import { CheckBox, Grommet, Box, Button, Text, Tab, Tabs, Heading, TextInput } from 'grommet';
+import { CheckBox, Grommet, Box, Button, Text, Tab, Tabs, Heading, TextArea } from 'grommet';
 import { grommet } from 'grommet/themes';
 import { Login as LoginIcon } from 'grommet-icons';
-
 
 const myTheme = {
   global: {
@@ -79,46 +78,47 @@ const LogoutMessage = styled.div`
   font-size: 100%;
 `;
 
+const URIInput = styled.textarea<IURIInputProps>`
+	  width: 200px;
+	  height: 150px;
+	  border-radius: 3px;
+	  font-family: 'Poppins', sans-serif;
+	  letter-spacing: 2px;
+	  resize: none;
+	  padding: 8px;
+	  border: ${({ requiredError }) =>
+	    requiredError ? '1px solid #ca333e' : '1px solid lightgrey'};
+	
+	  :focus {
+	    outline: none;
+	  }
+	`;
 
-// const LoginTypeNavigation = styled.div`
-// 	  display: flex;
-// 	  justify-content: center;
-// 	`;
+const ToggleSSL = styled.div`
+	  display: flex;
+	  justify-content: center;
+	  padding: 5px;
+	  margin: 10px;
+	  display: flex;
+	  align-items: center;
+`;
 
-
-// interface LoginTypeButtonProps {
-//   readonly selectedLoginType: string;
-//   readonly buttonType: string;
-// }
-
-// const LoginTypeButton = styled.button<LoginTypeButtonProps>`
-// 	  padding: 5px;
-// 	  font-size: 140%;
-// 	  margin: 10px;
-// 	  font-family: 'Poppins', sans-serif;
-// 	  background-color: transparent;
-// 	  display: flex;
-// 	  border: none;
-// 	  border-bottom: ${({ selectedLoginType, buttonType }) =>
-//     selectedLoginType === buttonType
-//       ? '3px solid #E55982'
-//       : '3px solid transparent'};
-// 	  transition: 0.3s;
-// 	  :hover {
-// 	    border-bottom: 3px solid #e55982;
-// 	    cursor: pointer;
-// 	  }
-// 	  :focus {
-// 	    outline: none;
-// 	  }
-// 	`;
-
-
-
-
-
-
-
+      const LoginBtn = styled.button`
+	  padding: 5px;
+  border-radius: 3px;
+  font-family: 'Poppins', sans-serif;
+  width: 100px;
+  border: none;
+  transition: 0.2s;
+  font-size: 120%;
+  :hover {
+    color: white;
+    background-color: #1ea196;
+  }
+  :focus {
+    outline: none;
+  }
+`;
 
 const Login = () => {
   const [loginType, setLoginType] = useState('URI');
@@ -227,22 +227,25 @@ const Login = () => {
               Unable to connect to the database. Please try again.
             </Box>
           )}
-
-
-
-
-
           <Tabs>
             <Tab
+              margin="large"
               title="URI"
               selectedLoginType={loginType}
-              onClick={() => { setLoginType('URI'), setConnectionError(false); }}>
-              <TextInput
-                onChange={sanitizeURI}
-                placeholder="Enter your URI connection string..."
-                value={URI}
-              />
+              onClick={() => { setLoginType('URI'), setConnectionError(false); 
+              }}>
+            <URIInput
+              requiredError={requiredError}
+              onChange={sanitizeURI}
+              placeholder="Enter your URI connection string..."
+              value={URI} 
+            />
+             {requiredError && (
+	             <RequiredWarning>URI is required</RequiredWarning>
+             )}
             </Tab>
+
+
             <Tab
               title="Credentials"
               selectedLoginType={loginType}
@@ -329,28 +332,13 @@ const Login = () => {
             </Tab>
           </Tabs>
 
-          <Box align="center" pad="large">
-            <CheckBox
-              label="SSL"
-              type="checkbox"
-              onChange={e => setSSL(e.target.checked)}
-            />
-          </Box>
+         <ToggleSSL>
+            <input type="checkbox" onChange={e => setSSL(e.target.checked)} />
+            <InputLabel>ssl?</InputLabel>
+          </ToggleSSL>
 
-          {!loading &&
-            <Button
-              label="Login"
-              onClick={sendLoginURI}>
-            </Button>
-          }
-          {loading &&
-            <Button
-              label="Login"
-              onClick={sendLoginURI}>
-            </Button>
-          }
-
-          {loading && <Button disabled>Loading...</Button>}
+          {!loading && <LoginBtn onClick={sendLoginURI}>Login</LoginBtn>}
+	        {loading && <LoginBtn disabled>Loading...</LoginBtn>}
           {redirectHome()}
         </Box>
         {/* end box that wraps the entire fill */}
