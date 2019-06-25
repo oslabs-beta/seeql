@@ -54,7 +54,6 @@ const TableTitle = styled.p`
   font-size: 140%;
   padding: 5px;
   overflow-wrap: break-word;
-  cursor: pointer;
   background-color: #eeeeee;
   :hover {
     transform: scale(1.01);
@@ -240,7 +239,9 @@ const Tables: React.SFC<Props> = ({
       selectedtable={activeTableInPanel.table_name}
       tablename={tableName}
     >
-      <TableTitle onClick={() => ipcRenderer.send('query-to-main', `SELECT * FROM ${tableName}`)} data-tablename={tableName}>{tableName}</TableTitle>
+      <TableTitle 
+      // onClick={() => ipcRenderer.send('query-to-main', `SELECT * FROM ${tableName}`)} 
+      data-tablename={tableName}>{tableName}</TableTitle>
       <TableRowsList>{rows}</TableRowsList>
     </Table>
   );
