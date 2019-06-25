@@ -49,19 +49,19 @@ const ResultsHeader = styled.div`
   align-items: center;
 `
 
-const ResetQueryButton = styled.button`
-  border-radius: 3px;
-  border: none;
-  font-size: 80%;
-  background-color: transparent;
-  :hover{
-    font-weight: bold;
-    color: black;
-  }
-  :focus{
-    outline: none;
-  }
-`
+// const ResetQueryButton = styled.button`
+//   border-radius: 3px;
+//   border: none;
+//   font-size: 80%;
+//   background-color: transparent;
+//   :hover{
+//     font-weight: bold;
+//     color: black;
+//   }
+//   :focus{
+//     outline: none;
+//   }
+// `
 
 interface IResultsContainerProps {
   activeDisplayInResultsTab: string;
@@ -108,7 +108,7 @@ const ResultsContainer: React.SFC<IResultsContainerProps> = ({
       <Box
         margin="small"
         pad="large"
-        align="left"
+        align="start"
         background={{ color: "light-2", opacity: "strong" }}
         round
         gap="small"

@@ -1,8 +1,6 @@
 import * as React from 'react';
 import { useState } from 'react';
 import { ipcRenderer } from 'electron';
-import { Box, Button, Grommet } from 'grommet';
-import { grommet } from 'grommet/themes';
 import styled from 'styled-components';
 import OmniBoxInput from '../../components/omnibox/OmniBoxInput';
 

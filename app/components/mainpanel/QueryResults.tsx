@@ -1,6 +1,8 @@
 import * as React from 'react';
 import styled from 'styled-components';
-import ReactTable from 'react-table';
+// import ReactTable from 'react-table';
+import { Grommet, Box, DataTable } from "grommet";
+import { grommet } from "grommet/themes";
 
 const QueryResultWrapper = styled.div`
   padding: 20px;
@@ -12,10 +14,10 @@ const QueryResultWrapper = styled.div`
   height: 60vh;
 `;
 
-const reactTableStyle = {
-  fontSize: '60%',
-  backgroundColor: 'transparent'
-};
+// const reactTableStyle = {
+//   fontSize: '60%',
+//   backgroundColor: 'transparent'
+// };
 
 interface IQueryResult {
   status: string;
@@ -27,35 +29,57 @@ interface IQueryResultsProps {
 }
 
 const QueryResults: React.SFC<IQueryResultsProps> = ({ queryResult }) => {
-  let columns = [];
+  const columns = [];
 
   if (queryResult.message.length > 0) {
     const columnNames = Object.keys(queryResult.message[0]);
-    columns = columnNames.map(column => {
-      return {
-        Header: column,
-        accessor: column
-      };
+    columnNames.forEach(column => {
+      if (column === 'id') columns.unshift({
+        property: column,
+        header: column,
+      })
+      else columns.push({
+        property: column,
+        header: column,
+      });
     });
   }
 
   return (
     <QueryResultWrapper>
-      {queryResult.message.length > 0 && (
-        <ReactTable
-          style={reactTableStyle}
-          data={queryResult.message}
-          columns={columns}
-        />
-      )}
-      {queryResult.message.length === 0 &&
-        queryResult.status === 'No results' && (
-          <div>{`There were no results found for your query :(`}</div>
-        )}
-      {queryResult.message.length === 0 &&
-        queryResult.status === 'No query' && (
-          <div>{`You haven't queried anything! Enter a query above to get started. :(`}</div>
-        )}
+      <Box border overflow="scroll">
+        {
+          queryResult.message.length > 0 && (
+            <Grommet theme={grommet}>
+              <Box align="center" pad="medium">
+                <DataTable sortable resizable 
+                  columns={columns.map(c => ({
+                    ...c,
+                    search: true,
+                  }))}
+                  data={queryResult.message} step={10} />
+              </Box>
+            </Grommet>
+            // <ReactTable
+            //   style={reactTableStyle}
+            //   data={queryResult.message}
+            //   columns={columns}
+            // />
+          )
+        }
+        {
+          queryResult.message.length === 0 &&
+          queryResult.status === 'No results' && (
+            <div>{`There were no results found for your query :(`}</div>
+          )
+        }
+        {
+          queryResult.message.length === 0 &&
+          queryResult.status === 'No query' && (
+            <div>{`You haven't queried anything! Enter a query above to get started. :(`}</div>
+          )
+        }
+      </Box >
     </QueryResultWrapper>
   );
 };
