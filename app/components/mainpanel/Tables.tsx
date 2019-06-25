@@ -36,18 +36,18 @@ const TableRow = styled.li<ITableRowProps>`
   display: flex;
   justify-content: space-between;
   list-style: none;
-  background-color: ${ (props) => props.affected ? props.theme.tables.row : 'transparent'};
+  background-color: ${ (props) => props.affected ? 'white' : 'transparent'};
   border: none;
   padding: 5px;
   transition: 0.3s;
 
   :hover {
     transform: scale(1.01);
-    background-color: ${props=>props.theme.tables.highlight};
+    background-color: lightgrey;
     cursor: ${({ inTheQuery }) =>
-      inTheQuery
-        ? 'url(https://img.icons8.com/flat_round/20/000000/minus.png), auto'
-        : 'url(https://img.icons8.com/flat_round/20/000000/plus.png), auto'};
+    inTheQuery
+      ? 'url(https://img.icons8.com/flat_round/20/000000/minus.png), auto'
+      : 'url(https://img.icons8.com/flat_round/20/000000/plus.png), auto'};
   }
 `;
 
@@ -136,10 +136,10 @@ const Tables: React.SFC<Props> = ({
   captureQuerySelections,
   selectedForQueryTables
 }) => {
-  let rows = [];
+  const rows = [];
 
-  for (let keys in columns) {
-    const primaryKey: boolean = (primarykey === columns[keys]['columnname']) ? true : false;
+  for (const keys in columns) {
+    const primaryKey: boolean = (primarykey === columns[keys]['columnname']);
     let affected = false;
     let foreignKey = false;
     let foreignkeyTable = '';
@@ -148,14 +148,14 @@ const Tables: React.SFC<Props> = ({
     if (Object.keys(selectedForQueryTables).includes(tableName)) {
       if (
         selectedForQueryTables[tableName].columns.includes(
-          columns[keys]['columnname']
+          columns[keys].columnname
         )
       )
         inTheQuery = true;
     }
 
     if (
-      primaryKeyAffected[0].primaryKeyColumn === columns[keys]['columnname'] &&
+      primaryKeyAffected[0].primaryKeyColumn === columns[keys].columnname &&
       primaryKeyAffected[0].primaryKeyTable === tableName
     )
       affected = true;
@@ -163,13 +163,13 @@ const Tables: React.SFC<Props> = ({
     foreignKeysAffected.forEach((option): void => {
       if (
         option.table === tableName &&
-        option.column === columns[keys]['columnname']
+        option.column === columns[keys].columnname
       )
         affected = true;
     });
 
     foreignkeys.forEach((key): void => {
-      if (key.column_name === columns[keys]['columnname']) {
+      if (key.column_name === columns[keys].columnname) {
         foreignKey = true;
         foreignkeyTable = key.foreign_table_name;
         foreignkeyColumn = key.foreign_column_name;
@@ -178,7 +178,7 @@ const Tables: React.SFC<Props> = ({
 
     rows.push(
       <TableRow
-        key={columns[keys]['columnname']}
+        key={columns[keys].columnname}
         onMouseOver={captureMouseEnter}
         onMouseLeave={captureMouseExit}
         onClick={captureQuerySelections}
@@ -188,7 +188,7 @@ const Tables: React.SFC<Props> = ({
         data-foreignkeytable={foreignkeyTable}
         data-foreignkeycolumn={foreignkeyColumn}
         data-tablename={tableName}
-        data-columnname={columns[keys]['columnname']}
+        data-columnname={columns[keys].columnname}
         data-isprimarykey={primaryKey}
       >
         <TableCell
@@ -196,7 +196,7 @@ const Tables: React.SFC<Props> = ({
           data-foreignkeytable={foreignkeyTable}
           data-foreignkeycolumn={foreignkeyColumn}
           data-tablename={tableName}
-          data-columnname={columns[keys]['columnname']}
+          data-columnname={columns[keys].columnname}
           data-isprimarykey={primaryKey}
         >
           {inTheQuery && (
@@ -210,7 +210,7 @@ const Tables: React.SFC<Props> = ({
               data-foreignkeytable={foreignkeyTable}
               data-foreignkeycolumn={foreignkeyColumn}
               data-tablename={tableName}
-              data-columnname={columns[keys]['columnname']}
+              data-columnname={columns[keys].columnname}
               data-isprimarykey={primaryKey}
               src="https://image.flaticon.com/icons/svg/891/891399.svg"
             ></KeyIcon>
@@ -221,24 +221,24 @@ const Tables: React.SFC<Props> = ({
               data-foreignkeytable={foreignkeyTable}
               data-foreignkeycolumn={foreignkeyColumn}
               data-tablename={tableName}
-              data-columnname={columns[keys]['columnname']}
+              data-columnname={columns[keys].columnname}
               data-isprimarykey={primaryKey}
               src="https://image.flaticon.com/icons/svg/179/179543.svg"
             ></KeyIcon>
           )}
-          {columns[keys]['columnname']}
+          {columns[keys].columnname}
         </TableCell>
         <TableCell
           data-isforeignkey={foreignKey}
           data-foreignkeytable={foreignkeyTable}
           data-foreignkeycolumn={foreignkeyColumn}
           data-tablename={tableName}
-          data-columnname={columns[keys]['columnname']}
+          data-columnname={columns[keys].columnname}
           data-isprimarykey={primaryKey}
         >
-          {columns[keys]['datatype'] === 'character varying'
+          {columns[keys].datatype === 'character varying'
             ? 'varchar'
-            : columns[keys]['datatype']}
+            : columns[keys].datatype}
         </TableCell>
       </TableRow>
     );

@@ -8,12 +8,10 @@ interface ISidePanelTableWrapperProps {
 const SidePanelTableListWrapper = styled.div<ISidePanelTableWrapperProps>`
   color: black;
   padding: 40px;
-  width: ${({ sidePanelVisibility }) =>
-    sidePanelVisibility ? '300px' : '0px'};
+  width: 300px;
   height: 100vh;
-  background-color: ${props => props.theme.panel.baseColor};
-  color: ${props => props.theme.fontColor};
-  transition: width 500ms ease-in-out;
+  background-color: 'white';
+  color: 'black';
 `;
 
 const InfoSection = styled.div`
@@ -21,17 +19,17 @@ const InfoSection = styled.div`
 `;
 
 const Title = styled.h1`
-  color: ${props => props.theme.panel.fontColor};
+  color: 'black';
 `;
 
 const Text = styled.p`
   font-size: 100%;
-  color: ${props => props.theme.panel.fontColor};
+  color: 'black';
 `;
 
 const Label = styled.label`
   font-size: 80%;
-  color: ${props => props.theme.panel.fontColor};
+  color: 'black';
 `;
 
 interface ISelectedTable {
@@ -111,11 +109,11 @@ const InfoPanel: React.SFC<Props> = ({
           )}
         </InfoSection>
       ) : (
-        <div>
-          You haven't selected a table yet, click on a table to see their
-          information
+          <div>
+            You haven't selected a table yet, click on a table to see their
+            information
         </div>
-      )}
+        )}
     </SidePanelTableListWrapper>
   );
 };

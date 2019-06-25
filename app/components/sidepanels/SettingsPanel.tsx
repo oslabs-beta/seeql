@@ -15,8 +15,8 @@ const PanelWrapper = styled.div`
   padding: 20px;
   height: 100vh;
   padding: 40px;
-  background-color: ${props => props.theme.panel.baseColor};
-  color: ${props => props.theme.panel.fontColor};
+  background-color: white;
+  color: black;
 `;
 
 const TopSection = styled.section`
@@ -34,11 +34,11 @@ const SettingsPanel = ({ intervalId }) => {
   return (
     <PanelWrapper>
       <TopSection>
-        <SettingsHead/>
-      <NestedCollapsible/>
-          <SingleCollapsible/>
+        <SettingsHead />
+        <NestedCollapsible />
+        <SingleCollapsible />
         <NavLink onClick={logOut} to="/">
-          <SignOutLink/>
+          <SignOutLink />
         </NavLink>
       </TopSection>
     </PanelWrapper>

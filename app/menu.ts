@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/explicit-member-accessibility */
 import {
   app,
   Menu,
@@ -50,17 +51,17 @@ export default class MenuBuilder {
 
   buildDarwinTemplate(): MenuItemConstructorOptions[] {
     const subMenuAbout = {
-      label: 'Electron',
+      label: 'SeeQL',
       submenu: [
         {
-          label: 'About ElectronReact',
+          label: 'About SeeQL',
           selector: 'orderFrontStandardAboutPanel:'
         },
         { type: 'separator' },
-        { label: 'Services', submenu: [] },
-        { type: 'separator' },
+        // { label: 'Services', submenu: [] },
+        // { type: 'separator' },
         {
-          label: 'Hide ElectronReact',
+          label: 'Hide SeeQL',
           accelerator: 'Command+H',
           selector: 'hide:'
         },
@@ -99,6 +100,14 @@ export default class MenuBuilder {
     const subMenuViewDev = {
       label: 'View',
       submenu: [
+        {
+          role: 'zoomin',
+          accelerator: 'Command+='
+        },
+        {
+          role: 'zoomout',
+          accelerator: 'Command+-'
+        },
         {
           label: 'Reload',
           accelerator: 'Command+R',
