@@ -49,8 +49,8 @@ const installExtensions = async () => {
 
 app.setAboutPanelOptions({
   applicationName: 'SeeQL',
-  applicationVersion: '1.0.0',
-  version: '1.0.0'
+  applicationVersion: '1.0.0-beta',
+  version: '1.0.0-beta'
 });
 
 app.on('ready', async () => {
