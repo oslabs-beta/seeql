@@ -1,8 +1,11 @@
 import * as React from 'react';
 import styled from 'styled-components';
+
+import { InformationPanel } from './sidePanelMolecules/Headers'
 import { Grommet } from "grommet";
 import { grommet } from 'grommet/themes';
 import { License, CircleInformation } from 'grommet-icons';
+
 
 interface ISidePanelTableWrapperProps {
   sidePanelVisibility: boolean;
@@ -19,17 +22,6 @@ const SidePanelTableListWrapper = styled.div<ISidePanelTableWrapperProps>`
 const InfoSection = styled.div`
   overflow-wrap: break-word;
   padding: 30px 0px;
-`;
-
-const Title = styled.p`
-  font-family: 'Poppins', sans-serif;
-  color: black;
-  font-size: 32px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 0px 0px 20px 0px;
-  border-bottom: 3px solid grey;
 `;
 
 const Text = styled.p`
@@ -108,44 +100,31 @@ const InfoPanel: React.SFC<Props> = ({
   }
 
   return (
-    <Grommet theme={grommet}>
-      <SidePanelTableListWrapper sidePanelVisibility={sidePanelVisibility}>
-        <Title><CircleInformation size="medium" color="#149BD2" /><span> Information</span></Title>
-        {Object.keys(activeTableInPanel).length > 0 ? (
-          <InfoSection>
-            <LabelTextWrapper>
-              <Label>table</Label>
-              <Text>{table_name}</Text>
-            </LabelTextWrapper>
-            <LabelTextWrapper>
-              <Label>primary key</Label>
-              <Text>{primaryKey}</Text>
-            </LabelTextWrapper>
-            <LabelTextWrapper>
-              {primaryKeyRelationships.length > 0 && (
-                <div>
-                  <Label><License
-                    size="small"
-                    color="#f39c12" /> Primary key is used in:</Label>
-                  <ul>{primaryKeyRelationships}</ul>
-                </div>
-              )}
-            </LabelTextWrapper>
-            <LabelTextWrapper>
-              {foreignKeyRelationships.length > 0 && (
-                <div>
-                  <Label><License
-                    size="small"
-                    color="#6DDEF4" /> Foreign keys in this table:</Label>
-                  <ul>{foreignKeyRelationships}</ul>
-                </div>
-              )}
-            </LabelTextWrapper>
-          </InfoSection>
-        ) : (
-            <EmptyState>
-              You haven't selected a table yet, click on a the <CircleInformation style={{ height: '20px' }} color="#149BD2" /> in a table to see more information.
-            </EmptyState>
+    <SidePanelTableListWrapper sidePanelVisibility={sidePanelVisibility}>
+      <InformationPanel />
+      {Object.keys(activeTableInPanel).length > 0 ? (
+        <InfoSection>
+          <Label>table name</Label>
+          <Text>{table_name}</Text>
+          <Label>primary key</Label>
+          <Text>{primaryKey}</Text>
+          {primaryKeyRelationships.length === 0 && (
+            <Label>The primary key is not used in any other table</Label>
+          )}
+          {primaryKeyRelationships.length > 0 && (
+            <div>
+              <Label>The primary key is referenced in</Label>
+              <ul>{primaryKeyRelationships}</ul>
+            </div>
+          )}
+          {foreignKeyRelationships.length === 0 && (
+            <Label>This table does not have any foreign keys</Label>
+          )}
+          {foreignKeyRelationships.length > 0 && (
+            <div>
+              <Label>foreign keys in this table are</Label>
+              <ul>{foreignKeyRelationships}</ul>
+            </div>
           )}
       </SidePanelTableListWrapper>
     </Grommet>

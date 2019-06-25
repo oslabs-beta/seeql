@@ -1,3 +1,4 @@
+
 export default function themeReducer(state, action) {
   console.log(
     'in reducer ',
@@ -6,17 +7,29 @@ export default function themeReducer(state, action) {
     action.payload,
     state
   );
+  console.log ('payload', action.payload)
   //when you get the selected theme,
   //you want to update the payload, active value, update the type with the true active value and spread thte state
   switch (action.type) {
     case 'CHANGE_MODE': {
       const newState = state.map(mode => {
-        //if the mode value in the array matches the theme selected, set the mode-active value in array equal to true
+
+        let setModeVal ='';
         if (mode.value === action.selected)
-         { mode = { value: action.selected, active: true }}
-        //if the mode value in the array matches the existing mode, AND  the existing mode does not equal the selected, set the mode-active value in array equal to false
+         { 
+           mode = { value: action.selected, active: true }
+           setModeVal = action.selected
+          }
         if (mode.value === action.payload)
-          {mode = { value: mode.value, active: false }}
+          console.log('diffferent', mode.value, action.payload)
+          {
+            mode = { value: mode.value, active: false }
+            setModeVal = mode.value
+        }
+          if (mode.currentMode){
+            console.log (mode.currentMode)
+            mode.currentMode = setModeVal
+          }
    return mode;
       });
       return newState;
