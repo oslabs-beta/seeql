@@ -1,5 +1,5 @@
 import * as React from 'react';
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 import { useState, useEffect } from 'react';
 import { Redirect } from 'react-router-dom';
 import { ipcRenderer } from 'electron';
@@ -8,30 +8,31 @@ import { CheckBox, Grommet, Box, Button, Text, Tab, Tabs, Heading, TextArea } fr
 import { dark } from 'grommet/themes';
 import { Login as LoginIcon } from 'grommet-icons';
 
-/*
- backgroundColor=`white`
- animation=`${funtimes} 8s ease infinite`
- background="linear-gradient(270deg, #49cefe, #c647bc)"
-*/
+const funtimes = keyframes`
+ 0%{background-position:0% 50%}
+ 50%{background-position:100% 50%}
+ 100%{background-position:0% 50%}
+`;
+
+const Gradient = styled.div`
+ backgroundColor:white;
+ animation:${funtimes} 8s ease infinite;
+ background:linear-gradient(270deg, #49cefe, #c647bc);
+`
 
 // const InvisibleHeader = styled.div`
 //   height: 30px;
 //   -webkit-app-region: drag;
 // `;
 //
-//const funtimes = keyframes`
-//  0%{background-position:0% 50%}
-//  50%{background-position:100% 50%}
-//  100%{background-position:0% 50%}
-//`;
 
 // interface LoginTypeButtonProps {
 //   readonly selectedLoginType: string;
 //   readonly buttonType: string;
 // }
 // const LoginTypeButton = styled.button<LoginTypeButtonProps>`
-//  border-bottom: ${({ 
-//    selectedLoginType, buttonType 
+//  border-bottom: ${({
+//    selectedLoginType, buttonType
 //  }) => selectedLoginType === buttonType ? '1 px black' : '1 px gray'};
 // `;
 
@@ -54,7 +55,7 @@ interface IURIInputProps {
 //   padding: 8px;
 //   border: ${({ requiredError }) =>
 //     requiredError ? '1px solid #ca333e' : '1px solid lightgrey'};
-// 
+//
 //   :focus {
 //     outline: none;
 //   }
@@ -102,17 +103,17 @@ const CredentialsInput = styled.input<IURIInputProps>`
   }
 `;
 
-const ConnectionErrorMessage = styled.div`
-  background-color: #f1c7ca;
-  width: 200px;
-  color: #ca333e;
-  border-radius: 3px;
-  padding: 5px;
-  margin: 5px;
-  font-family: 'Poppins', sans-serif;
-  border-left: 3px solid #ca333e;
-  font-size: 100%;
-`;
+// const ConnectionErrorMessage = styled.div`
+//   background-color: #f1c7ca;
+//   width: 200px;
+//   color: #ca333e;
+//   border-radius: 3px;
+//   padding: 5px;
+//   margin: 5px;
+//   font-family: 'Poppins', sans-serif;
+//   border-left: 3px solid #ca333e;
+//   font-size: 100%;
+// `;
 
 const LogoutMessage = styled.div`
   background-color: #f1c7ca;
@@ -218,9 +219,17 @@ const Login = () => {
   };
 
   return (
+
     <Grommet theme={dark}>
-      <Box fill justify="center">
-        <Heading justify="center">SeeQL</Heading>
+      <Box background={Gradient} fill justify="center">
+        <Box width="medium" justify="center" alignSelf="center">
+          <Heading
+            margin="xxsmall"
+            level="1"
+            responsive={true}
+            size="xlarge"
+            textAlign="center"
+            truncate={false}>SeeQL</Heading>
           {loggedOutMessage === 'inactivity' && (
             <Text>
               You've been logged out due to inactivity
@@ -235,26 +244,22 @@ const Login = () => {
               Unable to connect to the database. Please try again.
             </Box>
           )}
-  
-          {/* tabs URI / Credentials */}
+
           <Tabs>
-            <Tab 
-              title="URI1"
-              buttonType="URI"
-              selectedLoginType={loginType}
-              onClick={() => { setLoginType('URI'), setConnectionError(false);}}>
-              <Box pad="medium">URI </Box>
+            <Tab
+              title="URI"
+              // selectedLoginType={loginType}
+              onClick={() => { setLoginType('URI'), setConnectionError(false); }}>
+              <Box pad="medium"></Box>
             </Tab>
 
             <Tab title="Credentials"
-                 buttonType="Credentials"
-                 selectedLoginType={loginType}
-                 onClick={() => { setLoginType('Credentials'), setConnectionError(false); }}>
-              <Box pad="medium"> Credentials </Box>
+              // selectedLoginType={loginType}
+              onClick={() => { setLoginType('Credentials'), setConnectionError(false); }}>
+              <Box pad="medium"></Box>
             </Tab>
           </Tabs>
-          {/* end tabs URI / Credentials */}
-    
+
           {loginType === 'Credentials' && (
             <CredentialsContainer>
               <InputAndLabelWrapper>
@@ -360,22 +365,30 @@ const Login = () => {
             SSL?
           </Box>
 
-          {!loading && (
-          <Button
-             icon={<LoginIcon />}
-             label="Edit"
-             onClick={sendLoginURI}>
-          </Button>
-          )}
+          {!loading ?
+            (
+              <Button
+                icon={<LoginIcon />}
+                label="Edit"
+                onClick={sendLoginURI}>
+              </Button>
+            ) : (
+              <Button
+                icon={<LoginIcon />}
+                label="Edit"
+                onClick={sendLoginURI}>
+              </Button>
+            )
+          }
 
           {loading && <LoginBtn disabled>Loading...</LoginBtn>}
           {redirectHome()}
 
-      {/* end box that wraps the entire fill */}
-      </Box> 
-
-    {/* end Grommet provider */}
-    </Grommet>
+        </Box>
+        {/* end box that wraps the entire fill */}
+      </Box>
+      {/* end Grommet provider */}
+    </Grommet >
   );
 };
 
