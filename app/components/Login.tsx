@@ -1,101 +1,39 @@
 import * as React from 'react';
-import styled, { keyframes } from 'styled-components';
+import styled from 'styled-components';
 import { useState, useEffect } from 'react';
 import { Redirect } from 'react-router-dom';
 import { ipcRenderer } from 'electron';
 
-const InvisibleHeader = styled.div`
-  height: 30px;
-  -webkit-app-region: drag;
-`;
+import { CheckBox, Grommet, Box, Button, Text, Tab, Tabs, Heading, TextArea } from 'grommet';
+import { dark } from 'grommet/themes';
+import { Login as LoginIcon } from 'grommet-icons';
 
-const LoginPageWrapper = styled.div`
-  margin-top: -30px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: 'Poppins', sans-serif;
-  height: 100vh;
-  width: 100vw;
-`;
+/*
+ backgroundColor=`white`
+ animation=`${funtimes} 8s ease infinite`
+ background="linear-gradient(270deg, #49cefe, #c647bc)"
+*/
 
-const Title = styled.h1`
-  font-size: 72px;
-  font-weight: none;
-`;
+// const InvisibleHeader = styled.div`
+//   height: 30px;
+//   -webkit-app-region: drag;
+// `;
+//
+//const funtimes = keyframes`
+//  0%{background-position:0% 50%}
+//  50%{background-position:100% 50%}
+//  100%{background-position:0% 50%}
+//`;
 
-const Panel = styled.div`
-  height: 100vh;
-  width: 50vw;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
-
-const funtimes = keyframes`
-    0%{background-position:0% 50%}
-    50%{background-position:100% 50%}
-    100%{background-position:0% 50%}
-`;
-
-const LeftPanel = styled(Panel)`
-  background-color: white;
-  color: white;
-  animation: ${funtimes} 8s ease infinite;
-  background: linear-gradient(270deg, #49cefe, #c647bc);
-  background-size: 400% 400%;
-`;
-
-const RightPanel = styled(Panel)`
-  background-color: white;
-`;
-
-const LoginContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 20px;
-`;
-
-const LoginTypeNavigation = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-`;
-
-interface LoginTypeButtonProps {
-  readonly selectedLoginType: string;
-  readonly buttonType: string;
-}
-
-const LoginTypeButton = styled.button<LoginTypeButtonProps>`
-  padding: 5px;
-  font-size: 140%;
-  margin: 10px;
-  font-family: 'Poppins', sans-serif;
-  background-color: transparent;
-  display: flex;
-  border: none;
-  border-bottom: ${({ selectedLoginType, buttonType }) =>
-    selectedLoginType === buttonType
-      ? '3px solid #E55982'
-      : '3px solid transparent'};
-  transition: 0.3s;
-  :hover {
-    border-bottom: 3px solid #e55982;
-    cursor: pointer;
-  }
-  :focus {
-    outline: none;
-  }
-`;
-
-const URIConnectionContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  padding: 20px;
-`;
+// interface LoginTypeButtonProps {
+//   readonly selectedLoginType: string;
+//   readonly buttonType: string;
+// }
+// const LoginTypeButton = styled.button<LoginTypeButtonProps>`
+//  border-bottom: ${({ 
+//    selectedLoginType, buttonType 
+//  }) => selectedLoginType === buttonType ? '1 px black' : '1 px gray'};
+// `;
 
 const InputLabel = styled.span`
   font-size: 100%;
@@ -106,30 +44,21 @@ interface IURIInputProps {
   requiredError: boolean;
 }
 
-const URIInput = styled.textarea<IURIInputProps>`
-  width: 200px;
-  height: 150px;
-  border-radius: 3px;
-  font-family: 'Poppins', sans-serif;
-  letter-spacing: 2px;
-  resize: none;
-  padding: 8px;
-  border: ${({ requiredError }) =>
-    requiredError ? '1px solid #ca333e' : '1px solid lightgrey'};
-
-  :focus {
-    outline: none;
-  }
-`;
-
-const ToggleSSL = styled.div`
-  display: flex;
-  justify-content: center;
-  padding: 5px;
-  margin: 10px;
-  display: flex;
-  align-items: center;
-`;
+// const URIInput = styled.textarea<IURIInputProps>`
+//   width: 200px;
+//   height: 150px;
+//   border-radius: 3px;
+//   font-family: 'Poppins', sans-serif;
+//   letter-spacing: 2px;
+//   resize: none;
+//   padding: 8px;
+//   border: ${({ requiredError }) =>
+//     requiredError ? '1px solid #ca333e' : '1px solid lightgrey'};
+// 
+//   :focus {
+//     outline: none;
+//   }
+// `;
 
 const LoginBtn = styled.button`
   padding: 5px;
@@ -210,7 +139,7 @@ const Login = () => {
   const [password, setPassword] = useState({ value: '', requiredError: false });
   const [database, setDatabase] = useState({ value: '', requiredError: false });
   const [URI, setURI] = useState('');
-  const [isSSL, setSSL] = useState(false);
+  //const [isSSL, setSSL] = useState(false);
   const [requiredError, setRequiredError] = useState(false);
   const [connectionError, setConnectionError] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -220,13 +149,19 @@ const Login = () => {
 
   const sendLoginURI = (): void => {
     if (loggedOutMessage) setLoggedOutMessage('');
+
     const updatedPort = !port ? '5432' : port;
     let updatedURI;
-    if (loginType === 'URI') updatedURI = URI;
-    else if (loginType === 'Credentials')
-      updatedURI = `postgres://${username.value}:${password.value}@${host.value}:${updatedPort}/${database.value}`;
 
-    if (isSSL) updatedURI += '?ssl=true';
+    if (loginType === 'URI') updatedURI = URI;
+    else if (loginType === 'Credentials') updatedURI = `
+      postgres://${username.value}:
+                 ${password.value}@
+                 ${host.value}:
+                 ${updatedPort}/
+                 ${database.value}`;
+
+    // if (isSSL) updatedURI += '?ssl=true';
 
     if (!updatedURI) setRequiredError(true);
     if (!host.value) setHost({ value: '', requiredError: true });
@@ -283,155 +218,164 @@ const Login = () => {
   };
 
   return (
-    <React.Fragment>
-      <InvisibleHeader></InvisibleHeader>
-      <LoginPageWrapper>
-        <LeftPanel>
-          <Title>SeeQL</Title>
-        </LeftPanel>
-        <RightPanel>
-          <LoginContainer>
-            {loggedOutMessage === 'inactivity' && (
-              <LogoutMessage>
-                You've been logged out due to inactivity
-              </LogoutMessage>
-            )}
-            {loggedOutMessage === 'userlogout' && (
-              <LogoutMessage>You logged out</LogoutMessage>
-            )}
-            {connectionError && (
-              <ConnectionErrorMessage>
-                Unable to connect to the database. Please try again.
-              </ConnectionErrorMessage>
-            )}
-            <LoginTypeNavigation>
-              <LoginTypeButton
-                buttonType="URI"
-                selectedLoginType={loginType}
-                onClick={() => {
-                  setLoginType('URI'), setConnectionError(false);
-                }}
-              >
-                URI
-              </LoginTypeButton>
-              <LoginTypeButton
-                buttonType="Credentials"
-                selectedLoginType={loginType}
-                onClick={() => {
-                  setLoginType('Credentials'), setConnectionError(false);
-                }}
-              >
-                Credentials
-              </LoginTypeButton>
-            </LoginTypeNavigation>
-            {loginType === 'Credentials' && (
-              <CredentialsContainer>
-                <InputAndLabelWrapper>
-                  <InputLabel>Host</InputLabel>
-                  <CredentialsInput
-                    type="text"
-                    requiredError={host.requiredError}
-                    placeholder="host"
-                    value={host.value}
-                    onChange={e =>
-                      setHost({ value: e.target.value, requiredError: false })
-                    }
-                  />
-                  {host.requiredError && (
-                    <RequiredWarning>host is required</RequiredWarning>
-                  )}
-                </InputAndLabelWrapper>
-                <InputAndLabelWrapper>
-                  <InputLabel>Port</InputLabel>
-                  <CredentialsInput
-                    type="text"
-                    requiredError={false}
-                    placeholder="port (default 5432)"
-                    value={port}
-                    onChange={e => setPort(e.target.value)}
-                  />
-                </InputAndLabelWrapper>
-                <InputAndLabelWrapper>
-                  <InputLabel>Username</InputLabel>
-                  <CredentialsInput
-                    type="text"
-                    requiredError={username.requiredError}
-                    placeholder="username"
-                    value={username.value}
-                    onChange={e =>
-                      setUsername({
-                        value: e.target.value,
-                        requiredError: false
-                      })
-                    }
-                  />
-                  {username.requiredError && (
-                    <RequiredWarning>username is required</RequiredWarning>
-                  )}
-                </InputAndLabelWrapper>
-                <InputAndLabelWrapper>
-                  <InputLabel>Password</InputLabel>
-                  <CredentialsInput
-                    type="password"
-                    requiredError={password.requiredError}
-                    placeholder="password"
-                    value={password.value}
-                    onChange={e =>
-                      setPassword({
-                        value: e.target.value,
-                        requiredError: false
-                      })
-                    }
-                  />
-                  {password.requiredError && (
-                    <RequiredWarning>password is required</RequiredWarning>
-                  )}
-                </InputAndLabelWrapper>
-                <InputAndLabelWrapper>
-                  <InputLabel>Database</InputLabel>
-                  <CredentialsInput
-                    type="text"
-                    requiredError={database.requiredError}
-                    placeholder="database"
-                    value={database.value}
-                    onChange={e =>
-                      setDatabase({
-                        value: e.target.value,
-                        requiredError: false
-                      })
-                    }
-                  />
-                  {database.requiredError && (
-                    <RequiredWarning>database is required</RequiredWarning>
-                  )}
-                </InputAndLabelWrapper>
-              </CredentialsContainer>
-            )}
-            {loginType === 'URI' && (
-              <URIConnectionContainer>
-                <InputLabel>URI Connection String</InputLabel>
-                <URIInput
-                  requiredError={requiredError}
-                  onChange={captureURI}
-                  placeholder="Enter your URI connection string..."
-                  value={URI}
+    <Grommet theme={dark}>
+      <Box fill justify="center">
+        <Heading justify="center">SeeQL</Heading>
+          {loggedOutMessage === 'inactivity' && (
+            <Text>
+              You've been logged out due to inactivity
+            </Text>
+          )}
+          {loggedOutMessage === 'userlogout' && (
+            <LogoutMessage>You logged out</LogoutMessage>
+          )}
+          {connectionError && (
+            <Box
+              color="status-error">
+              Unable to connect to the database. Please try again.
+            </Box>
+          )}
+  
+          {/* tabs URI / Credentials */}
+          <Tabs>
+            <Tab 
+              title="URI1"
+              buttonType="URI"
+              selectedLoginType={loginType}
+              onClick={() => { setLoginType('URI'), setConnectionError(false);}}>
+              <Box pad="medium">URI </Box>
+            </Tab>
+
+            <Tab title="Credentials"
+                 buttonType="Credentials"
+                 selectedLoginType={loginType}
+                 onClick={() => { setLoginType('Credentials'), setConnectionError(false); }}>
+              <Box pad="medium"> Credentials </Box>
+            </Tab>
+          </Tabs>
+          {/* end tabs URI / Credentials */}
+    
+          {loginType === 'Credentials' && (
+            <CredentialsContainer>
+              <InputAndLabelWrapper>
+                <InputLabel>Host</InputLabel>
+                <CredentialsInput
+                  type="text"
+                  requiredError={host.requiredError}
+                  placeholder="host"
+                  value={host.value}
+                  onChange={e =>
+                    setHost({ value: e.target.value, requiredError: false })
+                  }
                 />
-                {requiredError && (
-                  <RequiredWarning>URI is required</RequiredWarning>
+                {host.requiredError && (
+                  <RequiredWarning>host is required</RequiredWarning>
                 )}
-              </URIConnectionContainer>
-            )}
-            <ToggleSSL>
-              <input type="checkbox" onChange={e => setSSL(e.target.checked)} />
-              <InputLabel>ssl?</InputLabel>
-            </ToggleSSL>
-            {!loading && <LoginBtn onClick={sendLoginURI}>Login</LoginBtn>}
-            {loading && <LoginBtn disabled>Loading...</LoginBtn>}
-            {redirectHome()}
-          </LoginContainer>
-        </RightPanel>
-      </LoginPageWrapper>
-    </React.Fragment>
+              </InputAndLabelWrapper>
+              <InputAndLabelWrapper>
+                <InputLabel>Port</InputLabel>
+                <CredentialsInput
+                  type="text"
+                  requiredError={false}
+                  placeholder="port (default 5432)"
+                  value={port}
+                  onChange={e => setPort(e.target.value)}
+                />
+              </InputAndLabelWrapper>
+              <InputAndLabelWrapper>
+                <InputLabel>Username</InputLabel>
+                <CredentialsInput
+                  type="text"
+                  requiredError={username.requiredError}
+                  placeholder="username"
+                  value={username.value}
+                  onChange={e =>
+                    setUsername({
+                      value: e.target.value,
+                      requiredError: false
+                    })
+                  }
+                />
+                {username.requiredError && (
+                  <RequiredWarning>username is required</RequiredWarning>
+                )}
+              </InputAndLabelWrapper>
+              <InputAndLabelWrapper>
+                <InputLabel>Password</InputLabel>
+                <CredentialsInput
+                  type="password"
+                  requiredError={password.requiredError}
+                  placeholder="password"
+                  value={password.value}
+                  onChange={e =>
+                    setPassword({
+                      value: e.target.value,
+                      requiredError: false
+                    })
+                  }
+                />
+                {password.requiredError && (
+                  <RequiredWarning>password is required</RequiredWarning>
+                )}
+              </InputAndLabelWrapper>
+              <InputAndLabelWrapper>
+                <InputLabel>Database</InputLabel>
+                <CredentialsInput
+                  type="text"
+                  requiredError={database.requiredError}
+                  placeholder="database"
+                  value={database.value}
+                  onChange={e =>
+                    setDatabase({
+                      value: e.target.value,
+                      requiredError: false
+                    })
+                  }
+                />
+                {database.requiredError && (
+                  <RequiredWarning>database is required</RequiredWarning>
+                )}
+              </InputAndLabelWrapper>
+            </CredentialsContainer>
+          )}
+          {loginType === 'URI' && (
+            <Box>
+              <Heading size="small">URI Connection String</Heading>
+              <TextArea
+                requiredError={requiredError}
+                onChange={captureURI}
+                placeholder="Enter your URI connection string..."
+                value={URI}
+              />
+              {requiredError && (
+                <RequiredWarning>URI is required</RequiredWarning>
+              )}
+            </Box>
+          )}
+
+          <Box align="center" pad="large">
+            <CheckBox
+              onChange={() => console.log(true)}
+            />
+            SSL?
+          </Box>
+
+          {!loading && (
+          <Button
+             icon={<LoginIcon />}
+             label="Edit"
+             onClick={sendLoginURI}>
+          </Button>
+          )}
+
+          {loading && <LoginBtn disabled>Loading...</LoginBtn>}
+          {redirectHome()}
+
+      {/* end box that wraps the entire fill */}
+      </Box> 
+
+    {/* end Grommet provider */}
+    </Grommet>
   );
 };
 
