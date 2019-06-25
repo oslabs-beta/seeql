@@ -6,7 +6,7 @@ import changePinnedStatus from '../../reducers/ChangePinnedStatus';
 import styled from 'styled-components';
 import { Text, Grommet } from "grommet";
 import { grommet } from 'grommet/themes';
-import { Pin, Inspect } from 'grommet-icons';
+import { Pin, CircleInformation } from 'grommet-icons';
 
 const TempWrapper = styled.div`
   display: flex;
@@ -142,18 +142,18 @@ const TablesContainer: React.SFC<ITablesContainerProps> = ({
           pinned.push(
             <TableWrapper highlightForRelationship={highlightForRelationship}>
               <Pin
+                style={{ height: '15px', cursor: 'pointer' }}
                 data-pinned={table.table_name}
                 onClick={() =>
                   dispatchPinned(actions.removeFromPinned(table.table_name))
                 }
                 pinned={true}
-                color="#149BD2"
-                size="medium"
+                color="#F12B93"
               />
-              <Inspect
+              <CircleInformation
+                style={{ height: '15px', cursor: 'pointer' }}
                 onClick={captureSelectedTable}
                 data-tablename={table.table_name}
-                size="medium"
                 color={(table.table_name === activeTableInPanel.table_name) ? "#149BD2" : 'black'}
               />
               <Tables
@@ -187,7 +187,7 @@ const TablesContainer: React.SFC<ITablesContainerProps> = ({
           filtered.push(
             <TableWrapper highlightForRelationship={highlightForRelationship}>
               <Pin
-                size="medium"
+                style={{ height: '15px', cursor: 'pointer' }}
                 data-pinned={table.table_name}
                 onClick={() =>
                   dispatchPinned(actions.addToPinned(table.table_name))
@@ -195,10 +195,10 @@ const TablesContainer: React.SFC<ITablesContainerProps> = ({
                 pinned={false}
                 color="black"
               />
-              <Inspect
+              <CircleInformation
                 onClick={captureSelectedTable}
                 data-tablename={table.table_name}
-                size="medium"
+                style={{ height: '15px', cursor: 'pointer' }}
                 color={(table.table_name === activeTableInPanel.table_name) ? "#149BD2" : 'black'}
               />
               <Tables

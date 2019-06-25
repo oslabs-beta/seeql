@@ -49,7 +49,7 @@ const CollapseBtn = styled.button<ICollapseBtnProps>`
 `;
 
 const MainPanel = styled.div`
-  background-color: ${props => props.theme.main.baseColor};
+  background-color: transparent;
   padding: 5px 20px;
   display: flex;
   flex-direction: column;

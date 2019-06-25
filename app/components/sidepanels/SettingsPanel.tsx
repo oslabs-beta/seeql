@@ -15,8 +15,6 @@ const PanelWrapper = styled.div`
   padding: 20px;
   height: 100vh;
   padding: 40px;
-  background-color: ${props => props.theme.panel.baseColor};
-  color: ${props => props.theme.panel.fontColor};
 `;
 
 const TopSection = styled.section`
@@ -33,15 +31,12 @@ const DivWrapper = styled.div`
   flex-direction: column;
 `;
 const Title = styled.h1`
-  color: ${props => props.theme.panel.headerColor};
   font-size: 30px;
 `;
 const Label = styled.label`
-  color: ${props => props.theme.panel.fontColor};
   padding: 10px 0;
 `;
 const SignOut = styled.span`
-  color: ${props => props.theme.link.signOut};
 `;
 
 const SettingsPanel = ({ intervalId }) => {

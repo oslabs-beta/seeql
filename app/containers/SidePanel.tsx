@@ -34,8 +34,7 @@ const IndTab = styled.button<IIndTabProps>`
   border: none;
   padding: 5px;
 
-  background-color: ${props => props.active === props.panel ? props.theme.tabs.baseColor : props.theme.panel.baseColorActive};
-  color: ${props => props.theme.tabs.fontColor};
+  background-color: ${props => props.active === props.panel ? 'black' : 'grey'};
 
   :hover {
     font-weight: bold;

@@ -35,8 +35,10 @@ const OmniBoxInput: React.SFC<IOmniBoxInputProps> = ({
             resize={false}
             onChange={e => setUserInputQuery(e.target.value)}
             value={userInputQuery}
+            style={{ height: '100px', fontSize: '14px' }}
           />
           <Button
+            style={{ borderRadius: '0px', margin: '3px 0px' }}
             onClick={executeQuery}
             disabled={loadingQueryStatus}
             label={loadingQueryStatus ? 'Loading query results...' : 'Execute Query'}
@@ -52,6 +54,7 @@ const OmniBoxInput: React.SFC<IOmniBoxInputProps> = ({
         placeholder="Search for a table"
         onChange={e => setUserInputForTables(e.target.value)}
         value={userInputForTables}
+        style={{ height: '100px', fontSize: '14px' }}
       />
     );
   }

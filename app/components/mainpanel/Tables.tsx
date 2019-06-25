@@ -1,6 +1,7 @@
 import * as React from 'react';
 import styled from 'styled-components';
 import { ipcRenderer } from 'electron';
+import { License, StatusGood } from 'grommet-icons';
 
 interface ITableProps {
   selectedtable: string;
@@ -36,13 +37,9 @@ const TableRow = styled.li<ITableRowProps>`
   transition: 0.3s;
 
   :hover {
-    background-color: #ececec;
+    background-color: #f4f4f4;
    transform: scale(1.01);
-   
-    cursor: ${({ inTheQuery }) =>
-    inTheQuery
-      ? 'url(https://img.icons8.com/flat_round/20/000000/minus.png), auto'
-      : 'url(https://img.icons8.com/flat_round/20/000000/plus.png), auto'};
+    cursor: pointer;
   }
 `;
 
@@ -57,6 +54,8 @@ const TableTitle = styled.p`
   font-size: 140%;
   padding: 5px;
   overflow-wrap: break-word;
+  cursor: pointer;
+  background-color: #eeeeee;
   :hover {
     transform: scale(1.01);
     background-color: rgb(240, 240, 240);
@@ -113,10 +112,6 @@ interface Props {
   captureQuerySelections: (Event) => void;
 }
 
-const KeyIcon = styled.img`
-  width: 15px;
-  height: 15px;
-`;
 
 const Tables: React.SFC<Props> = ({
   tableName,
@@ -195,33 +190,33 @@ const Tables: React.SFC<Props> = ({
           data-isprimarykey={primaryKey}
         >
           {inTheQuery && (
-            <span>
-              <KeyIcon src="https://image.flaticon.com/icons/svg/291/291201.svg"></KeyIcon>
-            </span>
+            <StatusGood style={{ height: '15px' }} color="#2ecc71" />
           )}
           {foreignKey && (
-            <KeyIcon
+            <License
+              style={{ height: '15px' }}
+              color="#6DDEF4"
               data-isforeignkey={foreignKey}
               data-foreignkeytable={foreignkeyTable}
               data-foreignkeycolumn={foreignkeyColumn}
               data-tablename={tableName}
               data-columnname={columns[keys]['columnname']}
               data-isprimarykey={primaryKey}
-              src="https://image.flaticon.com/icons/svg/891/891399.svg"
-            ></KeyIcon>
+            />
           )}
           {primaryKey && (
-            <KeyIcon
+            <License
+              style={{ height: '15px' }}
+              color="#f39c12"
               data-isforeignkey={foreignKey}
               data-foreignkeytable={foreignkeyTable}
               data-foreignkeycolumn={foreignkeyColumn}
               data-tablename={tableName}
               data-columnname={columns[keys]['columnname']}
               data-isprimarykey={primaryKey}
-              src="https://image.flaticon.com/icons/svg/179/179543.svg"
-            ></KeyIcon>
+            />
           )}
-          {columns[keys]['columnname']}
+          {` ` + columns[keys]['columnname']}
         </TableCell>
         <TableCell
           data-isforeignkey={foreignKey}

@@ -56,7 +56,7 @@ const QueryResults: React.SFC<IQueryResultsProps> = ({ queryResult }) => {
         )}
       {queryResult.message.length === 0 &&
         queryResult.status === 'No query' && (
-          <div>{`You haven't queried anything! Enter a query above to get started. :(`}</div>
+          <div>{`You haven't made any queries yet.`} <br />{`Enter a query above to get your data.`}</div>
         )}
     </QueryResultWrapper>
   );
