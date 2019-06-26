@@ -3,13 +3,12 @@ import { useState, useEffect, useReducer } from 'react';
 import { Redirect } from 'react-router-dom';
 import { ipcRenderer } from 'electron';
 import styled from 'styled-components';
-import { Button, Collapsible, Grommet, Text } from 'grommet';
+import { Button, Grommet, Text } from 'grommet';
 import { grommet } from 'grommet/themes';
 import { FormPrevious, FormNext } from "grommet-icons";
 import * as actions from '../actions/actions';
 import changeDisplayOfSidePanel from '../reducers/ChangeDisplayOfSidePanel';
 import SidePanel from './SidePanel';
-import LoadingComponent from '../components/LoadComponent';
 import ResultsContainer from './mainpanel/ResultsContainer';
 import OmniBoxContainer from '../containers/omnibox/OmniBoxContainer';
 
@@ -88,7 +87,6 @@ const HomePage = ({ location }) => {
   const [activeTableInPanel, setActiveTableInPanel] = useState({});
   const [userInputForTables, setUserInputForTables] = useState('');
   const [data, setData] = useState([]); // data from database
-  const [toggleLoad, setToggleLoad] = useState(true);
   const [userInputQuery, setUserInputQuery] = useState(
     'SELECT * FROM [table name]'
   );
@@ -355,9 +353,7 @@ const HomePage = ({ location }) => {
 
   // Fetches database information
   useEffect((): void => {
-    setToggleLoad(true);
     setData(allTablesMetaData);
-    setToggleLoad(false);
   }, [allTablesMetaData]);
 
   useEffect(() => {
@@ -415,11 +411,6 @@ const HomePage = ({ location }) => {
             />
           </SRightHeaderWrapper>
         </InvisibleHeader>
-        {toggleLoad && (
-          <LoadWrap>
-            <LoadingComponent />
-          </LoadWrap>
-        )}
         <SMainPanelWrapper className="main">
           <SLeftPanelWrapper className="left">
             <OmniBoxContainer

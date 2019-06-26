@@ -5,15 +5,21 @@ import * as actions from '../../actions/actions';
 import Tables from '../../components/mainpanel/Tables';
 import changePinnedStatus from '../../reducers/ChangePinnedStatus';
 import { Text } from "grommet";
-import { Pin, CircleInformation } from 'grommet-icons';
+import { Pin, CircleInformation, Halt } from 'grommet-icons';
+
+const SEmptyState = styled.div`
+  margin: auto;
+  text-align: center;
+
+`
 
 const TempWrapper = styled.div`
     overflow: scroll;
-    border: 3px solid pink;
-    border-radius: 3px;
-    box-shadow: 2px 2px 8px lightgrey;
     height: 100%;
     width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    padding: 5px;
 `
 
 interface ITableWrapperProps {
@@ -21,10 +27,12 @@ interface ITableWrapperProps {
 }
 
 const TableWrapper = styled.div<ITableWrapperProps>`
-  width: 200px;
+  width: 150px;
+  max-height: 150px;
   border-radius: 3px;
-  box-shadow: 2px 2px 8px lightgrey;
-  border: ${({ highlightForRelationship }) => (highlightForRelationship == 'true' ? '3px solid #8106E9' : '3px solid transparent')};
+  overflow: hidden;
+  margin: 5px;
+  border: ${({ highlightForRelationship }) => (highlightForRelationship == 'true' ? '3px solid #8106E9' : '3px solid grey')};
   :hover {
     transform: scale(1.03)
   }
@@ -249,9 +257,12 @@ const TablesContainer: React.SFC<ITablesContainerProps> = ({
     )
   }
   return (
-    <Text>
-      There were no search results. <br /> Please search again.
+    <SEmptyState>
+      <Text>
+        <Halt /><br />
+        Sorry, there are no tables that matched yoru search. <br /> Please search again.
     </Text>
+    </SEmptyState>
   )
 
 }

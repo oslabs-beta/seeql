@@ -1,6 +1,5 @@
 import * as React from 'react';
 import styled from 'styled-components';
-import { ipcRenderer } from 'electron';
 import { License, StatusGood } from 'grommet-icons';
 
 interface ITableProps {
@@ -11,15 +10,14 @@ interface ITableProps {
 const Table = styled.div<ITableProps>`
   display: flex;
   flex-direction: column;
-  font-size: 70%;
+  font-size: 60%;
   border-radius: 3px;
   transition: 0.3s;
 `;
 
 const TableRowsList = styled.ul`
-  flex-direction: column;
-  max-height: 200px;
   overflow: scroll;
+  height: 100px;
 `;
 
 interface ITableRowProps {
@@ -49,7 +47,7 @@ const TableCell = styled.p`
 
 const TableTitle = styled.p`
   text-align: center;
-  font-size: 140%;
+  font-size: 180%;
   overflow-wrap: break-word;
   :hover {
     transform: scale(1.01);
