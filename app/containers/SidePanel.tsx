@@ -35,14 +35,21 @@ const SInnerPanelWrapper = styled.div`
   height: 100%;
   border-radius: 3px;
   box-shadow: 1px 1px 4px #67809f;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 `;
 
 const IndTab = styled.button<IIndTabProps>`
   border: none;
+  border-bottom: ${({ active, panel }) => active === panel ? '2px solid transparent' : '2px solid transparent'};
+  margin: 5px;
+  padding: 3px 0px;
   cursor: pointer;
 
   :hover {
     transform: scale(1.1);
+    border-bottom: 2px solid #7540D9;
   }
   :focus {
     outline: none;
@@ -52,7 +59,7 @@ const IndTab = styled.button<IIndTabProps>`
 const Tabs = styled.div`
   display: flex;
   font-family: 'Poppins', sans-serif;
-  width: 250px;
+  margin: 10px;
 `;
 
 interface IForeignKeysAffected {
@@ -118,7 +125,7 @@ const SidePanel: React.SFC<Props> = ({
                   dispatchSidePanelDisplay(actions.changeToSettingsPanel())
                 }
               >
-                <UserSettings />
+                <UserSettings color={activePanel === 'settings' ? "#7540D9" : '#E6EAF2'} />
               </IndTab>
             </Tabs>
             <div>
