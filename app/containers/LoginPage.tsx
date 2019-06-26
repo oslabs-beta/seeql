@@ -1,9 +1,12 @@
 import * as React from 'react';
-import { Component } from 'react';
 import Login from '../components/Login';
 
-export default class LoginPage extends Component {
-  render() {
-    return <Login />;
-  }
+interface Props {
+  setTableData: (any) => any;
+  setCurrentView: (any) => any;
 }
+
+const LoginPage: React.SFC<Props> = ({ setTableData, setCurrentView }) =>
+  <Login setTableData={setTableData} setCurrentView={setCurrentView} />;
+
+export default LoginPage;

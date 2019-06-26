@@ -11,7 +11,11 @@ const productionPlugins = [
   // babel-preset-react-optimize
   require('@babel/plugin-transform-react-constant-elements'),
   require('@babel/plugin-transform-react-inline-elements'),
-  require('babel-plugin-transform-react-remove-prop-types')
+  require('babel-plugin-transform-react-remove-prop-types'),
+ // require('@babel/plugin-transform-runtime', {
+ //   regenerator: true,
+ //   absoluteRuntime: true
+ // })
 ];
 
 module.exports = api => {
@@ -64,6 +68,7 @@ module.exports = api => {
       require('@babel/plugin-proposal-json-strings'),
       // require('babel-plugin-transform-object-rest-spread'),
       require('@babel/plugin-proposal-object-rest-spread'),
+      require('@babel/plugin-transform-runtime', { regenerator: true }),
 
       ...(development ? developmentPlugins : productionPlugins)
     ]

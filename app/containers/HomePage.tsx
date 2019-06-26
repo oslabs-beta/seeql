@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { useState, useEffect, useReducer } from 'react';
-import { Redirect } from 'react-router-dom';
 import { ipcRenderer } from 'electron';
 import styled from 'styled-components';
 import { Button, Grommet, Text } from 'grommet';
@@ -75,9 +74,8 @@ const LoadWrap = styled.div`
 let relationships = {};
 const alias = {};
 
-const HomePage = ({ location }) => {
-  const allTablesMetaData = location.state.tables;
-  // const [relationships, setRelationships]
+const HomePage = ({ tableData, setCurrentView }) => {
+  console.log(`table data in the home page`, tableData)
   const [omniBoxView, setOmniBoxView] = useState('SQL');
   const [selectedForQueryTables, setSelectedForQueryTables] = useState({});
   const [loadingQueryStatus, setLoadingQueryStatus] = useState(false);
@@ -95,6 +93,7 @@ const HomePage = ({ location }) => {
     message: []
   });
   const [sidePanelVisibility, setSidePanelVisibility] = useState(true);
+  const [redirectDueToInactivity, setRedirectDueToInactivity] = useState(false);
 
   const [activePanel, dispatchSidePanelDisplay] = useReducer(
     changeDisplayOfSidePanel,
@@ -118,7 +117,6 @@ const HomePage = ({ location }) => {
   // Track user inactivity, logout after 15 minutes
   const [inactiveTime, setInactiveTime] = useState(0);
   const [intervalId, captureIntervalId] = useState();
-  const [redirectDueToInactivity, setRedirectDueToInactivity] = useState(false);
 
   const logOut = () => {
     clearInterval(intervalId);
@@ -133,7 +131,6 @@ const HomePage = ({ location }) => {
   }, []);
 
   useEffect(() => { if (inactiveTime >= 15) logOut() }, [inactiveTime]);
-
 
   const captureQuerySelections = e => {
     const selectedTableName = e.target.dataset.tablename;
@@ -353,8 +350,8 @@ const HomePage = ({ location }) => {
 
   // Fetches database information
   useEffect((): void => {
-    setData(allTablesMetaData);
-  }, [allTablesMetaData]);
+    setData(tableData);
+  }, [tableData]);
 
   useEffect(() => {
     ipcRenderer.on('query-result-to-homepage', (_event, queryResult) => {
@@ -395,7 +392,7 @@ const HomePage = ({ location }) => {
   return (
 
     <Grommet theme={grommet}>
-      {redirectDueToInactivity && <Redirect to='/' />}
+      {redirectDueToInactivity && setCurrentView('loginPage')}
       <SHomepageWrapper onMouseMove={() => setInactiveTime(0)}>
         <InvisibleHeader>
           <div></div>
