@@ -94,6 +94,7 @@ const STopNav = styled.div`
   align-items: center;
   padding: 0px 10px;
   min-height: 40px;
+  border-bottom: 1px solid #67809f;
 `
 
 interface IResultsContainerProps {
@@ -148,7 +149,7 @@ const ResultsContainer: React.SFC<IResultsContainerProps> = ({
       </STopNav>
       {activeDisplayInResultsTab === 'Tables' &&
         <TablesContainer
-        key={activeDisplayInResultsTab}
+          key={activeDisplayInResultsTab}
           relationships={relationships}
           userInputForTables={userInputForTables}
           activeTableInPanel={activeTableInPanel}

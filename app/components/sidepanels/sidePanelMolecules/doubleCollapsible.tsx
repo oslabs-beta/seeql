@@ -29,7 +29,7 @@ const NestedCollapsible = () => {
     useEffect(() => setContext(state), [state])
 
     return (
-        <Grommet theme={grommet}>
+        <Grommet theme={grommet} >
             <Box width="small">
                 <MenuButton
                     open={openMenu1}

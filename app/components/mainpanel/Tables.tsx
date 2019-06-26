@@ -30,9 +30,8 @@ const TableRow = styled.li<ITableRowProps>`
   justify-content: space-between;
   list-style: none;
   padding: 0px 3px;
-  border: ${ (props) => props.affected ? '2px solid #F2B25E' : '2px solid transparent'};
+  border: ${ (props) => props.affected ? '2px solid #26c281' : '2px solid transparent'};
   transition: 0.3s;
- background-color: ${ (props) => props.affected ? '#F2B25E' : 'transparent'};
 
   :hover {
     background-color: #f4f4f4;
@@ -176,7 +175,7 @@ const Tables: React.SFC<Props> = ({
           data-isprimarykey={primaryKey}
         >
           {inTheQuery && (
-            <StatusGood style={{ height: '15px' }} color="#2ecc71" />
+            <StatusGood style={{ height: '15px' }} color="#26c281" />
           )}
           {foreignKey && (
             <License
