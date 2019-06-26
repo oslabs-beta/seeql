@@ -51,7 +51,6 @@ const SMainPanelWrapper = styled.div`
    transition: all 0.2s ease-in-out;
 `
 
-//REPLACE MAIn
 const SLeftPanelWrapper = styled.div`
   height: 100%;
   width: 100%;
@@ -67,10 +66,6 @@ const SRightPanelWrapper = styled.div<ISRightPanelProps>`
     width: ${({ sidePanelVisibility }) => sidePanelVisibility ? '250px' : '0px'};
     transition: all 0.2s ease-in-out;
 `
-
-const LoadWrap = styled.div`
-  display: flex;
-`;
 
 let relationships = {};
 const alias = {};
@@ -410,7 +405,7 @@ const HomePage = ({ location }) => {
         <InvisibleHeader>
           <div></div>
           <SRightHeaderWrapper onClick={togglePanelVisibility}>
-            <Text style={{ cursor: 'pointer' }}> Menu</Text>
+            <Text style={{ cursor: 'pointer', fontFamily: 'Poppins' }}> Menu</Text>
             <Button
               plain={true}
               fill={false}

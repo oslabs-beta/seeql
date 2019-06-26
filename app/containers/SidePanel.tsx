@@ -27,6 +27,7 @@ const PanelWrapper = styled.div<IPanelWrapperProps>`
   background-color: #E6EAF2 ;
   height: 100%;
    transition: all 0.2s ease-in-out;
+     font-family: 'Poppins', sans-serif;
 `;
 
 const SInnerPanelWrapper = styled.div`
@@ -41,6 +42,7 @@ const SInnerPanelWrapper = styled.div`
 `;
 
 const IndTab = styled.button<IIndTabProps>`
+  font-family: 'Poppins', sans-serif;
   border: none;
   border-bottom: ${({ active, panel }) => active === panel ? '2px solid #4B70FE' : '2px solid transparent'};
   margin: 5px;

@@ -41,11 +41,13 @@ const InfoSection = styled.div`
 
 const SEmptyState = styled.div`
 margin: 20px;
+  font-family: 'Poppins', sans-serif;
 `
 
 const Text = styled.p`
   font-size: 80%;
   font-weight: bold;
+    font-family: 'Poppins', sans-serif;
   color: #485360;
   padding: 0px 2px;
   :hover {
@@ -55,6 +57,7 @@ const Text = styled.p`
 
 const Label = styled.label`
   font-size: 70%;
+    font-family: 'Poppins', sans-serif;
   color: #485360;
   font-weight: none;
 `;
@@ -146,8 +149,8 @@ const InfoPanel: React.SFC<Props> = ({
             <SEmptyState>
               You haven't selected a table yet, click on the <CircleInformation style={{ height: '20px' }} color="#149BD2" /> in a table to see more information.
               <br /><br />
-              To save a table to the top of the screen, click on the
-                <Pin
+              To save a table to the top of the list, click on the {` `}
+              <Pin
                 color="#FF98BB"
               /> in a table.
           </SEmptyState>

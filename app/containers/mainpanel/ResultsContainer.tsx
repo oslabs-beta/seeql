@@ -14,6 +14,7 @@ const ResultsWrapper = styled.div`
   min-width: 400px;
   box-shadow: 1px 1px 4px #67809f;
     border-radius: 3px;
+      font-family: 'Poppins', sans-serif;
 `
 
 const SRestTabsRight = styled.div`
@@ -21,12 +22,14 @@ const SRestTabsRight = styled.div`
   justify-content: flex-end;
   align-items: center;
   width: 50%;
+    font-family: 'Poppins', sans-serif;
 `
 
 const SResNavTabs = styled.div`
   display: flex;
   align-items: center;
   width: 50%;
+    font-family: 'Poppins', sans-serif;
 `
 
 interface SResultsNavButtonProps {
@@ -39,6 +42,7 @@ const SResultsNavButton = styled.button<SResultsNavButtonProps>`
   border: none;
   font-size: 80%;
   margin: 0px 5px;
+    font-family: 'Poppins', sans-serif;
   color: ${({ activeDisplayInResultsTab, activetabname }) => activeDisplayInResultsTab === activetabname ? '#4B70FE' : '#485360'};
   border-bottom: ${({ activeDisplayInResultsTab, activetabname }) => activeDisplayInResultsTab === activetabname ? '2px solid #4B70FE' : '2px solid transparent'};
   transition: all 0.2s;
@@ -59,7 +63,7 @@ border: none;
 font-size: 70%;
 cursor: pointer;
 transition: all 0.2s;
-
+  font-family: 'Poppins', sans-serif;
 :hover{
   color: #ca333e;
   span {
@@ -99,6 +103,7 @@ const STopNav = styled.div`
 
 const TooManySelectedTablesWarning = styled.div`
   color: #f5ab35;
+    font-family: 'Poppins', sans-serif;
   border-radius: 3px;
   border-left: 3px solid #f5ab35;
   font-size: 80%;
