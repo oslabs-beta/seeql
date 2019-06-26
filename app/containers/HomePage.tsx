@@ -24,6 +24,14 @@ const InvisibleHeader = styled.div`
   -webkit-app-region: drag;
 `;
 
+const SRightHeaderWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0px 5px;
+  cursor: pointer;
+`
+
 const SHomepageWrapper = styled.div`
   display: flex;
   flex-direction: column;
@@ -42,12 +50,14 @@ const SMainPanelWrapper = styled.div`
   width: 100%;
 `
 
+//REPLACE
 const SLeftPanelWrapper = styled.div`
   height: 100%;
   width: 100%;
   display: flex;
   flex-direction: column;
-  align-items: stretch;
+  padding: 10px;
+  background-color: #d2d7d3 ;
 `
 
 const SRightPanelWrapper = styled.div<ISRightPanelProps>`
@@ -388,15 +398,18 @@ const HomePage = ({ location }) => {
       <SHomepageWrapper onMouseMove={() => setInactiveTime(0)}>
         <InvisibleHeader>
           <div></div>
+          <SRightHeaderWrapper onClick={togglePanelVisibility}>
+            Menu
           <Button
-            onClick={togglePanelVisibility}
-            plain={true}
-            fill={false}
-            alignSelf="start"
-            margin="5px 20px"
-            style={{ cursor: 'pointer' }}
-            icon={sidePanelVisibility ? <FormNext size="medium" /> : <FormPrevious size="medium" />}
-          /></InvisibleHeader>
+              plain={true}
+              fill={false}
+              alignSelf="start"
+              margin="5px 0px"
+              style={{ cursor: 'pointer' }}
+              icon={sidePanelVisibility ? <FormNext size="medium" /> : <FormPrevious size="medium" />}
+            />
+          </SRightHeaderWrapper>
+        </InvisibleHeader>
         {toggleLoad && (
           <LoadWrap>
             <LoadingComponent />

@@ -11,7 +11,6 @@ interface ITableProps {
 const Table = styled.div<ITableProps>`
   display: flex;
   flex-direction: column;
-  background-color: white;
   font-size: 70%;
   border-radius: 3px;
   transition: 0.3s;
@@ -52,7 +51,6 @@ const TableTitle = styled.p`
   text-align: center;
   font-size: 140%;
   overflow-wrap: break-word;
-  background-color: #eeeeee;
   :hover {
     transform: scale(1.01);
     background-color: rgb(240, 240, 240);

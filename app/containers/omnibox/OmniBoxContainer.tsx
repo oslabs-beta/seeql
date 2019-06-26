@@ -7,7 +7,6 @@ import { grommet } from 'grommet/themes';
 import { Search } from 'grommet-icons';
 
 const QueryResultError = styled.div`
-  background-color: #f1c7ca;
   color: #ca333e;
   border-radius: 3px;
   font-family: 'Poppins', sans-serif;

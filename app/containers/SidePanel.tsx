@@ -62,6 +62,7 @@ const Tabs = styled.div`
   margin: 10px;
 `;
 
+
 interface IForeignKeysAffected {
   column: string;
   table: string;

@@ -1,9 +1,18 @@
 import * as React from 'react';
 import QueryResults from "../../components/mainpanel/QueryResults";
 import TablesContainer from './TablesContainer';
-import { Box, Tabs, Tab, Grommet, Button } from "grommet";
-import { grommet } from 'grommet/themes';
+import { Tabs, Tab, Button } from "grommet";
+// import { grommet } from 'grommet/themes';
 import { FormTrash } from 'grommet-icons';
+import styled from 'styled-components';
+
+const ResultsWrapper = styled.div`
+  height: 100px;
+  border: 3px solid green;
+  overflow: hidden;
+  overflow: scroll;
+  height: 100%;
+`
 
 interface IResultsContainerProps {
   activeDisplayInResultsTab: number;
@@ -58,13 +67,13 @@ const ResultsContainer: React.SFC<IResultsContainerProps> = ({
   })
 
   return (
-    <Grommet theme={grommet}>
+    <ResultsWrapper>
       <Button style={{ fontSize: '10px', padding: '0px 5px' }} gap="xxsmall" icon={<FormTrash size="small" />} label="Reset Query" onClick={resetQuerySelection} />
       <Tabs activeIndex={activeDisplayInResultsTab} onActive={(index) => setActiveDisplayInResultsTab(index)}>
         {resultsTabs}
       </Tabs>
+    </ResultsWrapper>
 
-    </Grommet>
   )
 }
 
