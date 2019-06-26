@@ -10,7 +10,7 @@ import { Pin, CircleInformation, Halt } from 'grommet-icons';
 const SEmptyState = styled.div`
   margin: auto;
   text-align: center;
-    font-size: 120%;
+  
   padding: 20px;
 `
 
@@ -182,7 +182,7 @@ const TablesContainer: React.SFC<ITablesContainerProps> = ({
                       dispatchPinned(actions.removeFromPinned(table.table_name))
                     }
                     pinned={true}
-                    color="#F12B93"
+                    color="#FF98BB"
                   />
                 </STabWrapper>
                 <STabWrapper>

@@ -121,7 +121,7 @@ const SidePanel: React.SFC<Props> = ({
                   dispatchSidePanelDisplay(actions.changeToInfoPanel())
                 }
               >
-                <CircleInformation color={activePanel === 'info' ? "#4B70FE" : '#E6EAF2'} />
+                <CircleInformation color={activePanel === 'info' ? "#4B70FE" : '#485360'} />
               </IndTab>
               <IndTab
                 data-panel="settings"
@@ -131,7 +131,7 @@ const SidePanel: React.SFC<Props> = ({
                   dispatchSidePanelDisplay(actions.changeToSettingsPanel())
                 }
               >
-                <UserSettings color={activePanel === 'settings' ? "#4B70FE" : '#E6EAF2'} />
+                <UserSettings color={activePanel === 'settings' ? "#4B70FE" : '#485360'} />
               </IndTab>
             </Tabs>
             <SSectionWrapper>
