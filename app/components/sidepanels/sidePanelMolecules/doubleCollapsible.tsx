@@ -31,12 +31,7 @@ const NestedCollapsible =()=> {
         return setTheme
     }
 
-    useEffect(()=>{
-        setContext(state)
-    },[state])
-
-console.log ('context ', context)
-console.log ('state', state)
+    useEffect(()=>setContext(state),[state])
 
     
         return (
