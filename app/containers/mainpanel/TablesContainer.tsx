@@ -181,7 +181,7 @@ const TablesContainer: React.SFC<ITablesContainerProps> = ({
                     onClick={() =>
                       dispatchPinned(actions.removeFromPinned(table.table_name))
                     }
-                    pinned={true}
+                    pinned='true'
                     color="#FF98BB"
                   />
                 </STabWrapper>
@@ -234,7 +234,7 @@ const TablesContainer: React.SFC<ITablesContainerProps> = ({
                     onClick={() =>
                       dispatchPinned(actions.addToPinned(table.table_name))
                     }
-                    pinned={false}
+                    pinned='false'
                     color="#485360"
                   />
                 </STabWrapper>

@@ -148,6 +148,7 @@ const ResultsContainer: React.SFC<IResultsContainerProps> = ({
       </STopNav>
       {activeDisplayInResultsTab === 'Tables' &&
         <TablesContainer
+        key={activeDisplayInResultsTab}
           relationships={relationships}
           userInputForTables={userInputForTables}
           activeTableInPanel={activeTableInPanel}

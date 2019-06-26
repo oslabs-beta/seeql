@@ -1,5 +1,6 @@
 import * as React from 'react';
 import styled from 'styled-components';
+
 import { InformationPanel } from './sidePanelMolecules/titles'
 import { Grommet } from "grommet";
 import { grommet } from 'grommet/themes';
