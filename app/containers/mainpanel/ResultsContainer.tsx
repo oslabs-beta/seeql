@@ -1,7 +1,7 @@
 import * as React from 'react';
+import styled from 'styled-components';
 import QueryResults from "../../components/mainpanel/QueryResults";
 import TablesContainer from './TablesContainer';
-import styled from 'styled-components';
 
 const ResultsWrapper = styled.div`
   display: flex;
@@ -148,7 +148,7 @@ const ResultsContainer: React.SFC<IResultsContainerProps> = ({
       </STopNav>
       {activeDisplayInResultsTab === 'Tables' &&
         <TablesContainer
-        key={activeDisplayInResultsTab}
+          key={activeDisplayInResultsTab}
           relationships={relationships}
           userInputForTables={userInputForTables}
           activeTableInPanel={activeTableInPanel}

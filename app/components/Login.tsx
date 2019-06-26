@@ -5,14 +5,12 @@ import { useState, useEffect } from 'react';
 /* eslint-disable @typescript-eslint/no-var-requires */
 import { Client } from 'pg';
 
-const client = new Client(`postgres://ltdnkwnbccooem:64ad308e565b39cc070194f7fa621ae0e925339be5a1c69480ff2a4462eab4c4@ec2-54-163-226-238.compute-1.amazonaws.com:5432/ddsu160rb5t7vq?ssl=true`)
-client.connect()
+
 
 const getTables = (client) => {
   return new Promise((resolve, reject) => {
     client.query(`SELECT table_name FROM information_schema.tables WHERE table_schema='public' AND table_type='BASE TABLE' ORDER BY table_name ASC`,
       (err, result) => {
-        console.log(result)
         if (err) reject(err);
         resolve(result);
       }
@@ -86,7 +84,7 @@ const getPrimaryKey = (client, tableName) => {
 };
 async function composeTableData(client) {
   const tablesArr = [];
-  var tableNames: any
+  let tableNames: any
   tableNames = await getTables(client);
 
   for (const table of tableNames.rows) {
@@ -310,7 +308,7 @@ const RequiredWarning = styled.span`
     transition: all 0.2s;
 `;
 
-const Login = ({ setTableData, setCurrentView }) => {
+const Login = ({ setTableData, setCurrentView, pgClient, setPgClient }) => {
   const [loginType, setLoginType] = useState('URI');
   const [host, setHost] = useState({ value: '', requiredError: false });
   const [port, setPort] = useState('5432');
@@ -340,9 +338,13 @@ const Login = ({ setTableData, setCurrentView }) => {
       URI ||
       (host.value && username.value && password.value && database.value)
     ) {
+      // const client = new Client(`postgres://ltdnkwnbccooem:64ad308e565b39cc070194f7fa621ae0e925339be5a1c69480ff2a4462eab4c4@ec2-54-163-226-238.compute-1.amazonaws.com:5432/ddsu160rb5t7vq?ssl=true`)
+      const client = new Client(updatedURI);
+      client.connect();
+      setPgClient(client)
       composeTableData(client)
-        .then(x => { 
-          setTableData(x)
+        .then(tableData => {
+          setTableData(tableData)
           setCurrentView('homePage')
         })
     }
