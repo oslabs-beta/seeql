@@ -13,6 +13,7 @@ const TitleWrapper = styled.span`
   display: flex;
   justify-content: center;
   align-items: center;
+  
 `
 
 const SidePanelTableListWrapper = styled.div<ISidePanelTableWrapperProps>`
@@ -21,6 +22,7 @@ const SidePanelTableListWrapper = styled.div<ISidePanelTableWrapperProps>`
   height: 100%;
   transition: width 500ms ease-in-out;
   overflow: hidden;
+   transition: all 0.2s ease-in-out;
 `;
 
 const LabelTextWrapper = styled.div`

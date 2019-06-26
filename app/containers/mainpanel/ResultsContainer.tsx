@@ -11,7 +11,7 @@ const ResultsWrapper = styled.div`
   overflow: scroll;
   background-color: white;
   height: 100%;
-  margin-top: 10px;
+  margin-top: 15px;
   box-shadow: 1px 1px 4px #67809f;
 `
 

@@ -22,11 +22,11 @@ const PanelWrapper = styled.div<IPanelWrapperProps>`
     sidePanelVisibility ? '250px' : '0px'};
   display: flex;
   flex-direction: column;
-  padding: 5px;
+  padding: 10px 10px 10px 0px;
   justify-content: flex-start;
   background-color: #E6EAF2 ;
   height: 100%;
-  transition: width 500ms ease-in-out;
+   transition: all 0.2s ease-in-out;
 `;
 
 const SInnerPanelWrapper = styled.div`

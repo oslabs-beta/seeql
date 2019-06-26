@@ -22,6 +22,7 @@ const InvisibleHeader = styled.div`
   align-items: center;
   background-color: #F7F9FD;
   -webkit-app-region: drag;
+   transition: all 0.2s ease-in-out;
 `;
 
 const SRightHeaderWrapper = styled.div`
@@ -48,6 +49,7 @@ const SMainPanelWrapper = styled.div`
   display: flex;
   height: 100%;
   width: 100%;
+   transition: all 0.2s ease-in-out;
 `
 
 //REPLACE MAIn
@@ -56,13 +58,15 @@ const SLeftPanelWrapper = styled.div`
   width: 100%;
   display: flex;
   flex-direction: column;
-  padding: 10px;
+  padding: 15px 10px 15px 15px;
   background-color: #E6EAF2;
+   transition: all 0.2s ease-in-out;
 `
 
 const SRightPanelWrapper = styled.div<ISRightPanelProps>`
   height: 100%;
     width: ${({ sidePanelVisibility }) => sidePanelVisibility ? '250px' : '0px'};
+    transition: all 0.2s ease-in-out;
 `
 
 const LoadWrap = styled.div`
