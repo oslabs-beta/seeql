@@ -15,8 +15,17 @@ const ResultsWrapper = styled.div`
   box-shadow: 1px 1px 4px #67809f;
 `
 
-const SBottomRes = styled.div`
-  border: 4px solid green;
+const SRestTabsRight = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  width: 50%;
+`
+
+const SResNavTabs = styled.div`
+  display: flex;
+  align-items: center;
+  width: 50%;
 `
 
 interface SResultsNavButtonProps {
@@ -47,14 +56,13 @@ const SResultsNavButton = styled.button<SResultsNavButtonProps>`
 const SResetQueryButton = styled.button`
 border: none;
 font-size: 70%;
-margin: 0px 5px;
 cursor: pointer;
 transition: all 0.2s;
 
 :hover{
   color: #ca333e;
   span {
-    opacity: 1;
+    visibility: visible;
   }
 
 }
@@ -62,15 +70,17 @@ transition: all 0.2s;
     outline: none;
   }
     span{
-    opacity: 0;
+    visibility: hidden;
     font-weight: bold;
+    position: relative;
       background-color: #fef5e7;
       color: #f5ab35;
       text-align: center;
       border-radius: 10px;
       padding: 8px
+      top: 5px;
       margin: 0px 3px;
-         transition: opacity 0.2s;
+        transition: all 0.2s;
       }
       
 }
@@ -127,10 +137,13 @@ const ResultsContainer: React.SFC<IResultsContainerProps> = ({
   return (
     <ResultsWrapper>
       <STopNav>
-        <div>
+        <SResNavTabs>
           {resultsTabs}
-        </div>
-        <SResetQueryButton onClick={resetQuerySelection}><span>This will remove all selected columns</span>Reset Query</SResetQueryButton>
+        </SResNavTabs>
+        <SRestTabsRight>
+          <div></div>
+          <SResetQueryButton onClick={resetQuerySelection}><span>This will remove all selected columns</span>Reset Query</SResetQueryButton>
+        </SRestTabsRight>
       </STopNav>
       {activeDisplayInResultsTab === 'Tables' &&
         <TablesContainer
