@@ -16,11 +16,10 @@ const LoginPageWrapper = styled.div`
   width: 100%;
 `;
 const Title = styled.h1`
-  font-size: 500%;
+  font-size: 600%;
   font-weight: none;
   color: #485360;
   color: white;
-  padding: 50px;
 `;
 const Panel = styled.div`
   height: 100vh;
@@ -37,8 +36,6 @@ const funtimes = keyframes`
 const LeftPanel = styled(Panel)`
   background-color: white;
   display: flex;
-  justify-content: center;
-  align-items: center;
   width: 100vw;
   height: 100vh;
   animation: ${funtimes} 8s ease infinite;
@@ -286,149 +283,153 @@ const Login = () => {
       <InvisibleHeader></InvisibleHeader>
       <LoginPageWrapper>
         <LeftPanel>
-          <Title>SeeQL</Title>
-          <LoginContainer>
-            {loggedOutMessage === 'inactivity' && (
-              <LogoutMessage>
-                You've been logged out due to inactivity. Please re-enter your credentials to login.
+          <Panel>
+            <Title>SeeQL</Title>
+          </Panel>
+          <Panel>
+            <LoginContainer>
+              {loggedOutMessage === 'inactivity' && (
+                <LogoutMessage>
+                  You've been logged out due to inactivity. Please re-enter your credentials to login.
               </LogoutMessage>
-            )}
-            {loggedOutMessage === 'userlogout' && (
-              <LogoutMessage>You have successfully logged out. Have a nice day.</LogoutMessage>
-            )}
-            {connectionError && (
-              <ConnectionErrorMessage>
-                We were unable to connect to your database. Please try again.
+              )}
+              {loggedOutMessage === 'userlogout' && (
+                <LogoutMessage>You have successfully logged out. Have a nice day.</LogoutMessage>
+              )}
+              {connectionError && (
+                <ConnectionErrorMessage>
+                  We were unable to connect to your database. Please try again.
               </ConnectionErrorMessage>
-            )}
-            <LoginTypeNavigation>
-              <LoginTypeButton
-                buttonType="URI"
-                selectedLoginType={loginType}
-                onClick={() => {
-                  setLoginType('URI'), setConnectionError(false);
-                }}
-              >
-                URI
+              )}
+              <LoginTypeNavigation>
+                <LoginTypeButton
+                  buttonType="URI"
+                  selectedLoginType={loginType}
+                  onClick={() => {
+                    setLoginType('URI'), setConnectionError(false);
+                  }}
+                >
+                  URI
               </LoginTypeButton>
-              <LoginTypeButton
-                buttonType="Credentials"
-                selectedLoginType={loginType}
-                onClick={() => {
-                  setLoginType('Credentials'), setConnectionError(false);
-                }}
-              >
-                Credentials
+                <LoginTypeButton
+                  buttonType="Credentials"
+                  selectedLoginType={loginType}
+                  onClick={() => {
+                    setLoginType('Credentials'), setConnectionError(false);
+                  }}
+                >
+                  Credentials
               </LoginTypeButton>
-            </LoginTypeNavigation>
-            {loginType === 'Credentials' && (
-              <CredentialsContainer>
-                <InputAndLabelWrapper>
-                  <InputLabel>Host</InputLabel>
-                  <CredentialsInput
-                    type="text"
-                    requiredError={host.requiredError}
-                    placeholder="host"
-                    value={host.value}
-                    onChange={e =>
-                      setHost({ value: e.target.value, requiredError: false })
-                    }
+              </LoginTypeNavigation>
+              {loginType === 'Credentials' && (
+                <CredentialsContainer>
+                  <InputAndLabelWrapper>
+                    <InputLabel>Host</InputLabel>
+                    <CredentialsInput
+                      type="text"
+                      requiredError={host.requiredError}
+                      placeholder="host"
+                      value={host.value}
+                      onChange={e =>
+                        setHost({ value: e.target.value, requiredError: false })
+                      }
+                    />
+                    {host.requiredError && (
+                      <RequiredWarning>host is required</RequiredWarning>
+                    )}
+                  </InputAndLabelWrapper>
+                  <InputAndLabelWrapper>
+                    <InputLabel>Port</InputLabel>
+                    <CredentialsInput
+                      type="text"
+                      requiredError={false}
+                      placeholder="port (default 5432)"
+                      value={port}
+                      onChange={e => setPort(e.target.value)}
+                    />
+                  </InputAndLabelWrapper>
+                  <InputAndLabelWrapper>
+                    <InputLabel>Username</InputLabel>
+                    <CredentialsInput
+                      type="text"
+                      requiredError={username.requiredError}
+                      placeholder="username"
+                      value={username.value}
+                      onChange={e =>
+                        setUsername({
+                          value: e.target.value,
+                          requiredError: false
+                        })
+                      }
+                    />
+                    {username.requiredError && (
+                      <RequiredWarning>username is required</RequiredWarning>
+                    )}
+                  </InputAndLabelWrapper>
+                  <InputAndLabelWrapper>
+                    <InputLabel>Password</InputLabel>
+                    <CredentialsInput
+                      type="password"
+                      requiredError={password.requiredError}
+                      placeholder="password"
+                      value={password.value}
+                      onChange={e =>
+                        setPassword({
+                          value: e.target.value,
+                          requiredError: false
+                        })
+                      }
+                    />
+                    {password.requiredError && (
+                      <RequiredWarning>password is required</RequiredWarning>
+                    )}
+                  </InputAndLabelWrapper>
+                  <InputAndLabelWrapper>
+                    <InputLabel>Database</InputLabel>
+                    <CredentialsInput
+                      type="text"
+                      requiredError={database.requiredError}
+                      placeholder="database"
+                      value={database.value}
+                      onChange={e =>
+                        setDatabase({
+                          value: e.target.value,
+                          requiredError: false
+                        })
+                      }
+                    />
+                    {database.requiredError && (
+                      <RequiredWarning>database is required</RequiredWarning>
+                    )}
+                  </InputAndLabelWrapper>
+                </CredentialsContainer>
+              )}
+              {loginType === 'URI' && (
+                <URIConnectionContainer>
+                  <InputLabel>URI Connection String</InputLabel>
+                  <URIInput
+                    requiredError={requiredError}
+                    onChange={captureURI}
+                    placeholder="Enter your URI connection string..."
+                    value={URI}
                   />
-                  {host.requiredError && (
-                    <RequiredWarning>host is required</RequiredWarning>
+                  {requiredError && (
+                    <RequiredWarning>URI is required</RequiredWarning>
                   )}
-                </InputAndLabelWrapper>
-                <InputAndLabelWrapper>
-                  <InputLabel>Port</InputLabel>
-                  <CredentialsInput
-                    type="text"
-                    requiredError={false}
-                    placeholder="port (default 5432)"
-                    value={port}
-                    onChange={e => setPort(e.target.value)}
-                  />
-                </InputAndLabelWrapper>
-                <InputAndLabelWrapper>
-                  <InputLabel>Username</InputLabel>
-                  <CredentialsInput
-                    type="text"
-                    requiredError={username.requiredError}
-                    placeholder="username"
-                    value={username.value}
-                    onChange={e =>
-                      setUsername({
-                        value: e.target.value,
-                        requiredError: false
-                      })
-                    }
-                  />
-                  {username.requiredError && (
-                    <RequiredWarning>username is required</RequiredWarning>
-                  )}
-                </InputAndLabelWrapper>
-                <InputAndLabelWrapper>
-                  <InputLabel>Password</InputLabel>
-                  <CredentialsInput
-                    type="password"
-                    requiredError={password.requiredError}
-                    placeholder="password"
-                    value={password.value}
-                    onChange={e =>
-                      setPassword({
-                        value: e.target.value,
-                        requiredError: false
-                      })
-                    }
-                  />
-                  {password.requiredError && (
-                    <RequiredWarning>password is required</RequiredWarning>
-                  )}
-                </InputAndLabelWrapper>
-                <InputAndLabelWrapper>
-                  <InputLabel>Database</InputLabel>
-                  <CredentialsInput
-                    type="text"
-                    requiredError={database.requiredError}
-                    placeholder="database"
-                    value={database.value}
-                    onChange={e =>
-                      setDatabase({
-                        value: e.target.value,
-                        requiredError: false
-                      })
-                    }
-                  />
-                  {database.requiredError && (
-                    <RequiredWarning>database is required</RequiredWarning>
-                  )}
-                </InputAndLabelWrapper>
-              </CredentialsContainer>
-            )}
-            {loginType === 'URI' && (
-              <URIConnectionContainer>
-                <InputLabel>URI Connection String</InputLabel>
-                <URIInput
-                  requiredError={requiredError}
-                  onChange={captureURI}
-                  placeholder="Enter your URI connection string..."
-                  value={URI}
-                />
-                {requiredError && (
-                  <RequiredWarning>URI is required</RequiredWarning>
-                )}
-              </URIConnectionContainer>
-            )}
-            <ToggleSSL>
-              <input type="checkbox" onChange={e => setSSL(e.target.checked)} />
-              <InputLabel>ssl?</InputLabel>
-            </ToggleSSL>
-            {!loading && <><LoginBtn onClick={sendLoginURI}><span>Login</span></LoginBtn></>}
-            {loading && <LoginBtn disabled>Loading...</LoginBtn>}
-            {redirectHome()}
-          </LoginContainer>
+                </URIConnectionContainer>
+              )}
+              <ToggleSSL>
+                <input type="checkbox" onChange={e => setSSL(e.target.checked)} />
+                <InputLabel>ssl?</InputLabel>
+              </ToggleSSL>
+              {!loading && <><LoginBtn onClick={sendLoginURI}><span>Login</span></LoginBtn></>}
+              {loading && <LoginBtn disabled>Loading...</LoginBtn>}
+              {redirectHome()}
+            </LoginContainer>
+          </Panel>
         </LeftPanel>
       </LoginPageWrapper>
-    </React.Fragment>
+    </React.Fragment >
   );
 };
 export default Login;
