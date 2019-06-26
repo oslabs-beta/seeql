@@ -1,10 +1,9 @@
 import * as React from 'react';
 import { ipcRenderer } from 'electron';
 import styled from 'styled-components';
+import { useState } from 'react';
 import OmniBoxInput from '../../components/omnibox/OmniBoxInput';
-import { Tabs, Tab, Grommet, Box } from "grommet";
-import { grommet } from 'grommet/themes';
-import { Search } from 'grommet-icons';
+// import { Search } from 'grommet-icons';
 
 const OmniBoxWrapper = styled.div`
   box-shadow: 1px 1px 4px #67809f;
@@ -17,6 +16,9 @@ const QueryResultError = styled.div`
   border-radius: 3px;
   border-left: 3px solid #ca333e;
   font-size: 80%;
+  background-color: #f1c7ca;
+  margin: 5px 0px;
+  padding: 5px;
 `;
 
 interface IOmniBoxProps {
@@ -40,10 +42,25 @@ const OmniBoxContainer: React.SFC<IOmniBoxProps> = ({
   setUserInputForTables,
   userInputForTables
 }) => {
+  const [omniBoxView, setOmniBoxView] = useState('SQL');
 
   const listOfTabNames = ['SQL', 'Search'];
+  const navigationTabs = listOfTabNames.map(tabname => {
+    return (
+      <button
+        key={tabname}
+        onClick={() => {
+          setOmniBoxView(tabname);
+        }}
+        omniBoxView={omniBoxView}
+        selectedView={tabname}
+      >
+        {tabname}
+      </button>
+    );
+  });
 
-
+  // #TODO: Connect this ipc communication with new query input
   const executeQuery = (): void => {
     if (!loadingQueryStatus) {
       setQueryResultError({
@@ -54,33 +71,30 @@ const OmniBoxContainer: React.SFC<IOmniBoxProps> = ({
     }
     setLoadingQueryStatus(true);
   };
-  const navigationTabs = listOfTabNames.map(tabname => {
+  const generateInputBox = () => {
     return (
-      <Tab
-        title={tabname === 'Search' ? <Search style={{ height: '20px' }} /> : tabname}
-      >
-        <OmniBoxInput
-          tabname={tabname}
-          userInputForTables={userInputForTables}
-          setUserInputForTables={setUserInputForTables}
-          setUserInputQuery={setUserInputQuery}
-          userInputQuery={userInputQuery}
-          executeQuery={executeQuery}
-          loadingQueryStatus={loadingQueryStatus}
-        />
-      </Tab>
+      <OmniBoxInput
+        key={omniBoxView}
+        userInputForTables={userInputForTables}
+        setUserInputForTables={setUserInputForTables}
+        omniBoxView={omniBoxView}
+        setUserInputQuery={setUserInputQuery}
+        userInputQuery={userInputQuery}
+        executeQuery={executeQuery}
+        loadingQueryStatus={loadingQueryStatus}
+      />
     );
-  });
+  };
+
 
   return (
-    <Grommet theme={grommet} className="OmniGrommet" style={{ height: 'auto' }}>
-      <OmniBoxWrapper>
-        <Tabs>{navigationTabs}</Tabs>
-        {queryResultError.status && (
-          <QueryResultError>{queryResultError.message}</QueryResultError>
-        )}
-      </OmniBoxWrapper>
-    </Grommet>
+    <OmniBoxWrapper>
+      <div>{navigationTabs}</div>
+      {generateInputBox()}
+      {queryResultError.status && (
+        <QueryResultError>{queryResultError.message}</QueryResultError>
+      )}
+    </OmniBoxWrapper>
   );
 };
 

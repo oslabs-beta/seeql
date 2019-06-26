@@ -78,10 +78,11 @@ const alias = {};
 const HomePage = ({ location }) => {
   const allTablesMetaData = location.state.tables;
   // const [relationships, setRelationships]
+
   const [selectedForQueryTables, setSelectedForQueryTables] = useState({});
   const [loadingQueryStatus, setLoadingQueryStatus] = useState(false);
   const [activeDisplayInResultsTab, setActiveDisplayInResultsTab] = useState(
-    0
+    'Tables'
   );
   const [activeTableInPanel, setActiveTableInPanel] = useState({});
   const [userInputForTables, setUserInputForTables] = useState('');
@@ -365,7 +366,7 @@ const HomePage = ({ location }) => {
           status: queryResult.message.length === 0 ? 'No results' : 'Success',
           message: queryResult.message
         });
-        setActiveDisplayInResultsTab(1);
+        setActiveDisplayInResultsTab('Query Results');
       }
       if (queryResult.statusCode === 'Invalid Request') {
         setQueryResultError({
