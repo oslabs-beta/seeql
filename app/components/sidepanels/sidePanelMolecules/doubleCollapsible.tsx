@@ -27,10 +27,11 @@ const NestedCollapsible =()=> {
 
     const [state, dispatch] = useReducer(themeReducer, context)
 
-    console.log (activeMode)
+    console.log ('activeMode', activeMode)
   
     
     const handleDispatch=( selectedMode, currentMode)=>{
+        console.log('selectedmode, currentMode colapse', selectedMode, currentMode)
         ipcRenderer.send('user-theme-selected', selectedMode);
         dispatch({
             type: 'CHANGE_MODE',
@@ -68,30 +69,30 @@ useEffect(()=>{
                         <Collapsible open={openSubmenu1}>
                             <Button
                                 hoverIndicator="background"
-                                onClick={(e)=>handleDispatch( e.target.dataset.value, activeMode)}
+                                onClick={(e)=>handleDispatch(e.target.dataset.value, activeMode)}
                                 >
                                 <Box
-                                    
-                                    
+                                    data-value="defaultTheme"
                                     margin={{ left: "medium" }}
                                     direction="row"
                                     align="center"
                                     pad="xsmall"
                                 >
-                                    <Text data-value='defaultTheme' size="small">Default</Text>
+                                    <Text size="small">Default</Text>
                                 </Box>
                             </Button>
                             <Button
                                 hoverIndicator="background"
                                 onClick={(e) => handleDispatch(e.target.dataset.value, activeMode)}
-                            >
+                                >
                                 <Box
+                                    data-value='darkTheme' 
                                     margin={{ left: "medium" }}
                                     direction="row"
                                     align="center"
                                     pad="xsmall"
                                 >
-                                    <Text data-value='darkTheme' size="small">Dark</Text>
+                                    <Text size="small">Dark</Text>
                                 </Box>
                             </Button>
                             {}

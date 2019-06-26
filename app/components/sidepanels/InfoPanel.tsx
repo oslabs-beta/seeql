@@ -1,6 +1,6 @@
 import * as React from 'react';
 import styled from 'styled-components';
-import {InformationPanel} from './sidePanelMolecules/Headers'
+import {InformationPanel} from './sidePanelMolecules/titles'
 interface ISidePanelTableWrapperProps {
   sidePanelVisibility: boolean;
 }
