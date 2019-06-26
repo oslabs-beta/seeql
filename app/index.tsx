@@ -4,15 +4,18 @@ import { hot } from 'react-hot-loader/root';
 import ThemeContext from './contexts/themeContext';
 import themes from './themes/themes';
 import Routes from './Routes';
-import { BrowserRouter } from 'react-router-dom';
+// this is react-router-dom, whereas the other components list react-router?
+import { HashRouter } from 'react-router-dom';
 import { ThemeProvider } from 'styled-components';
 import { useState } from 'react';
+
+import "regenerator-runtime/runtime";
 
 const Index = () => {
   const modes = [
     { value: 'defaultTheme', active: true },
     { value: 'darkTheme', active: false },
-    { currentMode:'defaultTheme' }
+    { currentMode: 'defaultTheme' }
     // { value: 'kateTheme', active: false },
     // { value: 'vaderette', active: false },
     // { value: 'tylerTheme', active: false },
@@ -27,9 +30,9 @@ const Index = () => {
   return (
     <ThemeContext.Provider value={[context, setContext]}>
       <ThemeProvider theme={themes[serveMode]}>
-        <BrowserRouter>
+        <HashRouter>
           <Routes />
-        </BrowserRouter>
+        </HashRouter>
       </ThemeProvider>
     </ThemeContext.Provider>
   );
