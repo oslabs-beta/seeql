@@ -10,7 +10,8 @@ import { Pin, CircleInformation, Halt } from 'grommet-icons';
 const SEmptyState = styled.div`
   margin: auto;
   text-align: center;
-
+    font-size: 120%;
+  padding: 20px;
 `
 
 const TableTitle = styled.p`

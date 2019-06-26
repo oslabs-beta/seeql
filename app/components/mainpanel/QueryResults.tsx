@@ -16,6 +16,8 @@ const SQueryEmptyState = styled.div`
   align-items: center;
   justify-content: center;
   font-size: 120%;
+  padding: 20px;
+  text-align: center;
 
 `
 
@@ -69,13 +71,13 @@ const QueryResults: React.SFC<IQueryResultsProps> = ({ queryResult }) => {
       {
         queryResult.message.length === 0 &&
         queryResult.status === 'No results' && (
-          <SQueryEmptyState><div>{`There were no results found for your query. Please enter a new query.`}</div></SQueryEmptyState>
+          <SQueryEmptyState><div>{`There were no results found for your query.`}<br /> {`Please enter a new query.`}</div></SQueryEmptyState>
         )
       }
       {
         queryResult.message.length === 0 &&
         queryResult.status === 'No query' && (
-          <SQueryEmptyState><div>{`You haven't queried anything! Enter a query above to get started.`}</div></SQueryEmptyState>
+          <SQueryEmptyState><div>{`You haven't queried anything!`}<br /> {` Enter a query above to get started.`}</div></SQueryEmptyState>
         )
       }
     </QueryResultWrapper>
