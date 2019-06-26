@@ -38,6 +38,7 @@ const SHomepageWrapper = styled.div`
   flex-direction: column;
   height: 100vh;
   width: 100vw;
+  transition: all 0.2s;
 `;
 
 interface ISRightPanelProps {

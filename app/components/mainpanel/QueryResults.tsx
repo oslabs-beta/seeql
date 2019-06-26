@@ -3,12 +3,21 @@ import styled from 'styled-components';
 import { Box, DataTable } from "grommet";
 
 const QueryResultWrapper = styled.div`
-      border: 2px solid pink;
       width: 100%;
     border-radius: 3px;
   overflow: scroll;
   height: 100%;
 `;
+
+const SQueryEmptyState = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 120%;
+
+`
 
 interface IQueryResult {
   status: string;
@@ -54,13 +63,13 @@ const QueryResults: React.SFC<IQueryResultsProps> = ({ queryResult }) => {
         {
           queryResult.message.length === 0 &&
           queryResult.status === 'No results' && (
-            <div>{`There were no results found for your query :(`}</div>
+            <SQueryEmptyState><span>{`There were no results found for your query. Please enter a new query.(`}</span></SQueryEmptyState>
           )
         }
         {
           queryResult.message.length === 0 &&
           queryResult.status === 'No query' && (
-            <div>{`You haven't queried anything! Enter a query above to get started. :(`}</div>
+            <SQueryEmptyState><span>{`You haven't queried anything! Enter a query above to get started.`}</span></SQueryEmptyState>
           )
         }
       </Box >

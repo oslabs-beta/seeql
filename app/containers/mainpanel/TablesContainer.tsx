@@ -4,8 +4,7 @@ import styled from 'styled-components';
 import * as actions from '../../actions/actions';
 import Tables from '../../components/mainpanel/Tables';
 import changePinnedStatus from '../../reducers/ChangePinnedStatus';
-import { Text, Grommet } from "grommet";
-import { grommet } from 'grommet/themes';
+import { Text } from "grommet";
 import { Pin, CircleInformation } from 'grommet-icons';
 
 const TempWrapper = styled.div`
@@ -13,6 +12,8 @@ const TempWrapper = styled.div`
     border: 3px solid pink;
     border-radius: 3px;
     box-shadow: 2px 2px 8px lightgrey;
+    height: 100%;
+    width: 100%;
 `
 
 interface ITableWrapperProps {
@@ -241,18 +242,16 @@ const TablesContainer: React.SFC<ITablesContainerProps> = ({
 
   if (pinnedTables.length || filteredTables.length) {
     return (
-      <Grommet theme={grommet}>
-        <TempWrapper>
-          {pinnedTables}
-          {filteredTables}
-        </TempWrapper>
-      </Grommet>
+      <TempWrapper>
+        {pinnedTables}
+        {filteredTables}
+      </TempWrapper>
     )
   }
   return (
     <Text>
       There were no search results. <br /> Please search again.
-      </Text>
+    </Text>
   )
 
 }

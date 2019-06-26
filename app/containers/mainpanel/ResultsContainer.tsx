@@ -4,6 +4,9 @@ import TablesContainer from './TablesContainer';
 import styled from 'styled-components';
 
 const ResultsWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
   overflow: hidden;
   background-color: white;
   height: 100%;
@@ -12,16 +15,46 @@ const ResultsWrapper = styled.div`
   box-shadow: 1px 1px 4px #67809f;
 `
 
+const SBottomRes = styled.div`
+  border: 4px solid green;
+`
+
+interface SResultsNavButtonProps {
+  activeDisplayInResultsTab: string;
+  activetabname: string;
+}
+
+
+const SResultsNavButton = styled.button<SResultsNavButtonProps>`
+  border: none;
+  font-size: 80%;
+  margin: 0px 5px;
+  color: ${({ activeDisplayInResultsTab, activetabname }) => activeDisplayInResultsTab === activetabname ? '#7540D9' : '#485360'};
+  border-bottom: ${({ activeDisplayInResultsTab, activetabname }) => activeDisplayInResultsTab === activetabname ? '2px solid #7540D9' : '2px solid transparent'};
+  transition: all 0.2s;
+  cursor: pointer;
+  
+  :hover {
+    border-bottom: 2px solid #7540D9;
+  }
+
+  :focus{
+    outline: none;
+  }
+
+`
+
 const SResetQueryButton = styled.button`
 border: none;
 font-size: 70%;
+margin: 0px 5px;
 cursor: pointer;
 transition: all 0.2s;
 
 :hover{
-  color: #7540D9;
+  color: #ca333e;
   span {
-    visibility: visible;
+    opacity: 1;
   }
 
 }
@@ -29,7 +62,7 @@ transition: all 0.2s;
     outline: none;
   }
     span{
-    visibility: hidden;
+    opacity: 0;
     font-weight: bold;
       background-color: #fef5e7;
       color: #f5ab35;
@@ -37,6 +70,7 @@ transition: all 0.2s;
       border-radius: 10px;
       padding: 8px
       margin: 0px 3px;
+         transition: opacity 0.2s;
       }
       
 }
@@ -48,7 +82,7 @@ const STopNav = styled.div`
   justify-content: space-between;
   align-items: center;
   padding: 0px 10px;
-  height: 40px;
+  min-height: 40px;
 `
 
 interface IResultsContainerProps {
@@ -82,12 +116,12 @@ const ResultsContainer: React.SFC<IResultsContainerProps> = ({
   const listOfTabNames = ['Tables', 'Query Results'];
 
   const resultsTabs = listOfTabNames.map((tabname) => {
-    return <button
+    return <SResultsNavButton
       key={tabname}
       activeDisplayInResultsTab={activeDisplayInResultsTab}
       activetabname={tabname}
       onClick={() => setActiveDisplayInResultsTab(tabname)}
-    >{tabname}</button>
+    >{tabname}</SResultsNavButton>
   })
 
   return (
