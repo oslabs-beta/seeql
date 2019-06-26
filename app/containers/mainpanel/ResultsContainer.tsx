@@ -1,9 +1,6 @@
 import * as React from 'react';
 import QueryResults from "../../components/mainpanel/QueryResults";
 import TablesContainer from './TablesContainer';
-// import { Tabs, Tab, Button } from "grommet";
-// import { grommet } from 'grommet/themes';
-// import { FormTrash } from 'grommet-icons';
 import styled from 'styled-components';
 
 const ResultsWrapper = styled.div`
@@ -15,12 +12,47 @@ const ResultsWrapper = styled.div`
   box-shadow: 1px 1px 4px #67809f;
 `
 
-const SInnerBottmPanelWrapper = styled.div`
+const SResetQueryButton = styled.button`
+border: none;
+font-size: 70%;
+cursor: pointer;
+transition: all 0.2s;
 
+:hover{
+  color: #7540D9;
+  span {
+    visibility: visible;
+  }
+
+}
+  :focus {
+    outline: none;
+  }
+    span{
+    visibility: hidden;
+    font-weight: bold;
+      background-color: #fef5e7;
+      color: #f5ab35;
+      text-align: center;
+      border-radius: 10px;
+      padding: 8px
+      margin: 0px 3px;
+      }
+      
+}
+`
+
+const STopNav = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0px 10px;
+  height: 40px;
 `
 
 interface IResultsContainerProps {
-  activeDisplayInResultsTab: number;
+  activeDisplayInResultsTab: string;
   queryResult: any;
   data: any;
   userInputForTables: string;
@@ -60,12 +92,12 @@ const ResultsContainer: React.SFC<IResultsContainerProps> = ({
 
   return (
     <ResultsWrapper>
-      <div>
+      <STopNav>
         <div>
           {resultsTabs}
         </div>
-        <button onClick={resetQuerySelection}>Reset Query</button>
-      </div>
+        <SResetQueryButton onClick={resetQuerySelection}><span>This will remove all selected columns</span>Reset Query</SResetQueryButton>
+      </STopNav>
       {activeDisplayInResultsTab === 'Tables' &&
         <TablesContainer
           relationships={relationships}

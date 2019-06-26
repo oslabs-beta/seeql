@@ -1,9 +1,7 @@
 import * as React from 'react';
 import { ipcRenderer } from 'electron';
 import styled from 'styled-components';
-import { useState } from 'react';
 import OmniBoxInput from '../../components/omnibox/OmniBoxInput';
-// import { Search } from 'grommet-icons';
 
 const OmniBoxWrapper = styled.div`
   box-shadow: 1px 1px 4px #67809f;
@@ -28,16 +26,20 @@ interface IOmniBoxNavButtonProps {
 const OmniBoxNavButton = styled.button<IOmniBoxNavButtonProps>`
   padding: 5px;
   width: 50%;
+  font-size: 80%;
   font-family: 'Poppins', sans-serif;
   border-radius: 3px 3px 0px 0px;
   border: none;
+      cursor: pointer;
   color: ${props =>
     props.selectedView === props.omniBoxView
       ? '#7540D9'
       : 'grey'};
   font-weight: ${(props) =>
     props.selectedView === props.omniBoxView ? 'bold' : 'none'};
-
+  :hover{
+    font-weight: bold;
+  }
   :focus {
     outline: none;
   }
@@ -48,10 +50,13 @@ interface IOmniBoxProps {
   loadingQueryStatus: boolean;
   queryResultError: any;
   userInputForTables: string;
+  omniBoxView: string;
+  setOmniBoxView: (any) => any;
   setQueryResultError: (any) => any;
   setLoadingQueryStatus: (any) => any;
   setUserInputQuery: (any) => any;
   setUserInputForTables: (any) => any;
+  setActiveDisplayInResultsTab: (any) => any;
 }
 
 const OmniBoxContainer: React.SFC<IOmniBoxProps> = ({
@@ -62,17 +67,20 @@ const OmniBoxContainer: React.SFC<IOmniBoxProps> = ({
   setUserInputQuery,
   queryResultError,
   setUserInputForTables,
-  userInputForTables
+  userInputForTables,
+  omniBoxView,
+  setOmniBoxView,
+  setActiveDisplayInResultsTab
 }) => {
-  const [omniBoxView, setOmniBoxView] = useState('SQL');
 
-  const listOfTabNames = ['SQL', 'plain'];
+  const listOfTabNames = ['SQL', 'Search'];
   const navigationTabs = listOfTabNames.map(tabname => {
     return (
       <OmniBoxNavButton
         key={tabname}
         onClick={() => {
           setOmniBoxView(tabname);
+          if (tabname === 'Search') setActiveDisplayInResultsTab('Tables');
         }}
         omniBoxView={omniBoxView}
         selectedView={tabname}

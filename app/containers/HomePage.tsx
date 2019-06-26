@@ -78,7 +78,7 @@ const alias = {};
 const HomePage = ({ location }) => {
   const allTablesMetaData = location.state.tables;
   // const [relationships, setRelationships]
-
+  const [omniBoxView, setOmniBoxView] = useState('SQL');
   const [selectedForQueryTables, setSelectedForQueryTables] = useState({});
   const [loadingQueryStatus, setLoadingQueryStatus] = useState(false);
   const [activeDisplayInResultsTab, setActiveDisplayInResultsTab] = useState(
@@ -422,6 +422,8 @@ const HomePage = ({ location }) => {
         <SMainPanelWrapper className="main">
           <SLeftPanelWrapper className="left">
             <OmniBoxContainer
+              omniBoxView={omniBoxView}
+              setOmniBoxView={setOmniBoxView}
               userInputForTables={userInputForTables}
               loadingQueryStatus={loadingQueryStatus}
               userInputQuery={userInputQuery}
@@ -430,6 +432,7 @@ const HomePage = ({ location }) => {
               setUserInputQuery={setUserInputQuery}
               queryResultError={queryResultError}
               setUserInputForTables={setUserInputForTables}
+              setActiveDisplayInResultsTab={setActiveDisplayInResultsTab}
             />
             <ResultsContainer
               relationships={relationships}

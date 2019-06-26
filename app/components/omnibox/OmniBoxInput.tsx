@@ -23,35 +23,34 @@ const OmniBoxInputText = styled.textarea`
 const ExecuteQueryButton = styled.button`
   transition: all 0.2s;
   text-align: center;
+  background-color: #7540D9;
+  color: white;
   padding: 8px;
-  font-size: 80%;
+  font-size: 100%;
   border-radius: 0px 0px 3px 3px;
   transition: 0.2s;
   span {
     cursor: pointer;
-    display: inline - block;
+    display: inline-block;
     position: relative;
     transition: 0.5s;
   }
-
   span:after {
-  content: '\00bb';
-  position: absolute;
-  opacity: 0;
-  top: 0;
-  right: -20px;
-  transition: 0.5s;
-}   
+    content: ">>";
+    position: absolute;
+    opacity: 0;
+    top: 0;
+    right: -22px;
+    transition: 0.5s;
+  }   
   :hover {
     span {
-      padding-right: 15px;
-    }
+      padding-right: 10px;
+    } 
     span:after {
-      opacity: 1;
-      right: 0;
+    opacity: 1;
     }
   }
-
   :focus {
     outline: none;
   }
@@ -92,7 +91,7 @@ const OmniBoxInput: React.SFC<IOmniBoxInputProps> = ({
       </OmniBoxWrapper>
     );
   }
-  if (omniBoxView === 'plain') {
+  if (omniBoxView === 'Search') {
     return (
       <OmniBoxInputText
         placeholder="Search for a table"
