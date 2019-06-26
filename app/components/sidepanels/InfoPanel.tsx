@@ -125,7 +125,7 @@ const InfoPanel: React.SFC<Props> = ({
                 <div>
                   <Label><License
                     size="small"
-                    color="#f39c12" /> Primary key is used in:</Label>
+                    color="#28C3AA" /> Primary key is used in:</Label>
                   <ul>{primaryKeyRelationships}</ul>
                 </div>
               )}
@@ -135,7 +135,7 @@ const InfoPanel: React.SFC<Props> = ({
                 <div>
                   <Label><License
                     size="small"
-                    color="#6DDEF4" /> Foreign keys in this table:</Label>
+                    color="#6532CC" /> Foreign keys in this table:</Label>
                   <ul>{foreignKeyRelationships}</ul>
                 </div>
               )}

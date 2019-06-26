@@ -13,6 +13,7 @@ const ResultsWrapper = styled.div`
   margin-top: 15px;
   min-width: 400px;
   box-shadow: 1px 1px 4px #67809f;
+    border-radius: 3px;
 `
 
 const SRestTabsRight = styled.div`
@@ -38,13 +39,13 @@ const SResultsNavButton = styled.button<SResultsNavButtonProps>`
   border: none;
   font-size: 80%;
   margin: 0px 5px;
-  color: ${({ activeDisplayInResultsTab, activetabname }) => activeDisplayInResultsTab === activetabname ? '#7540D9' : '#485360'};
-  border-bottom: ${({ activeDisplayInResultsTab, activetabname }) => activeDisplayInResultsTab === activetabname ? '2px solid #7540D9' : '2px solid transparent'};
+  color: ${({ activeDisplayInResultsTab, activetabname }) => activeDisplayInResultsTab === activetabname ? '#4B70FE' : '#485360'};
+  border-bottom: ${({ activeDisplayInResultsTab, activetabname }) => activeDisplayInResultsTab === activetabname ? '2px solid #4B70FE' : '2px solid transparent'};
   transition: all 0.2s;
   cursor: pointer;
   
   :hover {
-    border-bottom: 2px solid #7540D9;
+    border-bottom: 2px solid #4B70FE;
   }
 
   :focus{

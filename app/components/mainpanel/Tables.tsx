@@ -29,9 +29,10 @@ const TableRow = styled.li<ITableRowProps>`
   display: flex;
   justify-content: space-between;
   list-style: none;
-  padding: 0px 2px;
-  border: ${ (props) => props.affected ? '2px solid #28C3AA' : '2px solid transparent'};
+  padding: 0px 3px;
+  border: ${ (props) => props.affected ? '2px solid #F2B25E' : '2px solid transparent'};
   transition: 0.3s;
+ background-color: ${ (props) => props.affected ? '#F2B25E' : 'transparent'};
 
   :hover {
     background-color: #f4f4f4;
@@ -46,15 +47,6 @@ const TableCell = styled.p`
   align-items: center;
 `;
 
-const TableTitle = styled.p`
-  text-align: center;
-  font-size: 180%;
-  overflow-wrap: break-word;
-  :hover {
-    transform: scale(1.01);
-    background-color: rgb(240, 240, 240);
-  }
-`;
 
 interface IForeignKey {
   column_name?: string;
@@ -189,7 +181,7 @@ const Tables: React.SFC<Props> = ({
           {foreignKey && (
             <License
               style={{ height: '15px' }}
-              color="#6DDEF4"
+              color="#6532CC"
               data-isforeignkey={foreignKey}
               data-foreignkeytable={foreignkeyTable}
               data-foreignkeycolumn={foreignkeyColumn}
@@ -201,7 +193,7 @@ const Tables: React.SFC<Props> = ({
           {primaryKey && (
             <License
               style={{ height: '15px' }}
-              color="#f39c12"
+              color="#28C3AA"
               data-isforeignkey={foreignKey}
               data-foreignkeytable={foreignkeyTable}
               data-foreignkeycolumn={foreignkeyColumn}
@@ -234,9 +226,6 @@ const Tables: React.SFC<Props> = ({
       selectedtable={activeTableInPanel.table_name}
       tablename={tableName}
     >
-      <TableTitle
-        // onClick={() => ipcRenderer.send('query-to-main', `SELECT * FROM ${tableName}`)} 
-        data-tablename={tableName}>{tableName}</TableTitle>
       <TableRowsList>{rows}</TableRowsList>
     </Table>
   );

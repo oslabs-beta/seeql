@@ -7,6 +7,7 @@ const OmniBoxWrapper = styled.div`
   box-shadow: 1px 1px 4px #67809f;
   background-color: white;
   padding: 10px;
+  border-radius: 3px;
 `
 
 const QueryResultError = styled.div`
@@ -33,7 +34,7 @@ const OmniBoxNavButton = styled.button<IOmniBoxNavButtonProps>`
       cursor: pointer;
   color: ${props =>
     props.selectedView === props.omniBoxView
-      ? '#7540D9'
+      ? '#4B70FE'
       : 'grey'};
   font-weight: ${(props) =>
     props.selectedView === props.omniBoxView ? 'bold' : 'none'};

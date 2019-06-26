@@ -25,7 +25,7 @@ export const SignOutLink = () => {
 export const InformationPanel = () => {
     return (
         <Grommet theme={grommet}>
-            <Heading size="190%" style={{ overflowWrap: "break-word", width: 'auto', padding: '5px 0px', margin: '0px 5px', borderBottom: '2px solid #7540D9' }}>Information
+            <Heading size="190%" style={{ overflowWrap: "break-word", width: 'auto', padding: '5px 0px', margin: '0px 5px', borderBottom: '2px solid #4B70FE' }}>Information
             </Heading>
         </Grommet>
     )

@@ -23,7 +23,7 @@ const OmniBoxInputText = styled.textarea`
 const ExecuteQueryButton = styled.button`
   transition: all 0.2s;
   text-align: center;
-  background-color: #7540D9;
+  background-color: #4B70FE;
   color: white;
   padding: 8px;
   font-size: 100%;

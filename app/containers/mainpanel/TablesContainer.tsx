@@ -13,6 +13,17 @@ const SEmptyState = styled.div`
 
 `
 
+const TableTitle = styled.p`
+  text-align: center;
+  font-size: 160%;
+  padding: 5px;
+  overflow-wrap: break-word;
+  :hover {
+    transform: scale(1.01);
+  }
+`;
+
+
 const STabWrapper = styled.span`
   transition: all 0.2s;
   :hover {
@@ -25,6 +36,7 @@ width: 100%;
 display: flex;
 align-items: center;
 justify-content: center;
+border-bottom: 1px solid grey;
 `
 
 const TempWrapper = styled.div`
@@ -45,9 +57,9 @@ const TableWrapper = styled.div<ITableWrapperProps>`
   max-height: 200px;
   border-radius: 3px;
   overflow: hidden;
-  margin: 5px;
+  margin: 8px;
   border: ${({ highlightForRelationship }) => (highlightForRelationship == 'true' ? '1px solid transparent' : '1px solid grey')};
-  box-shadow: ${({ highlightForRelationship }) => (highlightForRelationship == 'true' ? '0px 0px 8px #7540D9' : 'none')};
+  box-shadow: ${({ highlightForRelationship }) => (highlightForRelationship == 'true' ? '0px 0px 8px #4B70FE' : 'none')};
 `;
 
 interface IForeignKey {
@@ -158,6 +170,7 @@ const TablesContainer: React.SFC<ITablesContainerProps> = ({
         if (pinnedTableNames.includes(table.table_name)) {
           pinned.push(
             <TableWrapper highlightForRelationship={highlightForRelationship}>
+              <TableTitle data-tablename={table.table_name}>{table.table_name}</TableTitle>
               <SIndTablButtons>
                 <STabWrapper>
                   <Pin
@@ -209,7 +222,9 @@ const TablesContainer: React.SFC<ITablesContainerProps> = ({
         } else if (regex.test(table.table_name)) {
           filtered.push(
             <TableWrapper highlightForRelationship={highlightForRelationship}>
+              <TableTitle data-tablename={table.table_name}>{table.table_name}</TableTitle>
               <SIndTablButtons>
+
                 <STabWrapper>
                   <Pin
                     style={{ height: '15px', cursor: 'pointer' }}
