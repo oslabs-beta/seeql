@@ -39,7 +39,7 @@ display: flex;
 align-items: center;
 justify-content: center;
 border-bottom: 1px solid grey;
-  padding-bottom: 5px;
+  padding-top: 3px;
 `
 
 const TempWrapper = styled.div`

@@ -396,7 +396,6 @@ const HomePage = ({ location }) => {
     return () => ipcRenderer.removeAllListeners('query-result-to-homepage');
   }, [userInputQuery]);
 
-
   return (
 
     <Grommet theme={grommet}>

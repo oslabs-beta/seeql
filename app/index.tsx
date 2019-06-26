@@ -21,7 +21,6 @@ const Index = () => {
     if (mode.active) acc = mode.value;
     return acc;
   }, 'defaultTheme');
-
   return (
     <ThemeContext.Provider value={[context, setContext]}>
       <ThemeProvider theme={themes[serveMode]}>

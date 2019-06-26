@@ -181,7 +181,7 @@ const ResultsContainer: React.SFC<IResultsContainerProps> = ({
         />
       }
       {activeDisplayInResultsTab === 'Query Results' && (
-        <QueryResults queryResult={queryResult} />
+        <QueryResults key={queryResult} queryResult={queryResult} />
       )}
     </ResultsWrapper>
   )
