@@ -26,6 +26,7 @@ const TableTitle = styled.p`
 
 
 const STabWrapper = styled.span`
+font-size: 14px;
   transition: all 0.2s;
   :hover {
     transform: scale(1.1);
@@ -176,7 +177,7 @@ const TablesContainer: React.SFC<ITablesContainerProps> = ({
               <SIndTablButtons>
                 <STabWrapper>
                   <Pin
-                    style={{ height: '15x', cursor: 'pointer' }}
+                    style={{ height: '15px', cursor: 'pointer' }}
                     data-pinned={table.table_name}
                     onClick={() =>
                       dispatchPinned(actions.removeFromPinned(table.table_name))

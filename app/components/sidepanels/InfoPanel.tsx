@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { InformationPanel } from './sidePanelMolecules/titles'
 import { Grommet } from "grommet";
 import { grommet } from 'grommet/themes';
-import { CircleInformation, License } from 'grommet-icons';
+import { CircleInformation, License, Pin } from 'grommet-icons';
 
 interface ISidePanelTableWrapperProps {
   sidePanelVisibility: boolean;
@@ -144,8 +144,13 @@ const InfoPanel: React.SFC<Props> = ({
           </InfoSection>
         ) : (
             <SEmptyState>
-              You haven't selected a table yet, click on a the <CircleInformation style={{ height: '20px' }} color="#149BD2" /> in a table to see more information.
-            </SEmptyState>
+              You haven't selected a table yet, click on the <CircleInformation style={{ height: '20px' }} color="#149BD2" /> in a table to see more information.
+              <br /><br />
+              To save a table to the top of the screen, click on the
+                <Pin
+                color="#FF98BB"
+              /> in a table.
+          </SEmptyState>
           )}
       </SidePanelTableListWrapper>
     </Grommet>
