@@ -17,7 +17,7 @@ const Table = styled.div<ITableProps>`
 
 const TableRowsList = styled.ul`
   overflow: scroll;
-  height: 100px;
+  height: 150px;
 `;
 
 interface ITableRowProps {
@@ -29,6 +29,7 @@ const TableRow = styled.li<ITableRowProps>`
   display: flex;
   justify-content: space-between;
   list-style: none;
+  padding: 0px 2px;
   border: ${ (props) => props.affected ? '2px solid #28C3AA' : '2px solid transparent'};
   transition: 0.3s;
 

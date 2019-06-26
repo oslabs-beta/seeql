@@ -29,25 +29,27 @@ const LabelTextWrapper = styled.div`
   display: flex;
   flex-direction: column;
     overflow-wrap: break-word;
+    padding: 5px 0px;
 `
 
 const InfoSection = styled.div`
   overflow-wrap: break-word;
-  margin: 20px 0px;
+  margin: 20px;
   overflow: hidden;
 `;
 
 const SEmptyState = styled.div`
-margin: 20px 0px;
+margin: 20px;
 `
 
 const Text = styled.p`
-  font-size: 100%;
+  font-size: 80%;
+  font-weight: bold;
   color: #485360;
 `;
 
 const Label = styled.label`
-  font-size: 80%;
+  font-size: 70%;
   color: #485360;
 `;
 
@@ -94,7 +96,7 @@ const InfoPanel: React.SFC<Props> = ({
   for (const foreignTableOfPrimary in foreignKeysOfPrimary) {
     primaryKeyRelationships.push(
       <li>
-        {foreignTableOfPrimary}({foreignKeysOfPrimary[foreignTableOfPrimary]})
+        <Text> {foreignTableOfPrimary}({foreignKeysOfPrimary[foreignTableOfPrimary]})</Text>
       </li>
     );
   }

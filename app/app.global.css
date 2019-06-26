@@ -16,5 +16,12 @@ body {
   overflow-y: hidden;
   font-family: 'Poppins', sans-serif;
   font-size: 14px;
-  
+}
+
+button {
+    font-family: 'Poppins', sans-serif;
+}
+
+a {
+    font-family: 'Poppins', sans-serif;
 }

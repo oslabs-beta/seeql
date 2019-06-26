@@ -13,13 +13,27 @@ const SEmptyState = styled.div`
 
 `
 
+const STabWrapper = styled.span`
+  transition: all 0.2s;
+  :hover {
+    transform: scale(1.1);
+  }
+`
+
+const SIndTablButtons = styled.div`
+width: 100%;
+display: flex;
+align-items: center;
+justify-content: center;
+`
+
 const TempWrapper = styled.div`
     overflow: scroll;
     height: 100%;
     width: 100%;
     display: flex;
     flex-wrap: wrap;
-    padding: 5px;
+    padding: 5px 15px;
 `
 
 interface ITableWrapperProps {
@@ -28,14 +42,12 @@ interface ITableWrapperProps {
 
 const TableWrapper = styled.div<ITableWrapperProps>`
   width: 150px;
-  max-height: 150px;
+  max-height: 200px;
   border-radius: 3px;
   overflow: hidden;
   margin: 5px;
-  border: ${({ highlightForRelationship }) => (highlightForRelationship == 'true' ? '3px solid #8106E9' : '3px solid grey')};
-  :hover {
-    transform: scale(1.03)
-  }
+  border: ${({ highlightForRelationship }) => (highlightForRelationship == 'true' ? '1px solid transparent' : '1px solid grey')};
+  box-shadow: ${({ highlightForRelationship }) => (highlightForRelationship == 'true' ? '0px 0px 8px #7540D9' : 'none')};
 `;
 
 interface IForeignKey {
@@ -146,21 +158,27 @@ const TablesContainer: React.SFC<ITablesContainerProps> = ({
         if (pinnedTableNames.includes(table.table_name)) {
           pinned.push(
             <TableWrapper highlightForRelationship={highlightForRelationship}>
-              <Pin
-                style={{ height: '15px', cursor: 'pointer' }}
-                data-pinned={table.table_name}
-                onClick={() =>
-                  dispatchPinned(actions.removeFromPinned(table.table_name))
-                }
-                pinned={true}
-                color="#F12B93"
-              />
-              <CircleInformation
-                style={{ height: '15px', cursor: 'pointer' }}
-                onClick={captureSelectedTable}
-                data-tablename={table.table_name}
-                color={(table.table_name === activeTableInPanel.table_name) ? "#149BD2" : '#485360'}
-              />
+              <SIndTablButtons>
+                <STabWrapper>
+                  <Pin
+                    style={{ height: '16x', cursor: 'pointer' }}
+                    data-pinned={table.table_name}
+                    onClick={() =>
+                      dispatchPinned(actions.removeFromPinned(table.table_name))
+                    }
+                    pinned={true}
+                    color="#F12B93"
+                  />
+                </STabWrapper>
+                <STabWrapper>
+                  <CircleInformation
+                    style={{ height: '15px', cursor: 'pointer' }}
+                    onClick={captureSelectedTable}
+                    data-tablename={table.table_name}
+                    color={(table.table_name === activeTableInPanel.table_name) ? "#149BD2" : '#485360'}
+                  />
+                </STabWrapper>
+              </SIndTablButtons>
               <Tables
                 selectedForQueryTables={selectedForQueryTables}
                 captureQuerySelections={captureQuerySelections}
@@ -191,21 +209,27 @@ const TablesContainer: React.SFC<ITablesContainerProps> = ({
         } else if (regex.test(table.table_name)) {
           filtered.push(
             <TableWrapper highlightForRelationship={highlightForRelationship}>
-              <Pin
-                style={{ height: '15px', cursor: 'pointer' }}
-                data-pinned={table.table_name}
-                onClick={() =>
-                  dispatchPinned(actions.addToPinned(table.table_name))
-                }
-                pinned={false}
-                color="#485360"
-              />
-              <CircleInformation
-                onClick={captureSelectedTable}
-                data-tablename={table.table_name}
-                style={{ height: '15px', cursor: 'pointer' }}
-                color={(table.table_name === activeTableInPanel.table_name) ? "#149BD2" : '#485360'}
-              />
+              <SIndTablButtons>
+                <STabWrapper>
+                  <Pin
+                    style={{ height: '15px', cursor: 'pointer' }}
+                    data-pinned={table.table_name}
+                    onClick={() =>
+                      dispatchPinned(actions.addToPinned(table.table_name))
+                    }
+                    pinned={false}
+                    color="#485360"
+                  />
+                </STabWrapper>
+                <STabWrapper>
+                  <CircleInformation
+                    onClick={captureSelectedTable}
+                    data-tablename={table.table_name}
+                    style={{ height: '15px', cursor: 'pointer' }}
+                    color={(table.table_name === activeTableInPanel.table_name) ? "#149BD2" : '#485360'}
+                  />
+                </STabWrapper>
+              </SIndTablButtons>
               <Tables
                 selectedForQueryTables={selectedForQueryTables}
                 captureQuerySelections={captureQuerySelections}
@@ -260,7 +284,7 @@ const TablesContainer: React.SFC<ITablesContainerProps> = ({
     <SEmptyState>
       <Text>
         <Halt /><br />
-        Sorry, there are no tables that matched yoru search. <br /> Please search again.
+        Sorry, there are no tables that matched your search. <br /> Please search again.
     </Text>
     </SEmptyState>
   )
