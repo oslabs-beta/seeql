@@ -1,6 +1,6 @@
 /**
  * Build config for electron renderer process
- */
+*/
 
 import path from 'path';
 import webpack from 'webpack';
@@ -15,13 +15,9 @@ import CheckNodeEnv from '../internals/scripts/CheckNodeEnv';
 CheckNodeEnv('production');
 export default merge.smart(baseConfig, {
   devtool: 'source-map',
-
   mode: 'production',
-
   target: 'electron-renderer',
-
   entry: path.join(__dirname, '..', 'app/index'),
-
   output: {
     path: path.join(__dirname, '..', 'app/dist'),
     publicPath: './dist/',
@@ -60,52 +56,6 @@ export default merge.smart(baseConfig, {
             options: {
               modules: true,
               localIdentName: '[name]__[local]__[hash:base64:5]',
-              sourceMap: true
-            }
-          }
-        ]
-      },
-      // Add SASS support  - compile all .global.scss files and pipe it to style.css
-      {
-        test: /\.global\.(scss|sass)$/,
-        use: [
-          {
-            loader: MiniCssExtractPlugin.loader
-          },
-          {
-            loader: 'css-loader',
-            options: {
-              sourceMap: true,
-              importLoaders: 1
-            }
-          },
-          {
-            loader: 'sass-loader',
-            options: {
-              sourceMap: true
-            }
-          }
-        ]
-      },
-      // Add SASS support  - compile all other .scss files and pipe it to style.css
-      {
-        test: /^((?!\.global).)*\.(scss|sass)$/,
-        use: [
-          {
-            loader: MiniCssExtractPlugin.loader
-          },
-          {
-            loader: 'css-loader',
-            options: {
-              modules: true,
-              importLoaders: 1,
-              localIdentName: '[name]__[local]__[hash:base64:5]',
-              sourceMap: true
-            }
-          },
-          {
-            loader: 'sass-loader',
-            options: {
               sourceMap: true
             }
           }

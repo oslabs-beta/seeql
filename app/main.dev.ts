@@ -1,6 +1,7 @@
 import { app, BrowserWindow, ipcMain } from 'electron';
 import MenuBuilder from './menu';
 import AppDb from './appDb';
+import path from 'path';
 
 // import { autoUpdater } from 'electron-updater';
 // #TODO: make update flow (this class is currently has 0 references)
@@ -33,15 +34,14 @@ if (
   process.env.NODE_ENV === 'development' ||
   process.env.DEBUG_PROD === 'true'
 ) {
-  process.env.ELECTRON_DISABLE_SECURITY_WARNINGS = 'true';
-  require('electron-debug')();
+  // process.env.ELECTRON_DISABLE_SECURITY_WARNINGS = 'true';
+  // require('electron-debug')();
 }
 
 const installExtensions = async () => {
   const installer = require('electron-devtools-installer');
   const forceDownload = !!process.env.UPGRADE_EXTENSIONS;
   const extensions = ['REACT_DEVELOPER_TOOLS', 'REDUX_DEVTOOLS'];
-
   return Promise.all(
     extensions.map(name => installer.default(installer[name], forceDownload))
   ).catch(console.log);
@@ -67,7 +67,8 @@ app.on('ready', async () => {
     height: appDb.get('height') || defaults.height,
     minWidth: 500,
     minHeight: 300,
-    titleBarStyle: 'hiddenInset'
+    titleBarStyle: 'hiddenInset',
+    icon: path.join(__dirname, 'internals/img/icon.png')
   });
 
   mainWindow.loadURL(`file://${__dirname}/app.html`);
@@ -168,19 +169,19 @@ app.on('ready', async () => {
   });
 
   console.log(`\n\n
-   ('-').->  ('-')               <-.('-')
-  ( OO)_    ( OO).->             __( OO)     <-.
- (_)--\_)  (,------.  ,------.  '-'---\_)  ,--. )
- /    _ /   |  .---'  |  .---' |  .-.  |   |  ('-')
- \_..'--.  (|  '--.   |  '--.  |  | |  |   |  |OO )
- .-._)   \  |  .--'   |  .--'  |  | |  |  (|  '__ |
- \       /  |  '---.  |  '---. '  '-'  '-. |     |'
-  '-----'   '------'  '------'  '-----'--' '-----'
+     ('-').->  ('-')               <-.('-')
+    ( OO)_    ( OO).->             __( OO)     <-.
+   (_)--\_)  (,------.  ,------.  '-'---\_)  ,--. )
+   /    _ /   |  .---'  |  .---' |  .-.  |   |  ('-')
+   \_..'--.  (|  '--.   |  '--.  |  | |  |   |  |OO )
+   .-._)   \  |  .--'   |  .--'  |  | |  |  (|  '__ |
+   \       /  |  '---.  |  '---. '  '-'  '-. |     |'
+    '-----'   '------'  '------'  '-----'--' '-----'
 
-              Have a question?
-    Contact us on github.com/oslabs-beta/seeql
-\n\n
-`);
+                Have a question?
+      Contact us on github.com/oslabs-beta/seeql
+  \n\n
+  `);
 });
 
 app.on('window-all-closed', () => {

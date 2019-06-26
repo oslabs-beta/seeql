@@ -1,20 +1,18 @@
 import * as React from 'react';
 import { render } from 'react-dom';
 import { hot } from 'react-hot-loader/root';
-import './app.global.css';
 import ThemeContext from './contexts/themeContext';
 import themes from './themes/themes';
 import Routes from './Routes';
 import { BrowserRouter } from 'react-router-dom';
 import { ThemeProvider } from 'styled-components';
 import { useState } from 'react';
-//memo to persist users active theme? for right now use default as user's first theme
-const Index = () => {
 
+const Index = () => {
   const modes = [
     { value: 'defaultTheme', active: true },
     { value: 'darkTheme', active: false },
-    {currentMode:'defaultTheme'}
+    { currentMode:'defaultTheme' }
     // { value: 'kateTheme', active: false },
     // { value: 'vaderette', active: false },
     // { value: 'tylerTheme', active: false },

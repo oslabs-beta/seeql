@@ -49,3 +49,7 @@ main.js.map
 
 .idea
 npm-debug.log.*
+
+env
+.env
+.ENV
