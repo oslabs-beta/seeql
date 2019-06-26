@@ -2,60 +2,47 @@ import React, { useState, useReducer, useContext, useEffect } from "react";
 import { Box, Button, Collapsible, Grommet, Text } from "grommet";
 import { grommet } from "grommet/themes";
 import MenuButton from './menuButton'
-//switch to a functional component! --
-//import context--
 import Context from '../../../contexts/themeContext'
-//import usereducer--
 import themeReducer from '../../../reducers/themeReducer'
 import { ipcRenderer } from 'electron';
-//payload will be selected current mode on context
-//selected will be selected value
-
-//reducer will need to grab the value, toggle the active mode and update the current mode value on the existing context
-
-//last  use context setter to update global context
-
-
 
 
 const NestedCollapsible =()=> {
     const [context, setContext] = useContext(Context)
     const[openMenu1, setOpenMenu1] = useState (false)
-    const [openMenu2, setOpenMenu2] =useState (false)
     const [openSubmenu1, setOpenSubmenu1] =useState(false)
-
     const [state, dispatch] = useReducer(themeReducer, context)
 
   
-    function findcurMode(selectedMode, context){
+    function findCurMode(selectedMode, context){
         const activeMode = context.reduce((acc ,mode)=>{
             if (mode.active) acc= mode.value 
             return acc;
         },'')
 
-        const handleDispatch=()=>{
-            console.log('selectedmode brute force active, colapse', selectedMode, activeMode)
+        const setTheme=()=>{
             ipcRenderer.send('user-theme-selected', selectedMode);
             dispatch({
                 type: 'CHANGE_MODE',
                 selected: selectedMode,
                 payload: activeMode
             });
-            setContext(state)
         }
-        return handleDispatch
+        return setTheme
     }
 
+    useEffect(()=>{
+        setContext(state)
+    },[state])
 
-// useEffect(()=>{
-//     console.log ('newcontext', context)
-// },[state])
+console.log ('context ', context)
+console.log ('state', state)
+
     
         return (
             <Grommet theme={grommet}>
                 <Box width="small">
                     <MenuButton
-                    
                         open={openMenu1}
                         label="Themes"
                         onClick={() => {
@@ -77,8 +64,8 @@ const NestedCollapsible =()=> {
                             <Button
                                 hoverIndicator="background"
                                 onClick={(e)=>{
-                                    const handled = findcurMode(e.target.dataset.value, context)
-                                    handled();
+                                    const setTheme = findCurMode(e.target.dataset.value, context)
+                                    setTheme();
                                 }}
                                 >
                                 <Box
@@ -94,8 +81,8 @@ const NestedCollapsible =()=> {
                             <Button
                                 hoverIndicator="background"
                                 onClick={(e) => {
-                                    const handled = findcurMode(e.target.dataset.value, context)
-                                    handled();
+                                    const setTheme = findCurMode(e.target.dataset.value, context)
+                                    setTheme();
                                 }}
                                 >
                                 <Box
