@@ -3,10 +3,11 @@ import styled from 'styled-components';
 import { Box, DataTable } from "grommet";
 
 const QueryResultWrapper = styled.div`
-      border: 1px solid black;
+      border: 2px solid pink;
+      width: 100%;
     border-radius: 3px;
   overflow: scroll;
-  height: 50%;
+  height: 100%;
 `;
 
 interface IQueryResult {
