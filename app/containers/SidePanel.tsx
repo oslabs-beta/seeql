@@ -22,17 +22,19 @@ const PanelWrapper = styled.div<IPanelWrapperProps>`
     sidePanelVisibility ? '250px' : '0px'};
   display: flex;
   flex-direction: column;
-  padding: 20px;
+  padding: 5px;
   justify-content: flex-start;
-  background-color: white;
-  border: 1px solid black;
+  background-color: #E6EAF2 ;
   height: 100%;
   transition: width 500ms ease-in-out;
 `;
 
-const ButtonMenu = styled.div`
-  display: flex;
-  justify-content: center;
+const SInnerPanelWrapper = styled.div`
+  margin: 5px;
+  background-color: white;
+  height: 100%;
+  border-radius: 3px;
+  box-shadow: 1px 1px 4px #67809f;
 `;
 
 const IndTab = styled.button<IIndTabProps>`
@@ -96,7 +98,7 @@ const SidePanel: React.SFC<Props> = ({
     <Grommet theme={grommet} style={{ height: '100%' }} >
       {sidePanelVisibility && (
         <PanelWrapper sidePanelVisibility={sidePanelVisibility} className="sidepanel">
-          <ButtonMenu>
+          <SInnerPanelWrapper>
             <Tabs>
               <IndTab
                 data-panel="info"
@@ -106,7 +108,7 @@ const SidePanel: React.SFC<Props> = ({
                   dispatchSidePanelDisplay(actions.changeToInfoPanel())
                 }
               >
-                <CircleInformation />
+                <CircleInformation color={activePanel === 'info' ? "#7540D9" : '#E6EAF2'} />
               </IndTab>
               <IndTab
                 data-panel="settings"
@@ -119,17 +121,17 @@ const SidePanel: React.SFC<Props> = ({
                 <UserSettings />
               </IndTab>
             </Tabs>
-          </ButtonMenu>
-          <div>
-            {activePanel === 'info' && (
-              <InfoPanel
-                sidePanelVisibility={sidePanelVisibility}
-                activeTableInPanel={activeTableInPanel}
-              />
-            )}
-            {activePanel === 'favorites' && <FavoritesPanel />}
-            {activePanel === 'settings' && <SettingsPanel intervalId={intervalId} />}
-          </div>
+            <div>
+              {activePanel === 'info' && (
+                <InfoPanel
+                  sidePanelVisibility={sidePanelVisibility}
+                  activeTableInPanel={activeTableInPanel}
+                />
+              )}
+              {activePanel === 'favorites' && <FavoritesPanel />}
+              {activePanel === 'settings' && <SettingsPanel intervalId={intervalId} />}
+            </div>
+          </SInnerPanelWrapper>
         </PanelWrapper>
       )
       }

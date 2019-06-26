@@ -11,8 +11,8 @@ interface ISidePanelTableWrapperProps {
 
 const SidePanelTableListWrapper = styled.div<ISidePanelTableWrapperProps>`
   width: ${({ sidePanelVisibility }) =>
-    sidePanelVisibility ? '300px' : '0px'};
-
+    sidePanelVisibility ? '210px' : '0px'};
+  height: 100%;
   border: 1px solid black;
   transition: width 500ms ease-in-out;
 `;
