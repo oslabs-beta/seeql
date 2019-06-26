@@ -77,7 +77,7 @@ const alias = {};
 
 const HomePage = ({ location }) => {
   const allTablesMetaData = location.state.tables;
-  // const [relationships, setRelationships]
+  const [overThreeTablesSelected, setOverThreeTablesSelected] = useState(false);
   const [omniBoxView, setOmniBoxView] = useState('SQL');
   const [selectedForQueryTables, setSelectedForQueryTables] = useState({});
   const [loadingQueryStatus, setLoadingQueryStatus] = useState(false);
@@ -309,6 +309,15 @@ const HomePage = ({ location }) => {
       // final query
       query = `SELECT ${columns} FROM ${tables}`;
     }
+
+    //error handle for 3+ joins
+    if (Object.keys(temp).length > 2) {
+      setOverThreeTablesSelected(true)
+    } else {
+      setOverThreeTablesSelected(false)
+    }
+
+
     setUserInputQuery(query);
     setSelectedForQueryTables(temp);
   };
@@ -438,6 +447,7 @@ const HomePage = ({ location }) => {
               setActiveDisplayInResultsTab={setActiveDisplayInResultsTab}
               activeTableInPanel={activeTableInPanel}
               selectedForQueryTables={selectedForQueryTables}
+              overThreeTablesSelected={overThreeTablesSelected}
             />
           </SLeftPanelWrapper>
           <SRightPanelWrapper className="right" sidePanelVisibility={sidePanelVisibility}>

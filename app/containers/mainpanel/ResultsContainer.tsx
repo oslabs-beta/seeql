@@ -97,6 +97,18 @@ const STopNav = styled.div`
   border-bottom: 1px solid #67809f;
 `
 
+const TooManySelectedTablesWarning = styled.div`
+  color: #f5ab35;
+  border-radius: 3px;
+  border-left: 3px solid #f5ab35;
+  font-size: 80%;
+  background-color: #fef5e7;
+  margin: 5px 0px;
+  padding: 5px;
+  width: 80%;
+  align-self: center;
+`;
+
 interface IResultsContainerProps {
   activeDisplayInResultsTab: string;
   queryResult: any;
@@ -105,6 +117,7 @@ interface IResultsContainerProps {
   activeTableInPanel: any;
   selectedForQueryTables: any;
   relationships;
+  overThreeTablesSelected: any;
   resetQuerySelection: (any) => any;
   captureQuerySelections: (any) => any;
   captureSelectedTable: (any) => any;
@@ -122,7 +135,8 @@ const ResultsContainer: React.SFC<IResultsContainerProps> = ({
   captureQuerySelections,
   setActiveDisplayInResultsTab,
   resetQuerySelection,
-  relationships
+  relationships,
+  overThreeTablesSelected
 }) => {
 
   const listOfTabNames = ['Tables', 'Query Results'];
@@ -136,6 +150,8 @@ const ResultsContainer: React.SFC<IResultsContainerProps> = ({
     >{tabname}</SResultsNavButton>
   })
 
+  console.log('hi', overThreeTablesSelected)
+
   return (
     <ResultsWrapper>
       <STopNav>
@@ -147,6 +163,9 @@ const ResultsContainer: React.SFC<IResultsContainerProps> = ({
           <SResetQueryButton onClick={resetQuerySelection}><span>This will remove all selected columns</span>Reset Query</SResetQueryButton>
         </SRestTabsRight>
       </STopNav>
+      {overThreeTablesSelected &&
+        <TooManySelectedTablesWarning>Automatic query generation only works on one or two tables. Please unselect any additional tables or reset the query.</TooManySelectedTablesWarning>
+      }
       {activeDisplayInResultsTab === 'Tables' &&
         <TablesContainer
           key={activeDisplayInResultsTab}
