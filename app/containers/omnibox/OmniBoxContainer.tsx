@@ -20,6 +20,30 @@ const QueryResultError = styled.div`
   margin: 5px 0px;
   padding: 5px;
 `;
+interface IOmniBoxNavButtonProps {
+  omniBoxView: string;
+  selectedView: string;
+}
+
+const OmniBoxNavButton = styled.button<IOmniBoxNavButtonProps>`
+  padding: 5px;
+  width: 50%;
+  font-family: 'Poppins', sans-serif;
+  border-radius: 3px 3px 0px 0px;
+  border: none;
+  background-color: ${props =>
+    props.selectedView === props.omniBoxView
+      ? props.theme.omniBox.buttonColorActive
+      : props.theme.omniBox.buttonColor};
+  color: ${(props) =>
+    props.selectedView === props.omniBoxView ? props.theme.omniBox.fontColorActive : props.theme.omniBox.fontColor};
+  font-weight: ${(props) =>
+    props.selectedView === props.omniBoxView ? 'bold' : 'none'};
+
+  :focus {
+    outline: none;
+  }
+`;
 
 interface IOmniBoxProps {
   userInputQuery: string;
@@ -44,10 +68,10 @@ const OmniBoxContainer: React.SFC<IOmniBoxProps> = ({
 }) => {
   const [omniBoxView, setOmniBoxView] = useState('SQL');
 
-  const listOfTabNames = ['SQL', 'Search'];
+  const listOfTabNames = ['SQL', 'plain'];
   const navigationTabs = listOfTabNames.map(tabname => {
     return (
-      <button
+      <OmniBoxNavButton
         key={tabname}
         onClick={() => {
           setOmniBoxView(tabname);
@@ -56,7 +80,7 @@ const OmniBoxContainer: React.SFC<IOmniBoxProps> = ({
         selectedView={tabname}
       >
         {tabname}
-      </button>
+      </OmniBoxNavButton>
     );
   });
 
@@ -89,7 +113,7 @@ const OmniBoxContainer: React.SFC<IOmniBoxProps> = ({
 
   return (
     <OmniBoxWrapper>
-      <div>{navigationTabs}</div>
+      <nav>{navigationTabs}</nav>
       {generateInputBox()}
       {queryResultError.status && (
         <QueryResultError>{queryResultError.message}</QueryResultError>

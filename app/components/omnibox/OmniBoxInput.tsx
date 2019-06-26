@@ -1,7 +1,7 @@
 import * as React from 'react';
 import styled from 'styled-components';
-import { Button, Grommet, TextArea } from 'grommet';
-import { grommet } from 'grommet/themes';
+// import { Button, Grommet, TextArea } from 'grommet';
+// import { grommet } from 'grommet/themes';
 
 const OmniBoxWrapper = styled.div`
 
@@ -28,33 +28,27 @@ const OmniBoxInput: React.SFC<IOmniBoxInputProps> = ({
 }) => {
   if (tabname === 'SQL') {
     return (
-      <Grommet theme={grommet}>
-        <OmniBoxWrapper>
-          <TextArea
-            resize={false}
-            onChange={e => setUserInputQuery(e.target.value)}
-            value={userInputQuery}
-            style={{ height: '100px', fontSize: '14px' }}
-          />
-          <Button
-            color="#000"
-            style={{ borderRadius: '0px' }}
-            onClick={executeQuery}
-            disabled={loadingQueryStatus}
-            label={loadingQueryStatus ? 'Loading query results...' : 'Execute Query'}
-          />
-        </OmniBoxWrapper>
-      </Grommet>
+      <OmniBoxWrapper>
+        <input
+          type="textarea"
+          onChange={e => setUserInputQuery(e.target.value)}
+          value={userInputQuery}
+        ></input>
+        <button
+          onClick={executeQuery}
+          disabled={loadingQueryStatus}
+          label={loadingQueryStatus ? 'Loading query results...' : 'Execute Query'}
+        ></button>
+      </OmniBoxWrapper>
     );
   }
   if (tabname === 'Search') {
     return (
-      <TextArea
-        resize={false}
+      <input
+        type="textarea"
         placeholder="Search for a table"
         onChange={e => setUserInputForTables(e.target.value)}
         value={userInputForTables}
-        style={{ height: '100px', fontSize: '14px' }}
       />
     );
   }
