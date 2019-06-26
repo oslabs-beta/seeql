@@ -59,7 +59,6 @@ const IndTab = styled.button<IIndTabProps>`
 
 const Tabs = styled.div`
   display: flex;
-  font-family: 'Poppins', sans-serif;
   margin: 10px;
 `;
 

@@ -12,15 +12,15 @@ const LoginPageWrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: 'Poppins', sans-serif;
   height: 100%;
   width: 100%;
 `;
 const Title = styled.h1`
-  font-size: 72px;
+  font-size: 500%;
   font-weight: none;
   color: #485360;
   color: white;
+  padding: 50px;
 `;
 const Panel = styled.div`
   height: 100vh;
@@ -37,7 +37,6 @@ const funtimes = keyframes`
 const LeftPanel = styled(Panel)`
   background-color: white;
   display: flex;
-  flex-direction: column;
   justify-content: center;
   align-items: center;
   width: 100vw;
@@ -66,15 +65,14 @@ interface LoginTypeButtonProps {
 }
 const LoginTypeButton = styled.button<LoginTypeButtonProps>`
   padding: 5px;
-  font-size: 140%;
+  font-size: 120%;
   margin: 10px;
-  font-family: 'Poppins', sans-serif;
   background-color: transparent;
   display: flex;
   border: none;
   border-bottom: ${({ selectedLoginType, buttonType }) =>
     selectedLoginType === buttonType
-    ? '3px solid #7540D9 '
+      ? '3px solid #7540D9 '
       : '3px solid transparent'};
   transition: 0.3s;
   :hover {
@@ -89,6 +87,7 @@ const URIConnectionContainer = styled.div`
   display: flex;
   flex-direction: column;
   padding: 20px;
+    transition: all 0.2s;
 `;
 const InputLabel = styled.span`
   font-size: 80%;
@@ -102,7 +101,6 @@ const URIInput = styled.textarea<IURIInputProps>`
   width: 200px;
   height: 150px;
   border-radius: 3px;
-  font-family: 'Poppins', sans-serif;
   letter-spacing: 2px;
   resize: none;
   padding: 8px;
@@ -115,15 +113,13 @@ const URIInput = styled.textarea<IURIInputProps>`
 const ToggleSSL = styled.div`
   display: flex;
   justify-content: center;
-  padding: 5px;
-  margin: 10px;
+  padding-bottom: 10px;
   display: flex;
   align-items: center;
 `;
 
 const LoginBtn = styled.button`
   padding: 8px;
-  font-family: 'Poppins', sans-serif;
   width: 150px;
   border: none;
   transition: 0.2s;
@@ -140,7 +136,7 @@ const LoginBtn = styled.button`
     transition: 0.5s;
   }
   span:after {
-    content: '>>';
+    content: ">>";
     position: absolute;
     opacity: 0;
     top: 0;
@@ -168,6 +164,7 @@ const CredentialsContainer = styled.div`
   display: flex;
   flex-direction: column;
   padding: 20px;
+    transition: all 0.2s;
 `;
 const InputAndLabelWrapper = styled.div`
   margin: 5px 0px;
@@ -178,7 +175,6 @@ const CredentialsInput = styled.input<IURIInputProps>`
   border-radius: 3px;
   padding: 8px;
   width: 200px;
-  font-family: 'Poppins', sans-serif;
   letter-spacing: 2px;
   border: ${({ requiredError }) =>
     requiredError ? '1px solid #ca333e' : '1px solid lightgrey'};
@@ -193,24 +189,25 @@ const ConnectionErrorMessage = styled.div`
   border-radius: 3px;
   padding: 5px;
   margin: 5px;
-  font-family: 'Poppins', sans-serif;
   border-left: 3px solid #ca333e;
   font-size: 100%;
+    transition: all 0.2s;
 `;
 const LogoutMessage = styled.div`
-  background-color: #f1c7ca;
+  background-color: #d5f5e3;
   width: 200px;
-  color: #ca333e;
+  color: #26a65b;
   border-radius: 3px;
   padding: 5px;
   margin: 5px;
-  font-family: 'Poppins', sans-serif;
-  border-left: 3px solid #ca333e;
+  border-left: 3px solid #26a65b;
   font-size: 100%;
+    transition: all 0.2s;
 `;
 const RequiredWarning = styled.span`
   color: #ca333e;
   font-size: 80%;
+    transition: all 0.2s;
 `;
 const Login = () => {
   const [loginType, setLoginType] = useState('URI');
@@ -293,15 +290,15 @@ const Login = () => {
           <LoginContainer>
             {loggedOutMessage === 'inactivity' && (
               <LogoutMessage>
-                You've been logged out due to inactivity
+                You've been logged out due to inactivity. Please re-enter your credentials to login.
               </LogoutMessage>
             )}
             {loggedOutMessage === 'userlogout' && (
-              <LogoutMessage>You logged out</LogoutMessage>
+              <LogoutMessage>You have successfully logged out. Have a nice day.</LogoutMessage>
             )}
             {connectionError && (
               <ConnectionErrorMessage>
-                Unable to connect to the database. Please try again.
+                We were unable to connect to your database. Please try again.
               </ConnectionErrorMessage>
             )}
             <LoginTypeNavigation>

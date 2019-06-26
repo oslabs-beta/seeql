@@ -11,7 +11,6 @@ const PanelWrapper = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-between
-  font-family: 'Poppins', sans-serif;˜
    transition: all 0.2s ease-in-out;
 `;
 

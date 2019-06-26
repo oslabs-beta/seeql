@@ -38,7 +38,6 @@ const SHomepageWrapper = styled.div`
   flex-direction: column;
   height: 100vh;
   width: 100vw;
-  font-family: 'Poppins', sans-serif;
 `;
 
 interface ISRightPanelProps {

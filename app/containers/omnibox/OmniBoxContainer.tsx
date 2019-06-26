@@ -15,7 +15,6 @@ const OmniBoxWrapper = styled.div`
 const QueryResultError = styled.div`
   color: #ca333e;
   border-radius: 3px;
-  font-family: 'Poppins', sans-serif;
   border-left: 3px solid #ca333e;
   font-size: 80%;
 `;
