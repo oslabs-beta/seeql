@@ -67,15 +67,11 @@ const SRightPanelWrapper = styled.div<ISRightPanelProps>`
     transition: all 0.2s ease-in-out;
 `
 
-const LoadWrap = styled.div`
-  display: flex;
-`;
-
 let relationships = {};
 const alias = {};
 
 const HomePage = ({ tableData, setCurrentView }) => {
-  console.log(`table data in the home page`, tableData)
+  // console.log(`table data in the home page`, tableData)
   const [omniBoxView, setOmniBoxView] = useState('SQL');
   const [selectedForQueryTables, setSelectedForQueryTables] = useState({});
   const [loadingQueryStatus, setLoadingQueryStatus] = useState(false);

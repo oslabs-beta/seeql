@@ -68,21 +68,20 @@ app.on('ready', async () => {
     show: true,
     width: appDb.get('width') || defaults.width,
     height: appDb.get('height') || defaults.height,
-    minWidth: 500,
-    minHeight: 300,
+    minWidth: 600,
+    minHeight: 500,
     titleBarStyle: 'hiddenInset',
     webPreferences: {
-      nodeIntegration: true
+      nodeIntegration: true // #TODO: see if necessary
     }
   });
 
-  mainWindow.openDevTools();
+  // debugging packaged app
+  // mainWindow.openDevTools();
 
   mainWindow.loadURL(`file://${__dirname}/app.html`);
-  // https://github.com/electron/electron/blob/master/docs/api/browser-window.md#using-ready-to-show-event
   mainWindow.webContents.on('ready-to-show', () => {
     if (!mainWindow) throw new Error('"mainWindow" is not defined');
-
     if (process.env.START_MINIMIZED) {
       mainWindow.minimize();
     } else {

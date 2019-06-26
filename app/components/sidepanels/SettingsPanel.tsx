@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { NavLink } from 'react-router-dom';
 import styled from 'styled-components';
 import { ipcRenderer } from 'electron';
 import NestedCollapsible from './sidePanelMolecules/doubleCollapsible'

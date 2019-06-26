@@ -1,8 +1,8 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 import * as React from 'react';
 import styled, { keyframes } from 'styled-components';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 // import { ipcRenderer } from 'electron';
-/* eslint-disable @typescript-eslint/no-var-requires */
 import { Client } from 'pg';
 
 const client = new Client(`postgres://ltdnkwnbccooem:64ad308e565b39cc070194f7fa621ae0e925339be5a1c69480ff2a4462eab4c4@ec2-54-163-226-238.compute-1.amazonaws.com:5432/ddsu160rb5t7vq?ssl=true`)
@@ -497,9 +497,6 @@ const Login = ({ setTableData, setCurrentView }) => {
                 <input type="checkbox" onChange={e => setSSL(e.target.checked)} />
                 <InputLabel>ssl?</InputLabel>
               </ToggleSSL>
-              <button onClick={() => setCurrentView('homePage')}>
-                FUCKIN WORK
-              </button>
               {!loading && <><LoginBtn onClick={sendLoginURI}><span>Login</span></LoginBtn></>}
               {loading && <LoginBtn disabled>Loading...</LoginBtn>}
             </LoginContainer>
@@ -511,6 +508,3 @@ const Login = ({ setTableData, setCurrentView }) => {
 };
 
 export default Login;
-
-
-
