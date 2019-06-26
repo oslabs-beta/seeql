@@ -15,40 +15,47 @@ import { ipcRenderer } from 'electron';
 
 //last  use context setter to update global context
 
-b
+
 
 
 const NestedCollapsible =()=> {
     const [context, setContext] = useContext(Context)
-    const [activeMode, setActiveMode ]= useState(context[2]['currentMode'])
     const[openMenu1, setOpenMenu1] = useState (false)
     const [openMenu2, setOpenMenu2] =useState (false)
     const [openSubmenu1, setOpenSubmenu1] =useState(false)
 
     const [state, dispatch] = useReducer(themeReducer, context)
 
-    console.log ('activeMode', activeMode)
   
-    
-    const handleDispatch=( selectedMode, currentMode)=>{
-        console.log('selectedmode, currentMode colapse', selectedMode, currentMode)
-        ipcRenderer.send('user-theme-selected', selectedMode);
-        dispatch({
-            type: 'CHANGE_MODE',
-            selected: selectedMode,
-            payload: currentMode
-        });
-    }
-useEffect(()=>{
+    function findcurMode(selectedMode, context){
+        const activeMode = context.reduce((acc ,mode)=>{
+            if (mode.active) acc= mode.value 
+            return acc;
+        },'')
 
-    setContext(state)
-    console.log ('newcontext', context)
-},[state])
+        const handleDispatch=()=>{
+            console.log('selectedmode brute force active, colapse', selectedMode, activeMode)
+            ipcRenderer.send('user-theme-selected', selectedMode);
+            dispatch({
+                type: 'CHANGE_MODE',
+                selected: selectedMode,
+                payload: activeMode
+            });
+            setContext(state)
+        }
+        return handleDispatch
+    }
+
+
+// useEffect(()=>{
+//     console.log ('newcontext', context)
+// },[state])
     
         return (
             <Grommet theme={grommet}>
                 <Box width="small">
                     <MenuButton
+                    
                         open={openMenu1}
                         label="Themes"
                         onClick={() => {
@@ -69,7 +76,10 @@ useEffect(()=>{
                         <Collapsible open={openSubmenu1}>
                             <Button
                                 hoverIndicator="background"
-                                onClick={(e)=>handleDispatch(e.target.dataset.value, activeMode)}
+                                onClick={(e)=>{
+                                    const handled = findcurMode(e.target.dataset.value, context)
+                                    handled();
+                                }}
                                 >
                                 <Box
                                     data-value="defaultTheme"
@@ -83,7 +93,10 @@ useEffect(()=>{
                             </Button>
                             <Button
                                 hoverIndicator="background"
-                                onClick={(e) => handleDispatch(e.target.dataset.value, activeMode)}
+                                onClick={(e) => {
+                                    const handled = findcurMode(e.target.dataset.value, context)
+                                    handled();
+                                }}
                                 >
                                 <Box
                                     data-value='darkTheme' 

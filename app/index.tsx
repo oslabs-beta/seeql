@@ -14,7 +14,7 @@ const Index = () => {
   const modes = [
     { value: 'defaultTheme', active: true },
     { value: 'darkTheme', active: false },
-    {currentMode:'defaultTheme'}
+
     // { value: 'kateTheme', active: false },
     // { value: 'vaderette', active: false },
     // { value: 'tylerTheme', active: false },
