@@ -10,8 +10,6 @@ const QueryResultError = styled.div`
   background-color: #f1c7ca;
   color: #ca333e;
   border-radius: 3px;
-  padding: 5px;
-  margin: 5px;
   font-family: 'Poppins', sans-serif;
   border-left: 3px solid #ca333e;
   font-size: 80%;

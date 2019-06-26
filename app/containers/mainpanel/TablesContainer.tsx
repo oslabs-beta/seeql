@@ -9,7 +9,6 @@ import { grommet } from 'grommet/themes';
 import { Pin, CircleInformation } from 'grommet-icons';
 
 const TempWrapper = styled.div`
-  display: flex;
     flex-wrap: wrap;
     overflow: scroll;
     border: 1px solid white;
@@ -22,7 +21,6 @@ interface ITableWrapperProps {
 }
 
 const TableWrapper = styled.div<ITableWrapperProps>`
-  margin: 10px;
   width: 200px;
   border-radius: 3px;
   box-shadow: 2px 2px 8px lightgrey;
@@ -251,13 +249,13 @@ const TablesContainer: React.SFC<ITablesContainerProps> = ({
         </TempWrapper>
       </Grommet>
     )
-  } 
-    return (
-      <Text>
-        There were no search results. <br /> Please search again.
+  }
+  return (
+    <Text>
+      There were no search results. <br /> Please search again.
       </Text>
-    )
-  
+  )
+
 }
 
 export default TablesContainer;

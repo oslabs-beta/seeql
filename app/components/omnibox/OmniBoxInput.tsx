@@ -4,8 +4,7 @@ import { Button, Grommet, TextArea } from 'grommet';
 import { grommet } from 'grommet/themes';
 
 const OmniBoxWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
+
 `;
 
 interface IOmniBoxInputProps {
@@ -39,7 +38,7 @@ const OmniBoxInput: React.SFC<IOmniBoxInputProps> = ({
           />
           <Button
             color="#000"
-            style={{ borderRadius: '0px', margin: '3px 0px' }}
+            style={{ borderRadius: '0px' }}
             onClick={executeQuery}
             disabled={loadingQueryStatus}
             label={loadingQueryStatus ? 'Loading query results...' : 'Execute Query'}

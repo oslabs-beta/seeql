@@ -11,11 +11,7 @@ const PanelWrapper = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-between
-  color: black;
   font-family: 'Poppins', sans-serif;˜
-  padding: 20px;
-  padding: 40px;
-    width: 250px;
 `;
 
 const TopSection = styled.section`

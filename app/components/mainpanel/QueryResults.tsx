@@ -3,15 +3,10 @@ import styled from 'styled-components';
 import { Box, DataTable } from "grommet";
 
 const QueryResultWrapper = styled.div`
-  padding: 20px;
-  display: flex;
-  flex-wrap: wrap;
-  background-color: white;
-      border: 1px solid white;
+      border: 1px solid black;
     border-radius: 3px;
-    box-shadow: 2px 2px 8px lightgrey;
   overflow: scroll;
-  height: 60vh;
+  height: 50%;
 `;
 
 interface IQueryResult {

@@ -3,7 +3,7 @@ import { useState, useEffect, useReducer } from 'react';
 import { Redirect } from 'react-router-dom';
 import { ipcRenderer } from 'electron';
 import styled from 'styled-components';
-import { Box, Button, Collapsible, Grommet } from 'grommet';
+import { Button, Collapsible, Grommet } from 'grommet';
 import { grommet } from 'grommet/themes';
 import { FormPrevious, FormNext } from "grommet-icons";
 import * as actions from '../actions/actions';
@@ -15,21 +15,48 @@ import OmniBoxContainer from '../containers/omnibox/OmniBoxContainer';
 
 
 const InvisibleHeader = styled.div`
-  height: 30px;
-  display: relative;
+  height: 40px;
+  width: 100vw;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #F7F9FD;
   -webkit-app-region: drag;
 `;
 
-const HomepageWrapper = styled.div`
+const SHomepageWrapper = styled.div`
   display: flex;
-  margin-top: -30px;
-  font-family: 'Poppins', sans-serif;
+  flex-direction: column;
   height: 100vh;
+  width: 100vw;
+  font-family: 'Poppins', sans-serif;
 `;
+
+interface ISRightPanelProps {
+  sidePanelVisibility: boolean;
+}
+
+const SMainPanelWrapper = styled.div`
+  display: flex;
+  height: 100%;
+  width: 100%;
+`
+
+const SLeftPanelWrapper = styled.div`
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+`
+
+const SRightPanelWrapper = styled.div<ISRightPanelProps>`
+  height: 100%;
+    width: ${({ sidePanelVisibility }) => sidePanelVisibility ? '250px' : '0px'};
+`
 
 const LoadWrap = styled.div`
   display: flex;
-  width: 100%;
 `;
 
 let relationships = {};
@@ -355,37 +382,28 @@ const HomePage = ({ location }) => {
 
 
   return (
-    <React.Fragment>
+
+    <Grommet theme={grommet}>
       {redirectDueToInactivity && <Redirect to='/' />}
-      <InvisibleHeader></InvisibleHeader>
-      <Grommet theme={grommet}>
-
-        <HomepageWrapper onMouseMove={() => setInactiveTime(0)}>
-          <Collapsible open={sidePanelVisibility} direction="horizontal" >
-            <SidePanel
-              intervalId={intervalId}
-              activePanel={activePanel}
-              dispatchSidePanelDisplay={dispatchSidePanelDisplay}
-              activeTableInPanel={activeTableInPanel}
-              sidePanelVisibility={sidePanelVisibility}
-            />
-          </Collapsible>
-          {toggleLoad && (
-            <LoadWrap>
-              <LoadingComponent />
-            </LoadWrap>
-          )}
-
-          <Box margin="small">
-            <Button
-              onClick={togglePanelVisibility}
-              plain={true}
-              fill={false}
-              alignSelf="start"
-              icon={sidePanelVisibility ? <FormPrevious size="large" /> : <FormNext size="large" />}
-              margin={sidePanelVisibility ? { left: "small" } : { left: "xlarge" }}
-            />
-
+      <SHomepageWrapper onMouseMove={() => setInactiveTime(0)}>
+        <InvisibleHeader>
+          <div></div>
+          <Button
+            onClick={togglePanelVisibility}
+            plain={true}
+            fill={false}
+            alignSelf="start"
+            margin="5px 20px"
+            style={{ cursor: 'pointer' }}
+            icon={sidePanelVisibility ? <FormNext size="medium" /> : <FormPrevious size="medium" />}
+          /></InvisibleHeader>
+        {toggleLoad && (
+          <LoadWrap>
+            <LoadingComponent />
+          </LoadWrap>
+        )}
+        <SMainPanelWrapper className="main">
+          <SLeftPanelWrapper className="left">
             <OmniBoxContainer
               userInputForTables={userInputForTables}
               loadingQueryStatus={loadingQueryStatus}
@@ -409,12 +427,22 @@ const HomePage = ({ location }) => {
               activeTableInPanel={activeTableInPanel}
               selectedForQueryTables={selectedForQueryTables}
             />
+          </SLeftPanelWrapper>
+          <SRightPanelWrapper className="right" sidePanelVisibility={sidePanelVisibility}>
+            {/* <Collapsible open={sidePanelVisibility} direction="horizontal" className="collapsible" style={{ height: "100%" }}> */}
+            <SidePanel
+              intervalId={intervalId}
+              activePanel={activePanel}
+              dispatchSidePanelDisplay={dispatchSidePanelDisplay}
+              activeTableInPanel={activeTableInPanel}
+              sidePanelVisibility={sidePanelVisibility}
+            />
+            {/* </Collapsible> */}
+          </SRightPanelWrapper>
+        </SMainPanelWrapper>
+      </SHomepageWrapper>
+    </Grommet >
 
-          </Box>
-        </HomepageWrapper>
-      </Grommet>
-
-    </React.Fragment>
   );
 };
 

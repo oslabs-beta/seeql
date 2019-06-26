@@ -4,7 +4,7 @@ import SettingsPanel from '../components/sidepanels/SettingsPanel';
 import FavoritesPanel from '../components/sidepanels/FavoritesPanel';
 import InfoPanel from '../components/sidepanels/InfoPanel';
 import * as actions from '../actions/actions';
-import { Grommet, Box } from "grommet";
+import { Grommet } from "grommet";
 import { grommet } from 'grommet/themes';
 import { UserSettings, CircleInformation } from 'grommet-icons';
 
@@ -22,7 +22,11 @@ const PanelWrapper = styled.div<IPanelWrapperProps>`
     sidePanelVisibility ? '250px' : '0px'};
   display: flex;
   flex-direction: column;
+  padding: 20px;
   justify-content: flex-start;
+  background-color: white;
+  border: 1px solid black;
+  height: 100%;
   transition: width 500ms ease-in-out;
 `;
 
@@ -33,7 +37,6 @@ const ButtonMenu = styled.div`
 
 const IndTab = styled.button<IIndTabProps>`
   border: none;
-  padding: 5px;
   cursor: pointer;
 
   :hover {
@@ -46,7 +49,6 @@ const IndTab = styled.button<IIndTabProps>`
 
 const Tabs = styled.div`
   display: flex;
-  justify-content: flex-end;
   font-family: 'Poppins', sans-serif;
   width: 250px;
 `;
@@ -91,50 +93,44 @@ const SidePanel: React.SFC<Props> = ({
   dispatchSidePanelDisplay
 }) => {
   return (
-    <Grommet theme={grommet}>
+    <Grommet theme={grommet} style={{ height: '100%' }} >
       {sidePanelVisibility && (
-        <Box cdirection="row"
-          border={{ color: 'brand', size: 'large' }}
-          pad="medium"
-          height='100%'
-        >
-          <PanelWrapper sidePanelVisibility={sidePanelVisibility}>
-            <ButtonMenu>
-              <Tabs>
-                <IndTab
-                  data-panel="info"
-                  panel="info"
-                  active={activePanel}
-                  onClick={() =>
-                    dispatchSidePanelDisplay(actions.changeToInfoPanel())
-                  }
-                >
-                  <CircleInformation />
-                </IndTab>
-                <IndTab
-                  data-panel="settings"
-                  panel="settings"
-                  active={activePanel}
-                  onClick={() =>
-                    dispatchSidePanelDisplay(actions.changeToSettingsPanel())
-                  }
-                >
-                  <UserSettings />
-                </IndTab>
-              </Tabs>
-            </ButtonMenu>
-            <div>
-              {activePanel === 'info' && (
-                <InfoPanel
-                  sidePanelVisibility={sidePanelVisibility}
-                  activeTableInPanel={activeTableInPanel}
-                />
-              )}
-              {activePanel === 'favorites' && <FavoritesPanel />}
-              {activePanel === 'settings' && <SettingsPanel intervalId={intervalId} />}
-            </div>
-          </PanelWrapper>
-        </Box>
+        <PanelWrapper sidePanelVisibility={sidePanelVisibility} className="sidepanel">
+          <ButtonMenu>
+            <Tabs>
+              <IndTab
+                data-panel="info"
+                panel="info"
+                active={activePanel}
+                onClick={() =>
+                  dispatchSidePanelDisplay(actions.changeToInfoPanel())
+                }
+              >
+                <CircleInformation />
+              </IndTab>
+              <IndTab
+                data-panel="settings"
+                panel="settings"
+                active={activePanel}
+                onClick={() =>
+                  dispatchSidePanelDisplay(actions.changeToSettingsPanel())
+                }
+              >
+                <UserSettings />
+              </IndTab>
+            </Tabs>
+          </ButtonMenu>
+          <div>
+            {activePanel === 'info' && (
+              <InfoPanel
+                sidePanelVisibility={sidePanelVisibility}
+                activeTableInPanel={activeTableInPanel}
+              />
+            )}
+            {activePanel === 'favorites' && <FavoritesPanel />}
+            {activePanel === 'settings' && <SettingsPanel intervalId={intervalId} />}
+          </div>
+        </PanelWrapper>
       )
       }
     </Grommet >
