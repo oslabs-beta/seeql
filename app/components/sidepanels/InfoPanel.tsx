@@ -21,7 +21,7 @@ const SidePanelTableListWrapper = styled.div<ISidePanelTableWrapperProps>`
     sidePanelVisibility ? '210px' : '0px'};
   height: 100%;
   transition: width 500ms ease-in-out;
-  overflow: hidden;
+  overflow: scroll;
    transition: all 0.2s ease-in-out;
 `;
 

@@ -60,8 +60,13 @@ const IndTab = styled.button<IIndTabProps>`
 const Tabs = styled.div`
   display: flex;
   margin: 10px;
+  height: 60px;
 `;
 
+const SSectionWrapper = styled.div`
+  height: 100%;
+  overflow: scroll;
+`
 
 interface IForeignKeysAffected {
   column: string;
@@ -129,7 +134,7 @@ const SidePanel: React.SFC<Props> = ({
                 <UserSettings color={activePanel === 'settings' ? "#4B70FE" : '#E6EAF2'} />
               </IndTab>
             </Tabs>
-            <div>
+            <SSectionWrapper>
               {activePanel === 'info' && (
                 <InfoPanel
                   sidePanelVisibility={sidePanelVisibility}
@@ -138,7 +143,7 @@ const SidePanel: React.SFC<Props> = ({
               )}
               {activePanel === 'favorites' && <FavoritesPanel />}
               {activePanel === 'settings' && <SettingsPanel intervalId={intervalId} />}
-            </div>
+            </SSectionWrapper>
           </SInnerPanelWrapper>
         </PanelWrapper>
       )
