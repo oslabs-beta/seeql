@@ -3,7 +3,7 @@ import { useState, useEffect, useReducer } from 'react';
 import { Redirect } from 'react-router-dom';
 import { ipcRenderer } from 'electron';
 import styled from 'styled-components';
-import { Button, Collapsible, Grommet } from 'grommet';
+import { Button, Collapsible, Grommet, Text } from 'grommet';
 import { grommet } from 'grommet/themes';
 import { FormPrevious, FormNext } from "grommet-icons";
 import * as actions from '../actions/actions';
@@ -50,14 +50,14 @@ const SMainPanelWrapper = styled.div`
   width: 100%;
 `
 
-//REPLACE
+//REPLACE MAIn
 const SLeftPanelWrapper = styled.div`
   height: 100%;
   width: 100%;
   display: flex;
   flex-direction: column;
   padding: 10px;
-  background-color: #d2d7d3 ;
+  background-color: #E6EAF2;
 `
 
 const SRightPanelWrapper = styled.div<ISRightPanelProps>`
@@ -104,7 +104,7 @@ const HomePage = ({ location }) => {
 
   const resetQuerySelection = () => {
     relationships = {};
-    setUserInputQuery('SELECT * FROM[table name]');
+    setUserInputQuery('SELECT * FROM [table name]');
     setSelectedForQueryTables({});
     setQueryResultError({
       status: false,
@@ -399,8 +399,8 @@ const HomePage = ({ location }) => {
         <InvisibleHeader>
           <div></div>
           <SRightHeaderWrapper onClick={togglePanelVisibility}>
-            Menu
-          <Button
+            <Text style={{ cursor: 'pointer' }}> Menu</Text>
+            <Button
               plain={true}
               fill={false}
               alignSelf="start"

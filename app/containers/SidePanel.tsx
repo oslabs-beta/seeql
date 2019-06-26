@@ -42,10 +42,11 @@ const SInnerPanelWrapper = styled.div`
 
 const IndTab = styled.button<IIndTabProps>`
   border: none;
-  border-bottom: ${({ active, panel }) => active === panel ? '2px solid transparent' : '2px solid transparent'};
+  border-bottom: ${({ active, panel }) => active === panel ? '2px solid #7540D9' : '2px solid transparent'};
   margin: 5px;
   padding: 3px 0px;
   cursor: pointer;
+  transition: 0.2s;
 
   :hover {
     transform: scale(1.1);

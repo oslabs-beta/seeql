@@ -9,12 +9,18 @@ interface ISidePanelTableWrapperProps {
   sidePanelVisibility: boolean;
 }
 
+const TitleWrapper = styled.span`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`
+
 const SidePanelTableListWrapper = styled.div<ISidePanelTableWrapperProps>`
   width: ${({ sidePanelVisibility }) =>
     sidePanelVisibility ? '210px' : '0px'};
   height: 100%;
-  border: 1px solid black;
   transition: width 500ms ease-in-out;
+  overflow: hidden;
 `;
 
 const LabelTextWrapper = styled.div`
@@ -25,10 +31,12 @@ const LabelTextWrapper = styled.div`
 
 const InfoSection = styled.div`
   overflow-wrap: break-word;
+  margin: 20px 0px;
+  overflow: hidden;
 `;
 
 const SEmptyState = styled.div`
-
+margin: 20px 0px;
 `
 
 const Text = styled.p`
@@ -92,7 +100,7 @@ const InfoPanel: React.SFC<Props> = ({
   return (
     <Grommet theme={grommet} style={{ height: '100%', width: '100%' }}>
       <SidePanelTableListWrapper sidePanelVisibility={sidePanelVisibility}>
-        <InformationPanel />
+        <TitleWrapper><InformationPanel /></TitleWrapper>
         {Object.keys(activeTableInPanel).length > 0 ? (
           <InfoSection>
             <LabelTextWrapper>

@@ -7,11 +7,12 @@ import { FormTrash } from 'grommet-icons';
 import styled from 'styled-components';
 
 const ResultsWrapper = styled.div`
-  height: 100px;
-  border: 3px solid green;
   overflow: hidden;
   overflow: scroll;
+  background-color: white;
   height: 100%;
+  margin-top: 10px;
+  box-shadow: 1px 1px 4px #67809f;
 `
 
 interface IResultsContainerProps {

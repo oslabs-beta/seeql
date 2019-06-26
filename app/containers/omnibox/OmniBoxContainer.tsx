@@ -6,6 +6,12 @@ import { Tabs, Tab, Grommet, Box } from "grommet";
 import { grommet } from 'grommet/themes';
 import { Search } from 'grommet-icons';
 
+const OmniBoxWrapper = styled.div`
+  box-shadow: 1px 1px 4px #67809f;
+  background-color: white;
+  padding: 10px;
+`
+
 const QueryResultError = styled.div`
   color: #ca333e;
   border-radius: 3px;
@@ -52,7 +58,7 @@ const OmniBoxContainer: React.SFC<IOmniBoxProps> = ({
   const navigationTabs = listOfTabNames.map(tabname => {
     return (
       <Tab
-        title={tabname === 'Search' ? <Search style={{ height: '25px' }} /> : tabname}
+        title={tabname === 'Search' ? <Search style={{ height: '20px' }} /> : tabname}
       >
         <OmniBoxInput
           tabname={tabname}
@@ -68,14 +74,13 @@ const OmniBoxContainer: React.SFC<IOmniBoxProps> = ({
   });
 
   return (
-    <Grommet theme={grommet}>
-      <Box
-      >
+    <Grommet theme={grommet} className="OmniGrommet" style={{ height: 'auto' }}>
+      <OmniBoxWrapper>
         <Tabs>{navigationTabs}</Tabs>
         {queryResultError.status && (
           <QueryResultError>{queryResultError.message}</QueryResultError>
         )}
-      </Box>
+      </OmniBoxWrapper>
     </Grommet>
   );
 };
