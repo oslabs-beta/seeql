@@ -171,7 +171,6 @@ const Login = () => {
   // IPC messaging listeners
   useEffect(() => {
     ipcRenderer.on('db-connection-error', () => {
-      // #TODO: Error handling for cases where unable to retrieve info from a valid connection
       setConnectionError(true);
       setLoading(false);
     });

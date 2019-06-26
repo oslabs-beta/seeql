@@ -41,9 +41,6 @@ const getForeignKeys = (client, tableName: string) => {
   });
 };
 
-// #TODO: add error handling when tables lack a primary key
-// Relational database theory dictates that every table must have a primary key.
-// This rule is not enforced by PostgreSQL, but it is usually best to follow it.
 const getColumns = (client, tableName: string) => {
   return new Promise((resolve, reject) => {
     client.query(
@@ -55,7 +52,6 @@ const getColumns = (client, tableName: string) => {
                       WHERE TABLE_NAME = '${tableName}'`,
       (err: string, result: any) => {
         if (err)
-          // #TODO: give a msg that doesn't expose structure of database
           reject(err);
         resolve(result.rows);
       }
@@ -94,7 +90,6 @@ async function composeTableData(client): Promise<any> {
     if (tablesArr.length > 0) {
       resolve(tablesArr);
     } else {
-      // #TODO: add empty state trigger
       reject(new Error('database empty'));
     }
   });

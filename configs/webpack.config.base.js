@@ -18,7 +18,7 @@ export default {
             presets: [
               [
                 '@babel/preset-env',
-                { targets: { browsers: 'last 2 versions' } } // #TODO: electron@our.version?
+                { targets: { browsers: 'last 2 versions' } }
               ],
               '@babel/preset-typescript',
               '@babel/preset-react'

@@ -4,7 +4,6 @@ import AppDb from './appDb';
 import path from 'path';
 
 // import { autoUpdater } from 'electron-updater';
-// #TODO: make update flow (this class is currently has 0 references)
 // export default class AppUpdater {
 //   public constructor() {
 //     log.transports.file.level = 'info';
@@ -79,8 +78,6 @@ app.on('ready', async () => {
     if (process.env.START_MINIMIZED) {
       mainWindow.minimize();
     } else {
-      // #TODO: decide do we show the app window
-
       // const connStrs = appDb.get('savedConnections');
       // mainWindow.webContents.send('saved-connections', connStrs);
 

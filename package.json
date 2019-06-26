@@ -2,7 +2,7 @@
   "name": "SeeQL",
   "productName": "SeeQL",
   "version": "0.0.1",
-  "description": "SeeQL is a database viz tool #TODO",
+  "description": "SeeQL is a database viz tool",
   "scripts": {
     "build": "concurrently \"yarn build-main\" \"yarn build-renderer\"",
     "build-dll": "cross-env NODE_ENV=development webpack --config ./configs/webpack.config.renderer.dev.dll.babel.js --colors",
@@ -30,7 +30,7 @@
   "main": "./app/main.prod.js",
   "build": {
     "productName": "Seeeql",
-    "appId": "org.Seeql.todo",
+    "appId": "org.Seeql.com",
     "files": [
       "app/dist/",
       "app/app.html",
@@ -172,7 +172,6 @@
     "@types/react-dom": "^16.0.11",
     "@types/react-router-dom": "^4.3.1",
     "@types/webpack-env": "^1.13.9",
-    "@fortawesome/fontawesome-free": "^5.6.3",
     "@hot-loader/react-dom": "^16.8.6",
     "@types/pg": "^7.4.14",
     "@types/styled-components": "^4.1.16",
