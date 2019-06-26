@@ -47,3 +47,4 @@ const SettingsPanel = ({ intervalId }) => {
 };
 
 export default SettingsPanel;
+s
