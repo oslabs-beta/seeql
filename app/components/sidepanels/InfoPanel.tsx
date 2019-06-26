@@ -46,11 +46,16 @@ const Text = styled.p`
   font-size: 80%;
   font-weight: bold;
   color: #485360;
+  padding: 0px 2px;
+  :hover {
+    background-color:  #f4f4f4;
+  }
 `;
 
 const Label = styled.label`
   font-size: 70%;
   color: #485360;
+  font-weight: none;
 `;
 
 interface ISelectedTable {
@@ -85,7 +90,7 @@ const InfoPanel: React.SFC<Props> = ({
       foreignKeyRelationships.push(
         <li>
           <Text key={key}>
-            {key.column_name} <Label as="span">from table</Label>
+            {key.column_name} <Label as="span"> from table </Label>
             {key.foreign_table_name}({key.foreign_column_name})
           </Text>
         </li>

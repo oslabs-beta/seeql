@@ -161,7 +161,7 @@ const TablesContainer: React.SFC<ITablesContainerProps> = ({
               <SIndTablButtons>
                 <STabWrapper>
                   <Pin
-                    style={{ height: '16x', cursor: 'pointer' }}
+                    style={{ height: '15x', cursor: 'pointer' }}
                     data-pinned={table.table_name}
                     onClick={() =>
                       dispatchPinned(actions.removeFromPinned(table.table_name))
