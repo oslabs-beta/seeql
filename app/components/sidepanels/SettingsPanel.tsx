@@ -23,6 +23,7 @@ const TopSection = styled.section`
   flex-direction: column;
 `;
 
+
 const SettingsPanel = ({ intervalId }) => {
   const logOut = () => {
     clearInterval(intervalId);
@@ -32,11 +33,13 @@ const SettingsPanel = ({ intervalId }) => {
   return (
     <PanelWrapper>
       <TopSection>
-        <SettingsHead />
-        <NestedCollapsible />
-        <SingleCollapsible />
+
+        <SettingsHead/>
+      <NestedCollapsible/>
+          <SingleCollapsible/>
         <NavLink onClick={logOut} to="/">
-          <SignOutLink />
+          <SignOutLink/>
+
         </NavLink>
       </TopSection>
     </PanelWrapper>

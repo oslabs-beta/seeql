@@ -1,5 +1,6 @@
 import * as React from 'react';
 import styled from 'styled-components';
+
 import { InformationPanel } from './sidePanelMolecules/titles'
 
 interface ISidePanelTableWrapperProps {
@@ -83,7 +84,9 @@ const InfoPanel: React.SFC<Props> = ({
 
   return (
     <SidePanelTableListWrapper sidePanelVisibility={sidePanelVisibility}>
+
       <InformationPanel />
+
       {Object.keys(activeTableInPanel).length > 0 ? (
         <InfoSection>
           <Label>table name</Label>
