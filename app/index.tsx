@@ -1,21 +1,18 @@
 import * as React from 'react';
+import { useState } from 'react';
 import { render } from 'react-dom';
-import { hot } from 'react-hot-loader/root';
-import './app.global.css';
+// import { hot } from 'react-hot-loader/root';
+
 import ThemeContext from './contexts/themeContext';
 import themes from './themes/themes';
-import Routes from './Routes';
-import { BrowserRouter } from 'react-router-dom';
+import { HashRouter } from 'react-router-dom';
 import { ThemeProvider } from 'styled-components';
-import { useState } from 'react';
+import { Switch, Route } from 'react-router';
+import LoginPage from './containers/LoginPage';
+import HomePage from './containers/HomePage';
 
 const Index = () => {
-  const modes = [
-    { value: 'defaultTheme', active: true },
-    { value: 'darkTheme', active: false },
-  ]
-
-
+  const modes = [{ value: 'defaultTheme', active: true }, { value: 'darkTheme', active: false }]
   const [context, setContext] = useState(modes);
   const serveMode = context.reduce((acc, mode) => {
     if (mode.active) acc = mode.value;
@@ -25,14 +22,15 @@ const Index = () => {
   return (
     <ThemeContext.Provider value={[context, setContext]}>
       <ThemeProvider theme={themes[serveMode]}>
-        <BrowserRouter>
-          <Routes />
-        </BrowserRouter>
+        <Switch>
+          <Route path="/homepage" component={HomePage} />
+          <Route path="/" component={LoginPage} />
+        </Switch>
       </ThemeProvider>
-    </ThemeContext.Provider>
+    </ThemeContext.Provider >
   );
 };
 
-hot(Index);
+// hot(Index);
 
-render(<Index />, document.getElementById('root'));
+render(<HashRouter><Index /></HashRouter>, document.getElementById('root'));
