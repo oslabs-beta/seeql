@@ -31,12 +31,10 @@ const OmniBoxNavButton = styled.button<IOmniBoxNavButtonProps>`
   font-family: 'Poppins', sans-serif;
   border-radius: 3px 3px 0px 0px;
   border: none;
-  background-color: ${props =>
+  color: ${props =>
     props.selectedView === props.omniBoxView
-      ? props.theme.omniBox.buttonColorActive
-      : props.theme.omniBox.buttonColor};
-  color: ${(props) =>
-    props.selectedView === props.omniBoxView ? props.theme.omniBox.fontColorActive : props.theme.omniBox.fontColor};
+      ? '#7540D9'
+      : 'grey'};
   font-weight: ${(props) =>
     props.selectedView === props.omniBoxView ? 'bold' : 'none'};
 
