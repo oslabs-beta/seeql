@@ -8,6 +8,7 @@ const QueryResultWrapper = styled.div`
   overflow: scroll;
   height: 100%;
   padding: 10px 0px 0px 0px;
+  overflow: scroll;
 `;
 
 const SQueryEmptyState = styled.div`
@@ -26,6 +27,7 @@ const SResultsWrapper = styled.div`
   display: flex;
   justify-content: center;
   font-size: 120%;
+  overflow: scroll;
 
 `
 

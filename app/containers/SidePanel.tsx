@@ -6,7 +6,7 @@ import InfoPanel from '../components/sidepanels/InfoPanel';
 import * as actions from '../actions/actions';
 import { Grommet } from "grommet";
 import { grommet } from 'grommet/themes';
-import { UserSettings, CircleInformation } from 'grommet-icons';
+import { CircleQuestion, CircleInformation } from 'grommet-icons';
 
 interface IPanelWrapperProps {
   sidePanelVisibility: boolean;
@@ -17,6 +17,8 @@ interface IIndTabProps {
   panel: string;
 }
 
+
+
 const PanelWrapper = styled.div<IPanelWrapperProps>`
   width: ${({ sidePanelVisibility }) =>
     sidePanelVisibility ? '250px' : '0px'};
@@ -24,7 +26,7 @@ const PanelWrapper = styled.div<IPanelWrapperProps>`
   flex-direction: column;
   padding: 10px 10px 10px 0px;
   justify-content: flex-start;
-  background-color: #E6EAF2 ;
+  background-color: #E6EAF2;
   height: 100%;
    transition: all 0.2s ease-in-out;
      font-family: 'Poppins', sans-serif;
@@ -107,7 +109,7 @@ const SidePanel: React.SFC<Props> = ({
   activeTableInPanel,
   sidePanelVisibility,
   activePanel,
-  dispatchSidePanelDisplay
+  dispatchSidePanelDisplay,
 }) => {
   return (
     <Grommet theme={grommet} style={{ height: '100%' }} >
@@ -133,7 +135,7 @@ const SidePanel: React.SFC<Props> = ({
                   dispatchSidePanelDisplay(actions.changeToSettingsPanel())
                 }
               >
-                <UserSettings color={activePanel === 'settings' ? "#4B70FE" : '#485360'} />
+                <CircleQuestion color={activePanel === 'settings' ? "#4B70FE" : '#485360'} />
               </IndTab>
             </Tabs>
             <SSectionWrapper>

@@ -18,7 +18,6 @@ const LoginPageWrapper = styled.div`
 const Title = styled.h1`
   font-size: 600%;
   font-weight: none;
-  color: #485360;
   color: white;
 `;
 const Panel = styled.div`

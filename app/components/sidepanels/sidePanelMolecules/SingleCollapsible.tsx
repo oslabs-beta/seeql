@@ -27,84 +27,84 @@ class SingleCollapsible extends Component {
                         }}
                     />
 
-                        <Collapsible open ={openMenu1}>
+                    <Collapsible open={openMenu1}>
                         <Button
                             hoverIndicator="background"
                             onClick={() => alert("xtrasmall clicked")}
                         >
-                                <Box
-                                    margin={{ left: "medium" }}
-                                    direction="row"
-                                    align="center"
-                                    pad="xsmall"
-                                >
-                                    <Text size="small">Extra Small</Text>
-                                </Box>
-                            </Button>
-                    
+                            <Box
+                                margin={{ left: "medium" }}
+                                direction="row"
+                                align="center"
+                                pad="xsmall"
+                            >
+                                <Text size="small">Extra Small</Text>
+                            </Box>
+                        </Button>
+
 
                         <Button
                             hoverIndicator="background"
                             onClick={() => alert("small clicked")}
                         >
-                                <Box
-                                    margin={{ left: "medium" }}
-                                    direction="row"
-                                    align="center"
-                                    pad="xsmall"
-                                >
-                                    <Text size="small">Small</Text>
-                                </Box>
-</Button>
+                            <Box
+                                margin={{ left: "medium" }}
+                                direction="row"
+                                align="center"
+                                pad="xsmall"
+                            >
+                                <Text size="small">Small</Text>
+                            </Box>
+                        </Button>
 
 
                         <Button
                             hoverIndicator="background"
                             onClick={() => alert("medium clicked")}
                         >
-                        <Box
-                            margin={{ left: "medium" }}
-                            direction="row"
-                            align="center"
-                            pad="xsmall"
-                        >
-                            <Text size="small">Medium</Text>
-                        </Box>
+                            <Box
+                                margin={{ left: "medium" }}
+                                direction="row"
+                                align="center"
+                                pad="xsmall"
+                            >
+                                <Text size="small">Medium</Text>
+                            </Box>
 
-</Button>
+                        </Button>
                         <Button
                             hoverIndicator="background"
                             onClick={() => alert("large clicked")}
                         >
-                        <Box
-                            margin={{ left: "medium" }}
-                            direction="row"
-                            align="center"
-                            pad="xsmall"
-                        >
-                            <Text size="small">Large</Text>
-                        </Box>
-</Button>
+                            <Box
+                                margin={{ left: "medium" }}
+                                direction="row"
+                                align="center"
+                                pad="xsmall"
+                            >
+                                <Text size="small">Large</Text>
+                            </Box>
+                        </Button>
 
                         <Button
                             hoverIndicator="background"
                             onClick={() => alert("geriatric clicked")}
                         >
-                        <Box
-                            margin={{ left: "medium" }}
-                            direction="row"
-                            align="center"
-                            pad="xsmall"
-                        >
-                            <Text size="small">Geriatric</Text>
-                        </Box>
-</Button>
+                            <Box
+                                margin={{ left: "medium" }}
+                                direction="row"
+                                align="center"
+                                pad="xsmall"
+                            >
+                                <Text size="small">Geriatric</Text>
+                            </Box>
+                        </Button>
 
-                        
-                         
-                            {}
-                        </Collapsible>
-                      
+
+
+                        {}
+                    </Collapsible>
+
                 </Box>
             </Grommet>
         );

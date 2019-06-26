@@ -12,10 +12,9 @@ import SidePanel from './SidePanel';
 import ResultsContainer from './mainpanel/ResultsContainer';
 import OmniBoxContainer from '../containers/omnibox/OmniBoxContainer';
 
-
 const InvisibleHeader = styled.div`
   height: 40px;
-  width: 100vw;
+  width: 100%;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -57,7 +56,7 @@ const SLeftPanelWrapper = styled.div`
   display: flex;
   flex-direction: column;
   padding: 15px 10px 15px 15px;
-  background-color: #E6EAF2;
+    background: #E6EAF2;
    transition: all 0.2s ease-in-out;
 `
 
@@ -90,7 +89,6 @@ const HomePage = ({ location }) => {
     message: []
   });
   const [sidePanelVisibility, setSidePanelVisibility] = useState(true);
-
   const [activePanel, dispatchSidePanelDisplay] = useReducer(
     changeDisplayOfSidePanel,
     'info'

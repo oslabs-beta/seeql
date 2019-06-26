@@ -31,6 +31,7 @@ const LabelTextWrapper = styled.div`
   flex-direction: column;
     overflow-wrap: break-word;
     padding: 5px 0px;
+    align-items: center;
 `
 
 const InfoSection = styled.div`
@@ -58,7 +59,7 @@ const Text = styled.p`
 const Label = styled.label`
   font-size: 70%;
     font-family: 'Poppins', sans-serif;
-  color: #485360;
+  color:#485360;
   font-weight: none;
 `;
 
@@ -77,7 +78,7 @@ interface Props {
 
 const InfoPanel: React.SFC<Props> = ({
   activeTableInPanel,
-  sidePanelVisibility
+  sidePanelVisibility,
 }) => {
   const {
     table_name,
