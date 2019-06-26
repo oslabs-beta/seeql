@@ -4,8 +4,8 @@ import { Grommet, Heading } from "grommet";
 import { grommet } from "grommet/themes";
 
 
-export const SettingsHead =()=>{
-    return(
+export const SettingsHead = () => {
+    return (
         <Grommet theme={grommet}>
             <Heading margin="none">Settings
             </Heading>
@@ -25,7 +25,7 @@ export const SignOutLink = () => {
 export const InformationPanel = () => {
     return (
         <Grommet theme={grommet}>
-            <Heading margin="none">Information
+            <Heading size="190%" style={{ overflowWrap: "break-word", width: 'auto', padding: '5px 0px', margin: '0px 5px', borderBottom: '2px solid #4B70FE' }}>Information
             </Heading>
         </Grommet>
     )

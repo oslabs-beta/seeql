@@ -3,7 +3,6 @@ import styled from 'styled-components';
 
 const PanelWrapper = styled.div`
   padding: 20px;
-  font-size: 30px;
   display: flex;
   width: 250px;
   justify-content: center;

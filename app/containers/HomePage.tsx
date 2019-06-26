@@ -3,33 +3,73 @@ import { useState, useEffect, useReducer } from 'react';
 import { Redirect } from 'react-router-dom';
 import { ipcRenderer } from 'electron';
 import styled from 'styled-components';
-import { Box, Button, Collapsible, Grommet } from 'grommet';
+import { Button, Grommet, Text } from 'grommet';
 import { grommet } from 'grommet/themes';
 import { FormPrevious, FormNext } from "grommet-icons";
 import * as actions from '../actions/actions';
 import changeDisplayOfSidePanel from '../reducers/ChangeDisplayOfSidePanel';
 import SidePanel from './SidePanel';
-import LoadingComponent from '../components/LoadComponent';
 import ResultsContainer from './mainpanel/ResultsContainer';
 import OmniBoxContainer from '../containers/omnibox/OmniBoxContainer';
 
 
 const InvisibleHeader = styled.div`
-  height: 30px;
-  display: relative;
+  height: 40px;
+  width: 100vw;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #F7F9FD;
   -webkit-app-region: drag;
+   transition: all 0.2s ease-in-out;
 `;
 
-const HomepageWrapper = styled.div`
+const SRightHeaderWrapper = styled.div`
   display: flex;
-  margin-top: -30px;
-  font-family: 'Poppins', sans-serif;
+  justify-content: center;
+  align-items: center;
+  margin: 0px 5px;
+  cursor: pointer;
+`
+
+const SHomepageWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
   height: 100vh;
+  width: 100vw;
+  transition: all 0.2s;
 `;
+
+interface ISRightPanelProps {
+  sidePanelVisibility: boolean;
+}
+
+const SMainPanelWrapper = styled.div`
+  display: flex;
+  height: 100%;
+  width: 100%;
+   transition: all 0.2s ease-in-out;
+`
+
+//REPLACE MAIn
+const SLeftPanelWrapper = styled.div`
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 15px 10px 15px 15px;
+  background-color: #E6EAF2;
+   transition: all 0.2s ease-in-out;
+`
+
+const SRightPanelWrapper = styled.div<ISRightPanelProps>`
+  height: 100%;
+    width: ${({ sidePanelVisibility }) => sidePanelVisibility ? '250px' : '0px'};
+    transition: all 0.2s ease-in-out;
+`
 
 const LoadWrap = styled.div`
   display: flex;
-  width: 100%;
 `;
 
 let relationships = {};
@@ -38,15 +78,15 @@ const alias = {};
 const HomePage = ({ location }) => {
   const allTablesMetaData = location.state.tables;
   // const [relationships, setRelationships]
+  const [omniBoxView, setOmniBoxView] = useState('SQL');
   const [selectedForQueryTables, setSelectedForQueryTables] = useState({});
   const [loadingQueryStatus, setLoadingQueryStatus] = useState(false);
   const [activeDisplayInResultsTab, setActiveDisplayInResultsTab] = useState(
-    0
+    'Tables'
   );
   const [activeTableInPanel, setActiveTableInPanel] = useState({});
   const [userInputForTables, setUserInputForTables] = useState('');
   const [data, setData] = useState([]); // data from database
-  const [toggleLoad, setToggleLoad] = useState(true);
   const [userInputQuery, setUserInputQuery] = useState(
     'SELECT * FROM [table name]'
   );
@@ -67,7 +107,7 @@ const HomePage = ({ location }) => {
 
   const resetQuerySelection = () => {
     relationships = {};
-    setUserInputQuery('SELECT * FROM[table name]');
+    setUserInputQuery('SELECT * FROM [table name]');
     setSelectedForQueryTables({});
     setQueryResultError({
       status: false,
@@ -313,9 +353,7 @@ const HomePage = ({ location }) => {
 
   // Fetches database information
   useEffect((): void => {
-    setToggleLoad(true);
     setData(allTablesMetaData);
-    setToggleLoad(false);
   }, [allTablesMetaData]);
 
   useEffect(() => {
@@ -325,7 +363,7 @@ const HomePage = ({ location }) => {
           status: queryResult.message.length === 0 ? 'No results' : 'Success',
           message: queryResult.message
         });
-        setActiveDisplayInResultsTab(1);
+        setActiveDisplayInResultsTab('Query Results');
       }
       if (queryResult.statusCode === 'Invalid Request') {
         setQueryResultError({
@@ -355,38 +393,29 @@ const HomePage = ({ location }) => {
 
 
   return (
-    <React.Fragment>
+
+    <Grommet theme={grommet}>
       {redirectDueToInactivity && <Redirect to='/' />}
-      <InvisibleHeader></InvisibleHeader>
-      <Grommet theme={grommet}>
-
-        <HomepageWrapper onMouseMove={() => setInactiveTime(0)}>
-          <Collapsible open={sidePanelVisibility} direction="horizontal" >
-            <SidePanel
-              intervalId={intervalId}
-              activePanel={activePanel}
-              dispatchSidePanelDisplay={dispatchSidePanelDisplay}
-              activeTableInPanel={activeTableInPanel}
-              sidePanelVisibility={sidePanelVisibility}
-            />
-          </Collapsible>
-          {toggleLoad && (
-            <LoadWrap>
-              <LoadingComponent />
-            </LoadWrap>
-          )}
-
-          <Box margin="small">
+      <SHomepageWrapper onMouseMove={() => setInactiveTime(0)}>
+        <InvisibleHeader>
+          <div></div>
+          <SRightHeaderWrapper onClick={togglePanelVisibility}>
+            <Text style={{ cursor: 'pointer' }}> Menu</Text>
             <Button
-              onClick={togglePanelVisibility}
               plain={true}
               fill={false}
               alignSelf="start"
-              icon={sidePanelVisibility ? <FormPrevious size="large" /> : <FormNext size="large" />}
-              margin={sidePanelVisibility ? { left: "small" } : { left: "xlarge" }}
+              margin="5px 0px"
+              style={{ cursor: 'pointer' }}
+              icon={sidePanelVisibility ? <FormNext size="medium" /> : <FormPrevious size="medium" />}
             />
-
+          </SRightHeaderWrapper>
+        </InvisibleHeader>
+        <SMainPanelWrapper className="main">
+          <SLeftPanelWrapper className="left">
             <OmniBoxContainer
+              omniBoxView={omniBoxView}
+              setOmniBoxView={setOmniBoxView}
               userInputForTables={userInputForTables}
               loadingQueryStatus={loadingQueryStatus}
               userInputQuery={userInputQuery}
@@ -395,6 +424,7 @@ const HomePage = ({ location }) => {
               setUserInputQuery={setUserInputQuery}
               queryResultError={queryResultError}
               setUserInputForTables={setUserInputForTables}
+              setActiveDisplayInResultsTab={setActiveDisplayInResultsTab}
             />
             <ResultsContainer
               relationships={relationships}
@@ -409,12 +439,22 @@ const HomePage = ({ location }) => {
               activeTableInPanel={activeTableInPanel}
               selectedForQueryTables={selectedForQueryTables}
             />
+          </SLeftPanelWrapper>
+          <SRightPanelWrapper className="right" sidePanelVisibility={sidePanelVisibility}>
+            {/* <Collapsible open={sidePanelVisibility} direction="horizontal" className="collapsible" style={{ height: "100%" }}> */}
+            <SidePanel
+              intervalId={intervalId}
+              activePanel={activePanel}
+              dispatchSidePanelDisplay={dispatchSidePanelDisplay}
+              activeTableInPanel={activeTableInPanel}
+              sidePanelVisibility={sidePanelVisibility}
+            />
+            {/* </Collapsible> */}
+          </SRightPanelWrapper>
+        </SMainPanelWrapper>
+      </SHomepageWrapper>
+    </Grommet >
 
-          </Box>
-        </HomepageWrapper>
-      </Grommet>
-
-    </React.Fragment>
   );
 };
 

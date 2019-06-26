@@ -5,41 +5,24 @@
 @import '~@fortawesome/fontawesome-free/css/all.css';
 
 * {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
+	box-sizing: border-box;
+	margin: 0;
+	padding: 0;
 }
 
 body {
   position: relative;
-  color: black;
+  color: #485360;
   overflow-y: hidden;
+  font-family: 'Poppins', sans-serif;
+  font-size: 14px;
 }
 
-h2 {
-  margin: 0;
-  font-size: 2.25rem;
-  font-weight: bold;
-  letter-spacing: -0.025em;
-  color: #fff;
-}
-
-p {
-  font-size: 24px;
-}
-
-li {
-  list-style: none;
+button {
+    font-family: 'Poppins', sans-serif;
 }
 
 a {
-  color: black;
-  opacity: 0.75;
-  text-decoration: none;
+    font-family: 'Poppins', sans-serif;
 }
 
-a:hover {
-  opacity: 1;
-  text-decoration: none;
-  cursor: pointer;
-}
