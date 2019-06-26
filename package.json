@@ -30,8 +30,10 @@
   },
   "main": "./app/main.prod.js",
   "build": {
-    "productName": "Seeeql",
-    "appId": "org.Seeql.com",
+    "productName": "Seeql",
+    "appId": "com.Seeql",
+    "compression": "normal",
+    "asar": true,
     "files": [
       "app/dist/",
       "app/app.html",
@@ -52,6 +54,26 @@
           "path": "/Applications"
         }
       ]
+    },
+    "mac": {
+      "icon": "resources/icons.icns",
+      "type": "distribution",
+      "category": "public.app-category.developer",
+      "target": [
+        "pkg",
+        "dmg",
+        "mas"
+      ],
+      "publish": {
+        "provider": "s3",
+        "bucket": "seeql-releases.todo_make_an_S3_bucket",
+        "path": "releases"
+      }
+    },
+    "mas": {
+      "entitlements": "assets/entitlements.mas.plist",
+      "entitlementsInherit": "assets/entitlements.mas.inherit.plist",
+      "provisioningProfile": "assets/embedded.provisionprofile"
     },
     "win": {
       "target": [
@@ -243,7 +265,7 @@
     "url-loader": "^1.1.2",
     "webpack": "^4.35.0",
     "webpack-bundle-analyzer": "^3.0.3",
-    "webpack-cli": "^3.2.0",
+    "webpack-cli": "^3.3.5",
     "webpack-dev-server": "^3.1.14",
     "webpack-merge": "^4.2.1",
     "yarn": "^1.12.3"
