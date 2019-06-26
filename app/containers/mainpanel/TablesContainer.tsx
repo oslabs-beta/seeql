@@ -151,7 +151,7 @@ const TablesContainer: React.SFC<ITablesContainerProps> = ({
                 style={{ height: '15px', cursor: 'pointer' }}
                 onClick={captureSelectedTable}
                 data-tablename={table.table_name}
-                color={(table.table_name === activeTableInPanel.table_name) ? "#149BD2" : 'black'}
+                color={(table.table_name === activeTableInPanel.table_name) ? "#149BD2" : '#485360'}
               />
               <Tables
                 selectedForQueryTables={selectedForQueryTables}
@@ -190,13 +190,13 @@ const TablesContainer: React.SFC<ITablesContainerProps> = ({
                   dispatchPinned(actions.addToPinned(table.table_name))
                 }
                 pinned={false}
-                color="black"
+                color="#485360"
               />
               <CircleInformation
                 onClick={captureSelectedTable}
                 data-tablename={table.table_name}
                 style={{ height: '15px', cursor: 'pointer' }}
-                color={(table.table_name === activeTableInPanel.table_name) ? "#149BD2" : 'black'}
+                color={(table.table_name === activeTableInPanel.table_name) ? "#149BD2" : '#485360'}
               />
               <Tables
                 selectedForQueryTables={selectedForQueryTables}

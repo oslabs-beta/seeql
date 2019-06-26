@@ -12,7 +12,7 @@
 
 body {
   position: relative;
-  color: black;
+  color: #485360;
   overflow-y: hidden;
 }
 
@@ -33,7 +33,7 @@ li {
 }
 
 a {
-  color: black;
+  color: #485360;
   opacity: 0.75;
   text-decoration: none;
 }

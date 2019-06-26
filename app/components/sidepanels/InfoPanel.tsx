@@ -43,12 +43,12 @@ margin: 20px 0px;
 
 const Text = styled.p`
   font-size: 100%;
-  color: black;
+  color: #485360;
 `;
 
 const Label = styled.label`
   font-size: 80%;
-  color: black;
+  color: #485360;
 `;
 
 interface ISelectedTable {
