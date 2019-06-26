@@ -9,8 +9,8 @@ import { ipcRenderer } from 'electron';
 
 const NestedCollapsible =()=> {
     const [context, setContext] = useContext(Context)
-    const[openMenu1, setOpenMenu1] = useState (false)
-    const [openSubmenu1, setOpenSubmenu1] =useState(false)
+    const [openMenu1, setOpenMenu1] = useState (false)
+    const [openSubmenu1, setOpenSubmenu1] = useState(false)
     const [state, dispatch] = useReducer(themeReducer, context)
 
   
@@ -19,7 +19,6 @@ const NestedCollapsible =()=> {
             if (mode.active) acc= mode.value 
             return acc;
         },'')
-
         const setTheme=()=>{
             ipcRenderer.send('user-theme-selected', selectedMode);
             dispatch({
