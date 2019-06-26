@@ -11,7 +11,6 @@ interface ITableProps {
 const Table = styled.div<ITableProps>`
   display: flex;
   flex-direction: column;
-  background-color: white;
   font-size: 70%;
   border-radius: 3px;
   transition: 0.3s;
@@ -33,7 +32,6 @@ const TableRow = styled.li<ITableRowProps>`
   justify-content: space-between;
   list-style: none;
   border: ${ (props) => props.affected ? '2px solid #28C3AA' : '2px solid transparent'};
-  padding: 5px;
   transition: 0.3s;
 
   :hover {
@@ -52,9 +50,7 @@ const TableCell = styled.p`
 const TableTitle = styled.p`
   text-align: center;
   font-size: 140%;
-  padding: 5px;
   overflow-wrap: break-word;
-  background-color: #eeeeee;
   :hover {
     transform: scale(1.01);
     background-color: rgb(240, 240, 240);
@@ -239,9 +235,9 @@ const Tables: React.SFC<Props> = ({
       selectedtable={activeTableInPanel.table_name}
       tablename={tableName}
     >
-      <TableTitle 
-      // onClick={() => ipcRenderer.send('query-to-main', `SELECT * FROM ${tableName}`)} 
-      data-tablename={tableName}>{tableName}</TableTitle>
+      <TableTitle
+        // onClick={() => ipcRenderer.send('query-to-main', `SELECT * FROM ${tableName}`)} 
+        data-tablename={tableName}>{tableName}</TableTitle>
       <TableRowsList>{rows}</TableRowsList>
     </Table>
   );

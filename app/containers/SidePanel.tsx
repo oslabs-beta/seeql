@@ -4,7 +4,7 @@ import SettingsPanel from '../components/sidepanels/SettingsPanel';
 import FavoritesPanel from '../components/sidepanels/FavoritesPanel';
 import InfoPanel from '../components/sidepanels/InfoPanel';
 import * as actions from '../actions/actions';
-import { Grommet, Box } from "grommet";
+import { Grommet } from "grommet";
 import { grommet } from 'grommet/themes';
 import { UserSettings, CircleInformation } from 'grommet-icons';
 
@@ -22,22 +22,35 @@ const PanelWrapper = styled.div<IPanelWrapperProps>`
     sidePanelVisibility ? '250px' : '0px'};
   display: flex;
   flex-direction: column;
+  padding: 10px 10px 10px 0px;
   justify-content: flex-start;
-  transition: width 500ms ease-in-out;
+  background-color: #E6EAF2 ;
+  height: 100%;
+   transition: all 0.2s ease-in-out;
 `;
 
-const ButtonMenu = styled.div`
+const SInnerPanelWrapper = styled.div`
+  margin: 5px;
+  background-color: white;
+  height: 100%;
+  border-radius: 3px;
+  box-shadow: 1px 1px 4px #67809f;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  align-items: center;
 `;
 
 const IndTab = styled.button<IIndTabProps>`
   border: none;
-  padding: 5px;
+  border-bottom: ${({ active, panel }) => active === panel ? '2px solid #7540D9' : '2px solid transparent'};
+  margin: 5px;
+  padding: 3px 0px;
   cursor: pointer;
+  transition: 0.2s;
 
   :hover {
     transform: scale(1.1);
+    border-bottom: 2px solid #7540D9;
   }
   :focus {
     outline: none;
@@ -46,10 +59,9 @@ const IndTab = styled.button<IIndTabProps>`
 
 const Tabs = styled.div`
   display: flex;
-  justify-content: flex-end;
-  font-family: 'Poppins', sans-serif;
-  width: 250px;
+  margin: 10px;
 `;
+
 
 interface IForeignKeysAffected {
   column: string;
@@ -91,38 +103,32 @@ const SidePanel: React.SFC<Props> = ({
   dispatchSidePanelDisplay
 }) => {
   return (
-    <Grommet theme={grommet}>
+    <Grommet theme={grommet} style={{ height: '100%' }} >
       {sidePanelVisibility && (
-        <Box cdirection="row"
-          border={{ color: 'brand', size: 'large' }}
-          pad="medium"
-          height='100%'
-        >
-          <PanelWrapper sidePanelVisibility={sidePanelVisibility}>
-            <ButtonMenu>
-              <Tabs>
-                <IndTab
-                  data-panel="info"
-                  panel="info"
-                  active={activePanel}
-                  onClick={() =>
-                    dispatchSidePanelDisplay(actions.changeToInfoPanel())
-                  }
-                >
-                  <CircleInformation />
-                </IndTab>
-                <IndTab
-                  data-panel="settings"
-                  panel="settings"
-                  active={activePanel}
-                  onClick={() =>
-                    dispatchSidePanelDisplay(actions.changeToSettingsPanel())
-                  }
-                >
-                  <UserSettings />
-                </IndTab>
-              </Tabs>
-            </ButtonMenu>
+        <PanelWrapper sidePanelVisibility={sidePanelVisibility} className="sidepanel">
+          <SInnerPanelWrapper>
+            <Tabs>
+              <IndTab
+                data-panel="info"
+                panel="info"
+                active={activePanel}
+                onClick={() =>
+                  dispatchSidePanelDisplay(actions.changeToInfoPanel())
+                }
+              >
+                <CircleInformation color={activePanel === 'info' ? "#7540D9" : '#E6EAF2'} />
+              </IndTab>
+              <IndTab
+                data-panel="settings"
+                panel="settings"
+                active={activePanel}
+                onClick={() =>
+                  dispatchSidePanelDisplay(actions.changeToSettingsPanel())
+                }
+              >
+                <UserSettings color={activePanel === 'settings' ? "#7540D9" : '#E6EAF2'} />
+              </IndTab>
+            </Tabs>
             <div>
               {activePanel === 'info' && (
                 <InfoPanel
@@ -133,8 +139,8 @@ const SidePanel: React.SFC<Props> = ({
               {activePanel === 'favorites' && <FavoritesPanel />}
               {activePanel === 'settings' && <SettingsPanel intervalId={intervalId} />}
             </div>
-          </PanelWrapper>
-        </Box>
+          </SInnerPanelWrapper>
+        </PanelWrapper>
       )
       }
     </Grommet >

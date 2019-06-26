@@ -18,19 +18,16 @@ import { ipcRenderer } from 'electron';
 
 
 
-const NestedCollapsible =()=> {
+const NestedCollapsible = () => {
     const [context, setContext] = useContext(Context)
-    const [activeMode, setActiveMode ]= useState(context[2]['currentMode'])
-    const[openMenu1, setOpenMenu1] = useState (false)
-    const [openMenu2, setOpenMenu2] =useState (false)
-    const [openSubmenu1, setOpenSubmenu1] =useState(false)
+    const [activeMode, setActiveMode] = useState(context[2]['currentMode'])
+    const [openMenu1, setOpenMenu1] = useState(false)
+    const [openMenu2, setOpenMenu2] = useState(false)
+    const [openSubmenu1, setOpenSubmenu1] = useState(false)
 
     const [state, dispatch] = useReducer(themeReducer, context)
 
-    console.log (activeMode)
-  
-    
-    const handleDispatch=( selectedMode, currentMode)=>{
+    const handleDispatch = (selectedMode, currentMode) => {
         ipcRenderer.send('user-theme-selected', selectedMode);
         dispatch({
             type: 'CHANGE_MODE',
@@ -38,71 +35,70 @@ const NestedCollapsible =()=> {
             payload: currentMode
         });
     }
-useEffect(()=>{
+    useEffect(() => {
 
-    setContext(state)
-    console.log ('newcontext', context)
-},[state])
-    
-        return (
-            <Grommet theme={grommet}>
-                <Box width="small">
+        setContext(state)
+    }, [state])
+
+    return (
+        <Grommet theme={grommet}>
+            <Box width="small">
+                <MenuButton
+                    open={openMenu1}
+                    label="Themes"
+                    onClick={() => {
+                        const newOpenMenu1 = !openMenu1;
+                        setOpenMenu1(newOpenMenu1)
+                        setOpenSubmenu1(!newOpenMenu1 ? false : openSubmenu1)
+                    }}
+                />
+                <Collapsible open={openMenu1}>
                     <MenuButton
-                        open={openMenu1}
-                        label="Themes"
-                        onClick={() => {
-                            const newOpenMenu1 = !openMenu1;
-                            setOpenMenu1(newOpenMenu1)
-                            setOpenSubmenu1(!newOpenMenu1 ? false : openSubmenu1)
-                        }}
-                    />
-                    <Collapsible open={openMenu1}>
-                        <MenuButton
-                            submenu
-                            open={openSubmenu1}
-                            label="Basic Themes"
-                            onClick={() => 
-                                setOpenSubmenu1(!openSubmenu1)
+                        submenu
+                        open={openSubmenu1}
+                        label="Basic Themes"
+                        onClick={() =>
+                            setOpenSubmenu1(!openSubmenu1)
                         }
-                        />
-                        <Collapsible open={openSubmenu1}>
-                            <Button
-                                hoverIndicator="background"
-                                onClick={(e)=>handleDispatch( e.target.dataset.value, activeMode)}
-                                >
-                                <Box
-                                    
-                                    
-                                    margin={{ left: "medium" }}
-                                    direction="row"
-                                    align="center"
-                                    pad="xsmall"
-                                >
-                                    <Text data-value='defaultTheme' size="small">Default</Text>
-                                </Box>
-                            </Button>
-                            <Button
-                                hoverIndicator="background"
-                                onClick={(e) => handleDispatch(e.target.dataset.value, activeMode)}
+                    />
+                    <Collapsible open={openSubmenu1}>
+                        <Button
+                            hoverIndicator="background"
+                            onClick={(e) => handleDispatch(e.target.dataset.value, activeMode)}
+                        >
+                            <Box
+
+
+                                margin={{ left: "medium" }}
+                                direction="row"
+                                align="center"
+                                pad="xsmall"
                             >
-                                <Box
-                                    margin={{ left: "medium" }}
-                                    direction="row"
-                                    align="center"
-                                    pad="xsmall"
-                                >
-                                    <Text data-value='darkTheme' size="small">Dark</Text>
-                                </Box>
-                            </Button>
-                            {}
-                        </Collapsible>
+                                <Text data-value='defaultTheme' size="small">Default</Text>
+                            </Box>
+                        </Button>
+                        <Button
+                            hoverIndicator="background"
+                            onClick={(e) => handleDispatch(e.target.dataset.value, activeMode)}
+                        >
+                            <Box
+                                margin={{ left: "medium" }}
+                                direction="row"
+                                align="center"
+                                pad="xsmall"
+                            >
+                                <Text data-value='darkTheme' size="small">Dark</Text>
+                            </Box>
+                        </Button>
+                        {}
                     </Collapsible>
-                   
-                    
-                </Box>
-            </Grommet>
-        );
-    }
+                </Collapsible>
+
+
+            </Box>
+        </Grommet>
+    );
+}
 
 
 
