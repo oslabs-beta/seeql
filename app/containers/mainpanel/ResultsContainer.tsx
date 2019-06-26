@@ -150,8 +150,6 @@ const ResultsContainer: React.SFC<IResultsContainerProps> = ({
     >{tabname}</SResultsNavButton>
   })
 
-  console.log('hi', overThreeTablesSelected)
-
   return (
     <ResultsWrapper>
       <STopNav>
@@ -159,7 +157,6 @@ const ResultsContainer: React.SFC<IResultsContainerProps> = ({
           {resultsTabs}
         </SResNavTabs>
         <SRestTabsRight>
-          <div></div>
           <SResetQueryButton onClick={resetQuerySelection}><span>This will remove all selected columns</span>Reset Query</SResetQueryButton>
         </SRestTabsRight>
       </STopNav>

@@ -107,6 +107,7 @@ const HomePage = ({ location }) => {
 
   const resetQuerySelection = () => {
     relationships = {};
+    setOverThreeTablesSelected(false)
     setUserInputQuery('SELECT * FROM [table name]');
     setSelectedForQueryTables({});
     setQueryResultError({
