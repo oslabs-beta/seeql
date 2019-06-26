@@ -3,12 +3,16 @@ import { useState, useEffect, useReducer } from 'react';
 import { Redirect } from 'react-router-dom';
 import { ipcRenderer } from 'electron';
 import styled from 'styled-components';
+import { Box, Button, Collapsible, Grommet } from 'grommet';
+import { grommet } from 'grommet/themes';
+import { FormPrevious, FormNext } from "grommet-icons";
 import * as actions from '../actions/actions';
 import changeDisplayOfSidePanel from '../reducers/ChangeDisplayOfSidePanel';
 import SidePanel from './SidePanel';
 import LoadingComponent from '../components/LoadComponent';
 import ResultsContainer from './mainpanel/ResultsContainer';
 import OmniBoxContainer from '../containers/omnibox/OmniBoxContainer';
+
 
 const InvisibleHeader = styled.div`
   height: 30px;
@@ -20,40 +24,7 @@ const HomepageWrapper = styled.div`
   display: flex;
   margin-top: -30px;
   font-family: 'Poppins', sans-serif;
-`;
-
-interface ICollapseBtnProps {
-  sidePanelVisibility: boolean;
-}
-
-const CollapseBtn = styled.button<ICollapseBtnProps>`
-  border: none;
-  border-radius: 3px;
-  padding: 5px;
-  width: 25px;
-  height: 25px;
-  margin: 5px;
-  display: relative;
-  left: 100px;
-  margin-left: ${({ sidePanelVisibility }) =>
-    sidePanelVisibility ? '0px' : '50px'};
-  text-align: center;
-  :focus {
-    outline: none;
-  }
-  :hover {
-    font-weight: bold;
-    background-color: #013243;
-    color: white;
-  }
-`;
-
-const MainPanel = styled.div`
-  background-color: ${props => props.theme.main.baseColor};
-  padding: 5px 20px;
-  display: flex;
-  flex-direction: column;
-  width: 100%;
+  height: 100vh;
 `;
 
 const LoadWrap = styled.div`
@@ -62,7 +33,7 @@ const LoadWrap = styled.div`
 `;
 
 let relationships = {};
-let alias = {};
+const alias = {};
 
 const HomePage = ({ location }) => {
   const allTablesMetaData = location.state.tables;
@@ -70,14 +41,14 @@ const HomePage = ({ location }) => {
   const [selectedForQueryTables, setSelectedForQueryTables] = useState({});
   const [loadingQueryStatus, setLoadingQueryStatus] = useState(false);
   const [activeDisplayInResultsTab, setActiveDisplayInResultsTab] = useState(
-    'Tables'
+    0
   );
   const [activeTableInPanel, setActiveTableInPanel] = useState({});
   const [userInputForTables, setUserInputForTables] = useState('');
   const [data, setData] = useState([]); // data from database
   const [toggleLoad, setToggleLoad] = useState(true);
   const [userInputQuery, setUserInputQuery] = useState(
-    'SELECT * FROM [add a table name here]'
+    'SELECT * FROM [table name]'
   );
   const [queryResult, setQueryResult] = useState({
     status: 'No query',
@@ -96,7 +67,7 @@ const HomePage = ({ location }) => {
 
   const resetQuerySelection = () => {
     relationships = {};
-    setUserInputQuery('SELECT * FROM [add a table name here]');
+    setUserInputQuery('SELECT * FROM[table name]');
     setSelectedForQueryTables({});
     setQueryResultError({
       status: false,
@@ -125,18 +96,18 @@ const HomePage = ({ location }) => {
 
 
   const captureQuerySelections = e => {
-    let selectedTableName = e.target.dataset.tablename;
-    let selectedColumnName = e.target.dataset.columnname;
+    const selectedTableName = e.target.dataset.tablename;
+    const selectedColumnName = e.target.dataset.columnname;
     let firstColumn = true;
     let firstTable = true;
     let pk = '';
-    let temp = selectedForQueryTables;
+    const temp = selectedForQueryTables;
     let columns = '';
     let tables = '';
     let query = '';
     relationships[selectedTableName] = [];
 
-    //get relationships of FK
+    // get relationships of FK
     data.forEach(table => {
       if (table.table_name === selectedTableName) {
         pk = table.primaryKey;
@@ -151,7 +122,7 @@ const HomePage = ({ location }) => {
       }
     });
 
-    //get relationships of PK
+    // get relationships of PK
     data.forEach(table => {
       table.foreignKeys.forEach(foreignkey => {
         if (
@@ -168,26 +139,26 @@ const HomePage = ({ location }) => {
       });
     });
 
-    //builds the object used to write the query
+    // builds the object used to write the query
     for (let i = 0; i < data.length; i++) {
       if (data[i].table_name === selectedTableName) {
-        //builds query selection object
-        //check if table already exists in query
+        // builds query selection object
+        // check if table already exists in query
         if (Object.keys(temp).includes(selectedTableName)) {
-          //check if column name already exists
+          // check if column name already exists
           if (temp[selectedTableName].columns.includes(selectedColumnName)) {
-            //remove the column if it exists
+            // remove the column if it exists
             const startIndex = temp[selectedTableName].columns.indexOf(
               selectedColumnName
             );
             temp[selectedTableName].columns = temp[selectedTableName].columns
               .slice(0, startIndex)
               .concat(temp[selectedTableName].columns.slice(startIndex + 1));
-            //add it to the columns
+            // add it to the columns
           } else {
             temp[selectedTableName].columns.push(selectedColumnName);
           }
-          //check if all items are selected
+          // check if all items are selected
           if (
             temp[selectedTableName].columns.length ===
             temp[selectedTableName].columncount
@@ -196,15 +167,15 @@ const HomePage = ({ location }) => {
           } else {
             temp[selectedTableName].all = false;
           }
-          //delete entire object if the columns are now empty
+          // delete entire object if the columns are now empty
           if (temp[selectedTableName].columns.length === 0) {
-            //if empty after removing
+            // if empty after removing
             delete temp[selectedTableName];
             delete relationships[selectedTableName];
             delete alias[selectedTableName];
           }
         } else {
-          //first row and first table to be selected
+          // first row and first table to be selected
           temp[selectedTableName] = {
             all: false,
             columncount: data[i].columns.length,
@@ -217,65 +188,65 @@ const HomePage = ({ location }) => {
     // query generation
     // for no tables
     if (Object.keys(temp).length === 0) {
-      query = 'SELECT * FROM [add a table name here]';
+      query = 'SELECT * FROM[table name]';
     }
 
-    //for one table
+    // for one table
     if (Object.keys(temp).length === 1) {
-      for (let table in temp) {
-        //check if all has been selected
+      for (const table in temp) {
+        // check if all has been selected
         if (temp[table].all) columns += '*';
         else {
           for (let i = 0; i < temp[table].columns.length; i++) {
             if (firstColumn) {
               columns += temp[table].columns[i];
               firstColumn = false;
-            } else columns += ', ' + temp[table].columns[i];
+            } else columns += `, ${temp[table].columns[i]}`;
           }
         }
       }
       tables = Object.keys(temp)[0];
-      query = `SELECT ` + columns + ` FROM ` + tables;
+      query = `SELECT ${columns} FROM ${tables}`;
     }
 
     let previousTablePointer;
 
-    //for multiple joins
+    // for multiple joins
     if (Object.keys(temp).length === 2) {
-      for (let table in temp) {
-        //loop through each table
+      for (const table in temp) {
+        // loop through each table
         let aliasIndex = 0;
         let tableInitial = table[0];
         while (Object.values(alias).includes(table[aliasIndex])) {
           tableInitial += table[aliasIndex + 1];
-          aliasIndex++; //initial of each table
+          aliasIndex++; // initial of each table
         }
         alias[table] = tableInitial;
         tableInitial += '.';
-        //check if all the columns have been selected
+        // check if all the columns have been selected
         if (temp[table].all) {
           if (firstColumn) {
-            columns += tableInitial + '*';
+            columns += `${tableInitial}*`;
             firstColumn = false;
-          } else columns += ', ' + tableInitial + '*';
+          } else columns += `, ${tableInitial}*`;
         } else {
-          //add each individual column name
+          // add each individual column name
           for (let i = 0; i < temp[table].columns.length; i++) {
             if (firstColumn) {
               columns += tableInitial + temp[table].columns[i];
               firstColumn = false;
             } else {
-              columns += ', ' + tableInitial + temp[table].columns[i];
+              columns += `, ${tableInitial}${temp[table].columns[i]}`;
             }
           }
         }
 
-        //create the table name
+        // create the table name
         if (firstTable) {
-          tables += table + ` as ` + table[0];
+          tables += `${table} as ${table[0]}`;
           firstTable = false;
         } else {
-          tables += ` INNER JOIN ` + table + ` as ` + alias[table];
+          tables += ` INNER JOIN ${table} as ${alias[table]}`;
           let rel = '';
           relationships[table].forEach(relation => {
             if (
@@ -283,20 +254,20 @@ const HomePage = ({ location }) => {
               relation.tablename === table
             ) {
               rel =
-                alias[previousTablePointer] +
-                '.' +
-                relation.fkcolname +
-                `=` +
-                (tableInitial + relation.colname);
+                `${alias[previousTablePointer]
+                }.${
+                relation.fkcolname
+                }=${
+                tableInitial + relation.colname}`;
             }
           });
-          tables += ` ON ` + rel;
+          tables += ` ON ${rel}`;
         }
         previousTablePointer = table;
       }
 
       // final query
-      query = `SELECT ` + columns + ` FROM ` + tables;
+      query = `SELECT ${columns} FROM ${tables}`;
     }
     setUserInputQuery(query);
     setSelectedForQueryTables(temp);
@@ -311,7 +282,7 @@ const HomePage = ({ location }) => {
 
   const captureSelectedTable = e => {
     const { tablename } = e.target.dataset;
-    let selectedPanelInfo;
+    let selectedPanelInfo = {};
     let primaryKey;
 
     data.forEach(table => {
@@ -321,7 +292,7 @@ const HomePage = ({ location }) => {
       }
     });
 
-    selectedPanelInfo.foreignKeysOfPrimary = {};
+    selectedPanelInfo['foreignKeysOfPrimary'] = {};
 
     data.forEach(table => {
       table.foreignKeys.forEach(foreignKey => {
@@ -329,7 +300,7 @@ const HomePage = ({ location }) => {
           foreignKey.foreign_column_name == primaryKey &&
           foreignKey.foreign_table_name == tablename
         ) {
-          selectedPanelInfo.foreignKeysOfPrimary[foreignKey.table_name] =
+          selectedPanelInfo['foreignKeysOfPrimary'][foreignKey.table_name] =
             foreignKey.column_name;
         }
       });
@@ -348,19 +319,21 @@ const HomePage = ({ location }) => {
   }, [allTablesMetaData]);
 
   useEffect(() => {
-    ipcRenderer.on('query-result-to-homepage', (event, queryResult) => {
+    ipcRenderer.on('query-result-to-homepage', (_event, queryResult) => {
       if (queryResult.statusCode === 'Success') {
         setQueryResult({
           status: queryResult.message.length === 0 ? 'No results' : 'Success',
           message: queryResult.message
         });
-        setActiveDisplayInResultsTab('Query Results');
-      } else if (queryResult.statusCode === 'Invalid Request') {
+        setActiveDisplayInResultsTab(1);
+      }
+      if (queryResult.statusCode === 'Invalid Request') {
         setQueryResultError({
           status: true,
           message: queryResult.message
         });
-      } else if (queryResult.statusCode === 'Syntax Error') {
+      }
+      if (queryResult.statusCode === 'Syntax Error') {
         setQueryResultError({
           status: true,
           message: `Syntax error in retrieving query results.
@@ -378,58 +351,69 @@ const HomePage = ({ location }) => {
       setLoadingQueryStatus(false);
     });
     return () => ipcRenderer.removeAllListeners('query-result-to-homepage');
-  }, []);
+  }, [userInputQuery]);
+
 
   return (
     <React.Fragment>
       {redirectDueToInactivity && <Redirect to='/' />}
       <InvisibleHeader></InvisibleHeader>
-      <HomepageWrapper onMouseMove={() => setInactiveTime(0)}>
-        <SidePanel
-          intervalId={intervalId}
-          activePanel={activePanel}
-          dispatchSidePanelDisplay={dispatchSidePanelDisplay}
-          activeTableInPanel={activeTableInPanel}
-          sidePanelVisibility={sidePanelVisibility}
-        />
-        {toggleLoad && (
-          <LoadWrap>
-            <LoadingComponent />
-          </LoadWrap>
-        )}
-        <MainPanel>
-          <CollapseBtn
-            onClick={togglePanelVisibility}
-            data-active={activePanel}
-            sidePanelVisibility={sidePanelVisibility}
-          >
-            {sidePanelVisibility ? `<<` : `>>`}
-          </CollapseBtn>
-          <OmniBoxContainer
-            userInputForTables={userInputForTables}
-            loadingQueryStatus={loadingQueryStatus}
-            userInputQuery={userInputQuery}
-            setQueryResultError={setQueryResultError}
-            setLoadingQueryStatus={setLoadingQueryStatus}
-            setUserInputQuery={setUserInputQuery}
-            queryResultError={queryResultError}
-            setUserInputForTables={setUserInputForTables}
-          />
-          <ResultsContainer
-            relationships={relationships}
-            resetQuerySelection={resetQuerySelection}
-            captureQuerySelections={captureQuerySelections}
-            captureSelectedTable={captureSelectedTable}
-            activeDisplayInResultsTab={activeDisplayInResultsTab}
-            queryResult={queryResult}
-            data={data}
-            userInputForTables={userInputForTables}
-            setActiveDisplayInResultsTab={setActiveDisplayInResultsTab}
-            activeTableInPanel={activeTableInPanel}
-            selectedForQueryTables={selectedForQueryTables}
-          />
-        </MainPanel>
-      </HomepageWrapper>
+      <Grommet theme={grommet}>
+
+        <HomepageWrapper onMouseMove={() => setInactiveTime(0)}>
+          <Collapsible open={sidePanelVisibility} direction="horizontal" >
+            <SidePanel
+              intervalId={intervalId}
+              activePanel={activePanel}
+              dispatchSidePanelDisplay={dispatchSidePanelDisplay}
+              activeTableInPanel={activeTableInPanel}
+              sidePanelVisibility={sidePanelVisibility}
+            />
+          </Collapsible>
+          {toggleLoad && (
+            <LoadWrap>
+              <LoadingComponent />
+            </LoadWrap>
+          )}
+
+          <Box margin="small">
+            <Button
+              onClick={togglePanelVisibility}
+              plain={true}
+              fill={false}
+              alignSelf="start"
+              icon={sidePanelVisibility ? <FormPrevious size="large" /> : <FormNext size="large" />}
+              margin={sidePanelVisibility ? { left: "small" } : { left: "xlarge" }}
+            />
+
+            <OmniBoxContainer
+              userInputForTables={userInputForTables}
+              loadingQueryStatus={loadingQueryStatus}
+              userInputQuery={userInputQuery}
+              setQueryResultError={setQueryResultError}
+              setLoadingQueryStatus={setLoadingQueryStatus}
+              setUserInputQuery={setUserInputQuery}
+              queryResultError={queryResultError}
+              setUserInputForTables={setUserInputForTables}
+            />
+            <ResultsContainer
+              relationships={relationships}
+              resetQuerySelection={resetQuerySelection}
+              captureQuerySelections={captureQuerySelections}
+              captureSelectedTable={captureSelectedTable}
+              activeDisplayInResultsTab={activeDisplayInResultsTab}
+              queryResult={queryResult}
+              data={data}
+              userInputForTables={userInputForTables}
+              setActiveDisplayInResultsTab={setActiveDisplayInResultsTab}
+              activeTableInPanel={activeTableInPanel}
+              selectedForQueryTables={selectedForQueryTables}
+            />
+
+          </Box>
+        </HomepageWrapper>
+      </Grommet>
+
     </React.Fragment>
   );
 };

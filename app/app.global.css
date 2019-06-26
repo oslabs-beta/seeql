@@ -13,7 +13,6 @@
 body {
   position: relative;
   color: black;
-  height: 100vh;
   overflow-y: hidden;
 }
 

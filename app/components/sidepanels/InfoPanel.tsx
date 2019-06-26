@@ -1,6 +1,8 @@
 import * as React from 'react';
 import styled from 'styled-components';
-import {InformationPanel} from './sidePanelMolecules/titles'
+
+import { InformationPanel } from './sidePanelMolecules/titles'
+
 interface ISidePanelTableWrapperProps {
   sidePanelVisibility: boolean;
 }
@@ -11,8 +13,8 @@ const SidePanelTableListWrapper = styled.div<ISidePanelTableWrapperProps>`
   width: ${({ sidePanelVisibility }) =>
     sidePanelVisibility ? '300px' : '0px'};
   height: 100vh;
-  background-color: ${props => props.theme.panel.baseColor};
-  color: ${props => props.theme.fontColor};
+  background-color: white;
+  color: black;
   transition: width 500ms ease-in-out;
 `;
 
@@ -24,12 +26,12 @@ const InfoSection = styled.div`
 
 const Text = styled.p`
   font-size: 100%;
-  color: ${props => props.theme.panel.fontColor};
+  color: black;
 `;
 
 const Label = styled.label`
   font-size: 80%;
-  color: ${props => props.theme.panel.fontColor};
+  color: black;
 `;
 
 interface ISelectedTable {
@@ -82,7 +84,9 @@ const InfoPanel: React.SFC<Props> = ({
 
   return (
     <SidePanelTableListWrapper sidePanelVisibility={sidePanelVisibility}>
-      <InformationPanel/>
+
+      <InformationPanel />
+
       {Object.keys(activeTableInPanel).length > 0 ? (
         <InfoSection>
           <Label>table name</Label>
@@ -109,11 +113,11 @@ const InfoPanel: React.SFC<Props> = ({
           )}
         </InfoSection>
       ) : (
-        <div>
-          You haven't selected a table yet, click on a table to see their
-          information
+          <div>
+            You haven't selected a table yet, click on a table to see their
+            information
         </div>
-      )}
+        )}
     </SidePanelTableListWrapper>
   );
 };

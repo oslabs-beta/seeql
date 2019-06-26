@@ -2,9 +2,12 @@ import React, { useState, useReducer, useContext, useEffect } from "react";
 import { Box, Button, Collapsible, Grommet, Text } from "grommet";
 import { grommet } from "grommet/themes";
 import MenuButton from './menuButton'
+
 import Context from '../../../contexts/themeContext'
 import themeReducer from '../../../reducers/themeReducer'
 import { ipcRenderer } from 'electron';
+
+
 
 
 const NestedCollapsible =()=> {
@@ -32,6 +35,8 @@ const NestedCollapsible =()=> {
 
     useEffect(()=>setContext(state),[state])
 
+
+
     
         return (
             <Grommet theme={grommet}>
@@ -57,6 +62,7 @@ const NestedCollapsible =()=> {
                         <Collapsible open={openSubmenu1}>
                             <Button
                                 hoverIndicator="background"
+
                                 onClick={(e)=>{
                                     const setTheme = findCurMode(e.target.dataset.value, context)
                                     setTheme();
@@ -64,16 +70,20 @@ const NestedCollapsible =()=> {
                                 >
                                 <Box
                                     data-value="defaultTheme"
+
                                     margin={{ left: "medium" }}
                                     direction="row"
                                     align="center"
                                     pad="xsmall"
                                 >
+
                                     <Text size="small">Default</Text>
+
                                 </Box>
                             </Button>
                             <Button
                                 hoverIndicator="background"
+
                                 onClick={(e) => {
                                     const setTheme = findCurMode(e.target.dataset.value, context)
                                     setTheme();
@@ -81,12 +91,16 @@ const NestedCollapsible =()=> {
                                 >
                                 <Box
                                     data-value='darkTheme' 
+
+
                                     margin={{ left: "medium" }}
                                     direction="row"
                                     align="center"
                                     pad="xsmall"
                                 >
+
                                     <Text size="small">Dark</Text>
+
                                 </Box>
                             </Button>
                             {}

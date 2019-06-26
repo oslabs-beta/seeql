@@ -13,7 +13,8 @@ const Index = () => {
   const modes = [
     { value: 'defaultTheme', active: true },
     { value: 'darkTheme', active: false },
-  ];
+
+
 
   const [context, setContext] = useState(modes);
   const serveMode = context.reduce((acc, mode) => {

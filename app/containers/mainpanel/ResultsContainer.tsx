@@ -1,68 +1,12 @@
 import * as React from 'react';
-import styled from 'styled-components';
 import QueryResults from "../../components/mainpanel/QueryResults";
 import TablesContainer from './TablesContainer';
-
-const ResultsWrapper = styled.div`
-  background-color: transparent;
-  display: flex;
-  flex-direction: column;
-  margin-top: 40px;
-`;
-
-const ResultsNav = styled.nav`
-  display: flex;
-  justify-content: center;
-  align-self: flex-start;
-`;
-
-interface IResultsNavButtonProps {
-  activeDisplayInResultsTab: string;
-  activetabname: string;
-}
-
-const ResultsNavButton = styled.button<IResultsNavButtonProps>`
-    font-family: 'Poppins', sans-serif;
-    border: none;
-    border-bottom: ${({ activeDisplayInResultsTab, activetabname }) =>
-    activeDisplayInResultsTab === activetabname
-      ? `3px solid ${props => props.theme.tables.navButtonSelect}`
-      : '3px solid transparent'};
-    padding: 8px;
-    transition: 0.3s;
-    font-size: 80%;
-    background-color: ${props => props.theme.tables.navButtonBase};
-    color: ${props => props.theme.tables.navButtonFontColor}
-    :focus {
-      outline: none;
-    }
-    :hover {
-      border-bottom: 3px solid ${props => props.theme.tables.navButtonHover};
-    }
-  `;
-
-const ResultsHeader = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-`
-
-const ResetQueryButton = styled.button`
-  border-radius: 3px;
-  border: none;
-  font-size: 80%;
-  background-color: transparent;
-  :hover{
-    font-weight: bold;
-    color: ${props => props.theme.tables.resetButton};
-  }
-  :focus{
-    outline: none;
-  }
-`
+import { Box, Tabs, Tab, Grommet, Button } from "grommet";
+import { grommet } from 'grommet/themes';
+import { FormTrash } from 'grommet-icons';
 
 interface IResultsContainerProps {
-  activeDisplayInResultsTab: string;
+  activeDisplayInResultsTab: number;
   queryResult: any;
   data: any;
   userInputForTables: string;
@@ -92,37 +36,35 @@ const ResultsContainer: React.SFC<IResultsContainerProps> = ({
   const listOfTabNames = ['Tables', 'Query Results'];
 
   const resultsTabs = listOfTabNames.map((tabname) => {
-    return <ResultsNavButton
-      key={tabname}
-      activeDisplayInResultsTab={activeDisplayInResultsTab}
-      activetabname={tabname}
-      onClick={() => setActiveDisplayInResultsTab(tabname)}
-    >{tabname}</ResultsNavButton>
+    return <Tab
+      title={tabname}
+    >
+      <div>
+        {tabname === 'Tables' ?
+          <TablesContainer
+            relationships={relationships}
+            userInputForTables={userInputForTables}
+            activeTableInPanel={activeTableInPanel}
+            selectedForQueryTables={selectedForQueryTables}
+            data={data}
+            captureSelectedTable={captureSelectedTable}
+            captureQuerySelections={captureQuerySelections}
+          />
+          :
+          <QueryResults queryResult={queryResult} />
+        }
+      </div>
+    </Tab>
   })
 
   return (
-    <ResultsWrapper>
-      <ResultsHeader>
-        <ResultsNav>
-          {resultsTabs}
-        </ResultsNav>
-        <ResetQueryButton onClick={resetQuerySelection}>Reset Query</ResetQueryButton>
-      </ResultsHeader>
-      {activeDisplayInResultsTab === 'Tables' &&
-        <TablesContainer
-          relationships={relationships}
-          userInputForTables={userInputForTables}
-          activeTableInPanel={activeTableInPanel}
-          selectedForQueryTables={selectedForQueryTables}
-          data={data}
-          captureSelectedTable={captureSelectedTable}
-          captureQuerySelections={captureQuerySelections}
-        />
-      }
-      {activeDisplayInResultsTab === 'Query Results' && (
-        <QueryResults queryResult={queryResult} />
-      )}
-    </ResultsWrapper>
+    <Grommet theme={grommet}>
+      <Button style={{ fontSize: '10px', padding: '0px 5px' }} gap="xxsmall" icon={<FormTrash size="small" />} label="Reset Query" onClick={resetQuerySelection} />
+      <Tabs activeIndex={activeDisplayInResultsTab} onActive={(index) => setActiveDisplayInResultsTab(index)}>
+        {resultsTabs}
+      </Tabs>
+
+    </Grommet>
   )
 }
 
