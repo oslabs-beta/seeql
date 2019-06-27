@@ -1,12 +1,9 @@
-<p align="center">
-<img width="250" alt="SeeQL Title" src="https://user-images.githubusercontent.com/29069478/60289605-ca915b80-98e4-11e9-943f-c40cb919c21e.png">
-</p>
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 ---
-<img width="80" alt="PRS Welcome" src="https://user-images.githubusercontent.com/29069478/60299610-1949f000-98fb-11e9-91f2-4ca061db51a1.png">
 
 Welcome to **SeeQL (beta)**: An easy-to-use desktop application that helps you visualize your database tables (including all foreign and primary key relationships), to quickly generate complex queries. 
-
 
 ## Getting Started
 
