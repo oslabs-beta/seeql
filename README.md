@@ -61,7 +61,7 @@ After clicking execute, you'll be able to see your results in the **Results** se
 You can filter which rows are visible by clicking the search icon next to each column name.
 
 
-## Resourceszwzwzq
+## Resources
 
 Built on Electron, React and Typescript
 
