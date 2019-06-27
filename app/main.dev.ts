@@ -1,7 +1,6 @@
 import { app, BrowserWindow, ipcMain } from 'electron';
 import MenuBuilder from './menu';
 import AppDb from './appDb';
-
 // import { autoUpdater } from 'electron-updater';
 // #TODO: make update flow (this class is currently has 0 references)
 // export default class AppUpdater {
@@ -67,7 +66,7 @@ app.on('ready', async () => {
     height: appDb.get('height') || defaults.height,
     minWidth: 500,
     minHeight: 300,
-    titleBarStyle: 'hiddenInset'
+    titleBarStyle: 'hiddenInset',
   });
 
   mainWindow.loadURL(`file://${__dirname}/app.html`);

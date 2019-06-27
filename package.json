@@ -249,7 +249,6 @@
     "@types/styled-components": "^4.1.16",
     "@typescript-eslint/parser": "^1.10.2",
     "devtron": "^1.4.0",
-    "electron": "^4.0.1",
     "electron-debug": "^2.0.0",
     "electron-log": "^2.2.17",
     "electron-updater": "^4.0.6",
