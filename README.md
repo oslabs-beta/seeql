@@ -33,7 +33,7 @@ yarn start
 
 **Logging In**
 
-Log-in to your database to view all your tables. You have the option to log in with a `postgres://` URI connection string, or enter your database ceredentials individually.
+You have the option to log in with a `postgres://` URI connection string, or enter your database credentials individually.
 
 [IMAGE HERE]
 
@@ -43,7 +43,7 @@ After logging in, you'll see three sections - the side panel, the input box, and
 
 Click on any table's **info** icon to view its information in the side panel.
 
-Choose the **Search** option above the input box to filter which tables will be displayed. Als, you can **pin** tables to the top of the page for your convinience, by clicking on any table's pin icon.
+Choose the **Search** option above the input box to filter which tables will be displayed. Also, you can **pin** tables to the top of the page for your convinience by clicking on any table's pin icon.
 
 [IMAGE HERE]
 
