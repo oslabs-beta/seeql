@@ -17,7 +17,7 @@ You'll need a Postgres database to connect to.
 
 Beta Release 0.0.1
 
-**MacOS:** [seeql-0.0.1.dmg](https://github.com/oslabs-beta/seeql/releases/download/untagged-bc5bc2c547e0407d958d/SeeQL-0.0.1.dmg)
+**MacOS:** [seeql-0.0.1.dmg](https://github.com/oslabs-beta/seeql/releases/download/v0.0.1/SeeQL-0.0.1-beta.dmg)
 
 *Note:* For now, you might need to go to your security settings to allow the app run on your system to allow the application to run. 
 
