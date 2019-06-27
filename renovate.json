@@ -3,7 +3,5 @@
   "rangeStrategy": "bump",
   "baseBranches": ["next"],
   "automerge": true,
-  "major": {
-    "automerge": false
-  }
+  "major": { "automerge": false }
 }
