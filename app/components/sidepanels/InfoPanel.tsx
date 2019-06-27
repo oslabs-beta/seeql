@@ -31,7 +31,6 @@ const LabelTextWrapper = styled.div`
   flex-direction: column;
     overflow-wrap: break-word;
     padding: 5px 0px;
-    align-items: center;
 `
 
 const InfoSection = styled.div`

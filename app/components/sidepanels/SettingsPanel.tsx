@@ -1,10 +1,7 @@
 import * as React from 'react';
-import { NavLink } from 'react-router-dom';
 import styled from 'styled-components';
-import { ipcRenderer } from 'electron';
-
-import { SettingsHead, SignOutLink } from './sidePanelMolecules/titles'
-import { CircleInformation, Pin, License, Github } from 'grommet-icons';
+import { SettingsHead } from './sidePanelMolecules/titles'
+import { CircleInformation, Pin, License } from 'grommet-icons';
 
 
 const SMiddleWrapper = styled.div`
@@ -58,15 +55,10 @@ const SInputLabel = styled(InputLabel)`
   font-weight: bold;
 `
 
-const SettingsPanel = ({ intervalId }) => {
-  const logOut = () => {
-    clearInterval(intervalId);
-    ipcRenderer.send('logout-to-main', 'userlogout');
-  };
+const SettingsPanel = () => {
 
   return (
     <PanelWrapper>
-
       <SettingsHead />
       <SMiddleWrapper>
         <SWrapper>
@@ -98,10 +90,6 @@ const SettingsPanel = ({ intervalId }) => {
             <InputLabel>- Use the search to find a table quickly</InputLabel>
           </LabelTextWrapper>
         </SWrapper>
-        <NavLink onClick={logOut} to="/">
-          <SignOutLink />
-
-        </NavLink>
       </SMiddleWrapper>
     </PanelWrapper>
   );

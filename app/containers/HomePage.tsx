@@ -1,7 +1,5 @@
 import * as React from 'react';
 import { useState, useEffect, useReducer } from 'react';
-import { Redirect } from 'react-router-dom';
-import { ipcRenderer } from 'electron';
 import styled from 'styled-components';
 import { Button, Grommet, Text } from 'grommet';
 import { grommet } from 'grommet/themes';
@@ -69,10 +67,9 @@ const SRightPanelWrapper = styled.div<ISRightPanelProps>`
 let relationships = {};
 const alias = {};
 
-const HomePage = ({ location }) => {
-  const allTablesMetaData = location.state.tables;
-  const [overThreeTablesSelected, setOverThreeTablesSelected] = useState(false);
+const HomePage = ({ pgClient, tableData, setCurrentView }) => {
   const [omniBoxView, setOmniBoxView] = useState('SQL');
+  const [overThreeTablesSelected, setOverThreeTablesSelected] = useState(false);
   const [selectedForQueryTables, setSelectedForQueryTables] = useState({});
   const [loadingQueryStatus, setLoadingQueryStatus] = useState(false);
   const [activeDisplayInResultsTab, setActiveDisplayInResultsTab] = useState(
@@ -89,6 +86,8 @@ const HomePage = ({ location }) => {
     message: []
   });
   const [sidePanelVisibility, setSidePanelVisibility] = useState(true);
+  const [redirectDueToInactivity, setRedirectDueToInactivity] = useState(false);
+
   const [activePanel, dispatchSidePanelDisplay] = useReducer(
     changeDisplayOfSidePanel,
     'info'
@@ -112,11 +111,8 @@ const HomePage = ({ location }) => {
   // Track user inactivity, logout after 15 minutes
   const [inactiveTime, setInactiveTime] = useState(0);
   const [intervalId, captureIntervalId] = useState();
-  const [redirectDueToInactivity, setRedirectDueToInactivity] = useState(false);
 
   const logOut = () => {
-    clearInterval(intervalId);
-    ipcRenderer.send('logout-to-main', 'inactivity');
     setRedirectDueToInactivity(true);
     clearInterval(intervalId);
   }
@@ -127,7 +123,6 @@ const HomePage = ({ location }) => {
   }, []);
 
   useEffect(() => { if (inactiveTime >= 15) logOut() }, [inactiveTime]);
-
 
   const captureQuerySelections = e => {
     const selectedTableName = e.target.dataset.tablename;
@@ -335,7 +330,7 @@ const HomePage = ({ location }) => {
       }
     });
 
-    selectedPanelInfo['foreignKeysOfPrimary'] = {};
+    selectedPanelInfo.foreignKeysOfPrimary = {};
 
     data.forEach(table => {
       table.foreignKeys.forEach(foreignKey => {
@@ -343,7 +338,7 @@ const HomePage = ({ location }) => {
           foreignKey.foreign_column_name == primaryKey &&
           foreignKey.foreign_table_name == tablename
         ) {
-          selectedPanelInfo['foreignKeysOfPrimary'][foreignKey.table_name] =
+          selectedPanelInfo.foreignKeysOfPrimary[foreignKey.table_name] =
             foreignKey.column_name;
         }
       });
@@ -356,48 +351,45 @@ const HomePage = ({ location }) => {
 
   // Fetches database information
   useEffect((): void => {
-    setData(allTablesMetaData);
-  }, [allTablesMetaData]);
+    setData(tableData);
+  }, [tableData]);
 
   useEffect(() => {
-    ipcRenderer.on('query-result-to-homepage', (_event, queryResult) => {
-      if (queryResult.statusCode === 'Success') {
-        setQueryResult({
-          status: queryResult.message.length === 0 ? 'No results' : 'Success',
-          message: queryResult.message
-        });
-        setActiveDisplayInResultsTab('Query Results');
-      }
-      if (queryResult.statusCode === 'Invalid Request') {
-        setQueryResultError({
-          status: true,
-          message: queryResult.message
-        });
-      }
-      if (queryResult.statusCode === 'Syntax Error') {
-        setQueryResultError({
-          status: true,
-          message: `Syntax error in retrieving query results.
+    if (queryResult.statusCode === 'Success') {
+      setQueryResult({
+        status: queryResult.message.length === 0 ? 'No results' : 'Success',
+        message: queryResult.message
+      });
+      setActiveDisplayInResultsTab('Query Results');
+    }
+    if (queryResult.statusCode === 'Invalid Request') {
+      setQueryResultError({
+        status: true,
+        message: queryResult.message
+      });
+    }
+    if (queryResult.statusCode === 'Syntax Error') {
+      setQueryResultError({
+        status: true,
+        message: `Syntax error in retrieving query results.
           Error on: ${userInputQuery.slice(
-            0,
-            parseInt(queryResult.err.position) - 1
-          )} "
+          0,
+          parseInt(queryResult.err.position) - 1
+        )} "
           ${userInputQuery.slice(
-            parseInt(queryResult.err.position) - 1,
-            parseInt(queryResult.err.position)
-          )} "
+          parseInt(queryResult.err.position) - 1,
+          parseInt(queryResult.err.position)
+        )} "
           ${userInputQuery.slice(parseInt(queryResult.err.position))};`
-        });
-      }
-      setLoadingQueryStatus(false);
-    });
-    return () => ipcRenderer.removeAllListeners('query-result-to-homepage');
-  }, [userInputQuery]);
+      });
+    }
+    setLoadingQueryStatus(false);
+  }, [queryResult]);
 
   return (
 
     <Grommet theme={grommet}>
-      {redirectDueToInactivity && <Redirect to='/' />}
+      {redirectDueToInactivity && setCurrentView('loginPage')}
       <SHomepageWrapper onMouseMove={() => setInactiveTime(0)}>
         <InvisibleHeader>
           <div></div>
@@ -416,6 +408,8 @@ const HomePage = ({ location }) => {
         <SMainPanelWrapper className="main">
           <SLeftPanelWrapper className="left">
             <OmniBoxContainer
+              pgClient={pgClient}
+              setQueryResult={setQueryResult}
               omniBoxView={omniBoxView}
               setOmniBoxView={setOmniBoxView}
               userInputForTables={userInputForTables}
@@ -446,6 +440,7 @@ const HomePage = ({ location }) => {
           <SRightPanelWrapper className="right" sidePanelVisibility={sidePanelVisibility}>
             {/* <Collapsible open={sidePanelVisibility} direction="horizontal" className="collapsible" style={{ height: "100%" }}> */}
             <SidePanel
+              setCurrentView={setCurrentView}
               intervalId={intervalId}
               activePanel={activePanel}
               dispatchSidePanelDisplay={dispatchSidePanelDisplay}

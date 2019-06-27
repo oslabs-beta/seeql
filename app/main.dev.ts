@@ -2,6 +2,8 @@ import { app, BrowserWindow, ipcMain } from 'electron';
 import MenuBuilder from './menu';
 import AppDb from './appDb';
 
+// import { remote } from 'electron';
+
 // import { autoUpdater } from 'electron-updater';
 // #TODO: make update flow (this class is currently has 0 references)
 // export default class AppUpdater {
@@ -13,7 +15,7 @@ import AppDb from './appDb';
 // }
 
 let mainWindow = null;
-let dbProcess = null;
+// let dbProcess = null;
 
 const defaults = {
   configName: 'user-data',
@@ -40,6 +42,7 @@ if (
 const installExtensions = async () => {
   const installer = require('electron-devtools-installer');
   const forceDownload = !!process.env.UPGRADE_EXTENSIONS;
+
   const extensions = ['REACT_DEVELOPER_TOOLS', 'REDUX_DEVTOOLS'];
 
   return Promise.all(
@@ -63,18 +66,23 @@ app.on('ready', async () => {
 
   mainWindow = new BrowserWindow({
     show: true,
-    width: appDb.get('width') || defaults.width,
-    height: appDb.get('height') || defaults.height,
-    minWidth: 500,
-    minHeight: 300,
-    titleBarStyle: 'hiddenInset'
+    width: 1200,
+    height: 800,
+    minWidth: 600,
+    minHeight: 500,
+    titleBarStyle: 'hiddenInset',
+    center: true,
+    webPreferences: {
+      nodeIntegration: true // #TODO: see if necessary
+    }
   });
 
+  // debugging packaged app
+  // mainWindow.openDevTools();
+
   mainWindow.loadURL(`file://${__dirname}/app.html`);
-  // https://github.com/electron/electron/blob/master/docs/api/browser-window.md#using-ready-to-show-event
   mainWindow.webContents.on('ready-to-show', () => {
     if (!mainWindow) throw new Error('"mainWindow" is not defined');
-
     if (process.env.START_MINIMIZED) {
       mainWindow.minimize();
     } else {
@@ -94,69 +102,70 @@ app.on('ready', async () => {
   const menuBuilder = new MenuBuilder(mainWindow);
   menuBuilder.buildMenu();
 
-  dbProcess = new BrowserWindow({ show: false });
-  dbProcess.loadURL(`file://${__dirname}/dbProcess.html`);
+  // dbProcess = new BrowserWindow({ show: false });
+  // dbProcess.loadURL(`file://${__dirname}/dbProcess.html`);
 
   // sent * from * the renderer process when the user selects "remember me"
   // savedConnStr = { name: "name for connStr", uri: 'postgres://etc' }
-  ipcMain.on('remember-connection', (_event: Event, savedConnStr: any) => {
-    appDb.set('connStr', savedConnStr);
-  });
+  // ipcMain.on('remember-connection', (_event: Event, savedConnStr: any) => {
+  //   appDb.set('connStr', savedConnStr);
+  // });
 
   // saves queries to display in side-panel @ some point
-  ipcMain.on('query-to-main', (_event: void, query: string) => {
-    dbProcess.webContents.send('query-to-db', query);
-    appDb.set('userQueryHistory', query);
-  });
+  // ipcMain.on('query-to-main', (_event: void, query: string) => {
+  //   // dbProcess.webContents.send('query-to-db', query);
+  //   appDb.set('userQueryHistory', query);
+  // });
 
-  // saves users theme if they select one which isn't default
-  ipcMain.on('user-theme-selected', (_event: Event, theme: string) => {
-    appDb.set('theme', theme);
-  });
+  // // saves users theme if they select one which isn't default
+  // ipcMain.on('user-theme-selected', (_event: Event, theme: string) => {
+  //   appDb.set('theme', theme);
+  // });
 
-  // Listening from homepage, to send to database
-  ipcMain.on('uri-to-main', (_event: void, uri: string) => {
-    dbProcess.webContents.send('uri-to-db', uri);
-  });
+  // // Listening from homepage, to send to database
+  // ipcMain.on('uri-to-main', (_event: void, uri: string) => {
+  //   console.log('hi im uri-to-main in the main.dev.ts');
+  //   dbProcess.webContents.send('uri-to-db', uri);
+  // });
 
-  ipcMain.on('query-to-main', (_event: void, query: string) => {
-    dbProcess.webContents.send('query-to-db', query);
-  });
+  // ipcMain.on('query-to-main', (_event: void, query: string) => {
+  //   dbProcess.webContents.send('query-to-db', query);
+  // });
 
-  ipcMain.on('logout-to-main', (_event: void, message: string) => {
-    dbProcess.webContents.send('logout-to-db', message);
-  });
+  // ipcMain.on('logout-to-main', (_event: void, message: string) => {
+  //   dbProcess.webContents.send('logout-to-db', message);
+  // });
 
-  ipcMain.on('login-mounted', () => {
-    dbProcess.webContents.send('login-mounted');
-  });
+  // ipcMain.on('login-mounted', () => {
+  //   dbProcess.webContents.send('login-mounted');
+  // });
 
-  // Listening from database, to send to homepage
-  ipcMain.on(
-    'database-tables-to-main',
-    (_event: void, databaseTables: any[]) => {
-      mainWindow.webContents.send('tabledata-to-login', databaseTables);
-      // we could save/cache this data but for now let's not
-    }
-  );
+  // // Listening from database, to send to homepage
+  // ipcMain.on(
+  //   'database-tables-to-main',
+  //   (_event: void, databaseTables: any[]) => {
+  //     mainWindow.webContents.send('tabledata-to-login', databaseTables); // we could save/cache this data but for now let's not
+  //     console.log('hello im databasetables PLZ FUCKING WOKR', databaseTables);
+  //   }
+  // );
 
-  ipcMain.on('db-connection-error', (_event: void, err: Error) => {
-    mainWindow.webContents.send('db-connection-error', err);
-    appDb.set('connectionError', err); // could be used in our crash reporting tools
-  });
+  // ipcMain.on('db-connection-error', (_event: void, err: Error) => {
+  //   mainWindow.webContents.send('db-connection-error', err);
+  //   appDb.set('connectionError', err); // could be used in our crash reporting tools
+  // });
 
-  ipcMain.on('query-result-to-main', (_event: void, messagePayload: any) => {
-    mainWindow.webContents.send('query-result-to-homepage', messagePayload);
-  });
+  // ipcMain.on('query-result-to-main', (_event: void, messagePayload: any) => {
+  //   mainWindow.webContents.send('query-result-to-homepage', messagePayload);
+  // });
 
-  ipcMain.on('inactivity-logout', (_event: void, _message: string) => {
-    mainWindow.webContents.send('inactivity-logout');
-  });
+  // ipcMain.on('inactivity-logout', (_event: void, _message: string) => {
+  //   mainWindow.webContents.send('inactivity-logout');
+  // });
 
-  ipcMain.on('logout-reason', (_event: void, message: string) => {
-    mainWindow.webContents.send('logout-reason', message);
-    appDb.set('logoutReason', message);
-  });
+  // ipcMain.on('logout-reason', (_event: void, message: string) => {
+  //   mainWindow.webContents.send('logout-reason', message);
+  //   appDb.set('logoutReason', message);
+  // });
 
   mainWindow.on('resize', () => {
     const { width, height } = mainWindow.getBounds();

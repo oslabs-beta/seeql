@@ -6,7 +6,7 @@ import InfoPanel from '../components/sidepanels/InfoPanel';
 import * as actions from '../actions/actions';
 import { Grommet } from "grommet";
 import { grommet } from 'grommet/themes';
-import { CircleQuestion, CircleInformation } from 'grommet-icons';
+import { CircleQuestion, CircleInformation, Logout } from 'grommet-icons';
 
 interface IPanelWrapperProps {
   sidePanelVisibility: boolean;
@@ -42,6 +42,24 @@ const SInnerPanelWrapper = styled.div`
   flex-direction: column;
   align-items: center;
 `;
+
+const SIndTab = styled.button`
+  font-family: 'Poppins', sans-serif;
+  border: none;
+    margin: 5px;
+  padding: 3px 0px;
+  cursor: pointer;
+  transition: 0.2s;
+  border-bottom: 2px solid transparent;
+
+    :hover {
+    transform: scale(1.1);
+    border-bottom: 2px solid #4B70FE;
+  }
+  :focus {
+    outline: none;
+  }
+`
 
 const IndTab = styled.button<IIndTabProps>`
   font-family: 'Poppins', sans-serif;
@@ -102,10 +120,13 @@ interface Props {
   sidePanelVisibility: boolean;
   activePanel: string;
   dispatchSidePanelDisplay: (IDispatchSidePanelDisplayAction) => any;
+
+  setCurrentView: (any) => any;
 }
 
 const SidePanel: React.SFC<Props> = ({
   intervalId,
+  setCurrentView,
   activeTableInPanel,
   sidePanelVisibility,
   activePanel,
@@ -137,6 +158,16 @@ const SidePanel: React.SFC<Props> = ({
               >
                 <CircleQuestion color={activePanel === 'settings' ? "#4B70FE" : '#485360'} />
               </IndTab>
+              <SIndTab
+                onClick={() => {
+                  clearInterval(intervalId);
+                  setCurrentView('loginPage')
+                }}
+              >
+                <Logout
+                  style={{ height: '22px' }}
+                />
+              </SIndTab>
             </Tabs>
             <SSectionWrapper>
               {activePanel === 'info' && (
@@ -146,7 +177,7 @@ const SidePanel: React.SFC<Props> = ({
                 />
               )}
               {activePanel === 'favorites' && <FavoritesPanel />}
-              {activePanel === 'settings' && <SettingsPanel intervalId={intervalId} />}
+              {activePanel === 'settings' && <SettingsPanel />}
             </SSectionWrapper>
           </SInnerPanelWrapper>
         </PanelWrapper>

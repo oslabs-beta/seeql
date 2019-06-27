@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { ipcRenderer } from 'electron';
 import styled from 'styled-components';
 import OmniBoxInput from '../../components/omnibox/OmniBoxInput';
 
@@ -48,11 +47,13 @@ const OmniBoxNavButton = styled.button<IOmniBoxNavButtonProps>`
 `;
 
 interface IOmniBoxProps {
+  pgClient: any,
   userInputQuery: string;
   loadingQueryStatus: boolean;
   queryResultError: any;
   userInputForTables: string;
   omniBoxView: string;
+  setQueryResult: (any) => any;
   setOmniBoxView: (any) => any;
   setQueryResultError: (any) => any;
   setLoadingQueryStatus: (any) => any;
@@ -62,6 +63,8 @@ interface IOmniBoxProps {
 }
 
 const OmniBoxContainer: React.SFC<IOmniBoxProps> = ({
+  pgClient,
+  setQueryResult,
   userInputQuery,
   loadingQueryStatus,
   setQueryResultError,
@@ -92,14 +95,39 @@ const OmniBoxContainer: React.SFC<IOmniBoxProps> = ({
     );
   });
 
-  // #TODO: Connect this ipc communication with new query input
   const executeQuery = (): void => {
     if (!loadingQueryStatus) {
-      setQueryResultError({
-        status: false,
-        message: ''
-      });
-      ipcRenderer.send('query-to-main', userInputQuery);
+      let query = userInputQuery;
+      if (query.slice(0, 6).toUpperCase() === 'SELECT') {
+        if (query.indexOf(';') > -1) query = query.slice(0, query.indexOf(';'));
+        query += ';';
+
+        setQueryResultError({
+          status: false,
+          message: ''
+        });
+        pgClient.query(query, (err, result) => {
+          if (err) {
+            setQueryResult({
+              statusCode: 'Syntax Error',
+              message: 'Issue getting data from db',
+              err
+            })
+          } else {
+            setQueryResult({
+              statusCode: 'Success',
+              message: result.rows
+            })
+          }
+        })
+
+      } else {
+        setQueryResult({
+          statusCode: 'Invalid Request',
+          message: 'Invalid query input. The query can only be a SELECT statement.'
+        });
+
+      }
     }
     setLoadingQueryStatus(true);
   };

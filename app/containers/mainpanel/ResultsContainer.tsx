@@ -1,7 +1,7 @@
 import * as React from 'react';
+import styled from 'styled-components';
 import QueryResults from "../../components/mainpanel/QueryResults";
 import TablesContainer from './TablesContainer';
-import styled from 'styled-components';
 
 const ResultsWrapper = styled.div`
   display: flex;
