@@ -113,8 +113,6 @@ const HomePage = ({ pgClient, tableData, setCurrentView }) => {
   const [intervalId, captureIntervalId] = useState();
 
   const logOut = () => {
-    clearInterval(intervalId);
-    // ipcRenderer.send('logout-to-main', 'inactivity');
     setRedirectDueToInactivity(true);
     clearInterval(intervalId);
   }
