@@ -14,7 +14,7 @@ You'll need a Postgres database to connect to.
 
 Beta Release 0.0.1
 
-MacOS: [seeql-0.0.1.dmg](https://github.com/oslabs-beta/seeql/releases/download/untagged-a131a506418b006215d8/SeeQL-0.0.1.dmg)
+MacOS: [seeql-0.0.1.dmg](https://github.com/oslabs-beta/seeql/releases/download/untagged-bc5bc2c547e0407d958d/SeeQL-0.0.1.dmg)
 
 Or from the terminal, run:
 
