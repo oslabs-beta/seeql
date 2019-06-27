@@ -43,13 +43,13 @@ const SResultsNavButton = styled.button<SResultsNavButtonProps>`
   font-size: 80%;
   margin: 0px 5px;
     font-family: 'Poppins', sans-serif;
-  color: ${({ activeDisplayInResultsTab, activetabname }) => activeDisplayInResultsTab === activetabname ? '#4B70FE' : '#485360'};
-  border-bottom: ${({ activeDisplayInResultsTab, activetabname }) => activeDisplayInResultsTab === activetabname ? '2px solid #4B70FE' : '2px solid transparent'};
+  color: ${({ activeDisplayInResultsTab, activetabname }) => activeDisplayInResultsTab === activetabname ? '#e26a6a' : '#485360'};
+  border-bottom: ${({ activeDisplayInResultsTab, activetabname }) => activeDisplayInResultsTab === activetabname ? '2px solid #dadfe1' : '2px solid transparent'};
   transition: all 0.2s;
   cursor: pointer;
   
   :hover {
-    border-bottom: 2px solid #4B70FE;
+    border-bottom: 2px solid #e26a6a;
   }
 
   :focus{

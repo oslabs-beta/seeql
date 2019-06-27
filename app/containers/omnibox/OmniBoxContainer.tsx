@@ -35,7 +35,7 @@ const OmniBoxNavButton = styled.button<IOmniBoxNavButtonProps>`
       cursor: pointer;
   color: ${props =>
     props.selectedView === props.omniBoxView
-      ? '#4B70FE'
+      ? '#e26a6a'
       : 'grey'};
   font-weight: ${(props) =>
     props.selectedView === props.omniBoxView ? 'bold' : 'none'};

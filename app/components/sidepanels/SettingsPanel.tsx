@@ -43,7 +43,7 @@ justify-self:'center';
   cursor: 'pointer';
   transition: 0.2s;
   :hover {
-    color: #4B70FE;
+    color: #e26a6a;
     transform: scale(1.1);
   }
 `
