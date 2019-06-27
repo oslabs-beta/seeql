@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { NavLink } from 'react-router-dom';
 import styled from 'styled-components';
 import { ipcRenderer } from 'electron';
 import NestedCollapsible from './sidePanelMolecules/doubleCollapsible'
@@ -20,7 +19,7 @@ const TopSection = styled.section`
 `;
 
 
-const SettingsPanel = ({ intervalId }) => {
+const SettingsPanel = ({ intervalId, setCurrentView }) => {
   const logOut = () => {
     clearInterval(intervalId);
     ipcRenderer.send('logout-to-main', 'userlogout');
@@ -30,15 +29,14 @@ const SettingsPanel = ({ intervalId }) => {
     <PanelWrapper>
       <TopSection>
 
-        <SettingsHead/>
-      <NestedCollapsible/>
-          <SingleCollapsible/>
-        <NavLink onClick={logOut} to="/">
-          <SignOutLink/>
-
-        </NavLink>
+        <SettingsHead />
+        <NestedCollapsible />
+        <SingleCollapsible />
+        <button onClick={() => setCurrentView('loginPage')}>
+          log out
+        </button>
       </TopSection>
-    </PanelWrapper>
+    </PanelWrapper >
   );
 };
 

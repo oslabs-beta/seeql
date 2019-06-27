@@ -1,8 +1,109 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 import * as React from 'react';
 import styled, { keyframes } from 'styled-components';
-import { useState, useEffect } from 'react';
-import { Redirect } from 'react-router-dom';
-import { ipcRenderer } from 'electron';
+import { useState } from 'react';
+// import { ipcRenderer } from 'electron';
+import { Client } from 'pg';
+
+
+
+const getTables = (client) => {
+  return new Promise((resolve, reject) => {
+    client.query(`SELECT table_name FROM information_schema.tables WHERE table_schema='public' AND table_type='BASE TABLE' ORDER BY table_name ASC`,
+      (err, result) => {
+        if (err) reject(err);
+        resolve(result);
+      }
+    );
+  });
+};
+
+const getForeignKeys = (client, tableName) => {
+  return new Promise((resolve, reject) => {
+    client.query(
+      `SELECT tc.table_schema,
+                         tc.constraint_name,
+                         tc.table_name,
+                         kcu.column_name,
+                         ccu.table_schema AS foreign_table_schema,
+                         ccu.table_name AS foreign_table_name,
+                         ccu.column_name AS foreign_column_name
+                  FROM information_schema.table_constraints AS tc
+                  JOIN information_schema.key_column_usage AS kcu
+                  ON tc.constraint_name = kcu.constraint_name
+                  AND tc.table_schema = kcu.table_schema
+                  JOIN information_schema.constraint_column_usage AS ccu
+                  ON ccu.constraint_name = tc.constraint_name
+                  AND ccu.table_schema = tc.table_schema
+                  WHERE tc.constraint_type = 'FOREIGN KEY'
+                  AND tc.table_name = '${tableName}'`,
+      (err, result) => {
+        if (err) reject(err);
+        resolve(result.rows);
+      }
+    );
+  });
+};
+
+// #TODO: add error handling when tables lack a primary key
+// Relational database theory dictates that every table must have a primary key.
+// This rule is not enforced by PostgreSQL, but it is usually best to follow it.
+const getColumns = (client, tableName) => {
+  return new Promise((resolve, reject) => {
+    client.query(
+      `SELECT COLUMN_NAME AS ColumnName,
+                             DATA_TYPE AS DataType,
+                             CHARACTER_MAXIMUM_LENGTH AS CharacterLength,
+                             COLUMN_DEFAULT AS DefaultValue
+                      FROM INFORMATION_SCHEMA.COLUMNS
+                      WHERE TABLE_NAME = '${tableName}'`,
+      (err, result) => {
+        if (err)
+          // #TODO: give a msg that doesn't expose structure of database
+          reject(err);
+        resolve(result.rows);
+      }
+    );
+  });
+};
+
+const getPrimaryKey = (client, tableName) => {
+  return new Promise((resolve, reject) => {
+    client.query(
+      `SELECT column_name
+                      FROM pg_constraint, information_schema.constraint_column_usage
+                      WHERE contype = 'p'
+                      AND information_schema.constraint_column_usage.table_name = '${tableName}'
+                      AND pg_constraint.conname = information_schema.constraint_column_usage.constraint_name`,
+      (err, result) => {
+        if (err) reject(err);
+        resolve(result.rows[0].column_name);
+      }
+    );
+  });
+};
+async function composeTableData(client) {
+  const tablesArr = [];
+  let tableNames: any
+  tableNames = await getTables(client);
+
+  for (const table of tableNames.rows) {
+    table.primaryKey = await getPrimaryKey(client, table.table_name);
+    table.foreignKeys = await getForeignKeys(client, table.table_name);
+    table.columns = await getColumns(client, table.table_name);
+    tablesArr.push(table);
+  }
+
+  return new Promise((resolve, reject) => {
+    if (tablesArr.length > 0) {
+      resolve(tablesArr);
+    } else {
+      // #TODO: add empty state trigger
+      reject(new Error('database empty'));
+    }
+  });
+}
+
 const InvisibleHeader = styled.div`
   height: 30px;
   -webkit-app-region: drag;
@@ -139,12 +240,12 @@ const LoginBtn = styled.button`
     top: 0;
     right: -20px;
     transition: 0.5s;
-  }   
+  }
   :hover {
     box-shadow: 0px 5px 10px #bdc3c7;
     span {
       padding-right: 5px;
-    } 
+    }
     span:after {
     opacity: 1;
     }
@@ -206,7 +307,8 @@ const RequiredWarning = styled.span`
   font-size: 80%;
     transition: all 0.2s;
 `;
-const Login = () => {
+
+const Login = ({ setTableData, setCurrentView, pgClient, setPgClient }) => {
   const [loginType, setLoginType] = useState('URI');
   const [host, setHost] = useState({ value: '', requiredError: false });
   const [port, setPort] = useState('5432');
@@ -218,9 +320,7 @@ const Login = () => {
   const [requiredError, setRequiredError] = useState(false);
   const [connectionError, setConnectionError] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [redirectToHome, setRedirectToHome] = useState(false);
   const [loggedOutMessage, setLoggedOutMessage] = useState('');
-  const [tableData, setTableData] = useState([]);
   const sendLoginURI = (): void => {
     if (loggedOutMessage) setLoggedOutMessage('');
     const updatedPort = !port ? '5432' : port;
@@ -238,45 +338,22 @@ const Login = () => {
       URI ||
       (host.value && username.value && password.value && database.value)
     ) {
-      setLoading(true);
-      ipcRenderer.send('uri-to-main', updatedURI);
+      // const client = new Client(`postgres://ltdnkwnbccooem:64ad308e565b39cc070194f7fa621ae0e925339be5a1c69480ff2a4462eab4c4@ec2-54-163-226-238.compute-1.amazonaws.com:5432/ddsu160rb5t7vq?ssl=true`)
+      const client = new Client(updatedURI);
+      client.connect();
+      setPgClient(client)
+      composeTableData(client)
+        .then(tableData => {
+          setTableData(tableData)
+          setCurrentView('homePage')
+        })
     }
   };
-  // IPC messaging listeners
-  useEffect(() => {
-    ipcRenderer.on('db-connection-error', (_event, err) => {
-      // #TODO: Error handling for cases where unable to retrieve info from a valid connection
-      setConnectionError(true);
-      setLoading(false);
-    });
-    ipcRenderer.on('tabledata-to-login', (_event, databaseTables) => {
-      setConnectionError(false);
-      setTableData(databaseTables);
-      setLoading(false);
-      setRedirectToHome(true);
-    });
-    ipcRenderer.send('login-mounted');
-    ipcRenderer.on('logout-reason', (_event, message) =>
-      setLoggedOutMessage(message)
-    );
-    return () => {
-      ipcRenderer.removeAllListeners('db-connection-error');
-      ipcRenderer.removeAllListeners('tabledata-to-login');
-      ipcRenderer.removeAllListeners('logout-reason');
-    };
-  }, []);
+
   const captureURI = (e): void => {
     const sanitizedURI = e.target.value.replace(/\s+/g, '');
     setURI(sanitizedURI);
     if (requiredError) setRequiredError(false);
-  };
-  const redirectHome = () => {
-    if (redirectToHome)
-      return (
-        <Redirect
-          to={{ pathname: '/homepage', state: { tables: tableData } }}
-        />
-      );
   };
   return (
     <React.Fragment>
@@ -424,7 +501,6 @@ const Login = () => {
               </ToggleSSL>
               {!loading && <><LoginBtn onClick={sendLoginURI}><span>Login</span></LoginBtn></>}
               {loading && <LoginBtn disabled>Loading...</LoginBtn>}
-              {redirectHome()}
             </LoginContainer>
           </Panel>
         </LeftPanel>
@@ -432,4 +508,5 @@ const Login = () => {
     </React.Fragment >
   );
 };
+
 export default Login;
