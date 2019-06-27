@@ -72,6 +72,7 @@ app.on('ready', async () => {
     minHeight: 500,
     titleBarStyle: 'hiddenInset',
     center: true,
+    icon: __dirname + '../resources/seeql.png.icns',
     webPreferences: {
       nodeIntegration: true // #TODO: see if necessary
     }
