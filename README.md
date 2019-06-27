@@ -1,3 +1,6 @@
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 <p align="center">
 <img width="250" alt="SeeQL Title" src="https://user-images.githubusercontent.com/29069478/60289605-ca915b80-98e4-11e9-943f-c40cb919c21e.png">
 </p>
