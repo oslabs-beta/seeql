@@ -71,6 +71,12 @@ interface ISelectedTable {
   foreignKeysOfPrimary?: any;
 }
 
+const InputLabel = styled.p`
+  font-size: 80%;
+  letter-spacing: 2px;
+  color: #485360;
+`;
+
 interface Props {
   activeTableInPanel: ISelectedTable;
   sidePanelVisibility: boolean;
@@ -148,13 +154,13 @@ const InfoPanel: React.SFC<Props> = ({
           </InfoSection>
         ) : (
             <SEmptyState>
-              You haven't selected a table yet, click on the <CircleInformation style={{ height: '20px' }} color="#149BD2" /> in a table to see more information.
-              <br /><br />
-              To save a table to the top of the list, click on the {` `}
-              <Pin
-                color="#FF98BB"
-              /> in a table.
-          </SEmptyState>
+              <InputLabel>You haven't selected a table yet, click on the <CircleInformation style={{ height: '20px' }} color="#149BD2" /> in a table to see more information.</InputLabel>
+              <br />
+              <InputLabel>To save a table to the top of the list, click on the {` `}
+                <Pin
+                  color="#FF98BB"
+                /> in a table.</InputLabel>
+            </SEmptyState>
           )}
       </SidePanelTableListWrapper>
     </Grommet>

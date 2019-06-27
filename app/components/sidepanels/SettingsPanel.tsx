@@ -4,12 +4,12 @@ import styled from 'styled-components';
 import { ipcRenderer } from 'electron';
 
 import { SettingsHead, SignOutLink } from './sidePanelMolecules/titles'
-import { CircleQuestion, CircleInformation, Pin, License } from 'grommet-icons';
+import { CircleInformation, Pin, License, Github } from 'grommet-icons';
 
 
 const SMiddleWrapper = styled.div`
   height: 100%;
-  padding: 20px 0px;
+  padding: 10px;
 
   display: flex;
   flex-direction: column;
@@ -17,7 +17,6 @@ const SMiddleWrapper = styled.div`
 `
 
 const SWrapper = styled.div`
- padding: 10px 0px;
  font-size: 80%;
 `
 
@@ -35,6 +34,18 @@ const LabelTextWrapper = styled.div`
   align-items: center;
     overflow-wrap: break-word;
     padding: 5px 0px;
+`
+
+const SLabelTextWrapper = styled(LabelTextWrapper)`
+font-weight: bold;
+justify-self:'center';
+  align-self: center;
+  cursor: 'pointer';
+  transition: 0.2s;
+  :hover {
+    color: #4B70FE;
+    transform: scale(1.1);
+  }
 `
 const InputLabel = styled.span`
   font-size: 80%;
@@ -75,7 +86,13 @@ const SettingsPanel = ({ intervalId }) => {
             <SInputLabel>Features</SInputLabel>
           </LabelTextWrapper>
           <LabelTextWrapper>
+            <InputLabel>- Hover over a row to view the relationships to other tables</InputLabel>
+          </LabelTextWrapper>
+          <LabelTextWrapper>
             <InputLabel>- Click on the rows of a table to automatically generate a query</InputLabel>
+          </LabelTextWrapper>
+          <LabelTextWrapper>
+            <InputLabel>- Click reset query to remove all selected rows</InputLabel>
           </LabelTextWrapper>
           <LabelTextWrapper>
             <InputLabel>- Use the search to find a table quickly</InputLabel>
