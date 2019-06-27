@@ -1,18 +1,35 @@
 import * as React from 'react';
 import styled from 'styled-components';
-import { Box, DataTable } from "grommet";
+import { DataTable } from "grommet";
 
 const QueryResultWrapper = styled.div`
-  padding: 20px;
-  display: flex;
-  flex-wrap: wrap;
-  background-color: white;
-      border: 1px solid white;
+      width: 100%;
     border-radius: 3px;
-    box-shadow: 2px 2px 8px lightgrey;
   overflow: scroll;
-  height: 60vh;
+  height: 100%;
+  padding: 10px 0px 0px 0px;
+  overflow: scroll;
 `;
+
+const SQueryEmptyState = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 120%;
+  padding: 20px;
+  text-align: center;
+
+`
+
+const SResultsWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  font-size: 120%;
+  overflow: scroll;
+
+`
 
 interface IQueryResult {
   status: string;
@@ -42,32 +59,30 @@ const QueryResults: React.SFC<IQueryResultsProps> = ({ queryResult }) => {
 
   return (
     <QueryResultWrapper>
-      <Box border overflow="scroll">
-        {
-          queryResult.message.length > 0 && (
-            <Box align="center" pad="medium">
-              <DataTable sortable resizable
-                columns={columns.map(c => ({
-                  ...c,
-                  search: true,
-                }))}
-                data={queryResult.message} step={20} />
-            </Box>
-          )
-        }
-        {
-          queryResult.message.length === 0 &&
-          queryResult.status === 'No results' && (
-            <div>{`There were no results found for your query :(`}</div>
-          )
-        }
-        {
-          queryResult.message.length === 0 &&
-          queryResult.status === 'No query' && (
-            <div>{`You haven't queried anything! Enter a query above to get started. :(`}</div>
-          )
-        }
-      </Box >
+      {
+        queryResult.message.length > 0 && (
+          <SResultsWrapper>
+            <DataTable sortable resizable
+              columns={columns.map(c => ({
+                ...c,
+                search: true,
+              }))}
+              data={queryResult.message} step={20} />
+          </SResultsWrapper>
+        )
+      }
+      {
+        queryResult.message.length === 0 &&
+        queryResult.status === 'No results' && (
+          <SQueryEmptyState><div>{`There were no results found for your query.`}<br /> {`Please enter a new query.`}</div></SQueryEmptyState>
+        )
+      }
+      {
+        queryResult.message.length === 0 &&
+        queryResult.status === 'No query' && (
+          <SQueryEmptyState><div>{`You haven't queried anything!`}<br /> {` Enter a query above to get started.`}</div></SQueryEmptyState>
+        )
+      }
     </QueryResultWrapper>
   );
 };

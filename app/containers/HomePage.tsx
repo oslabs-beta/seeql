@@ -1,52 +1,83 @@
 import * as React from 'react';
 import { useState, useEffect, useReducer } from 'react';
-import { Redirect } from 'react-router-dom';
-import { ipcRenderer } from 'electron';
 import styled from 'styled-components';
-import { Box, Button, Collapsible, Grommet } from 'grommet';
+import { Button, Grommet, Text } from 'grommet';
 import { grommet } from 'grommet/themes';
 import { FormPrevious, FormNext } from "grommet-icons";
 import * as actions from '../actions/actions';
 import changeDisplayOfSidePanel from '../reducers/ChangeDisplayOfSidePanel';
 import SidePanel from './SidePanel';
-import LoadingComponent from '../components/LoadComponent';
 import ResultsContainer from './mainpanel/ResultsContainer';
 import OmniBoxContainer from '../containers/omnibox/OmniBoxContainer';
 
-
 const InvisibleHeader = styled.div`
-  height: 30px;
-  display: relative;
-  -webkit-app-region: drag;
-`;
-
-const HomepageWrapper = styled.div`
-  display: flex;
-  margin-top: -30px;
-  font-family: 'Poppins', sans-serif;
-  height: 100vh;
-`;
-
-const LoadWrap = styled.div`
-  display: flex;
+  height: 40px;
   width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #F7F9FD;
+  -webkit-app-region: drag;
+   transition: all 0.2s ease-in-out;
 `;
+
+const SRightHeaderWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0px 5px;
+  cursor: pointer;
+`
+
+const SHomepageWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100vw;
+  transition: all 0.2s;
+`;
+
+interface ISRightPanelProps {
+  sidePanelVisibility: boolean;
+}
+
+const SMainPanelWrapper = styled.div`
+  display: flex;
+  height: 100%;
+  width: 100%;
+   transition: all 0.2s ease-in-out;
+`
+
+const SLeftPanelWrapper = styled.div`
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 15px 10px 15px 15px;
+    background: #E6EAF2;
+   transition: all 0.2s ease-in-out;
+`
+
+const SRightPanelWrapper = styled.div<ISRightPanelProps>`
+  height: 100%;
+    width: ${({ sidePanelVisibility }) => sidePanelVisibility ? '250px' : '0px'};
+    transition: all 0.2s ease-in-out;
+`
 
 let relationships = {};
 const alias = {};
 
-const HomePage = ({ location }) => {
-  const allTablesMetaData = location.state.tables;
-  // const [relationships, setRelationships]
+const HomePage = ({ pgClient, tableData, setCurrentView }) => {
+  const [omniBoxView, setOmniBoxView] = useState('SQL');
+  const [overThreeTablesSelected, setOverThreeTablesSelected] = useState(false);
   const [selectedForQueryTables, setSelectedForQueryTables] = useState({});
   const [loadingQueryStatus, setLoadingQueryStatus] = useState(false);
   const [activeDisplayInResultsTab, setActiveDisplayInResultsTab] = useState(
-    0
+    'Tables'
   );
   const [activeTableInPanel, setActiveTableInPanel] = useState({});
   const [userInputForTables, setUserInputForTables] = useState('');
   const [data, setData] = useState([]); // data from database
-  const [toggleLoad, setToggleLoad] = useState(true);
   const [userInputQuery, setUserInputQuery] = useState(
     'SELECT * FROM [table name]'
   );
@@ -55,6 +86,7 @@ const HomePage = ({ location }) => {
     message: []
   });
   const [sidePanelVisibility, setSidePanelVisibility] = useState(true);
+  const [redirectDueToInactivity, setRedirectDueToInactivity] = useState(false);
 
   const [activePanel, dispatchSidePanelDisplay] = useReducer(
     changeDisplayOfSidePanel,
@@ -67,7 +99,8 @@ const HomePage = ({ location }) => {
 
   const resetQuerySelection = () => {
     relationships = {};
-    setUserInputQuery('SELECT * FROM[table name]');
+    setOverThreeTablesSelected(false)
+    setUserInputQuery('SELECT * FROM [table name]');
     setSelectedForQueryTables({});
     setQueryResultError({
       status: false,
@@ -78,11 +111,8 @@ const HomePage = ({ location }) => {
   // Track user inactivity, logout after 15 minutes
   const [inactiveTime, setInactiveTime] = useState(0);
   const [intervalId, captureIntervalId] = useState();
-  const [redirectDueToInactivity, setRedirectDueToInactivity] = useState(false);
 
   const logOut = () => {
-    clearInterval(intervalId);
-    ipcRenderer.send('logout-to-main', 'inactivity');
     setRedirectDueToInactivity(true);
     clearInterval(intervalId);
   }
@@ -93,7 +123,6 @@ const HomePage = ({ location }) => {
   }, []);
 
   useEffect(() => { if (inactiveTime >= 15) logOut() }, [inactiveTime]);
-
 
   const captureQuerySelections = e => {
     const selectedTableName = e.target.dataset.tablename;
@@ -269,6 +298,15 @@ const HomePage = ({ location }) => {
       // final query
       query = `SELECT ${columns} FROM ${tables}`;
     }
+
+    //error handle for 3+ joins
+    if (Object.keys(temp).length > 2) {
+      setOverThreeTablesSelected(true)
+    } else {
+      setOverThreeTablesSelected(false)
+    }
+
+
     setUserInputQuery(query);
     setSelectedForQueryTables(temp);
   };
@@ -292,7 +330,7 @@ const HomePage = ({ location }) => {
       }
     });
 
-    selectedPanelInfo['foreignKeysOfPrimary'] = {};
+    selectedPanelInfo.foreignKeysOfPrimary = {};
 
     data.forEach(table => {
       table.foreignKeys.forEach(foreignKey => {
@@ -300,7 +338,7 @@ const HomePage = ({ location }) => {
           foreignKey.foreign_column_name == primaryKey &&
           foreignKey.foreign_table_name == tablename
         ) {
-          selectedPanelInfo['foreignKeysOfPrimary'][foreignKey.table_name] =
+          selectedPanelInfo.foreignKeysOfPrimary[foreignKey.table_name] =
             foreignKey.column_name;
         }
       });
@@ -313,80 +351,67 @@ const HomePage = ({ location }) => {
 
   // Fetches database information
   useEffect((): void => {
-    setToggleLoad(true);
-    setData(allTablesMetaData);
-    setToggleLoad(false);
-  }, [allTablesMetaData]);
+    setData(tableData);
+  }, [tableData]);
 
   useEffect(() => {
-    ipcRenderer.on('query-result-to-homepage', (_event, queryResult) => {
-      if (queryResult.statusCode === 'Success') {
-        setQueryResult({
-          status: queryResult.message.length === 0 ? 'No results' : 'Success',
-          message: queryResult.message
-        });
-        setActiveDisplayInResultsTab(1);
-      }
-      if (queryResult.statusCode === 'Invalid Request') {
-        setQueryResultError({
-          status: true,
-          message: queryResult.message
-        });
-      }
-      if (queryResult.statusCode === 'Syntax Error') {
-        setQueryResultError({
-          status: true,
-          message: `Syntax error in retrieving query results.
+    if (queryResult.statusCode === 'Success') {
+      setQueryResult({
+        status: queryResult.message.length === 0 ? 'No results' : 'Success',
+        message: queryResult.message
+      });
+      setActiveDisplayInResultsTab('Query Results');
+    }
+    if (queryResult.statusCode === 'Invalid Request') {
+      setQueryResultError({
+        status: true,
+        message: queryResult.message
+      });
+    }
+    if (queryResult.statusCode === 'Syntax Error') {
+      setQueryResultError({
+        status: true,
+        message: `Syntax error in retrieving query results.
           Error on: ${userInputQuery.slice(
-            0,
-            parseInt(queryResult.err.position) - 1
-          )} "
+          0,
+          parseInt(queryResult.err.position) - 1
+        )} "
           ${userInputQuery.slice(
-            parseInt(queryResult.err.position) - 1,
-            parseInt(queryResult.err.position)
-          )} "
+          parseInt(queryResult.err.position) - 1,
+          parseInt(queryResult.err.position)
+        )} "
           ${userInputQuery.slice(parseInt(queryResult.err.position))};`
-        });
-      }
-      setLoadingQueryStatus(false);
-    });
-    return () => ipcRenderer.removeAllListeners('query-result-to-homepage');
-  }, [userInputQuery]);
-
+      });
+    }
+    setLoadingQueryStatus(false);
+  }, [queryResult]);
 
   return (
-    <React.Fragment>
-      {redirectDueToInactivity && <Redirect to='/' />}
-      <InvisibleHeader></InvisibleHeader>
-      <Grommet theme={grommet}>
 
-        <HomepageWrapper onMouseMove={() => setInactiveTime(0)}>
-          <Collapsible open={sidePanelVisibility} direction="horizontal" >
-            <SidePanel
-              intervalId={intervalId}
-              activePanel={activePanel}
-              dispatchSidePanelDisplay={dispatchSidePanelDisplay}
-              activeTableInPanel={activeTableInPanel}
-              sidePanelVisibility={sidePanelVisibility}
-            />
-          </Collapsible>
-          {toggleLoad && (
-            <LoadWrap>
-              <LoadingComponent />
-            </LoadWrap>
-          )}
-
-          <Box margin="small">
+    <Grommet theme={grommet}>
+      {redirectDueToInactivity && setCurrentView('loginPage')}
+      <SHomepageWrapper onMouseMove={() => setInactiveTime(0)}>
+        <InvisibleHeader>
+          <div></div>
+          <SRightHeaderWrapper onClick={togglePanelVisibility}>
+            <Text style={{ cursor: 'pointer', fontFamily: 'Poppins' }}> Menu</Text>
             <Button
-              onClick={togglePanelVisibility}
               plain={true}
               fill={false}
               alignSelf="start"
-              icon={sidePanelVisibility ? <FormPrevious size="large" /> : <FormNext size="large" />}
-              margin={sidePanelVisibility ? { left: "small" } : { left: "xlarge" }}
+              margin="5px 0px"
+              style={{ cursor: 'pointer' }}
+              icon={sidePanelVisibility ? <FormNext size="medium" /> : <FormPrevious size="medium" />}
             />
-
+          </SRightHeaderWrapper>
+        </InvisibleHeader>
+        <SMainPanelWrapper className="main">
+          <SLeftPanelWrapper className="left">
             <OmniBoxContainer
+              pgClient={pgClient}
+              setQueryResult={setQueryResult}
+              omniBoxView={omniBoxView}
+              setOmniBoxView={setOmniBoxView}
               userInputForTables={userInputForTables}
               loadingQueryStatus={loadingQueryStatus}
               userInputQuery={userInputQuery}
@@ -395,6 +420,7 @@ const HomePage = ({ location }) => {
               setUserInputQuery={setUserInputQuery}
               queryResultError={queryResultError}
               setUserInputForTables={setUserInputForTables}
+              setActiveDisplayInResultsTab={setActiveDisplayInResultsTab}
             />
             <ResultsContainer
               relationships={relationships}
@@ -408,13 +434,25 @@ const HomePage = ({ location }) => {
               setActiveDisplayInResultsTab={setActiveDisplayInResultsTab}
               activeTableInPanel={activeTableInPanel}
               selectedForQueryTables={selectedForQueryTables}
+              overThreeTablesSelected={overThreeTablesSelected}
             />
+          </SLeftPanelWrapper>
+          <SRightPanelWrapper className="right" sidePanelVisibility={sidePanelVisibility}>
+            {/* <Collapsible open={sidePanelVisibility} direction="horizontal" className="collapsible" style={{ height: "100%" }}> */}
+            <SidePanel
+              setCurrentView={setCurrentView}
+              intervalId={intervalId}
+              activePanel={activePanel}
+              dispatchSidePanelDisplay={dispatchSidePanelDisplay}
+              activeTableInPanel={activeTableInPanel}
+              sidePanelVisibility={sidePanelVisibility}
+            />
+            {/* </Collapsible> */}
+          </SRightPanelWrapper>
+        </SMainPanelWrapper>
+      </SHomepageWrapper>
+    </Grommet >
 
-          </Box>
-        </HomepageWrapper>
-      </Grommet>
-
-    </React.Fragment>
   );
 };
 
