@@ -8,34 +8,51 @@ const OmniBoxWrapper = styled.div`
 
 const OmniBoxInputText = styled.textarea`
   font-family: 'Poppins', sans-serif;
-  border: 1px solid lightgrey;
-  padding: 8px;
+  font-size: 90%;
+  border: none;
+  background-color: #f1f1f1;
+  padding: 10px;
   height: 100px;
-  border-radius: 3px;
   letter-spacing: 2px;
   resize: none;
   width: 100%;
-
+  transition: all 0.2s;
   :focus {
     outline: none;
   }
 `;
 
 const ExecuteQueryButton = styled.button`
-  font-family: 'Poppins', sans-serif;
-  border: ${props=>props.theme.executeButton.border};
-  background-color: ${props=>props.theme.executeButton.baseColor};
-  transition: 0.2s;
-  color: ${props =>props.theme.executeButton.fontColor};
+  transition: all 0.2s;
   text-align: center;
-  padding: 5px;
-  font-size: 80%;
-  transition: 1s;
-
-  :hover {
-    background-image: linear-gradient(to bottom right, #49cefe, #c647bc);
+   background-color: #4B70FE;
+  color: white;
+  padding: 8px;
+  font-size: 100%;
+  border-radius: 0px 0px 3px 3px;
+  transition: 0.2s;
+  span {
+    cursor: pointer;
+    display: inline-block;
+    position: relative;
+    transition: 0.5s;
   }
-
+  span:after {
+    content: ">>";
+    position: absolute;
+    opacity: 0;
+    top: 0;
+    right: -14px;
+    transition: 0.5s;
+  }   
+  :hover {
+    span {
+      padding-right: 10px;
+    } 
+    span:after {
+    opacity: 1;
+    }
+  }
   :focus {
     outline: none;
   }
@@ -71,12 +88,12 @@ const OmniBoxInput: React.SFC<IOmniBoxInputProps> = ({
           onClick={executeQuery}
           disabled={loadingQueryStatus}
         >
-          {loadingQueryStatus ? 'Loading query results...' : 'Execute Query'}
+          <span>{loadingQueryStatus ? 'Loading query results...' : 'Execute Query'}</span>
         </ExecuteQueryButton>
       </OmniBoxWrapper>
     );
   }
-  if (omniBoxView === 'plain') {
+  if (omniBoxView === 'Search') {
     return (
       <OmniBoxInputText
         placeholder="Search for a table"

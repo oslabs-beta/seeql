@@ -1,37 +1,65 @@
 import * as React from 'react';
 import styled from 'styled-components';
 
+import { InformationPanel } from './sidePanelMolecules/titles'
+import { Grommet } from "grommet";
+import { grommet } from 'grommet/themes';
+import { CircleInformation, License, Pin } from 'grommet-icons';
+
 interface ISidePanelTableWrapperProps {
   sidePanelVisibility: boolean;
 }
 
+const TitleWrapper = styled.span`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  
+`
+
 const SidePanelTableListWrapper = styled.div<ISidePanelTableWrapperProps>`
-  color: black;
-  padding: 40px;
   width: ${({ sidePanelVisibility }) =>
-    sidePanelVisibility ? '300px' : '0px'};
-  height: 100vh;
-  background-color: ${props => props.theme.panel.baseColor};
-  color: ${props => props.theme.fontColor};
+    sidePanelVisibility ? '210px' : '0px'};
+  height: 100%;
   transition: width 500ms ease-in-out;
+  overflow: scroll;
+   transition: all 0.2s ease-in-out;
 `;
+
+const LabelTextWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+    overflow-wrap: break-word;
+    padding: 5px 0px;
+`
 
 const InfoSection = styled.div`
   overflow-wrap: break-word;
+  margin: 20px;
+  overflow: hidden;
 `;
 
-const Title = styled.h1`
-  color: ${props => props.theme.panel.fontColor};
-`;
+const SEmptyState = styled.div`
+margin: 20px;
+  font-family: 'Poppins', sans-serif;
+`
 
 const Text = styled.p`
-  font-size: 100%;
-  color: ${props => props.theme.panel.fontColor};
+  font-size: 80%;
+  font-weight: bold;
+    font-family: 'Poppins', sans-serif;
+  color: #485360;
+  padding: 0px 2px;
+  :hover {
+    background-color:  #f4f4f4;
+  }
 `;
 
 const Label = styled.label`
-  font-size: 80%;
-  color: ${props => props.theme.panel.fontColor};
+  font-size: 70%;
+    font-family: 'Poppins', sans-serif;
+  color:#485360;
+  font-weight: none;
 `;
 
 interface ISelectedTable {
@@ -42,6 +70,12 @@ interface ISelectedTable {
   foreignKeysOfPrimary?: any;
 }
 
+const InputLabel = styled.p`
+  font-size: 80%;
+  letter-spacing: 2px;
+  color: #485360;
+`;
+
 interface Props {
   activeTableInPanel: ISelectedTable;
   sidePanelVisibility: boolean;
@@ -49,7 +83,7 @@ interface Props {
 
 const InfoPanel: React.SFC<Props> = ({
   activeTableInPanel,
-  sidePanelVisibility
+  sidePanelVisibility,
 }) => {
   const {
     table_name,
@@ -66,7 +100,7 @@ const InfoPanel: React.SFC<Props> = ({
       foreignKeyRelationships.push(
         <li>
           <Text key={key}>
-            {key.column_name} <Label as="span">from table</Label>
+            {key.column_name} <Label as="span"> from table </Label>
             {key.foreign_table_name}({key.foreign_column_name})
           </Text>
         </li>
@@ -77,46 +111,58 @@ const InfoPanel: React.SFC<Props> = ({
   for (const foreignTableOfPrimary in foreignKeysOfPrimary) {
     primaryKeyRelationships.push(
       <li>
-        {foreignTableOfPrimary}({foreignKeysOfPrimary[foreignTableOfPrimary]})
+        <Text> {foreignTableOfPrimary}({foreignKeysOfPrimary[foreignTableOfPrimary]})</Text>
       </li>
     );
   }
 
   return (
-    <SidePanelTableListWrapper sidePanelVisibility={sidePanelVisibility}>
-      <Title>Information</Title>
-      {Object.keys(activeTableInPanel).length > 0 ? (
-        <InfoSection>
-          <Label>table name</Label>
-          <Text>{table_name}</Text>
-          <Label>primary key</Label>
-          <Text>{primaryKey}</Text>
-          {primaryKeyRelationships.length === 0 && (
-            <Label>The primary key is not used in any other table</Label>
+    <Grommet theme={grommet} style={{ height: '100%', width: '100%' }}>
+      <SidePanelTableListWrapper sidePanelVisibility={sidePanelVisibility}>
+        <TitleWrapper><InformationPanel /></TitleWrapper>
+        {Object.keys(activeTableInPanel).length > 0 ? (
+          <InfoSection>
+            <LabelTextWrapper>
+              <Label>table</Label>
+              <Text>{table_name}</Text>
+            </LabelTextWrapper>
+            <LabelTextWrapper>
+              <Label>primary key</Label>
+              <Text>{primaryKey}</Text>
+            </LabelTextWrapper>
+            <LabelTextWrapper>
+              {primaryKeyRelationships.length > 0 && (
+                <div>
+                  <Label><License
+                    size="small"
+                    color="#28C3AA" /> Primary key is used in:</Label>
+                  <ul>{primaryKeyRelationships}</ul>
+                </div>
+              )}
+            </LabelTextWrapper>
+            <LabelTextWrapper>
+              {foreignKeyRelationships.length > 0 && (
+                <div>
+                  <Label><License
+                    size="small"
+                    color="#6532CC" /> Foreign keys in this table:</Label>
+                  <ul>{foreignKeyRelationships}</ul>
+                </div>
+              )}
+            </LabelTextWrapper>
+          </InfoSection>
+        ) : (
+            <SEmptyState>
+              <InputLabel>You haven't selected a table yet, click on the <CircleInformation style={{ height: '20px' }} color="#149BD2" /> in a table to see more information.</InputLabel>
+              <br />
+              <InputLabel>To save a table to the top of the list, click on the {` `}
+                <Pin
+                  color="#FF98BB"
+                /> in a table.</InputLabel>
+            </SEmptyState>
           )}
-          {primaryKeyRelationships.length > 0 && (
-            <div>
-              <Label>The primary key is referenced in</Label>
-              <ul>{primaryKeyRelationships}</ul>
-            </div>
-          )}
-          {foreignKeyRelationships.length === 0 && (
-            <Label>This table does not have any foreign keys</Label>
-          )}
-          {foreignKeyRelationships.length > 0 && (
-            <div>
-              <Label>foreign keys in this table are</Label>
-              <ul>{foreignKeyRelationships}</ul>
-            </div>
-          )}
-        </InfoSection>
-      ) : (
-        <div>
-          You haven't selected a table yet, click on a table to see their
-          information
-        </div>
-      )}
-    </SidePanelTableListWrapper>
+      </SidePanelTableListWrapper>
+    </Grommet>
   );
 };
 

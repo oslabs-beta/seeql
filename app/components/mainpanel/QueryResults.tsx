@@ -1,21 +1,35 @@
 import * as React from 'react';
 import styled from 'styled-components';
-import ReactTable from 'react-table';
+import { DataTable } from "grommet";
 
 const QueryResultWrapper = styled.div`
-  padding: 20px;
-  display: flex;
-  flex-wrap: wrap;
-  background-color: white;
-  border: 1px solid black;
+      width: 100%;
+    border-radius: 3px;
   overflow: scroll;
-  height: 60vh;
+  height: 100%;
+  padding: 10px 0px 0px 0px;
+  overflow: scroll;
 `;
 
-const reactTableStyle = {
-  fontSize: '60%',
-  backgroundColor: 'transparent'
-};
+const SQueryEmptyState = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 120%;
+  padding: 20px;
+  text-align: center;
+
+`
+
+const SResultsWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  font-size: 120%;
+  overflow: scroll;
+
+`
 
 interface IQueryResult {
   status: string;
@@ -27,35 +41,48 @@ interface IQueryResultsProps {
 }
 
 const QueryResults: React.SFC<IQueryResultsProps> = ({ queryResult }) => {
-  let columns = [];
+  const columns = [];
 
   if (queryResult.message.length > 0) {
     const columnNames = Object.keys(queryResult.message[0]);
-    columns = columnNames.map(column => {
-      return {
-        Header: column,
-        accessor: column
-      };
+    columnNames.forEach(column => {
+      if (column === 'id') columns.unshift({
+        property: column,
+        header: column,
+      })
+      else columns.push({
+        property: column,
+        header: column,
+      });
     });
   }
 
   return (
     <QueryResultWrapper>
-      {queryResult.message.length > 0 && (
-        <ReactTable
-          style={reactTableStyle}
-          data={queryResult.message}
-          columns={columns}
-        />
-      )}
-      {queryResult.message.length === 0 &&
+      {
+        queryResult.message.length > 0 && (
+          <SResultsWrapper>
+            <DataTable sortable resizable
+              columns={columns.map(c => ({
+                ...c,
+                search: true,
+              }))}
+              data={queryResult.message} step={20} />
+          </SResultsWrapper>
+        )
+      }
+      {
+        queryResult.message.length === 0 &&
         queryResult.status === 'No results' && (
-          <div>{`There were no results found for your query :(`}</div>
-        )}
-      {queryResult.message.length === 0 &&
+          <SQueryEmptyState><div>{`There were no results found for your query.`}<br /> {`Please enter a new query.`}</div></SQueryEmptyState>
+        )
+      }
+      {
+        queryResult.message.length === 0 &&
         queryResult.status === 'No query' && (
-          <div>{`You haven't queried anything! Enter a query above to get started. :(`}</div>
-        )}
+          <SQueryEmptyState><div>{`You haven't queried anything!`}<br /> {` Enter a query above to get started.`}</div></SQueryEmptyState>
+        )
+      }
     </QueryResultWrapper>
   );
 };

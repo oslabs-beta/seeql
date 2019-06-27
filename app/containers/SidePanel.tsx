@@ -4,6 +4,9 @@ import SettingsPanel from '../components/sidepanels/SettingsPanel';
 import FavoritesPanel from '../components/sidepanels/FavoritesPanel';
 import InfoPanel from '../components/sidepanels/InfoPanel';
 import * as actions from '../actions/actions';
+import { Grommet } from "grommet";
+import { grommet } from 'grommet/themes';
+import { CircleQuestion, CircleInformation, Logout } from 'grommet-icons';
 
 interface IPanelWrapperProps {
   sidePanelVisibility: boolean;
@@ -14,31 +17,62 @@ interface IIndTabProps {
   panel: string;
 }
 
+
+
 const PanelWrapper = styled.div<IPanelWrapperProps>`
   width: ${({ sidePanelVisibility }) =>
-    sidePanelVisibility ? '375px' : '0px'};
+    sidePanelVisibility ? '250px' : '0px'};
   display: flex;
   flex-direction: column;
+  padding: 10px 10px 10px 0px;
   justify-content: flex-start;
-  transition: visibility 500ms ease-in-out;
-`;
-const ButtonMenu = styled.div`
-  display: flex;
-  justify-content: center;
-  background-color: #e8ecf1;
+  background-color: #E6EAF2;
+  height: 100%;
+   transition: all 0.2s ease-in-out;
+     font-family: 'Poppins', sans-serif;
 `;
 
-const IndTab = styled.button<IIndTabProps>`
-  border: none;
+const SInnerPanelWrapper = styled.div`
+  margin: 5px;
+  background-color: white;
+  height: 100%;
+  border-radius: 3px;
+  box-shadow: 1px 1px 4px #67809f;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
+
+const SIndTab = styled.button`
   font-family: 'Poppins', sans-serif;
   border: none;
-  padding: 5px;
+    margin: 5px;
+  padding: 3px 0px;
+  cursor: pointer;
+  transition: 0.2s;
+  border-bottom: 2px solid transparent;
 
-  background-color: ${props => props.active === props.panel ? props.theme.tabs.baseColor : props.theme.panel.baseColorActive};
-  color: ${props => props.theme.tabs.fontColor};
+    :hover {
+    transform: scale(1.1);
+    border-bottom: 2px solid #4B70FE;
+  }
+  :focus {
+    outline: none;
+  }
+`
+
+const IndTab = styled.button<IIndTabProps>`
+  font-family: 'Poppins', sans-serif;
+  border: none;
+  border-bottom: ${({ active, panel }) => active === panel ? '2px solid #4B70FE' : '2px solid transparent'};
+  margin: 5px;
+  padding: 3px 0px;
+  cursor: pointer;
+  transition: 0.2s;
 
   :hover {
-    font-weight: bold;
+    transform: scale(1.1);
+    border-bottom: 2px solid #4B70FE;
   }
   :focus {
     outline: none;
@@ -47,10 +81,14 @@ const IndTab = styled.button<IIndTabProps>`
 
 const Tabs = styled.div`
   display: flex;
-  padding: 50px 0px 5px 5px;
-  justify-content: space-between;
-  font-family: 'Poppins', sans-serif;
+  margin: 10px;
+  height: 60px;
 `;
+
+const SSectionWrapper = styled.div`
+  height: 100%;
+  overflow: scroll;
+`
 
 interface IForeignKeysAffected {
   column: string;
@@ -82,20 +120,23 @@ interface Props {
   sidePanelVisibility: boolean;
   activePanel: string;
   dispatchSidePanelDisplay: (IDispatchSidePanelDisplayAction) => any;
+
+  setCurrentView: (any) => any;
 }
 
 const SidePanel: React.SFC<Props> = ({
   intervalId,
+  setCurrentView,
   activeTableInPanel,
   sidePanelVisibility,
   activePanel,
-  dispatchSidePanelDisplay
+  dispatchSidePanelDisplay,
 }) => {
   return (
-    <React.Fragment>
+    <Grommet theme={grommet} style={{ height: '100%' }} >
       {sidePanelVisibility && (
-        <PanelWrapper sidePanelVisibility={sidePanelVisibility}>
-          <ButtonMenu>
+        <PanelWrapper sidePanelVisibility={sidePanelVisibility} className="sidepanel">
+          <SInnerPanelWrapper>
             <Tabs>
               <IndTab
                 data-panel="info"
@@ -105,17 +146,7 @@ const SidePanel: React.SFC<Props> = ({
                   dispatchSidePanelDisplay(actions.changeToInfoPanel())
                 }
               >
-                Table Info
-              </IndTab>
-              <IndTab
-                data-panel="favorites"
-                panel="favorites"
-                active={activePanel}
-                onClick={() =>
-                  dispatchSidePanelDisplay(actions.changeToFavPanel())
-                }
-              >
-                Favorites
+                <CircleInformation color={activePanel === 'info' ? "#4B70FE" : '#485360'} />
               </IndTab>
               <IndTab
                 data-panel="settings"
@@ -125,23 +156,34 @@ const SidePanel: React.SFC<Props> = ({
                   dispatchSidePanelDisplay(actions.changeToSettingsPanel())
                 }
               >
-                Settings
+                <CircleQuestion color={activePanel === 'settings' ? "#4B70FE" : '#485360'} />
               </IndTab>
+              <SIndTab
+                onClick={() => {
+                  clearInterval(intervalId);
+                  setCurrentView('loginPage')
+                }}
+              >
+                <Logout
+                  style={{ height: '22px' }}
+                />
+              </SIndTab>
             </Tabs>
-          </ButtonMenu>
-          <div>
-            {activePanel === 'info' && (
-              <InfoPanel
-                sidePanelVisibility={sidePanelVisibility}
-                activeTableInPanel={activeTableInPanel}
-              />
-            )}
-            {activePanel === 'favorites' && <FavoritesPanel />}
-            {activePanel === 'settings' && <SettingsPanel intervalId={intervalId} />}
-          </div>
+            <SSectionWrapper>
+              {activePanel === 'info' && (
+                <InfoPanel
+                  sidePanelVisibility={sidePanelVisibility}
+                  activeTableInPanel={activeTableInPanel}
+                />
+              )}
+              {activePanel === 'favorites' && <FavoritesPanel />}
+              {activePanel === 'settings' && <SettingsPanel />}
+            </SSectionWrapper>
+          </SInnerPanelWrapper>
         </PanelWrapper>
-      )}
-    </React.Fragment>
+      )
+      }
+    </Grommet >
   );
 };
 

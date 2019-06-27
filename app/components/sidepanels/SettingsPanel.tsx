@@ -1,102 +1,96 @@
 import * as React from 'react';
-import { useReducer, useContext, useState, useEffect } from 'react';
-import { NavLink } from 'react-router-dom';
 import styled from 'styled-components';
-import { ipcRenderer } from 'electron';
-import Context from '../../contexts/themeContext';
-import themeReducer from '../../reducers/themeReducer';
+import { SettingsHead } from './sidePanelMolecules/titles'
+import { CircleInformation, Pin, License } from 'grommet-icons';
+
+
+const SMiddleWrapper = styled.div`
+  height: 100%;
+  padding: 10px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+`
+
+const SWrapper = styled.div`
+ font-size: 80%;
+`
 
 const PanelWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  color: black;
-  font-family: 'Poppins', sans-serif;
-  padding: 20px;
-  height: 100vh;
-  padding: 40px;
-  background-color: ${props => props.theme.panel.baseColor};
-  color: ${props => props.theme.panel.fontColor};
+  height: 100%;
+  margin: 10px 20px;
+  justify-content: space-between
+   transition: all 0.2s ease-in-out;
 `;
 
-const TopSection = styled.section`
+const LabelTextWrapper = styled.div`
   display: flex;
-  flex-direction: column;
-`;
-const BottomSection = styled.section`
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-`;
-const DivWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-`;
-const Title = styled.h1`
-  color: ${props => props.theme.panel.headerColor};
-  font-size: 30px;
-`;
-const Label = styled.label`
-  color: ${props => props.theme.panel.fontColor};
-  padding: 10px 0;
-`;
-const SignOut = styled.span`
-  color: ${props => props.theme.link.signOut};
+  align-items: center;
+    overflow-wrap: break-word;
+    padding: 5px 0px;
+`
+
+const SLabelTextWrapper = styled(LabelTextWrapper)`
+font-weight: bold;
+justify-self:'center';
+  align-self: center;
+  cursor: 'pointer';
+  transition: 0.2s;
+  :hover {
+    color: #4B70FE;
+    transform: scale(1.1);
+  }
+`
+const InputLabel = styled.span`
+  font-size: 80%;
+  letter-spacing: 2px;
+  color: #485360;
 `;
 
-const SettingsPanel = ({ intervalId }) => {
-  const [context, setContext] = useContext(Context);
-  const [state, dispatch] = useReducer(themeReducer, context);
-  const [activeMode, setActiveMode] = useState('default');
+const SInputLabel = styled(InputLabel)`
+  text-decoration: underline;
+  font-weight: bold;
+`
 
-  const logOut = () => {
-    clearInterval(intervalId);
-    ipcRenderer.send('logout-to-main', 'userlogout');
-  };
-
-  useEffect(() => {
-    setContext(state);
-  }, [state]);
+const SettingsPanel = () => {
 
   return (
     <PanelWrapper>
-      <TopSection>
-        <Title>Settings</Title>
-
-        <DivWrapper>
-          <Label>Theme</Label>
-          <select
-            name="modeList"
-            onChange={e => {
-              setActiveMode(e.target.value);
-              ipcRenderer.send('user-theme-selected', e.target.value);
-              dispatch({
-                type: 'CHANGE_MODE',
-                selected: e.target.value,
-                payload: activeMode
-              });
-            }}
-          >
-            {context.map(modeObj => (
-              <option key={modeObj.value} value={modeObj.value}>
-                {modeObj.value}
-              </option>
-            ))}
-          </select>
-        </DivWrapper>
-        <DivWrapper>
-          <Label>Font Size</Label>
-          <select>
-            <option value="">Normal</option>
-            <option value="">small</option>
-            <option value="">large</option>
-            <option value="">Extra-Large</option>
-          </select>
-        </DivWrapper>
-        <NavLink onClick={logOut} to="/">
-          <SignOut>SignOut</SignOut>
-        </NavLink>
-      </TopSection>
+      <SettingsHead />
+      <SMiddleWrapper>
+        <SWrapper>
+          <LabelTextWrapper>
+            <License style={{ height: '15px' }} color="#28C3AA" /><InputLabel>Primary Key</InputLabel>
+          </LabelTextWrapper>
+          <LabelTextWrapper>
+            <License style={{ height: '15px' }} color="#6532CC" /><InputLabel> Foreign Key</InputLabel>
+          </LabelTextWrapper>
+          <LabelTextWrapper>
+            <Pin style={{ height: '15px' }} color="#FF98BB" /><InputLabel>Pin a table to the top of the list</InputLabel>
+          </LabelTextWrapper>
+          <LabelTextWrapper>
+            <CircleInformation style={{ height: '15px' }} color="#149BD2" /><InputLabel>View table info</InputLabel>
+          </LabelTextWrapper>
+          <LabelTextWrapper>
+            <SInputLabel>Features</SInputLabel>
+          </LabelTextWrapper>
+          <LabelTextWrapper>
+            <InputLabel>- Hover over a row to view the relationships to other tables</InputLabel>
+          </LabelTextWrapper>
+          <LabelTextWrapper>
+            <InputLabel>- Click on the rows of a table to automatically generate a query</InputLabel>
+          </LabelTextWrapper>
+          <LabelTextWrapper>
+            <InputLabel>- Click reset query to remove all selected rows</InputLabel>
+          </LabelTextWrapper>
+          <LabelTextWrapper>
+            <InputLabel>- Use the search to find a table quickly</InputLabel>
+          </LabelTextWrapper>
+        </SWrapper>
+      </SMiddleWrapper>
     </PanelWrapper>
   );
 };
