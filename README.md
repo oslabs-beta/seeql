@@ -1,56 +1,63 @@
 # SeeQL [beta]
 
-Welcome to SeeQL. An easy-to-use desktop application to view your database tables in order to help you write complex joins. All foreign and primary key relationshps are clear and visible. 
-
+Welcome to SeeQL: An easy-to-use desktop application that helps you visualize your database tables and quickly generate complex joins. All foreign and primary key relationshps are clear and visible.
 
 ## Getting Started
-******
+
+---
 
 #### Requirements
 
-You need Postgres. 
-
+You'll need a Postgres database to connect to.
 
 #### How to Install
 
+Beta Release 0.0.1
+
+MacOS: [seeql-0.0.1.dmg](https://github.com/oslabs-beta/seeql/releases/download/untagged-bc5bc2c547e0407d958d/SeeQL-0.0.1.dmg)
+
+Or from the terminal, run:
+
 ```
- Go to the electron store or ...
+git clone https://github.com/oslabs-beta/seeql.git
+cd seeql
+yarn
+yarn run build
+yarn start
+
 ```
-
-
-
 
 ## Features and how to get started:
-******
+
+---
 
 **Logging In**
 
-Log-in to your database with your credentials to view all your tables. You may log in with the entire URI connection string or enter indivudal credentials separately.
+You have the option to log in with a `postgres://` URI connection string, or enter your database credentials individually.
 
 [IMAGE HERE]
 
-
 **Viewing Database Information**
 
-After logging in, you'll see three sections - the side panel, the query input, and all your database tables. In the database tables section, all your tables will display and as you **hover** over a primary key in a table, all references to this **primary key** in other tables will be highlighted. As you hover over a **foreign key** in a table, the related primary key will be highlighted. 
+After logging in, you'll see three sections - the side panel, the input box, and the database tables section. In the tables section, when you **hover** over a primary key in a table, any references to this **primary key** in other tables will be highlighted. Similarly, if you hover over a **foreign key** in a table, its related primary key will be highlighted.
 
-Click on the **info** icon to view table inforamtion in the information panel. 
+Click on any table's **info** icon to view its information in the side panel.
 
-Use the **Search** section to find a specific table. You can **pin** tables to the top of the page for your convinience. 
+Choose the **Search** option above the input box to filter which tables will be displayed. Also, you can **pin** tables to the top of the page for your convinience by clicking on any table's pin icon.
 
 [IMAGE HERE]
 
 **Generating SQL queries**
 
-You can write a **SQL query** in the SQL input box or automatically generate a query by clicking on the rows of a table. To execute a query, write a SQL query and **click execute** query. If your query has any errors, an error message will display telling you exactly where the error occured.
+You can write a **SQL SELECT query** in the SQL input box, or automatically generate a query by clicking on the rows of a table. Once your query is complete, click **execute query**. If your query has any errors, an error message will display telling you exactly where the error occured.
 
 [IMAGE HERE]
 
 **Viewing your data**
 
-After executing a query, you'll be able to see all results in the **Results** section. You can filter through each column by clicking the search icon in the header.
-
+After clicking execute, you'll be able to see your results in the **Results** section. Clicking on a column name will sort your table data accordingly.
+Also, you can filter which rows are visible by clicking the search icon next to each column name.
 
 ## Resources
 
-******
+---
