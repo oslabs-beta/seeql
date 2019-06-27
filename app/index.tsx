@@ -33,8 +33,8 @@ const Index = () => {
         <React.Fragment>
           {currentView === 'loginPage' &&
             <LoginPage
-            setCurrentView={setCurrentView}
-            setTableData={setTableData} />
+              setCurrentView={setCurrentView}
+              setTableData={setTableData} />
           }
           {currentView === 'homePage' &&
             <HomePage setCurrentView={setCurrentView} tableData={tableData} />

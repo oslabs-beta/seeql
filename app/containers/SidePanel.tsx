@@ -98,10 +98,13 @@ interface Props {
   sidePanelVisibility: boolean;
   activePanel: string;
   dispatchSidePanelDisplay: (IDispatchSidePanelDisplayAction) => any;
+
+  setCurrentView: (any) => any;
 }
 
 const SidePanel: React.SFC<Props> = ({
   intervalId,
+  setCurrentView,
   activeTableInPanel,
   sidePanelVisibility,
   activePanel,
@@ -142,7 +145,7 @@ const SidePanel: React.SFC<Props> = ({
                 />
               )}
               {activePanel === 'favorites' && <FavoritesPanel />}
-              {activePanel === 'settings' && <SettingsPanel intervalId={intervalId} />}
+              {activePanel === 'settings' && <SettingsPanel intervalId={intervalId} setCurrentView={setCurrentView} />}
             </SSectionWrapper>
           </SInnerPanelWrapper>
         </PanelWrapper>

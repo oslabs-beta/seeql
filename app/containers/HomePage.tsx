@@ -436,6 +436,7 @@ const HomePage = ({ tableData, setCurrentView }) => {
           <SRightPanelWrapper className="right" sidePanelVisibility={sidePanelVisibility}>
             {/* <Collapsible open={sidePanelVisibility} direction="horizontal" className="collapsible" style={{ height: "100%" }}> */}
             <SidePanel
+              setCurrentView={setCurrentView}
               intervalId={intervalId}
               activePanel={activePanel}
               dispatchSidePanelDisplay={dispatchSidePanelDisplay}
