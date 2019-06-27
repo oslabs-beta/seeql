@@ -5,6 +5,8 @@ import MenuButton from './menuButton'
 import Context from '../../../contexts/themeContext'
 import themeReducer from '../../../reducers/themeReducer'
 import { ipcRenderer } from 'electron';
+
+
 const NestedCollapsible = () => {
     const [context, setContext] = useContext(Context)
     const [openMenu1, setOpenMenu1] = useState(false)
@@ -29,9 +31,10 @@ const NestedCollapsible = () => {
     useEffect(() => setContext(state), [state])
 
     return (
-        <Grommet theme={grommet}>
+        <Grommet theme={grommet} >
             <Box width="small">
                 <MenuButton
+                    style={{ fontFamily: 'Poppins' }}
                     open={openMenu1}
                     label="Themes"
                     onClick={() => {
@@ -43,6 +46,7 @@ const NestedCollapsible = () => {
                 <Collapsible open={openMenu1}>
                     <MenuButton
                         submenu
+                        style={{ fontFamily: 'Poppins' }}
                         open={openSubmenu1}
                         label="Basic Themes"
                         onClick={() =>
@@ -64,7 +68,7 @@ const NestedCollapsible = () => {
                                 align="center"
                                 pad="xsmall"
                             >
-                                <Text size="small">Default</Text>
+                                <Text size="small" style={{ fontFamily: 'Poppins' }}>Default</Text>
                             </Box>
                         </Button>
                         <Button
@@ -81,7 +85,7 @@ const NestedCollapsible = () => {
                                 align="center"
                                 pad="xsmall"
                             >
-                                <Text size="small">Dark</Text>
+                                <Text size="small" style={{ fontFamily: 'Poppins' }}>Dark</Text>
                             </Box>
                         </Button>
                         {}

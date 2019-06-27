@@ -23,32 +23,32 @@ const Index = () => {
   const [pgClient, setPgClient] = useState()
   const [tableData, setTableData] = useState([]);
   const [currentView, setCurrentView] = useState('loginPage')
-
+  //validate in another way error or no tables in db
   useEffect(() => {
-    if (tableData.length > 5) setCurrentView('homePage')
+    if (tableData.length > 0) setCurrentView('homePage')
   }, [])
 
   return (
-    <ThemeContext.Provider value={[context, setContext]}>
-      <ThemeProvider theme={themes[serveMode]}>
-        <React.Fragment>
-          {currentView === 'loginPage' &&
-            <LoginPage
-              setCurrentView={setCurrentView}
-              setTableData={setTableData}
-              setPgClient={setPgClient}
-            />
-          }
-          {currentView === 'homePage' &&
-            <HomePage
-              pgClient={pgClient}
-              setCurrentView={setCurrentView}
-              tableData={tableData}
-            />
-          }
-        </React.Fragment>
-      </ThemeProvider>
-    </ThemeContext.Provider>
+    // <ThemeContext.Provider value={[context, setContext]}>
+    //   <ThemeProvider theme={themes[serveMode]}>
+    <React.Fragment>
+      {currentView === 'loginPage' &&
+        <LoginPage
+          setCurrentView={setCurrentView}
+          setTableData={setTableData}
+          setPgClient={setPgClient}
+        />
+      }
+      {currentView === 'homePage' &&
+        <HomePage
+          pgClient={pgClient}
+          setCurrentView={setCurrentView}
+          tableData={tableData}
+        />
+      }
+    </React.Fragment>
+    //   </ThemeProvider>
+    // </ThemeContext.Provider>
   );
 };
 

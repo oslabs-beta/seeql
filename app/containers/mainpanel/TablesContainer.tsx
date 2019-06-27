@@ -16,7 +16,7 @@ const SEmptyState = styled.div`
 
 const TableTitle = styled.p`
   text-align: center;
-  font-size: 160%;
+  font-size: 90%;
   padding: 5px;
   overflow-wrap: break-word;
   :hover {
@@ -26,6 +26,7 @@ const TableTitle = styled.p`
 
 
 const STabWrapper = styled.span`
+font-size: 14px;
   transition: all 0.2s;
   :hover {
     transform: scale(1.1);
@@ -38,7 +39,7 @@ display: flex;
 align-items: center;
 justify-content: center;
 border-bottom: 1px solid grey;
-  padding-bottom: 5px;
+  padding-top: 3px;
 `
 
 const TempWrapper = styled.div`
@@ -176,7 +177,7 @@ const TablesContainer: React.SFC<ITablesContainerProps> = ({
               <SIndTablButtons>
                 <STabWrapper>
                   <Pin
-                    style={{ height: '15x', cursor: 'pointer' }}
+                    style={{ height: '15px', cursor: 'pointer' }}
                     data-pinned={table.table_name}
                     onClick={() =>
                       dispatchPinned(actions.removeFromPinned(table.table_name))

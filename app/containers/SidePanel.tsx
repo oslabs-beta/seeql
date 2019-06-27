@@ -6,7 +6,7 @@ import InfoPanel from '../components/sidepanels/InfoPanel';
 import * as actions from '../actions/actions';
 import { Grommet } from "grommet";
 import { grommet } from 'grommet/themes';
-import { UserSettings, CircleInformation } from 'grommet-icons';
+import { CircleQuestion, CircleInformation, Logout } from 'grommet-icons';
 
 interface IPanelWrapperProps {
   sidePanelVisibility: boolean;
@@ -17,6 +17,8 @@ interface IIndTabProps {
   panel: string;
 }
 
+
+
 const PanelWrapper = styled.div<IPanelWrapperProps>`
   width: ${({ sidePanelVisibility }) =>
     sidePanelVisibility ? '250px' : '0px'};
@@ -24,9 +26,10 @@ const PanelWrapper = styled.div<IPanelWrapperProps>`
   flex-direction: column;
   padding: 10px 10px 10px 0px;
   justify-content: flex-start;
-  background-color: #E6EAF2 ;
+  background-color: #E6EAF2;
   height: 100%;
    transition: all 0.2s ease-in-out;
+     font-family: 'Poppins', sans-serif;
 `;
 
 const SInnerPanelWrapper = styled.div`
@@ -40,7 +43,26 @@ const SInnerPanelWrapper = styled.div`
   align-items: center;
 `;
 
+const SIndTab = styled.button`
+  font-family: 'Poppins', sans-serif;
+  border: none;
+    margin: 5px;
+  padding: 3px 0px;
+  cursor: pointer;
+  transition: 0.2s;
+  border-bottom: 2px solid transparent;
+
+    :hover {
+    transform: scale(1.1);
+    border-bottom: 2px solid #4B70FE;
+  }
+  :focus {
+    outline: none;
+  }
+`
+
 const IndTab = styled.button<IIndTabProps>`
+  font-family: 'Poppins', sans-serif;
   border: none;
   border-bottom: ${({ active, panel }) => active === panel ? '2px solid #4B70FE' : '2px solid transparent'};
   margin: 5px;
@@ -108,7 +130,7 @@ const SidePanel: React.SFC<Props> = ({
   activeTableInPanel,
   sidePanelVisibility,
   activePanel,
-  dispatchSidePanelDisplay
+  dispatchSidePanelDisplay,
 }) => {
   return (
     <Grommet theme={grommet} style={{ height: '100%' }} >
@@ -134,8 +156,18 @@ const SidePanel: React.SFC<Props> = ({
                   dispatchSidePanelDisplay(actions.changeToSettingsPanel())
                 }
               >
-                <UserSettings color={activePanel === 'settings' ? "#4B70FE" : '#485360'} />
+                <CircleQuestion color={activePanel === 'settings' ? "#4B70FE" : '#485360'} />
               </IndTab>
+              <SIndTab
+                onClick={() => {
+                  clearInterval(intervalId);
+                  setCurrentView('loginPage')
+                }}
+              >
+                <Logout
+                  style={{ height: '22px' }}
+                />
+              </SIndTab>
             </Tabs>
             <SSectionWrapper>
               {activePanel === 'info' && (
@@ -145,7 +177,7 @@ const SidePanel: React.SFC<Props> = ({
                 />
               )}
               {activePanel === 'favorites' && <FavoritesPanel />}
-              {activePanel === 'settings' && <SettingsPanel intervalId={intervalId} setCurrentView={setCurrentView} />}
+              {activePanel === 'settings' && <SettingsPanel />}
             </SSectionWrapper>
           </SInnerPanelWrapper>
         </PanelWrapper>

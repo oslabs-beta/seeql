@@ -66,11 +66,12 @@ app.on('ready', async () => {
 
   mainWindow = new BrowserWindow({
     show: true,
-    width: appDb.get('width') || defaults.width,
-    height: appDb.get('height') || defaults.height,
+    width: 1200,
+    height: 800,
     minWidth: 600,
     minHeight: 500,
     titleBarStyle: 'hiddenInset',
+    center: true,
     webPreferences: {
       nodeIntegration: true // #TODO: see if necessary
     }

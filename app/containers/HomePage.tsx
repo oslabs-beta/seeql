@@ -10,10 +10,9 @@ import SidePanel from './SidePanel';
 import ResultsContainer from './mainpanel/ResultsContainer';
 import OmniBoxContainer from '../containers/omnibox/OmniBoxContainer';
 
-
 const InvisibleHeader = styled.div`
   height: 40px;
-  width: 100vw;
+  width: 100%;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -49,14 +48,13 @@ const SMainPanelWrapper = styled.div`
    transition: all 0.2s ease-in-out;
 `
 
-// REPLACE MAIn
 const SLeftPanelWrapper = styled.div`
   height: 100%;
   width: 100%;
   display: flex;
   flex-direction: column;
   padding: 15px 10px 15px 15px;
-  background-color: #E6EAF2;
+    background: #E6EAF2;
    transition: all 0.2s ease-in-out;
 `
 
@@ -71,6 +69,7 @@ const alias = {};
 
 const HomePage = ({ pgClient, tableData, setCurrentView }) => {
   const [omniBoxView, setOmniBoxView] = useState('SQL');
+  const [overThreeTablesSelected, setOverThreeTablesSelected] = useState(false);
   const [selectedForQueryTables, setSelectedForQueryTables] = useState({});
   const [loadingQueryStatus, setLoadingQueryStatus] = useState(false);
   const [activeDisplayInResultsTab, setActiveDisplayInResultsTab] = useState(
@@ -100,6 +99,7 @@ const HomePage = ({ pgClient, tableData, setCurrentView }) => {
 
   const resetQuerySelection = () => {
     relationships = {};
+    setOverThreeTablesSelected(false)
     setUserInputQuery('SELECT * FROM [table name]');
     setSelectedForQueryTables({});
     setQueryResultError({
@@ -298,6 +298,15 @@ const HomePage = ({ pgClient, tableData, setCurrentView }) => {
       // final query
       query = `SELECT ${columns} FROM ${tables}`;
     }
+
+    //error handle for 3+ joins
+    if (Object.keys(temp).length > 2) {
+      setOverThreeTablesSelected(true)
+    } else {
+      setOverThreeTablesSelected(false)
+    }
+
+
     setUserInputQuery(query);
     setSelectedForQueryTables(temp);
   };
@@ -377,7 +386,6 @@ const HomePage = ({ pgClient, tableData, setCurrentView }) => {
     setLoadingQueryStatus(false);
   }, [queryResult]);
 
-
   return (
 
     <Grommet theme={grommet}>
@@ -386,7 +394,7 @@ const HomePage = ({ pgClient, tableData, setCurrentView }) => {
         <InvisibleHeader>
           <div></div>
           <SRightHeaderWrapper onClick={togglePanelVisibility}>
-            <Text style={{ cursor: 'pointer' }}> Menu</Text>
+            <Text style={{ cursor: 'pointer', fontFamily: 'Poppins' }}> Menu</Text>
             <Button
               plain={true}
               fill={false}
@@ -426,6 +434,7 @@ const HomePage = ({ pgClient, tableData, setCurrentView }) => {
               setActiveDisplayInResultsTab={setActiveDisplayInResultsTab}
               activeTableInPanel={activeTableInPanel}
               selectedForQueryTables={selectedForQueryTables}
+              overThreeTablesSelected={overThreeTablesSelected}
             />
           </SLeftPanelWrapper>
           <SRightPanelWrapper className="right" sidePanelVisibility={sidePanelVisibility}>

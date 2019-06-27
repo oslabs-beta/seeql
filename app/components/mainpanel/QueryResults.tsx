@@ -1,12 +1,14 @@
 import * as React from 'react';
 import styled from 'styled-components';
-import { Box, DataTable } from "grommet";
+import { DataTable } from "grommet";
 
 const QueryResultWrapper = styled.div`
       width: 100%;
     border-radius: 3px;
   overflow: scroll;
   height: 100%;
+  padding: 10px 0px 0px 0px;
+  overflow: scroll;
 `;
 
 const SQueryEmptyState = styled.div`
@@ -25,6 +27,7 @@ const SResultsWrapper = styled.div`
   display: flex;
   justify-content: center;
   font-size: 120%;
+  overflow: scroll;
 
 `
 

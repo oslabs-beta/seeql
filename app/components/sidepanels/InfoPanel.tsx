@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { InformationPanel } from './sidePanelMolecules/titles'
 import { Grommet } from "grommet";
 import { grommet } from 'grommet/themes';
-import { CircleInformation, License } from 'grommet-icons';
+import { CircleInformation, License, Pin } from 'grommet-icons';
 
 interface ISidePanelTableWrapperProps {
   sidePanelVisibility: boolean;
@@ -41,11 +41,13 @@ const InfoSection = styled.div`
 
 const SEmptyState = styled.div`
 margin: 20px;
+  font-family: 'Poppins', sans-serif;
 `
 
 const Text = styled.p`
   font-size: 80%;
   font-weight: bold;
+    font-family: 'Poppins', sans-serif;
   color: #485360;
   padding: 0px 2px;
   :hover {
@@ -55,7 +57,8 @@ const Text = styled.p`
 
 const Label = styled.label`
   font-size: 70%;
-  color: #485360;
+    font-family: 'Poppins', sans-serif;
+  color:#485360;
   font-weight: none;
 `;
 
@@ -67,6 +70,12 @@ interface ISelectedTable {
   foreignKeysOfPrimary?: any;
 }
 
+const InputLabel = styled.p`
+  font-size: 80%;
+  letter-spacing: 2px;
+  color: #485360;
+`;
+
 interface Props {
   activeTableInPanel: ISelectedTable;
   sidePanelVisibility: boolean;
@@ -74,7 +83,7 @@ interface Props {
 
 const InfoPanel: React.SFC<Props> = ({
   activeTableInPanel,
-  sidePanelVisibility
+  sidePanelVisibility,
 }) => {
   const {
     table_name,
@@ -144,7 +153,12 @@ const InfoPanel: React.SFC<Props> = ({
           </InfoSection>
         ) : (
             <SEmptyState>
-              You haven't selected a table yet, click on a the <CircleInformation style={{ height: '20px' }} color="#149BD2" /> in a table to see more information.
+              <InputLabel>You haven't selected a table yet, click on the <CircleInformation style={{ height: '20px' }} color="#149BD2" /> in a table to see more information.</InputLabel>
+              <br />
+              <InputLabel>To save a table to the top of the list, click on the {` `}
+                <Pin
+                  color="#FF98BB"
+                /> in a table.</InputLabel>
             </SEmptyState>
           )}
       </SidePanelTableListWrapper>

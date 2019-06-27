@@ -8,13 +8,15 @@ const OmniBoxWrapper = styled.div`
 
 const OmniBoxInputText = styled.textarea`
   font-family: 'Poppins', sans-serif;
+  font-size: 90%;
   border: none;
-  background-color: #E8ECF1;
-  padding: 8px;
+  background-color: #f1f1f1;
+  padding: 10px;
   height: 100px;
   letter-spacing: 2px;
   resize: none;
   width: 100%;
+  transition: all 0.2s;
   :focus {
     outline: none;
   }
@@ -23,7 +25,7 @@ const OmniBoxInputText = styled.textarea`
 const ExecuteQueryButton = styled.button`
   transition: all 0.2s;
   text-align: center;
-  background-color: #4B70FE;
+   background-color: #4B70FE;
   color: white;
   padding: 8px;
   font-size: 100%;
@@ -40,7 +42,7 @@ const ExecuteQueryButton = styled.button`
     position: absolute;
     opacity: 0;
     top: 0;
-    right: -22px;
+    right: -14px;
     transition: 0.5s;
   }   
   :hover {
