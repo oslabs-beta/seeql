@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { useState, useEffect, useReducer } from 'react';
-import { ipcRenderer } from 'electron';
 import styled from 'styled-components';
 import { Button, Grommet, Text } from 'grommet';
 import { grommet } from 'grommet/themes';
@@ -50,7 +49,7 @@ const SMainPanelWrapper = styled.div`
    transition: all 0.2s ease-in-out;
 `
 
-//REPLACE MAIn
+// REPLACE MAIn
 const SLeftPanelWrapper = styled.div`
   height: 100%;
   width: 100%;
@@ -70,8 +69,7 @@ const SRightPanelWrapper = styled.div<ISRightPanelProps>`
 let relationships = {};
 const alias = {};
 
-const HomePage = ({ tableData, setCurrentView }) => {
-  // console.log(`table data in the home page`, tableData)
+const HomePage = ({ pgClient, tableData, setCurrentView }) => {
   const [omniBoxView, setOmniBoxView] = useState('SQL');
   const [selectedForQueryTables, setSelectedForQueryTables] = useState({});
   const [loadingQueryStatus, setLoadingQueryStatus] = useState(false);
@@ -116,7 +114,7 @@ const HomePage = ({ tableData, setCurrentView }) => {
 
   const logOut = () => {
     clearInterval(intervalId);
-    ipcRenderer.send('logout-to-main', 'inactivity');
+    // ipcRenderer.send('logout-to-main', 'inactivity');
     setRedirectDueToInactivity(true);
     clearInterval(intervalId);
   }
@@ -325,7 +323,7 @@ const HomePage = ({ tableData, setCurrentView }) => {
       }
     });
 
-    selectedPanelInfo['foreignKeysOfPrimary'] = {};
+    selectedPanelInfo.foreignKeysOfPrimary = {};
 
     data.forEach(table => {
       table.foreignKeys.forEach(foreignKey => {
@@ -333,7 +331,7 @@ const HomePage = ({ tableData, setCurrentView }) => {
           foreignKey.foreign_column_name == primaryKey &&
           foreignKey.foreign_table_name == tablename
         ) {
-          selectedPanelInfo['foreignKeysOfPrimary'][foreignKey.table_name] =
+          selectedPanelInfo.foreignKeysOfPrimary[foreignKey.table_name] =
             foreignKey.column_name;
         }
       });
@@ -350,39 +348,36 @@ const HomePage = ({ tableData, setCurrentView }) => {
   }, [tableData]);
 
   useEffect(() => {
-    ipcRenderer.on('query-result-to-homepage', (_event, queryResult) => {
-      if (queryResult.statusCode === 'Success') {
-        setQueryResult({
-          status: queryResult.message.length === 0 ? 'No results' : 'Success',
-          message: queryResult.message
-        });
-        setActiveDisplayInResultsTab('Query Results');
-      }
-      if (queryResult.statusCode === 'Invalid Request') {
-        setQueryResultError({
-          status: true,
-          message: queryResult.message
-        });
-      }
-      if (queryResult.statusCode === 'Syntax Error') {
-        setQueryResultError({
-          status: true,
-          message: `Syntax error in retrieving query results.
+    if (queryResult.statusCode === 'Success') {
+      setQueryResult({
+        status: queryResult.message.length === 0 ? 'No results' : 'Success',
+        message: queryResult.message
+      });
+      setActiveDisplayInResultsTab('Query Results');
+    }
+    if (queryResult.statusCode === 'Invalid Request') {
+      setQueryResultError({
+        status: true,
+        message: queryResult.message
+      });
+    }
+    if (queryResult.statusCode === 'Syntax Error') {
+      setQueryResultError({
+        status: true,
+        message: `Syntax error in retrieving query results.
           Error on: ${userInputQuery.slice(
-            0,
-            parseInt(queryResult.err.position) - 1
-          )} "
+          0,
+          parseInt(queryResult.err.position) - 1
+        )} "
           ${userInputQuery.slice(
-            parseInt(queryResult.err.position) - 1,
-            parseInt(queryResult.err.position)
-          )} "
+          parseInt(queryResult.err.position) - 1,
+          parseInt(queryResult.err.position)
+        )} "
           ${userInputQuery.slice(parseInt(queryResult.err.position))};`
-        });
-      }
-      setLoadingQueryStatus(false);
-    });
-    return () => ipcRenderer.removeAllListeners('query-result-to-homepage');
-  }, [userInputQuery]);
+      });
+    }
+    setLoadingQueryStatus(false);
+  }, [queryResult]);
 
 
   return (
@@ -407,6 +402,8 @@ const HomePage = ({ tableData, setCurrentView }) => {
         <SMainPanelWrapper className="main">
           <SLeftPanelWrapper className="left">
             <OmniBoxContainer
+              pgClient={pgClient}
+              setQueryResult={setQueryResult}
               omniBoxView={omniBoxView}
               setOmniBoxView={setOmniBoxView}
               userInputForTables={userInputForTables}

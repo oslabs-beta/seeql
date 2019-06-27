@@ -4,9 +4,14 @@ import Login from '../components/Login';
 interface Props {
   setTableData: (any) => any;
   setCurrentView: (any) => any;
+  setPgClient: (any) => any;
 }
 
-const LoginPage: React.SFC<Props> = ({ setTableData, setCurrentView }) =>
-  <Login setTableData={setTableData} setCurrentView={setCurrentView} />;
+const LoginPage: React.SFC<Props> = ({ setTableData, setCurrentView, setPgClient }) =>
+  <Login
+    setTableData={setTableData}
+    setCurrentView={setCurrentView}
+    setPgClient={setPgClient}
+  />;
 
 export default LoginPage;

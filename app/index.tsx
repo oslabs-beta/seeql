@@ -2,10 +2,10 @@ import * as React from 'react';
 import { render } from 'react-dom';
 // import { hot } from 'react-hot-loader/root';
 import './app.global.css';
-import ThemeContext from './contexts/themeContext';
-import themes from './themes/themes';
 import { ThemeProvider } from 'styled-components';
 import { useState, useEffect } from 'react';
+import ThemeContext from './contexts/themeContext';
+import themes from './themes/themes';
 import LoginPage from './containers/LoginPage';
 import HomePage from './containers/HomePage';
 
@@ -20,6 +20,7 @@ const Index = () => {
     return acc;
   }, 'defaultTheme');
 
+  const [pgClient, setPgClient] = useState()
   const [tableData, setTableData] = useState([]);
   const [currentView, setCurrentView] = useState('loginPage')
 
@@ -34,10 +35,16 @@ const Index = () => {
           {currentView === 'loginPage' &&
             <LoginPage
               setCurrentView={setCurrentView}
-              setTableData={setTableData} />
+              setTableData={setTableData}
+              setPgClient={setPgClient}
+            />
           }
           {currentView === 'homePage' &&
-            <HomePage setCurrentView={setCurrentView} tableData={tableData} />
+            <HomePage
+              pgClient={pgClient}
+              setCurrentView={setCurrentView}
+              tableData={tableData}
+            />
           }
         </React.Fragment>
       </ThemeProvider>
