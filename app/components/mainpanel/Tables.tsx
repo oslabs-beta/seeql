@@ -1,5 +1,6 @@
 import * as React from 'react';
 import styled from 'styled-components';
+import { ipcRenderer } from 'electron';
 import { License, StatusGood } from 'grommet-icons';
 
 interface ITableProps {
@@ -10,14 +11,16 @@ interface ITableProps {
 const Table = styled.div<ITableProps>`
   display: flex;
   flex-direction: column;
-  font-size: 60%;
+  background-color: white;
+  font-size: 70%;
   border-radius: 3px;
   transition: 0.3s;
 `;
 
 const TableRowsList = styled.ul`
+  flex-direction: column;
+  max-height: 200px;
   overflow: scroll;
-  height: 150px;
 `;
 
 interface ITableRowProps {
@@ -29,8 +32,8 @@ const TableRow = styled.li<ITableRowProps>`
   display: flex;
   justify-content: space-between;
   list-style: none;
-  padding: 0px 3px;
-  border: ${ (props) => props.affected ? '2px solid #26c281' : '2px solid transparent'};
+  border: ${ (props) => props.affected ? '2px solid #28C3AA' : '2px solid transparent'};
+  padding: 5px;
   transition: 0.3s;
 
   :hover {
@@ -46,6 +49,17 @@ const TableCell = styled.p`
   align-items: center;
 `;
 
+const TableTitle = styled.p`
+  text-align: center;
+  font-size: 140%;
+  padding: 5px;
+  overflow-wrap: break-word;
+  background-color: #eeeeee;
+  :hover {
+    transform: scale(1.01);
+    background-color: rgb(240, 240, 240);
+  }
+`;
 
 interface IForeignKey {
   column_name?: string;
@@ -175,12 +189,12 @@ const Tables: React.SFC<Props> = ({
           data-isprimarykey={primaryKey}
         >
           {inTheQuery && (
-            <StatusGood style={{ height: '15px' }} color="#26c281" />
+            <StatusGood style={{ height: '15px' }} color="#2ecc71" />
           )}
           {foreignKey && (
             <License
               style={{ height: '15px' }}
-              color="#6532CC"
+              color="#6DDEF4"
               data-isforeignkey={foreignKey}
               data-foreignkeytable={foreignkeyTable}
               data-foreignkeycolumn={foreignkeyColumn}
@@ -192,7 +206,7 @@ const Tables: React.SFC<Props> = ({
           {primaryKey && (
             <License
               style={{ height: '15px' }}
-              color="#28C3AA"
+              color="#f39c12"
               data-isforeignkey={foreignKey}
               data-foreignkeytable={foreignkeyTable}
               data-foreignkeycolumn={foreignkeyColumn}
@@ -225,6 +239,9 @@ const Tables: React.SFC<Props> = ({
       selectedtable={activeTableInPanel.table_name}
       tablename={tableName}
     >
+      <TableTitle 
+      // onClick={() => ipcRenderer.send('query-to-main', `SELECT * FROM ${tableName}`)} 
+      data-tablename={tableName}>{tableName}</TableTitle>
       <TableRowsList>{rows}</TableRowsList>
     </Table>
   );
