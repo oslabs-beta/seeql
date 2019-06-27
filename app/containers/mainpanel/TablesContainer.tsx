@@ -16,7 +16,7 @@ const SEmptyState = styled.div`
 
 const TableTitle = styled.p`
   text-align: center;
-  font-size: 160%;
+  font-size: 90%;
   padding: 5px;
   overflow-wrap: break-word;
   :hover {

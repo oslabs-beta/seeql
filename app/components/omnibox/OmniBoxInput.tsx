@@ -8,13 +8,15 @@ const OmniBoxWrapper = styled.div`
 
 const OmniBoxInputText = styled.textarea`
   font-family: 'Poppins', sans-serif;
+  font-size: 90%;
   border: none;
-  background-color: #E8ECF1;
-  padding: 8px;
+  background-color: #f1f1f1;
+  padding: 10px;
   height: 100px;
   letter-spacing: 2px;
   resize: none;
   width: 100%;
+  transition: all 0.2s;
   :focus {
     outline: none;
   }
