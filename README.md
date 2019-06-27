@@ -3,6 +3,7 @@
 </p>
 
 ---
+<img width="80" alt="PRS Welcome" src="https://user-images.githubusercontent.com/29069478/60299610-1949f000-98fb-11e9-91f2-4ca061db51a1.png">
 
 Welcome to **SeeQL (beta)**: An easy-to-use desktop application that helps you visualize your database tables (including all foreign and primary key relationships), to quickly generate complex queries. 
 
