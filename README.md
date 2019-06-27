@@ -8,7 +8,6 @@ Welcome to **SeeQL (beta)**: An easy-to-use desktop application that helps you v
 
 
 ## Getting Started
----
 
 #### Requirements
 
@@ -35,7 +34,6 @@ yarn start
 
 
 ## Features
----
 
 **Logging In**
 
@@ -63,8 +61,7 @@ After clicking execute, you'll be able to see your results in the **Results** se
 You can filter which rows are visible by clicking the search icon next to each column name.
 
 
-## Resources
----
+## Resourceszwzwzq
 
 Built on Electron, React and Typescript
 
