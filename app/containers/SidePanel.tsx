@@ -46,7 +46,7 @@ const SInnerPanelWrapper = styled.div`
 const IndTab = styled.button<IIndTabProps>`
   font-family: 'Poppins', sans-serif;
   border: none;
-  border-bottom: ${({ active, panel }) => active === panel ? '2px solid #e26a6a' : '2px solid transparent'};
+  border-bottom: ${({ active, panel }) => active === panel ? '2px solid #4B70FE' : '2px solid transparent'};
   margin: 5px;
   padding: 3px 0px;
   cursor: pointer;
@@ -54,7 +54,7 @@ const IndTab = styled.button<IIndTabProps>`
 
   :hover {
     transform: scale(1.1);
-    border-bottom: 2px solid #e26a6a;
+    border-bottom: 2px solid #4B70FE;
   }
   :focus {
     outline: none;
@@ -125,7 +125,7 @@ const SidePanel: React.SFC<Props> = ({
                   dispatchSidePanelDisplay(actions.changeToInfoPanel())
                 }
               >
-                <CircleInformation color={activePanel === 'info' ? "#e26a6a" : '#485360'} />
+                <CircleInformation color={activePanel === 'info' ? "#4B70FE" : '#485360'} />
               </IndTab>
               <IndTab
                 data-panel="settings"
@@ -135,7 +135,7 @@ const SidePanel: React.SFC<Props> = ({
                   dispatchSidePanelDisplay(actions.changeToSettingsPanel())
                 }
               >
-                <CircleQuestion color={activePanel === 'settings' ? "#e26a6a" : '#485360'} />
+                <CircleQuestion color={activePanel === 'settings' ? "#4B70FE" : '#485360'} />
               </IndTab>
             </Tabs>
             <SSectionWrapper>

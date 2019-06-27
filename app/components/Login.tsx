@@ -68,11 +68,11 @@ const LoginTypeButton = styled.button<LoginTypeButtonProps>`
   border: none;
   border-bottom: ${({ selectedLoginType, buttonType }) =>
     selectedLoginType === buttonType
-      ? '3px solid #e26a6a '
+      ? '3px solid #4B70FE '
       : '3px solid transparent'};
   transition: 0.3s;
   :hover {
-    border-bottom: 3px solid #e26a6a;
+    border-bottom: 3px solid #4B70FE;
     cursor: pointer;
   }
   :focus {
@@ -123,7 +123,7 @@ const LoginBtn = styled.button`
   font-size: 120%;
   color: white;
   text-align: center;
-  background-color: #e26a6a;
+  background-color: #4B70FE;
   transition: all 0.2s;
   span {
     cursor: pointer;

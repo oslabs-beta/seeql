@@ -43,13 +43,13 @@ const SResultsNavButton = styled.button<SResultsNavButtonProps>`
   font-size: 80%;
   margin: 0px 5px;
     font-family: 'Poppins', sans-serif;
-  color: ${({ activeDisplayInResultsTab, activetabname }) => activeDisplayInResultsTab === activetabname ? '#e26a6a' : '#485360'};
-  border-bottom: ${({ activeDisplayInResultsTab, activetabname }) => activeDisplayInResultsTab === activetabname ? '2px solid #dadfe1' : '2px solid transparent'};
+  color: ${({ activeDisplayInResultsTab, activetabname }) => activeDisplayInResultsTab === activetabname ? '#4B70FE' : '#485360'};
+  border-bottom: ${({ activeDisplayInResultsTab, activetabname }) => activeDisplayInResultsTab === activetabname ? '2px solid #4B70FE' : '2px solid transparent'};
   transition: all 0.2s;
   cursor: pointer;
   
   :hover {
-    border-bottom: 2px solid #e26a6a;
+    border-bottom: 2px solid #4B70FE;
   }
 
   :focus{
@@ -98,7 +98,7 @@ const STopNav = styled.div`
   align-items: center;
   padding: 0px 10px;
   min-height: 40px;
-  border-bottom: 1px solid #67809f;
+  border-bottom: 1px solid #dadfe1;
 `
 
 const TooManySelectedTablesWarning = styled.div`

@@ -23,7 +23,7 @@ const OmniBoxInputText = styled.textarea`
 const ExecuteQueryButton = styled.button`
   transition: all 0.2s;
   text-align: center;
-   background-color: #e26a6a;
+   background-color: #4B70FE;
   color: white;
   padding: 8px;
   font-size: 100%;
@@ -40,7 +40,7 @@ const ExecuteQueryButton = styled.button`
     position: absolute;
     opacity: 0;
     top: 0;
-    right: -22px;
+    right: -14px;
     transition: 0.5s;
   }   
   :hover {
