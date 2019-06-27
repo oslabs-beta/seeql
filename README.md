@@ -19,7 +19,7 @@ Beta Release 0.0.1
 
 **MacOS:** [seeql-0.0.1.dmg](https://github.com/oslabs-beta/seeql/releases/download/untagged-bc5bc2c547e0407d958d/SeeQL-0.0.1.dmg)
 
-*Note:* For now you might need to go to your security settings to allow the app run on your system as we do not have an Apple license yet.
+*Note:* For now, you might need to go to your security settings to allow the app run on your system to allow the application to run. 
 
 Or from the **terminal**, run:
 
@@ -49,13 +49,13 @@ Click on any table's **info** icon to view its information in the side panel.
 
 Choose the **Search** option above the input box to filter which tables will be displayed. You can **pin** tables to the top of the page for your convinience by clicking on any table's pin icon.
 
-![seeql_viewqueryresults](https://user-images.githubusercontent.com/29069478/60289121-b567fd00-98e3-11e9-9225-dc5f4f7f3508.gif)
+![finalSeeQLViewDB](https://user-images.githubusercontent.com/29069478/60296862-00d6d700-98f5-11e9-9bf5-c0e15fee21ee.gif)
 
 **Generating SQL queries & Viewing the results**
 
 You can write a **SQL SELECT query** in the SQL input box, or automatically generate a query by clicking on the rows of a table. Once your query is complete, click **execute query**. If your query has any errors, an error message will display telling you exactly where the error occured.
 
-![seeql_viewdbinfo](https://user-images.githubusercontent.com/29069478/60289008-6e7a0780-98e3-11e9-88eb-e339cec90a2f.gif)
+![finalGenerateQuery](https://user-images.githubusercontent.com/29069478/60296884-0af8d580-98f5-11e9-8d26-06cb5c58f270.gif)
 
 After clicking execute, you'll be able to see your results in the **Results** section. Clicking on a column name will sort your table data accordingly.
 You can filter which rows are visible by clicking the search icon next to each column name.
