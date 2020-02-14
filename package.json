@@ -243,7 +243,7 @@
     "webpack-cli": "^3.2.0",
     "webpack-dev-server": "^3.1.14",
     "webpack-merge": "^4.2.1",
-    "yarn": "^1.12.3"
+    "yarn": "^1.22.0"
   },
   "dependencies": {
     "@babel/plugin-transform-runtime": "^7.4.4",
