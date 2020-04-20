@@ -1,4 +1,4 @@
-const kateTheme = {
+const kateTheme:Partial<{}> = {
     panel: { baseColor: 'green', fontColor: 'red', headerColor: 'orange' },
     tabs: { baseColor: 'orange', baseColorActive: 'black', fontColor: 'red' },
     omniBox: {

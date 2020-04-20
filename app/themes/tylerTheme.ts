@@ -1,4 +1,4 @@
-const tylerTheme = {
+const tylerTheme:Partial<{}> = {
     panel: { baseColor: 'orange', fontColor: 'black', headerColor: 'blue' },
     tabs: { baseColor: 'green', baseColorActive: 'red', fontColor: 'purple' },
     omniBox: {

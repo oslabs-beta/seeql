@@ -1,4 +1,4 @@
-const vaderette= {
+const vaderette:Partial<{}> = {
     panel: { baseColor: 'grey', fontColor: 'magenta', headerColor: 'orange' },
     tabs: {
       baseColor: 'magenta',

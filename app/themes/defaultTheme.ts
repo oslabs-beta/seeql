@@ -1,4 +1,4 @@
-const themes = {
+const themes:Partial<{}> = {
   defaultTheme: {
     mainPanelBackground: '#E6EAF2',
     headerBackground: '#F7F9FD',

@@ -1,4 +1,4 @@
-const darkTheme = {
+const darkTheme:Partial<{}> = {
     panel: { baseColor: 'black', fontColor: 'white', headerColor: 'orange' },
     tabs: { baseColor: 'grey', baseColorActive: 'yellow', fontColor: 'brown' },
     omniBox: {

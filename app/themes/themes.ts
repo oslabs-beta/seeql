@@ -5,7 +5,7 @@ import tylerTheme from './tylerTheme'
 import darkTheme from './darkTheme'
 import defaultTheme from './defaultTheme'
 
-const themes ={
+const themes:Partial<{}> ={
   defaultTheme, darkTheme, kateTheme, vaderette, tylerTheme, happi
 }
  

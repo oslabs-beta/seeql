@@ -1,4 +1,4 @@
-const happi= {
+const happi:Partial<{}> = {
     panel: { baseColor: 'red', fontColor: 'blue', headerColor: 'orange' },
     tabs: { baseColor: 'yellow', baseColorActive: 'black', fontColor: 'white' },
     omniBox: {
