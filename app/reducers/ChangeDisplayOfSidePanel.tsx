@@ -17,7 +17,7 @@ And return a string or an error object
 */
 
 export default function changedisplayOfSidePanel(
-  _state: State,
+  state: State,
   action: ActionObject
 ): string | { new (): Error } {
   switch (action.type) {
