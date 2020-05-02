@@ -25,13 +25,12 @@ Beta Release 0.0.1
 
 Or from the **terminal**, run:
 
-```
+```bash
 git clone https://github.com/oslabs-beta/seeql.git
 cd seeql
 yarn
 yarn run build
 yarn start
-
 ```
 
 
@@ -49,7 +48,7 @@ After logging in, you'll see three sections - the side panel, the input box, and
 
 Click on any table's **info** icon to view its information in the side panel.
 
-Choose the **Search** option above the input box to filter which tables will be displayed. You can **pin** tables to the top of the page for your convinience by clicking on any table's pin icon.
+Choose the **Search** option above the input box to filter which tables will be displayed. You can **pin** tables to the top of the page for your convenience by clicking on any table's pin icon.
 
 ![finalSeeQLViewDB](https://user-images.githubusercontent.com/29069478/60296862-00d6d700-98f5-11e9-9bf5-c0e15fee21ee.gif)
 
